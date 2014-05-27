@@ -1,7 +1,9 @@
 activity
 ========
 
-The activity app
+The activity app for ownCloud
+
+Provides an activity feed that shows you all the changes in you files and all the interesting things that are going on in your ownCloud.
 
 [![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=master)](https://travis-ci.org/owncloud/activity)
 
