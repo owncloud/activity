@@ -3,8 +3,8 @@
 /**
  * ownCloud - Activity App
  *
- * @author Frank Karlitschek
- * @copyright 2013 Frank Karlitschek frank@owncloud.org
+ * @author Joas Schilling
+ * @copyright 2014 Joas Schilling nickvergessen@owncloud.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -21,7 +21,30 @@
  *
  */
 
+OC_API::register(
+	'get',
+	'/apps/activity/api/v1',
+	array('OCA\Activity\Api', 'get'),
+	'activity'
+);
 
-// register an ocs api call
-OCP\API::register('get', '/cloud/activity', array('OCA\Activity\OCS', 'getActivities'), 'activity', OC_API::ADMIN_AUTH);
+OC_API::register(
+	'get',
+	'/apps/activity/api/v1/page/{page}',
+	array('OCA\Activity\Api', 'getPage'),
+	'activity'
+);
 
+OC_API::register(
+	'get',
+	'/apps/activity/api/v1/filter/{filter}',
+	array('OCA\Activity\Api', 'getFilter'),
+	'activity'
+);
+
+OC_API::register(
+	'get',
+	'/apps/activity/api/v1/filter/{filter}/page/{page}',
+	array('OCA\Activity\Api', 'getFilterPage'),
+	'activity'
+);
