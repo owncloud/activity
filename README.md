@@ -21,6 +21,9 @@ a new entry to the types array via the `OC_Activity/notification_types` hook.
 If you want to enable the new type by default, you need to add the type to the
 settings array via the `OC_Activity/default_types` hook aswell.
 
+Additionally you can add a css class for your activity in the feed, using the
+`OC_Activity/get_type_icon` hook.
+
 ## Adding a new filter
 
 To add a new filter to the sidebar, you need to add an entry to the

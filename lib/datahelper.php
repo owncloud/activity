@@ -140,6 +140,18 @@ class DataHelper
 			case Data::TYPE_SHARED:
 				return 'icon-share';
 		}
-		return '';
+
+		$icon = '';
+		// Allow other apps to add a icon for their notifications
+		\OCP\Util::emitHook(
+			'OC_Activity',
+			'get_type_icon',
+			array(
+				'type'		=> $type,
+				'icon'		=> &$icon,
+			)
+		);
+
+		return $icon;
 	}
 }
