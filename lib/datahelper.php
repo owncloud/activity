@@ -47,7 +47,7 @@ class DataHelper
 
 		if ($app === 'files') {
 			$preparedParams = ParameterHelper::prepareParameters(
-				$l, $app, $text,
+				$l, $text,
 				$params, ParameterHelper::getSpecialParameterList($app, $text),
 				$stripPath, $highlightParams
 			);
