@@ -49,8 +49,19 @@ class Data
 	const TYPE_STORAGE_QUOTA_90 = 'storage_quota_90';
 	const TYPE_STORAGE_FAILURE = 'storage_failure';
 
+	static protected $notificationTypes = array();
+
+	/**
+	 * @param \OC_L10N $l
+	 * @return array Array "stringID of the type" => "translated string description for the setting"
+	 */
 	public static function getNotificationTypes(\OC_L10N $l) {
-		return array(
+		if (isset(self::$notificationTypes[$l->getLanguageCode()]))
+		{
+			return self::$notificationTypes[$l->getLanguageCode()];
+		}
+
+		$notificationTypes = array(
 			\OCA\Activity\Data::TYPE_SHARED => $l->t('A file or folder has been <strong>shared</strong>'),
 //			\OCA\Activity\Data::TYPE_SHARE_UNSHARED => $l->t('Previously shared file or folder has been <strong>unshared</strong>'),
 //			\OCA\Activity\Data::TYPE_SHARE_EXPIRED => $l->t('Expiration date of shared file or folder <strong>expired</strong>'),
@@ -63,6 +74,20 @@ class Data
 //			\OCA\Activity\Data::TYPE_STORAGE_QUOTA_90 => $l->t('<strong>Storage usage</strong> is at 90%%'),
 //			\OCA\Activity\Data::TYPE_STORAGE_FAILURE => $l->t('An <strong>external storage</strong> has an error'),
 		);
+
+		// Allow other apps to add new notification types
+		\OCP\Util::emitHook(
+			'OC_Activity',
+			'notification_types',
+			array(
+				'language'	=> $l,
+				'types'		=> &$notificationTypes,
+			)
+		);
+
+		self::$notificationTypes[$l->getLanguageCode()] = $notificationTypes;
+
+		return $notificationTypes;
 	}
 
 	/**
@@ -156,6 +181,16 @@ class Data
 					Data::TYPE_SHARED,
 				), $types);
 		}
+
+		// Allow other apps to add new notification types
+		\OCP\Util::emitHook(
+			'OC_Activity',
+			'filter_types',
+			array(
+				'filter'	=> $filter,
+				'types'		=> &$types,
+			)
+		);
 		return $types;
 	}
 

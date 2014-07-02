@@ -99,6 +99,16 @@ class UserSettings
 //				$settings[] = Data::TYPE_STORAGE_FAILURE;
 		}
 
+		// Allow other apps to add notification types to the default setting
+		\OCP\Util::emitHook(
+			'OC_Activity',
+			'default_types',
+			array(
+				'method'		=> $method,
+				'settings'		=> &$settings,
+			)
+		);
+
 		return $settings;
 	}
 
