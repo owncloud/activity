@@ -72,13 +72,31 @@ class DataHelper
 					return $l->t('%2$s shared %1$s with you', $preparedParams);
 				case 'shared_link_self':
 					return $l->t('You shared %1$s via link', $preparedParams);
-				default:
-					return $l->t($text, $preparedParams);
 			}
-		} else {
-			$l = \OCP\Util::getL10N($app);
-			return $l->t($text, $params);
 		}
+
+		$translation = false;
+		// Allow other apps to correctly translate their activities
+		\OCP\Util::emitHook(
+			'OC_Activity',
+			'translation',
+			array(
+				'translation'	=> &$translation,
+				'app'			=> $app,
+				'text'			=> $text,
+				'parameters'	=> $params,
+				'strip_path'	=> $stripPath,
+				'highlight'		=> $highlightParams,
+				'language'		=> $l,
+			)
+		);
+
+		if ($translation !== false) {
+			return $translation;
+		}
+
+		$l = \OCP\Util::getL10N($app);
+		return $l->t($text, $params);
 	}
 
 	/**

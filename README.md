@@ -27,6 +27,10 @@ Additionally you can add a css class for your activity in the feed, using the
 In order to group the activities based on a parameter, you need to specify the
 group parameter in the `OC_Activity/group_parameter` hook.
 
+If the parameters need to be modified (add highlight, remove file path, ...)
+before they should be displayed to the user, you can do that with the
+`OC_Activity/translation` hook. Just set `translation` to final and parsed string.
+
 ## Adding a new filter
 
 To add a new filter to the sidebar, you need to add an entry to the
