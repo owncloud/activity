@@ -24,6 +24,9 @@ settings array via the `OC_Activity/default_types` hook aswell.
 Additionally you can add a css class for your activity in the feed, using the
 `OC_Activity/get_type_icon` hook.
 
+In order to group the activities based on a parameter, you need to specify the
+group parameter in the `OC_Activity/group_parameter` hook.
+
 ## Adding a new filter
 
 To add a new filter to the sidebar, you need to add an entry to the
