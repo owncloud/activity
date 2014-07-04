@@ -256,15 +256,18 @@ class Data
 	 * @return int
 	 */
 	public static function getFilterFromParam($paramName = 'filter') {
-		$filter='';
-		
-		switch ($_GET[$paramName]) {
+		$filter='';	
+		$typeFilter=$paramName;
+		if(array_key_exists($paramName, $_GET)){
+			$typeFilter=$_GET[$paramName];
+		}
+		switch ($typeFilter) {
 			case 'by':
 			case 'self':
 			case 'shares':
 			case 'all':
 			case 'files':
-				return $_GET[$paramName];
+				return $typeFilter;
 			default:
 				$filter = 'all';
 
