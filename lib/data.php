@@ -256,6 +256,10 @@ class Data
 	 * @return int
 	 */
 	public static function getFilterFromParam($paramName = 'filter') {
+		if (!isset($_GET[$paramName])) {
+			return 'all';
+		}
+
 		switch ($_GET[$paramName]) {
 			case 'by':
 			case 'self':
