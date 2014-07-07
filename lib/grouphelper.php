@@ -126,7 +126,19 @@ class GroupHelper
 					return 0;
 			}
 		}
-		return false;
+
+		$parameter = false;
+		// Allow other apps to group their notifications
+		\OCP\Util::emitHook(
+			'OC_Activity',
+			'group_parameter',
+			array(
+				'activity'		=> $activity,
+				'parameter'		=> &$parameter,
+			)
+		);
+
+		return $parameter;
 	}
 
 	/**
