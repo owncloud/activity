@@ -6,7 +6,7 @@ php:
 
 env:
   global:
-    - CORE_BRANCH=public-api-activity
+    - CORE_BRANCH=stable7
   matrix:
     - DB=sqlite
 
