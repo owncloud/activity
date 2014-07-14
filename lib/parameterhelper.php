@@ -118,12 +118,15 @@ class ParameterHelper
 	 * @return string
 	 */
 	protected static function prepareUserParam($param, $highlightParams) {
+		$displayName = \OC_User::getDisplayName($param);
+		$param = \OC_Util::sanitizeHTML($param);
+		$displayName = \OC_Util::sanitizeHTML($displayName);
+
 		if ($highlightParams) {
-			$param = \OC_Util::sanitizeHTML($param);
 			return '<div class="avatar" data-user="' . $param . '"></div>'
-				. '<strong>' . \OC_User::getDisplayName($param) . '</strong>';
+				. '<strong>' . $displayName . '</strong>';
 		} else {
-			return \OC_User::getDisplayName($param);
+			return $displayName;
 		}
 	}
 
@@ -155,7 +158,8 @@ class ParameterHelper
 			return self::stripPathFromFilename($param);
 		}
 
-		$title = ' title="' . \OC_Util::sanitizeHTML($param) . '"';
+		$title = $param;
+		$title = ' title="' . \OC_Util::sanitizeHTML($title) . '"';
 		$newParam = self::stripPathFromFilename($param);
 		return '<a class="filename tooltip" href="' . $fileLink . '"' . $title . '>' . \OC_Util::sanitizeHTML($newParam) . '</a>';
 	}
