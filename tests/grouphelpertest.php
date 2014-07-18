@@ -22,7 +22,9 @@
 
 namespace OCA\Activity\Tests;
 
+use OCA\Activity\DataHelper;
 use OCA\Activity\GroupHelper;
+use OCA\Activity\ParameterHelper;
 
 class GroupHelperTest extends \PHPUnit_Framework_TestCase {
 	public function groupHelperData() {
@@ -150,6 +152,82 @@ class GroupHelperTest extends \PHPUnit_Framework_TestCase {
 						'messageparams'	=> array(),
 						'file'			=> 'testing/file2.txt',
 						'typeicon'		=> 'icon-add-color',
+					),
+				),
+			),
+			array(
+				true,
+				array(
+					array(
+						'activity_id'	=> 3,
+						'user'			=> 'user',
+						'affecteduser'	=> 'affecteduser',
+						'app'			=> 'files',
+						'type'			=> 'file_created',
+						'subject'		=> 'created_self',
+						'subjectparams'	=> serialize(array('testing/file3.txt')),
+						'message'		=> '',
+						'messageparams'	=> serialize(array()),
+						'file'			=> 'testing/file3.txt',
+						'timestamp'		=> time(),
+					),
+					array(
+						'activity_id'	=> 2,
+						'user'			=> 'user',
+						'affecteduser'	=> 'affecteduser',
+						'app'			=> 'files',
+						'type'			=> 'file_created',
+						'subject'		=> 'created_self',
+						'subjectparams'	=> serialize(array('testing/file2.txt')),
+						'message'		=> '',
+						'messageparams'	=> serialize(array()),
+						'file'			=> 'testing/file2.txt',
+						'timestamp'		=> time(),
+					),
+					array(
+						'activity_id'	=> 1,
+						'user'			=> 'user',
+						'affecteduser'	=> 'affecteduser',
+						'app'			=> 'files',
+						'type'			=> 'shared',
+						'subject'		=> 'shared_link_self',
+						'subjectparams'	=> serialize(array('testing/file1.txt')),
+						'message'		=> '',
+						'messageparams'	=> serialize(array()),
+						'file'			=> 'testing/file1.txt',
+						'timestamp'		=> time() - 10,
+					),
+				),
+				array(
+					array(
+						'activity_id'	=> 3,
+						'activity_ids'	=> array(3, 2),
+						'user'			=> 'user',
+						'affecteduser'	=> 'affecteduser',
+						'app'			=> 'files',
+						'type'			=> 'file_created',
+						'subject'		=> 'created_self',
+						'subjectparams'	=> array(array(
+							'testing/file3.txt',
+							'testing/file2.txt',
+						)),
+						'message'		=> '',
+						'messageparams'	=> array(),
+						'file'			=> 'testing/file3.txt',
+						'typeicon'		=> 'icon-add-color',
+					),
+					array(
+						'activity_id'	=> 1,
+						'user'			=> 'user',
+						'affecteduser'	=> 'affecteduser',
+						'app'			=> 'files',
+						'type'			=> 'shared',
+						'subject'		=> 'shared_link_self',
+						'subjectparams'	=> array('testing/file1.txt'),
+						'message'		=> '',
+						'messageparams'	=> array(),
+						'file'			=> 'testing/file1.txt',
+						'typeicon'		=> 'icon-share',
 					),
 				),
 			),
@@ -396,7 +474,26 @@ class GroupHelperTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider groupHelperData
 	 */
 	public function testGroupHelper($allowGrouping, $activities, $expected) {
-		$helper = new GroupHelper($allowGrouping);
+		$activityManager = $this->getMock('\OCP\Activity\IManager');
+		$activityManager->expects($this->any())
+			->method('getGroupParameter')
+			->with($this->anything())
+			->will($this->returnValue(false));
+		$activityLanguage = \OCP\Util::getL10N('activity');
+
+		$helper = new GroupHelper(
+			$activityManager,
+			new DataHelper(
+				$activityManager,
+				new ParameterHelper(
+					new \OC\Files\View(''),
+					$activityLanguage
+				),
+				$activityLanguage
+			),
+			$allowGrouping
+		);
+
 		foreach ($activities as $activity) {
 			$helper->addActivity($activity);
 		}

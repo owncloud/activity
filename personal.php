@@ -24,7 +24,8 @@ OCP\Util::addScript('activity', 'settings');
 OCP\Util::addStyle('activity', 'settings');
 
 $l=OC_L10N::get('activity');
-$types = \OCA\Activity\Data::getNotificationTypes($l);
+$data = new \OCA\Activity\Data(\OC::$server->getActivityManager());
+$types = $data->getNotificationTypes($l);
 
 $user = OCP\User::getUser();
 $activities = array();
@@ -48,5 +49,6 @@ else {
 	$template->assign('setting_batchtime', \OCA\Activity\UserSettings::EMAIL_SEND_HOURLY);
 }
 $template->assign('activity_email', \OCP\Config::getUserValue($user, 'settings', 'email', ''));
+$template->assign('notify_self', \OCA\Activity\UserSettings::getUserSetting($user, 'setting', 'self'));
 
 return $template->fetchPage();

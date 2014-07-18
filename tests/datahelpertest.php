@@ -82,6 +82,10 @@ class DataHelperTest extends \PHPUnit_Framework_TestCase {
 				'<div class="avatar" data-user="UserA"></div><strong>UserA</strong>',
 				'<strong>/foo/bar.file</strong>',
 			)),
+			array(array('U<ser>A', '/foo/bar.file'), array(0 => 'username'), true, true, array(
+				'<div class="avatar" data-user="U&lt;ser&gt;A"></div><strong>U&lt;ser&gt;A</strong>',
+				'<strong>/foo/bar.file</strong>',
+			)),
 
 			array(array('UserA', '/foo/bar.file'), array(0 => 'username', 1 => 'file'), true, true, array(
 				'<div class="avatar" data-user="UserA"></div><strong>UserA</strong>',
@@ -95,9 +99,10 @@ class DataHelperTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testPrepareParameters($params, $filePosition, $stripPath, $highlightParams, $expected) {
 		$l = \OC_L10N::get('activity');
+		$parameterHelper = new \OCA\Activity\ParameterHelper(new \OC\Files\View(''), $l);
 		$this->assertEquals(
 			$expected,
-			\OCA\Activity\ParameterHelper::prepareParameters($l, 'action', $params, $filePosition, $stripPath, $highlightParams)
+			$parameterHelper->prepareParameters('action', $params, $filePosition, $stripPath, $highlightParams)
 		);
 	}
 
@@ -190,9 +195,18 @@ class DataHelperTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider translationData
 	 */
 	public function testTranslation($text, $params, $stripPath, $highlightParams, $expected) {
+		$dataHelper = new \OCA\Activity\DataHelper(
+			$this->getMock('\OCP\Activity\IManager'),
+			new \OCA\Activity\ParameterHelper(
+				new \OC\Files\View(''),
+				\OCP\Util::getL10N('activity')
+			),
+			\OCP\Util::getL10N('activity')
+		);
+
 		$this->assertEquals(
 			$expected,
-			(string) \OCA\Activity\DataHelper::translation('files', $text, $params, $stripPath, $highlightParams)
+			(string) $dataHelper->translation('files', $text, $params, $stripPath, $highlightParams)
 		);
 	}
 }
