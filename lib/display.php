@@ -22,6 +22,10 @@
  */
 
 namespace OCA\Activity;
+use OCP\Template;
+use OCP\Util;
+use OCP\User;
+use OC\Files\View;
 
 /**
  * Class Display
@@ -34,14 +38,14 @@ class Display
 	 * Get the template for a specific activity-event in the activities
 	 *
 	 * @param array $activity An array with all the activity data in it
-	 * @param return string
+	 * @return string
 	 */
 	public static function show($activity) {
-		$tmpl = new \OCP\Template('activity', 'activity.box');
-		$tmpl->assign('formattedDate', \OCP\Util::formatDate($activity['timestamp']));
+		$tmpl = new Template('activity', 'activity.box');
+		$tmpl->assign('formattedDate', Util::formatDate($activity['timestamp']));
 		$tmpl->assign('formattedTimestamp', \OCP\relative_modified_date($activity['timestamp']));
 		$tmpl->assign('user', $activity['user']);
-		$tmpl->assign('displayName', \OCP\User::getDisplayName($activity['user']));
+		$tmpl->assign('displayName', User::getDisplayName($activity['user']));
 
 		if ($activity['app'] === 'files') {
 			// We do not link the subject as we create links for the parameters instead
@@ -51,23 +55,23 @@ class Display
 		$tmpl->assign('event', $activity);
 
 		if ($activity['file']) {
-			$rootView = new \OC\Files\View('');
+			$rootView = new View('');
 			$exist = $rootView->file_exists('/' . $activity['user'] . '/files' . $activity['file']);
 			$is_dir = $rootView->is_dir('/' . $activity['user'] . '/files' . $activity['file']);
 			unset($rootView);
 
 			// show a preview image if the file still exists
 			if (!$is_dir && $exist) {
-				$tmpl->assign('previewLink', \OCP\Util::linkTo('files', 'index.php', array('dir' => dirname($activity['file']))));
+				$tmpl->assign('previewLink', Util::linkToRoute('files_index', array('dir' => dirname($activity['file']))));
 				$tmpl->assign('previewImageLink',
-					\OCP\Util::linkToRoute('core_ajax_preview', array(
+					Util::linkToRoute('core_ajax_preview', array(
 						'file' => $activity['file'],
 						'x' => 150,
 						'y' => 150,
 					))
 				);
 			} else if ($exist) {
-				$tmpl->assign('previewLink', \OCP\Util::linkTo('files', 'index.php', array('dir' => $activity['file'])));
+				$tmpl->assign('previewLink', Util::linkToRoute('files_index', array('dir' => $activity['file'])));
 				$tmpl->assign('previewImageLink', \OC_Helper::mimetypeIcon('dir'));
 				$tmpl->assign('previewLinkIsDir', true);
 			}

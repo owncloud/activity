@@ -158,7 +158,7 @@ class ParameterHelper
 			$parent_dir = (substr_count($param, '/') == 1) ? '/' : dirname($param);
 		}
 
-		$fileLink = Util::linkTo('files', 'index.php', array('dir' => $parent_dir));
+		$fileLink = Util::linkToRoute('files_index', array('dir' => $parent_dir));
 		$param = trim($param, '/');
 
 		list($path, $name) = $this->splitPathFromFilename($param);
