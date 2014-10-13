@@ -5,6 +5,7 @@
 
 /** @var OC_L10N $l */
 /** @var array $_ */
+$l = $_['overwriteL10N'];
 
 print_unescaped($l->t('Hello %s,', array($_['username'])));
 p("\n");
@@ -20,8 +21,8 @@ if ($_['timeframe'] == \OCA\Activity\UserSettings::EMAIL_SEND_HOURLY) {
 p("\n");
 p("\n");
 
-foreach ($_['activities'] as $activity) {
-	print_unescaped($l->t('* %s', array($activity)));
+foreach ($_['activities'] as $activityData) {
+	print_unescaped($l->t('* %1$s - %2$s', $activityData));
 	p("\n");
 }
 p("\n");
