@@ -6,7 +6,7 @@ php:
 
 env:
   global:
-    - CORE_BRANCH=master
+    - CORE_BRANCH=in_cli_mode_return_true_for_ishtaccessworking
   matrix:
     - DB=sqlite
 
