@@ -126,8 +126,7 @@ class MailQueueHandler {
 			$this->senderAddress = \OCP\Util::getDefaultEmailAddress('no-reply');
 		}
 		if (empty($this->senderName)) {
-			$defaults = new \OCP\Defaults();
-			$this->senderName = $defaults->getName();
+			$this->senderName = \OCP\Util::getDefaultSenderName();
 		}
 
 		if ($setting === 'email') {
