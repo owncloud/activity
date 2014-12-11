@@ -26,8 +26,7 @@ namespace OCA\Activity;
 use \OCP\Util;
 use \OCP\Activity\IManager;
 
-class DataHelper
-{
+class DataHelper {
 	/** @var \OCP\Activity\IManager */
 	protected $activityManager;
 
@@ -59,11 +58,12 @@ class DataHelper
 			return '';
 		}
 
+		$preparedParams = $this->parameterHelper->prepareParameters(
+			$params, $this->parameterHelper->getSpecialParameterList($app, $text),
+			$stripPath, $highlightParams
+		);
+
 		if ($app === 'files') {
-			$preparedParams = $this->parameterHelper->prepareParameters(
-				$params, $this->parameterHelper->getSpecialParameterList($app, $text),
-				$stripPath, $highlightParams
-			);
 			switch ($text) {
 				case 'created_self':
 					return $this->l->t('You created %1$s', $preparedParams);
