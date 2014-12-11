@@ -6,7 +6,7 @@ php:
 
 env:
   global:
-    - CORE_BRANCH=master
+    - CORE_BRANCH=add-special-parameterlist-to-manager
   matrix:
     - DB=sqlite
 
