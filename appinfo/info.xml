@@ -14,5 +14,8 @@
 		<types>
 				<filesystem/>
 		</types>
+		<remote>
+			<activities>appinfo/remote.php</activities>
+		</remote>
 		<ocsid>166038</ocsid>
 </info>
