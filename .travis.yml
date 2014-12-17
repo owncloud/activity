@@ -1,4 +1,5 @@
 language: php
+cache: apt
 php:
   - 5.4
   - 5.5
@@ -18,8 +19,8 @@ branches:
     - stable7
 
 before_install:
-  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-  - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
+  #- wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
+  - ./before_install.sh $APP_NAME $CORE_BRANCH $DB
 
 script:
   # Test lint
