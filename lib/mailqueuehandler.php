@@ -216,7 +216,7 @@ class MailQueueHandler {
 
 		try {
 			\OCP\Util::sendMail(
-				$email, $user,
+				$email, \OCP\User::getDisplayName($user),
 				$l->t('Activity notification'), $emailText,
 				$this->getSenderData('email'), $this->getSenderData('name')
 			);
