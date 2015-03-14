@@ -36,7 +36,7 @@ class NavigationTest extends TestCase {
 	/**
 	 * @dataProvider getTemplateData
 	 */
-	public function testHooksDeleteUser($constructorActive, $forceActive) {
+	public function testGetTemplate($constructorActive, $forceActive) {
 		$l = \OCP\Util::getL10N('activity');
 		$navigation = new Navigation($l, \OC::$server->getActivityManager(), \OC::$server->getURLGenerator(), $constructorActive);
 		$output = $navigation->getTemplate($forceActive)->fetchPage();

@@ -185,6 +185,7 @@ class MailQueueHandler {
 			new ParameterHelper(
 				\OC::$server->getActivityManager(),
 				new \OC\Files\View(''),
+				\OC::$server->getConfig(),
 				$l
 			),
 			$l
