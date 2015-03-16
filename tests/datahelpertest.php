@@ -125,10 +125,16 @@ class DataHelperTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider translationData
 	 */
 	public function testTranslation($text, $params, $stripPath, $highlightParams, $expected) {
+		$config = $this->getMockBuilder('OCP\IConfig')->disableOriginalConstructor()->getMock();
+		$config->expects($this->any())
+			->method('getSystemValue')
+			->with('enable_avatars', true)
+			->willReturn(true);
 		$dataHelper = new \OCA\Activity\DataHelper(
 			$this->getMock('\OCP\Activity\IManager'),
 			new \OCA\Activity\ParameterHelper(
 				new \OC\Files\View(''),
+				$config,
 				\OCP\Util::getL10N('activity')
 			),
 			\OCP\Util::getL10N('activity')

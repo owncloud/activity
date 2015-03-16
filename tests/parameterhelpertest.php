@@ -29,6 +29,8 @@ class ParameterHelperTest extends \PHPUnit_Framework_TestCase {
 	protected $parameterHelper;
 	/** @var \OC\Files\View */
 	protected $view;
+	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	protected $config;
 
 	public function setUp() {
 		parent::setUp();
@@ -36,7 +38,15 @@ class ParameterHelperTest extends \PHPUnit_Framework_TestCase {
 		\OC::$WEBROOT = '';
 		$l = \OCP\Util::getL10N('activity');
 		$this->view = new \OC\Files\View('');
-		$this->parameterHelper = new \OCA\Activity\ParameterHelper($this->view, $l);
+
+		$this->config = $this->getMockBuilder('OCP\IConfig')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->parameterHelper = new \OCA\Activity\ParameterHelper(
+			$this->view,
+			$this->config,
+			$l
+		);
 	}
 
 	public function tearDown() {
@@ -106,16 +116,25 @@ class ParameterHelperTest extends \PHPUnit_Framework_TestCase {
 				'<div class="avatar" data-user="UserA"></div><strong>UserA</strong>',
 				'<a class="filename tooltip" href="/index.php/apps/files?dir=%2Ftmp%2Ftest" title="in tmp">test</a>',
 			), 'tmp/test/'),
+
+			array(array('UserA', '/foo/bar.file'), array(0 => 'username'), true, true, array(
+				'<strong>UserA</strong>',
+				'<strong>/foo/bar.file</strong>',
+			), '', false),
 		);
 	}
 
 	/**
 	 * @dataProvider prepareParametersData
 	 */
-	public function testPrepareParameters($params, $filePosition, $stripPath, $highlightParams, $expected, $createFolder = '') {
+	public function testPrepareParameters($params, $filePosition, $stripPath, $highlightParams, $expected, $createFolder = '', $enableAvatars = true) {
 		if ($createFolder !== '') {
 			$this->view->mkdir('/' . \OCP\User::getUser() . '/files/' . $createFolder);
 		}
+		$this->config->expects($this->any())
+			->method('getSystemValue')
+			->with('enable_avatars', true)
+			->willReturn($enableAvatars);
 		$this->assertEquals(
 			$expected,
 			$this->parameterHelper->prepareParameters($params, $filePosition, $stripPath, $highlightParams)

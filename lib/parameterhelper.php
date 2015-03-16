@@ -23,6 +23,7 @@
 
 namespace OCA\Activity;
 
+use OCP\IConfig;
 use \OCP\User;
 use \OCP\Util;
 use \OC\Files\View;
@@ -32,11 +33,20 @@ class ParameterHelper
 	/** @var \OC\Files\View */
 	protected $rootView;
 
+	/** @var \OCP\IConfig */
+	protected $config;
+
 	/** @var \OC_L10N */
 	protected $l;
 
-	public function __construct(View $rootView, \OC_L10N $l) {
+	/**
+	 * @param View $rootView
+	 * @param IConfig $config
+	 * @param \OC_L10N $l
+	 */
+	public function __construct(View $rootView, IConfig $config, \OC_L10N $l) {
 		$this->rootView = $rootView;
+		$this->config = $config;
 		$this->l = $l;
 	}
 
@@ -131,8 +141,11 @@ class ParameterHelper
 		$displayName = Util::sanitizeHTML($displayName);
 
 		if ($highlightParams) {
-			return '<div class="avatar" data-user="' . $param . '"></div>'
-				. '<strong>' . $displayName . '</strong>';
+			$avatarPlaceHolder = '';
+			if ($this->config->getSystemValue('enable_avatars', true)) {
+				$avatarPlaceHolder = '<div class="avatar" data-user="' . $param . '"></div>';
+			}
+			return $avatarPlaceHolder . '<strong>' . $displayName . '</strong>';
 		} else {
 			return $displayName;
 		}

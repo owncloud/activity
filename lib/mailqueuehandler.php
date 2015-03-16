@@ -164,7 +164,15 @@ class MailQueueHandler {
 	 */
 	public function sendEmailToUser($user, $email, $lang, $mailData) {
 		$l = $this->getLanguage($lang);
-		$dataHelper = new DataHelper(\OC::$server->getActivityManager(), new ParameterHelper(new \OC\Files\View(''), $l), $l);
+		$dataHelper = new DataHelper(
+			\OC::$server->getActivityManager(),
+			new ParameterHelper(
+				new \OC\Files\View(''),
+				\OC::$server->getConfig(),
+				$l
+			),
+			$l
+		);
 
 		$activityList = array();
 		foreach ($mailData as $activity) {
