@@ -487,6 +487,7 @@ class GroupHelperTest extends \PHPUnit_Framework_TestCase {
 				$activityManager,
 				new ParameterHelper(
 					new \OC\Files\View(''),
+					$this->getMockBuilder('OCP\IConfig')->disableOriginalConstructor()->getMock(),
 					$activityLanguage
 				),
 				$activityLanguage
