@@ -142,11 +142,18 @@ class DataHelperTest extends TestCase {
 	 * @dataProvider translationData
 	 */
 	public function testTranslation($text, $params, $stripPath, $highlightParams, $expected) {
+		$config = $this->getMockBuilder('OCP\IConfig')->disableOriginalConstructor()->getMock();
+		$config->expects($this->any())
+			->method('getSystemValue')
+			->with('enable_avatars', true)
+			->willReturn(true);
+
 		$dataHelper = new DataHelper(
 			$this->getMock('\OCP\Activity\IManager'),
 			new ParameterHelper(
 				$this->getMock('\OCP\Activity\IManager'),
 				new View(''),
+				$config,
 				Util::getL10N('activity')
 			),
 			Util::getL10N('activity')
@@ -193,6 +200,7 @@ class DataHelperTest extends TestCase {
 			new ParameterHelper(
 				$manager,
 				new View(''),
+				$this->getMockBuilder('OCP\IConfig')->disableOriginalConstructor()->getMock(),
 				Util::getL10N('activity')
 			),
 			Util::getL10N('activity')
@@ -225,6 +233,7 @@ class DataHelperTest extends TestCase {
 			new ParameterHelper(
 				$manager,
 				new View(''),
+				$this->getMockBuilder('OCP\IConfig')->disableOriginalConstructor()->getMock(),
 				Util::getL10N('activity')
 			),
 			Util::getL10N('activity')

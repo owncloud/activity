@@ -488,6 +488,7 @@ class GroupHelperTest extends TestCase {
 				new ParameterHelper(
 					$activityManager,
 					new \OC\Files\View(''),
+					$this->getMockBuilder('OCP\IConfig')->disableOriginalConstructor()->getMock(),
 					$activityLanguage
 				),
 				$activityLanguage
