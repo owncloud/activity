@@ -48,7 +48,7 @@ class Display
 		$tmpl->assign('user', $activity['user']);
 		$tmpl->assign('displayName', User::getDisplayName($activity['user']));
 
-		if ($activity['app'] === 'files') {
+		if (strpos($activity['subjectformatted']['markup']['trimmed'], '<a ') !== false) {
 			// We do not link the subject as we create links for the parameters instead
 			$activity['link'] = '';
 		}

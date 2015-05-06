@@ -215,7 +215,7 @@ class Data
 			$limitActivities .= ' AND `user` = ?';
 			$parameters[] = $user;
 		}
-		else if ($filter === 'by') {
+		else if ($filter === 'by' || $filter === 'all' && !$userSettings->getUserSetting($user, 'setting', 'self')) {
 			$limitActivities .= ' AND `user` <> ?';
 			$parameters[] = $user;
 		}
