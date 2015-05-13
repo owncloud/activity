@@ -283,7 +283,7 @@ class Hooks {
 			return;
 		}
 
-		$selfAction = substr($subject, -5) !== '_self';
+		$selfAction = $user === $this->currentUser;
 		$link = \OCP\Util::linkToAbsolute('files', 'index.php', array(
 			'dir' => ($isFile) ? dirname($path) : $path,
 		));
