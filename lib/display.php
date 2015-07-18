@@ -91,7 +91,7 @@ class Display {
 			$tmpl->assign('previewLink', $this->getPreviewLink($activity['file'], $is_dir));
 
 			// show a preview image if the file still exists
-			$mimeType = \OCP\Files::getMimeType($activity['file']);
+			$mimeType = \OC_Helper::getFileNameMimeType($activity['file']);
 			if ($mimeType && !$is_dir && $this->preview->isMimeSupported($mimeType) && $exist) {
 				$tmpl->assign('previewImageLink',
 					$this->urlGenerator->linkToRoute('core_ajax_preview', array(
