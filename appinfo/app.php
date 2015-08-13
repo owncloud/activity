@@ -51,8 +51,10 @@ $c->getServer()->getJobList()->add('OCA\Activity\BackgroundJob\EmailNotification
 $c->getServer()->getJobList()->add('OCA\Activity\BackgroundJob\ExpireActivities');
 
 // Needed for the files sidebar entry
-\OCP\Util::addScript('activity', 'activitymodel');
-\OCP\Util::addScript('activity', 'activitycollection');
-\OCP\Util::addScript('activity', 'activitytabview');
-\OCP\Util::addScript('activity', 'filesplugin');
+\OCP\Util::connectHook(
+	'OCA\Files',
+	'loadAdditionalScripts',
+	'\OCA\Activity\FilesHooksStatic',
+	'loadFilesAppScripts'
+);
 
