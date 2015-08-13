@@ -49,3 +49,10 @@ $c->getServer()->getNavigationManager()->add($navigationEntry);
 // Cron job for sending emails and pruning the activity list
 $c->getServer()->getJobList()->add('OCA\Activity\BackgroundJob\EmailNotification');
 $c->getServer()->getJobList()->add('OCA\Activity\BackgroundJob\ExpireActivities');
+
+// Needed for the files sidebar entry
+\OCP\Util::addScript('activity', 'activitymodel');
+\OCP\Util::addScript('activity', 'activitycollection');
+\OCP\Util::addScript('activity', 'activitytabview');
+\OCP\Util::addScript('activity', 'filesplugin');
+
