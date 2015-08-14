@@ -88,14 +88,4 @@ class FilesHooksStatic {
 		self::getHooks()->share($params);
 	}
 
-	/**
-	 * Load additional scripts when the files app is visible
-	 */
-	public static function loadFilesAppScripts() {
-		\OCP\Util::addStyle('activity', 'style');
-		\OCP\Util::addScript('activity', 'activitymodel');
-		\OCP\Util::addScript('activity', 'activitycollection');
-		\OCP\Util::addScript('activity', 'activitytabview');
-		\OCP\Util::addScript('activity', 'filesplugin');
-	}
 }
