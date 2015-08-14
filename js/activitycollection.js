@@ -24,7 +24,14 @@
 		 *
 		 * @var int
 		 */
-		_fileId: undefined,
+		_objectId: null,
+
+		/**
+		 * Type of the object to filter by
+		 *
+		 * @var string
+		 */
+		_objectType: null,
 
 		model: OCA.Activity.ActivityModel,
 
@@ -35,12 +42,21 @@
 		},
 
 		/**
-		 * Sets the file id to filter by or null for all.
+		 * Sets the object id to filter by or null for all.
 		 * 
-		 * @param {int} fileId file id or null
+		 * @param {int} objectId file id or null
 		 */
-		setFileId: function(fileId) {
-			this._fileId = fileId;
+		setObjectId: function(objectId) {
+			this._objectId = objectId;
+		},
+
+		/**
+		 * Sets the object type to filter by or null for all.
+		 * 
+		 * @param {int} objectType file id or null
+		 */
+		setObjectType: function(objectType) {
+			this._objectType = objectType;
 		},
 
 		url: function() {
@@ -49,31 +65,14 @@
 				filter: 'all'
 			};
 			var url = OC.generateUrl('apps/activity/activities/fetch');
-			if (!_.isUndefined(this._fileId)) {
-				query.fileid = this._fileId;
+			if (this._objectId) {
+				query.objectid = this._objectId;
+			}
+			if (this._objectType) {
+				query.objecttype = this._objectType;
 			}
 			url += '?' + OC.buildQueryString(query);
 			return url;
-		},
-
-		fetch: function() {
-			var self = this;
-			// FIXME: TEMP for testing the view, remove this method
-			// once the backend is ready
-			_.delay(function() {
-				self.reset([
-					{
-						id: 1,
-						subject: 'Test subject',
-						message: 'Test message',
-						file: 'test.txt',
-						link: OC.generateUrl('apps/files'),
-						user: OC.currentUser,
-						affectedUsers: [OC.currentUser],
-						timestamp: new Date(Date.UTC(2015, 8, 12, 10, 11, 12))
-					}
-				]);
-			}, 1000);
 		}
 	});
 

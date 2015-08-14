@@ -17,12 +17,21 @@
 		'{{else}}' +
 		'<ul>' +
 		'{{#each activities}}' +
-		'    <li>' +
-		'        <div class="subject">{{subject}}</div>' +
-		'        <div class="message">{{message}}</div>' +
-		'        <div class="user">{{user}}</div>' +
-		'        <div class="timestamp">{{formattedTime}}</div>' +
-	    '    </li>' +
+		'    <li class="activity box">' +
+		'        <div class="activity-icon {{typeIconClass}}"></div>' +
+		'        <div class="activitysubject">{{{subject}}}</div>' +
+		'        <span class="activitytime has-tooltip" title="{{formattedDateTooltip}}">{{formattedDate}}</span>' +
+		'        <div class="activitymessage">{{message}}</div>' +
+		'        {{#if previews}}' +
+		'        <div class="previews">' +
+		'        {{#each previews}}' +
+		'            <img class="preview {{previewClass}}" src="{{source}}" alt="" />' +
+		'        {{/each}}' +
+		'        </div>' +
+		'        {{/if}}' +
+		'    </li>' +
+		'{{else}}' +
+		'    <li class="empty">{{emptyMessage}}</li>' +
 		'{{/each}}' +
 		'</ul>' +
 		'{{/if}}' +
@@ -35,12 +44,25 @@
 	 * @return {Object}
 	 */
 	function formatActivity(activity) {
-		return {
-			subject: activity.get('subject'),
-			message: activity.get('message'),
-			user: activity.get('user'),
-			formattedTime: OC.Util.formatDate(activity.get('timestamp'))
+		var output = {
+			subject: activity.get('subjectformatted').markup.trimmed,
+			formattedDate: activity.get('relativeDateTimestamp'),
+			formattedDateTooltip: activity.get('readableDateTimestamp'),
+			message: activity.get('messageformatted').markup.trimmed
 		};
+
+		if (activity.has('typeicon')) {
+			output.typeIconClass = activity.get('typeicon') + ' svg';
+		}
+		if (activity.has('previews')) {
+			output.previews = _.map(activity.get('previews'), function(data) {
+				return {
+					previewClass: data.isMimeTypeIcon ? 'preview-mimetype-icon': '',
+					source: data.source
+				};
+			});
+		}
+		return output;
 	}
 
 	/**
@@ -50,7 +72,7 @@
 	 * Displays activity information for a given file
 	 *
 	 */
-	var ActivityTabView = OC.Backbone.View.extend(
+	var ActivityTabView = OCA.Files.DetailTabView.extend(
 		/** @lends OCA.Activity.ActivityTabView.prototype */ {
 		id: 'activityTabView',
 		className: 'activityTabView tab',
@@ -64,8 +86,9 @@
 
 		initialize: function() {
 			this._activities = new OCA.Activity.ActivityCollection();
+			this._activities.setObjectType('files');
 			this._activities.on('request', this._onRequest, this);
-			this._activities.on('reset', this._onChange, this);
+			this._activities.on('update', this._onChange, this);
 		},
 
 		template: function(data) {
@@ -84,15 +107,13 @@
 		},
 
 		setFileInfo: function(fileInfo) {
-			var self = this;
 			this._fileInfo = fileInfo;
 			if (this._fileInfo) {
-				self._loading = true;
+				this._activities.setObjectId(this._fileInfo.get('id'));
 				this._activities.fetch();
 			} else {
 				this._activities.reset();
 			}
-			this.render();
 		},
 
 		_onRequest: function() {
@@ -112,8 +133,12 @@
 			if (this._fileInfo) {
 				this.$el.html(this.template({
 					loading: this._loading,
-					activities: this._activities.map(formatActivity)
+					activities: this._activities.map(formatActivity),
+					emptyMessage: t('activity', 'No activities')
 				}));
+				this.$el.find('.has-tooltip').tooltip({
+					placement: 'bottom'
+				});
 			} else {
 				// TODO: render placeholder text?
 			}
