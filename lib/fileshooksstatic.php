@@ -87,4 +87,5 @@ class FilesHooksStatic {
 	public static function share($params) {
 		self::getHooks()->share($params);
 	}
+
 }
