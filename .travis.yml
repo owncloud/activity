@@ -8,7 +8,7 @@ php:
 
 env:
   global:
-    - CORE_BRANCH=master
+    - CORE_BRANCH=autoloader-fix
     - APP_NAME=activity
   matrix:
     - DB=sqlite
