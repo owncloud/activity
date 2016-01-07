@@ -77,7 +77,9 @@ $(function(){
 					OC.generateUrl('/apps/activity/activities/fetch'),
 					'filter=' + OCActivity.Filter.filter + '&page=' + OCActivity.Filter.currentPage,
 					function (data) {
-						OCActivity.InfinitScrolling.handleActivitiesCallback(data);
+						if (OCActivity.InfinitScrolling.handleActivitiesCallback(data)) {
+							OCActivity.InfinitScrolling.ignoreScroll = false;
+						}
 					}
 				);
 			}
@@ -94,6 +96,7 @@ $(function(){
 
 				// Continue prefill
 				this.prefill();
+				return true;
 
 			} else if (OCActivity.Filter.currentPage == 1) {
 				// First page is empty - No activities :(
@@ -111,6 +114,7 @@ $(function(){
 				$('#no_more_activities').removeClass('hidden');
 				$('#loading_activities').addClass('hidden');
 			}
+			return false;
 		},
 
 		appendActivityToContainer: function ($activity) {
