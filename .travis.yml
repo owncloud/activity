@@ -1,10 +1,11 @@
+sudo: required
 language: php
 php:
   - 5.4
-  - 5.5
-  - 5.6
-  - 7
-  - hhvm
+#  - 5.5
+#  - 5.6
+#  - 7
+#  - hhvm
 
 env:
   global:
@@ -19,7 +20,7 @@ branches:
     - /^stable\d+(\.\d+)?$/
 
 before_install:
-  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
+  - wget https://raw.githubusercontent.com/owncloud/administration/alternative-oracle-approach/travis-ci/before_install.sh
   - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
 
   # Add some output debugging information
@@ -54,18 +55,18 @@ script:
 
 matrix:
   include:
-    - php: 5.4
-      env: DB=mysql
-    - php: 5.4
-      env: DB=pgsql
+#    - php: 5.4
+#      env: DB=mysql
+#    - php: 5.4
+#      env: DB=pgsql
     - php: 5.4
       env: DB=oracle
-    - php: 5.4
-      env: DB=mysql;CODECHECK=1
-    - php: 5.4
-      env: DB=mysql;CODECHECK=2
-    - php: 5.4
-      env: DB=mysql;JSTESTS=1
+#    - php: 5.4
+#      env: DB=mysql;CODECHECK=1
+#    - php: 5.4
+#      env: DB=mysql;CODECHECK=2
+#    - php: 5.4
+#      env: DB=mysql;JSTESTS=1
   allow_failures:
     - php: hhvm
     - env: DB=mysql;CODECHECK=2
