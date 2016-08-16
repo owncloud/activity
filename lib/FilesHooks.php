@@ -148,6 +148,11 @@ class FilesHooks {
 		}
 
 		list($filePath, $uidOwner, $fileId) = $this->getSourcePathAndOwner($filePath);
+		if (!$fileId) {
+			// no owner, possibly deleted or unknown
+			// skip notifications
+			return;
+		}
 		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
 		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'stream', $activityType);
 		$filteredEmailUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'email', $activityType);
@@ -193,11 +198,19 @@ class FilesHooks {
 	 * @return array
 	 */
 	protected function getSourcePathAndOwner($path) {
-		$uidOwner = Filesystem::getOwner($path);
+		$currentUserView = Filesystem::getView();
+		$uidOwner = $currentUserView->getOwner($path);
 		$fileId = 0;
 
 		if ($uidOwner !== $this->currentUser) {
-			Filesystem::initMountPoints($uidOwner);
+			list($storage, $internalPath) = $currentUserView->resolvePath($path);
+			if ($storage->instanceOfStorage('OCA\Files_Sharing\External\Storage')) {
+				// for federated shares we don't have access to the remote user, use the current one
+				// which will also make it use the matching local "shared::" federated share storage instead
+				$uidOwner = $this->currentUser;
+			} else {
+				Filesystem::initMountPoints($uidOwner);
+			}
 		}
 		$info = Filesystem::getFileInfo($path);
 		if ($info !== false) {
