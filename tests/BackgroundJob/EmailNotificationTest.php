@@ -47,12 +47,12 @@ class EmailNotificationTest extends TestCase {
 	public function testConstructAndRun($isCLI) {
 		$backgroundJob = new EmailNotification(
 			$this->getMockBuilder('OCA\Activity\MailQueueHandler')->disableOriginalConstructor()->getMock(),
-			$this->getMock('OCP\IConfig'),
-			$this->getMock('OCP\ILogger'),
+			$this->createMock('OCP\IConfig'),
+			$this->createMock('OCP\ILogger'),
 			$isCLI
 		);
 
-		$jobList = $this->getMock('\OCP\BackgroundJob\IJobList');
+		$jobList = $this->createMock('\OCP\BackgroundJob\IJobList');
 
 		/** @var \OC\BackgroundJob\JobList $jobList */
 		$backgroundJob->execute($jobList);
@@ -69,7 +69,7 @@ class EmailNotificationTest extends TestCase {
 		$backgroundJob = new EmailNotification(
 			$mailQueueHandler,
 			$config,
-			$this->getMock('OCP\ILogger'),
+			$this->createMock('OCP\ILogger'),
 			true
 		);
 

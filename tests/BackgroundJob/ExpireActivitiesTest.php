@@ -52,7 +52,7 @@ class ExpireActivitiesTest extends TestCase {
 	public function testExecute(Data $data = null, IConfig $config = null) {
 		$backgroundJob = new ExpireActivities($data, $config);
 
-		$jobList = $this->getMock('\OCP\BackgroundJob\IJobList');
+		$jobList = $this->createMock('\OCP\BackgroundJob\IJobList');
 
 		/** @var \OC\BackgroundJob\JobList $jobList */
 		$backgroundJob->execute($jobList);

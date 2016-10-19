@@ -50,16 +50,16 @@ class DataTest extends TestCase {
 
 		$this->activityLanguage = $activityLanguage = \OCP\Util::getL10N('activity', 'en');
 		$this->activityManager = new \OC\Activity\Manager(
-			$this->getMock('OCP\IRequest'),
-			$this->getMock('OCP\IUserSession'),
-			$this->getMock('OCP\IConfig')
+			$this->createMock('OCP\IRequest'),
+			$this->createMock('OCP\IUserSession'),
+			$this->createMock('OCP\IConfig')
 		);
 		$this->session = $this->getMockBuilder('OCP\IUserSession')
 			->disableOriginalConstructor()
 			->getMock();
 
 		$this->activityManager->registerExtension(function() use ($activityLanguage) {
-			return new Extension($activityLanguage, $this->getMock('\OCP\IURLGenerator'));
+			return new Extension($activityLanguage, $this->createMock('\OCP\IURLGenerator'));
 		});
 		$this->data = new Data(
 			$this->activityManager,

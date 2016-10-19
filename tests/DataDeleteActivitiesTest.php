@@ -63,9 +63,9 @@ class DataDeleteActivitiesTest extends TestCase {
 			));
 		}
 		$this->data = new Data(
-			$this->getMock('\OCP\Activity\IManager'),
+			$this->createMock('\OCP\Activity\IManager'),
 			\OC::$server->getDatabaseConnection(),
-			$this->getMock('\OCP\IUserSession')
+			$this->createMock('\OCP\IUserSession')
 		);
 	}
 
@@ -98,7 +98,7 @@ class DataDeleteActivitiesTest extends TestCase {
 	public function testExpireActivities() {
 		$backgroundjob = new \OCA\Activity\BackgroundJob\ExpireActivities();
 		$this->assertUserActivities(array('delete', 'otherUser'));
-		$jobList = $this->getMock('\OCP\BackgroundJob\IJobList');
+		$jobList = $this->createMock('\OCP\BackgroundJob\IJobList');
 		$backgroundjob->execute($jobList);
 		$this->assertUserActivities(array('otherUser'));
 	}

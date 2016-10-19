@@ -63,7 +63,7 @@ class ActivitiesTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->request = $this->getMock('OCP\IRequest');
+		$this->request = $this->createMock('OCP\IRequest');
 
 		$this->controller = $this->getController();
 

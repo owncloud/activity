@@ -61,10 +61,10 @@ class SettingsTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->config = $this->getMock('OCP\IConfig');
-		$this->request = $this->getMock('OCP\IRequest');
-		$this->urlGenerator = $this->getMock('OCP\IURLGenerator');
-		$this->random = $this->getMock('OCP\Security\ISecureRandom');
+		$this->config = $this->createMock('OCP\IConfig');
+		$this->request = $this->createMock('OCP\IRequest');
+		$this->urlGenerator = $this->createMock('OCP\IURLGenerator');
+		$this->random = $this->createMock('OCP\Security\ISecureRandom');
 		$this->l10n = \OCP\Util::getL10N('activity', 'en');
 
 		$this->controller = new Settings(

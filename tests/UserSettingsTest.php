@@ -37,18 +37,18 @@ class UserSettingsTest extends TestCase {
 
 		$activityLanguage = \OCP\Util::getL10N('activity', 'en');
 		$activityManager = new \OC\Activity\Manager(
-			$this->getMock('OCP\IRequest'),
-			$this->getMock('OCP\IUserSession'),
-			$this->getMock('OCP\IConfig')
+			$this->createMock('OCP\IRequest'),
+			$this->createMock('OCP\IUserSession'),
+			$this->createMock('OCP\IConfig')
 		);
 		$activityManager->registerExtension(function() use ($activityLanguage) {
-			return new Extension($activityLanguage, $this->getMock('\OCP\IURLGenerator'));
+			return new Extension($activityLanguage, $this->createMock('\OCP\IURLGenerator'));
 		});
-		$this->config = $this->getMock('OCP\IConfig');
+		$this->config = $this->createMock('OCP\IConfig');
 		$this->userSettings = new UserSettings($activityManager, $this->config, new Data(
 			$activityManager,
-			$this->getMock('\OCP\IDBConnection'),
-			$this->getMock('\OCP\IUserSession')
+			$this->createMock('\OCP\IDBConnection'),
+			$this->createMock('\OCP\IUserSession')
 		));
 	}
 
