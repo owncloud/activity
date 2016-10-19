@@ -67,8 +67,8 @@ class FeedTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->config = $this->getMock('OCP\IConfig');
-		$this->request = $this->getMock('OCP\IRequest');
+		$this->config = $this->createMock('OCP\IConfig');
+		$this->request = $this->createMock('OCP\IRequest');
 		$this->session = $this->getMockBuilder('OCP\IUserSession')
 			->disableOriginalConstructor()
 			->getMock();

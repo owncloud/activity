@@ -46,12 +46,12 @@ class NavigationTest extends TestCase {
 	public function testGetTemplate($constructorActive, $forceActive = null, $rssToken = '') {
 		$activityLanguage = \OCP\Util::getL10N('activity', 'en');
 		$activityManager = new \OC\Activity\Manager(
-			$this->getMock('OCP\IRequest'),
-			$this->getMock('OCP\IUserSession'),
-			$this->getMock('OCP\IConfig')
+			$this->createMock('OCP\IRequest'),
+			$this->createMock('OCP\IUserSession'),
+			$this->createMock('OCP\IConfig')
 		);
 		$activityManager->registerExtension(function() use ($activityLanguage) {
-			return new Extension($activityLanguage, $this->getMock('\OCP\IURLGenerator'));
+			return new Extension($activityLanguage, $this->createMock('\OCP\IURLGenerator'));
 		});
 		$navigation = new Navigation(
 			$activityLanguage,

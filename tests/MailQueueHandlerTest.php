@@ -57,7 +57,7 @@ class MailQueueHandlerTest extends TestCase {
 		parent::setUp();
 
 		$app = $this->getUniqueID('MailQueueHandlerTest');
-		$this->userManager = $this->getMock('OCP\IUserManager');
+		$this->userManager = $this->createMock('OCP\IUserManager');
 
 		$connection = \OC::$server->getDatabaseConnection();
 		$query = $connection->prepare('INSERT INTO `*PREFIX*activity_mq` '
@@ -107,12 +107,12 @@ class MailQueueHandlerTest extends TestCase {
 		$this->message = $this->getMockBuilder('OC\Mail\Message')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->mailer = $this->getMock('OCP\Mail\IMailer');
+		$this->mailer = $this->createMock('OCP\Mail\IMailer');
 		$this->mailer->expects($this->any())
 			->method('createMessage')
 			->willReturn($this->message);
 		$this->mailQueueHandler = new MailQueueHandler(
-			$this->getMock('\OCP\IDateTimeFormatter'),
+			$this->createMock('\OCP\IDateTimeFormatter'),
 			$connection,
 			$this->dataHelper,
 			$this->mailer,
@@ -214,7 +214,7 @@ class MailQueueHandlerTest extends TestCase {
 		$this->message->expects($this->once())
 			->method('setFrom');
 
-		$userObject = $this->getMock('OCP\IUser');
+		$userObject = $this->createMock('OCP\IUser');
 		$userObject->expects($this->any())
 			->method('getDisplayName')
 			->willReturn($userDisplayName);

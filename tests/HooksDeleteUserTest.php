@@ -74,9 +74,9 @@ class HooksDeleteUserTest extends TestCase {
 
 	protected function tearDown() {
 		$data = new Data(
-			$this->getMock('\OCP\Activity\IManager'),
+			$this->createMock('\OCP\Activity\IManager'),
 			\OC::$server->getDatabaseConnection(),
-			$this->getMock('\OCP\IUserSession')
+			$this->createMock('\OCP\IUserSession')
 		);
 		$data->deleteActivities(array(
 			'type' => 'test',

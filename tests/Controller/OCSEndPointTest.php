@@ -106,7 +106,7 @@ class OCSEndPointTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->request = $this->getMock('OCP\IRequest');
+		$this->request = $this->createMock('OCP\IRequest');
 
 		$this->controller = $this->getController();
 
@@ -172,7 +172,7 @@ class OCSEndPointTest extends TestCase {
 			->willReturnArgument(0);
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->willReturn($this->getMock('OCP\IUser'));
+			->willReturn($this->createMock('OCP\IUser'));
 
 		$this->invokePrivate($this->controller, 'readParameters', [$params]);
 		$this->assertSame($filter, $this->invokePrivate($this->controller, 'filter'));
@@ -233,7 +233,7 @@ class OCSEndPointTest extends TestCase {
 			->willReturnArgument(0);
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->willReturn($this->getMock('OCP\IUser'));
+			->willReturn($this->createMock('OCP\IUser'));
 
 		$this->invokePrivate($this->controller, 'readParameters', [[]]);
 		$this->assertSame($expectedType, $this->invokePrivate($this->controller, 'objectType'));
@@ -276,7 +276,7 @@ class OCSEndPointTest extends TestCase {
 			->willReturnArgument(0);
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->willReturn($this->getMock('OCP\IUser'));
+			->willReturn($this->createMock('OCP\IUser'));
 
 		$this->invokePrivate($this->controller, 'readParameters', [[]]);
 		$this->assertSame($expectedValue, $this->invokePrivate($this->controller, $memberName));
@@ -294,7 +294,7 @@ class OCSEndPointTest extends TestCase {
 	 * @param string $uid
 	 */
 	public function testReadParameterUser($uid) {
-		$user = $this->getMock('OCP\IUser');
+		$user = $this->createMock('OCP\IUser');
 		$user->expects($this->once())
 			->method('getUID')
 			->willReturn($uid);
