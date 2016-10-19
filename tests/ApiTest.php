@@ -80,9 +80,9 @@ class ApiTest extends TestCase {
 
 	protected function tearDown() {
 		$data = new Data(
-			$this->getMock('OCP\Activity\IManager'),
+			$this->createMock('OCP\Activity\IManager'),
 			\OC::$server->getDatabaseConnection(),
-			$this->getMock('OCP\IUserSession')
+			$this->createMock('OCP\IUserSession')
 		);
 
 		$this->deleteUser($data, 'activity-api-user1');
@@ -172,15 +172,15 @@ class ApiTest extends TestCase {
 		$this->assertEquals($user, $sessionUser->getUID());
 
 		$activityManager = new \OC\Activity\Manager(
-			$this->getMock('OCP\IRequest'),
-			$this->getMock('OCP\IUserSession'),
-			$this->getMock('OCP\IConfig')
+			$this->createMock('OCP\IRequest'),
+			$this->createMock('OCP\IUserSession'),
+			$this->createMock('OCP\IConfig')
 		);
 		$activityManager->registerExtension(function() {
-			return new Extension(\OCP\Util::getL10N('activity', 'en'), $this->getMock('\OCP\IURLGenerator'));
+			return new Extension(\OCP\Util::getL10N('activity', 'en'), $this->createMock('\OCP\IURLGenerator'));
 		});
 		$this->overwriteService('ActivityManager', $activityManager);
-		$result = \OCA\Activity\Api::get(array('_route' => 'get_cloud_activity'));
+		$result = \OCA\Activity\Api::get();
 		$this->restoreService('ActivityManager');
 
 		$this->assertEquals(100, $result->getStatusCode());
