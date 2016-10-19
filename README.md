@@ -11,17 +11,35 @@ going on in your ownCloud.
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
 
+## QA metrics on stable9.1 branch:
+
+[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable9.1)](https://travis-ci.org/owncloud/activity/branches)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable9.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9.1)
+[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable9.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9.1)
+
+## QA metrics on stable9 branch:
+
+[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable9)](https://travis-ci.org/owncloud/activity/branches)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable9)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9)
+[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable9)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9)
+
+## QA metrics on stable8.2 branch:
+
+[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable8.2)](https://travis-ci.org/owncloud/activity/branches)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable8.2)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.2)
+[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable8.2)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.2)
+
+## QA metrics on stable8.1 branch:
+
+[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable8.1)](https://travis-ci.org/owncloud/activity/branches)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable8.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.1)
+[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable8.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.1)
+
 ## QA metrics on stable8 branch:
 
 [![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable8)](https://travis-ci.org/owncloud/activity/branches)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable8)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8)
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable8)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8)
-
-## QA metrics on stable7 branch:
-
-[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable7)](https://travis-ci.org/owncloud/activity/branches)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable7)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable7)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable7)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable7)
 
 # Add new activities / types for other apps
 
