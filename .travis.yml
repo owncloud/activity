@@ -1,8 +1,30 @@
+dist: trusty
+sudo: required
 language: php
 php:
   - 5.6
   - 7.0
   - 7.1
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+      - mysql-server-5.6
+      - mysql-client-core-5.6
+      - mysql-client-5.6
+      - alien
+      - libaio1
+
+cache:
+  directories:
+    - $HOME/.cache/bower
+    - $HOME/.composer/cache
+    - $HOME/.npm
+    - docker
+  apt: true
 
 env:
   global:
@@ -17,8 +39,10 @@ branches:
     - /^stable\d+(\.\d+)?$/
 
 before_install:
-  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-  - bash ./before_install.sh $APP_NAME $CORE_BRANCH $DB
+  - which php
+  - more `which pecl`
+  - which phpize
+  - bash tests/.travis/before_install.sh $APP_NAME $CORE_BRANCH $DB
 
   # Add some output debugging information
   - cd ../core
@@ -52,6 +76,8 @@ script:
 
 matrix:
   include:
+    - php: 5.6
+      env: DB=oracle
     - php: 5.6
       env: DB=mysql
     - php: 5.6
