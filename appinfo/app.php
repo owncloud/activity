@@ -21,7 +21,6 @@
  */
 
 $app = new \OCA\Activity\AppInfo\Application();
-$app->registerNavigationEntry();
 $app->registerActivityConsumer();
 $app->registerHooksAndEvents();
 $app->registerPersonalPage();
