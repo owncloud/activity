@@ -35,7 +35,7 @@ use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
 use OCP\Settings\ISettings;
 
-class Settings extends Controller implements ISettings {
+class SettingsController extends Controller implements ISettings {
 
 	/** @var \OCP\IConfig */
 	protected $config;
@@ -91,7 +91,7 @@ class Settings extends Controller implements ISettings {
 	}
 
 	public function getSectionID() {
-		return 'general';
+		return 'activity';
 	}
 
 	public function getPriority() {

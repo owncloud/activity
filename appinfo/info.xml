@@ -38,6 +38,6 @@
 	</background-jobs>
 
 	<settings>
-		<personal>OCA\Activity\Controller\Settings</personal>
+		<personal>OCA\Activity\Controller\SettingsController</personal>
 	</settings>
 </info>

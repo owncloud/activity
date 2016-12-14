@@ -22,7 +22,7 @@
 
 namespace OCA\Activity\Tests\Controller;
 
-use OCA\Activity\Controller\Settings;
+use OCA\Activity\Controller\SettingsController;
 use OCA\Activity\Tests\TestCase;
 use OCP\Activity\IExtension;
 
@@ -48,7 +48,7 @@ class SettingsTest extends TestCase {
 	/** @var \OCP\IL10N */
 	protected $l10n;
 
-	/** @var Settings */
+	/** @var SettingsController */
 	protected $controller;
 
 	protected function setUp() {
@@ -67,7 +67,7 @@ class SettingsTest extends TestCase {
 		$this->random = $this->createMock('OCP\Security\ISecureRandom');
 		$this->l10n = \OCP\Util::getL10N('activity', 'en');
 
-		$this->controller = new Settings(
+		$this->controller = new SettingsController(
 			'activity',
 			$this->request,
 			$this->config,
@@ -213,7 +213,7 @@ class SettingsTest extends TestCase {
 				],
 			]);
 
-		$renderedResponse = $this->controller->displayPanel()->render();
+		$renderedResponse = $this->controller->getPanel()->render();
 		$this->assertContains('<form id="activity_notifications" class="section">', $renderedResponse);
 
 		// Checkboxes for the type
@@ -253,7 +253,7 @@ class SettingsTest extends TestCase {
 			->method('getUserValue')
 			->willReturn($email);
 
-		$renderedResponse = $this->controller->displayPanel()->render();
+		$renderedResponse = $this->controller->getPanel()->render();
 		$this->assertContains('<form id="activity_notifications" class="section">', $renderedResponse);
 
 		if ($containsWarning) {
@@ -288,7 +288,7 @@ class SettingsTest extends TestCase {
 			->method('getUserSetting')
 			->willReturn($setting);
 
-		$renderedResponse = $this->controller->displayPanel()->render();
+		$renderedResponse = $this->controller->getPanel()->render();
 		$this->assertContains('<form id="activity_notifications" class="section">', $renderedResponse);
 
 		$this->assertContains('<option value="' . $selectedValue . '" selected="selected">' . $selectedLabel . '</option>', $renderedResponse);

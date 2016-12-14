@@ -27,7 +27,7 @@ use OCA\Activity\Controller\Activities;
 use OCA\Activity\Controller\EndPoint;
 use OCA\Activity\Controller\Feed;
 use OCA\Activity\Controller\OCSEndPoint;
-use OCA\Activity\Controller\Settings;
+use OCA\Activity\Controller\SettingsController;
 use OCA\Activity\Data;
 use OCA\Activity\DataHelper;
 use OCA\Activity\GroupHelper;
@@ -181,11 +181,11 @@ class Application extends App {
 		/**
 		 * Controller
 		 */
-		$container->registerService('Settings', function(IAppContainer $c) {
+		$container->registerService(SettingsController::class, function(IAppContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
-			return new Settings(
+			return new SettingsController(
 				$c->getAppName(),
 				$server->getRequest(),
 				$server->getConfig(),
