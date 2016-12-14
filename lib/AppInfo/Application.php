@@ -260,26 +260,6 @@ class Application extends App {
 	}
 
 	/**
-	 * Register the navigation entry
-	 */
-	public function registerNavigationEntry() {
-		$c = $this->getContainer();
-		/** @var \OCP\IServerContainer $server */
-		$server = $c->getServer();
-
-		$navigationEntry = function () use ($c, $server) {
-			return [
-				'id' => $c->getAppName(),
-				'order' => 1,
-				'name' => $c->query('OCP\IL10N')->t('Activity'),
-				'href' => $server->getURLGenerator()->linkToRoute('activity.Activities.showList'),
-				'icon' => $server->getURLGenerator()->imagePath($c->getAppName(), 'activity.svg'),
-			];
-		};
-		$server->getNavigationManager()->add($navigationEntry);
-	}
-
-	/**
 	 * Registers the consumer to the Activity Manager
 	 */
 	public function registerActivityConsumer() {

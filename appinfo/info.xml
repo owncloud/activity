@@ -36,4 +36,9 @@
 		<job>OCA\Activity\BackgroundJob\EmailNotification</job>
 		<job>OCA\Activity\BackgroundJob\ExpireActivities</job>
 	</background-jobs>
+
+	<navigation>
+		<order>1</order>
+		<route>activity.Activities.showList</route>
+	</navigation>
 </info>
