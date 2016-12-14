@@ -33,8 +33,10 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
+use OCP\Settings\ISettings;
 
-class Settings extends Controller {
+class Settings extends Controller implements ISettings {
+
 	/** @var \OCP\IConfig */
 	protected $config;
 
@@ -86,6 +88,14 @@ class Settings extends Controller {
 		$this->userSettings = $userSettings;
 		$this->l10n = $l10n;
 		$this->user = $user;
+	}
+
+	public function getSectionID() {
+		return 'general';
+	}
+
+	public function getPriority() {
+		return 51;
 	}
 
 	/**
@@ -156,7 +166,7 @@ class Settings extends Controller {
 	 *
 	 * @return TemplateResponse
 	 */
-	public function displayPanel() {
+	public function getPanel() {
 		$types = $this->data->getNotificationTypes($this->l10n);
 
 		$activities = array();
