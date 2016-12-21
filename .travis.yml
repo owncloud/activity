@@ -55,6 +55,8 @@ matrix:
     - php: 5.6
       env: DB=mysql
     - php: 5.6
+      env: DB=mysqlmb4
+    - php: 5.6
       env: DB=pgsql
     - php: 5.6
       env: DB=mysql;CODECHECK=1
