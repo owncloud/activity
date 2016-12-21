@@ -13,7 +13,7 @@ DATABASEUSER=oc_autotest
 ADMINLOGIN=admin
 BASEDIR=$PWD
 
-DBCONFIGS="sqlite mysql pgsql oracle"
+DBCONFIGS="sqlite mysql pgsql oracle mysqlmb4"
 PHPUNIT=$(which phpunit)
 
 # set oracle home if it is not set

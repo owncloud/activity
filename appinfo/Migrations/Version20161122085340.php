@@ -13,6 +13,8 @@ class Version20161122085340 implements ISchemaMigration {
 		if ($schema->hasTable("{$prefix}activity")) {
 			return;
 		}
+
+		// not that valid ....
 		$schemaReader = new MDB2SchemaReader(\OC::$server->getConfig(), \OC::$server->getDatabaseConnection()->getDatabasePlatform());
 		$schemaReader->loadSchemaFromFile(__DIR__ . '/../database.xml', $schema);
 	}

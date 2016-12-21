@@ -26,6 +26,14 @@ cd apps
 cp -R ../../$APP_NAME/ .
 cd $WORKDIR
 
+if [ "$DB" == "mysqlmb4" ] ; then
+  echo "Setting up mysqlmb4 ..."
+  cat "$WORKDIR/../core/tests/docker/mysqlmb4/mb4.cnf" | sudo tee -a /etc/mysql/my.cnf
+  sudo service mysql restart
+  DB="mysql"
+  cp $WORKDIR/../core/tests/docker/mysqlmb4.config.php ../core/config
+fi
+
 if [ "$DB" == "mysql" ] ; then
   echo "Setting up mysql ..."
   mysql -u root -e 'create database oc_autotest;'
