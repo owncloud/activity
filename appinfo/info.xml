@@ -22,14 +22,14 @@
 	</types>
 
 	<documentation>
-		<admin>https://doc.owncloud.org/server/9.1/admin_manual/configuration_server/activity_configuration.html</admin>
+		<admin>https://doc.owncloud.org/server/10.0/admin_manual/configuration_server/activity_configuration.html</admin>
     	</documentation>
 	<website>https://github.com/owncloud/activity/</website>
     	<bugs>https://github.com/owncloud/activity/issues</bugs>
     	<repository type="git">https://github.com/owncloud/activity.git</repository>
 
 	<dependencies>
-		<owncloud min-version="9.2" max-version="9.2" />
+		<owncloud min-version="10.0" max-version="10.0" />
 	</dependencies>
 
 	<background-jobs>
