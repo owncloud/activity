@@ -7,7 +7,7 @@ php:
 
 env:
   global:
-    - CORE_BRANCH=stable9.1
+    - CORE_BRANCH=master
     - APP_NAME=activity
   matrix:
     - DB=sqlite
