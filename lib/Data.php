@@ -222,6 +222,9 @@ class Data {
 					'file_created',
 					'file_changed',
 					'file_deleted',
+					'file_renamed',
+					'file_movedin',
+					'file_movedout',
 					'file_restored',
 				], IQueryBuilder::PARAM_STR_ARRAY))
 			));
@@ -234,6 +237,9 @@ class Data {
 						'file_created',
 						'file_changed',
 						'file_deleted',
+						'file_renamed',
+						'file_movedin',
+						'file_movedout',
 						'file_restored',
 					], IQueryBuilder::PARAM_STR_ARRAY))
 				));

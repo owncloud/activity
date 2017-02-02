@@ -245,10 +245,10 @@ class FilesHooks {
 
 			if ($user === $this->currentUser) {
 				$userSubject = $subject;
-				$userParams = [[$fileId => $path]];
+				$userParams = [[$fileId => $filePath], [$fileId => $filePath]];
 			} else {
 				$userSubject = $subjectBy;
-				$userParams = [[$fileId => $path], $this->currentUser];
+				$userParams = [[$fileId => $filePath], [$fileId => $filePath], $this->currentUser];
 			}
 
 			$this->addNotificationsForUser(
@@ -292,22 +292,27 @@ class FilesHooks {
 			// users seeing a rename, both source and target visible
 			Files::TYPE_SHARE_RENAMED => array_intersect_key($oldAffectedUsers, $newAffectedUsers),
 			// users seeing a move in, only target visible
-			Files_Sharing::TYPE_SHARE_MOVEIN => array_diff_key($newAffectedUsers, $oldAffectedUsers),
+			Files::TYPE_SHARE_MOVEDIN => array_diff_key($newAffectedUsers, $oldAffectedUsers),
 			// users seeing a move out, only target visible
-			Files_Sharing::TYPE_SHARE_MOVEOUT => array_diff_key($oldAffectedUsers, $newAffectedUsers),
+			Files::TYPE_SHARE_MOVEDOUT => array_diff_key($oldAffectedUsers, $newAffectedUsers),
 		];
 
 		foreach ($types as $activityType => $affectedUsers) {
-			// TODO filter streams, add new activity types
-			// $filteredStreamUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'stream', $activityType);
-			// $filteredEmailUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'email', $activityType);
+			$filteredStreamUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'stream', $activityType);
+			$filteredEmailUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'email', $activityType);
 			foreach ($affectedUsers as $user => $path) {
+				if (empty($filteredStreamUsers[$user]) && empty($filteredEmailUsers[$user])) {
+					continue;
+				}
+
+				// use $oldPath as parameter because that one cannot be resolved back
+				// and fileid can be used to find the new path when displaying
 				if ($user === $this->currentUser) {
 					$userSubject = $subject;
-					$userParams = [[$fileId => [basename($oldPath), basename($newPath)]]];
+					$userParams = [[$fileId => $oldPath]];
 				} else {
 					$userSubject = $subjectBy;
-					$userParams = [[$fileId => [basename($oldPath), basename($newPath)]], $this->currentUser];
+					$userParams = [[$fileId => $oldPath], $this->currentUser];
 				}
 
 				$this->addNotificationsForUser(
@@ -317,8 +322,8 @@ class FilesHooks {
 					$fileId,
 					$newPath,
 					true,
-					true, //!empty($filteredStreamUsers[$user]),
-					true, //!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
+					!empty($filteredStreamUsers[$user]),
+					!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
 					$activityType
 				);
 			}
