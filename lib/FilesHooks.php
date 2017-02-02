@@ -126,6 +126,19 @@ class FilesHooks {
 	}
 
 	/**
+	 * Store the rename hook events
+	 * @param string $oldPath Path of the file before rename
+	 * @param string $newPath Path of the file after rename
+	 */
+	public function fileRename($oldPath, $newPath) {
+		if ($this->getCurrentUser() !== false) {
+			$this->addNotificationsForFileRename($oldPath, $newPath, 'renamed_self', 'renamed_by');
+		} else {
+			$this->addNotificationsForFileRename($oldPath, $newPath, '', 'renamed_public');
+		}
+	}
+
+	/**
 	 * Store the restore hook events
 	 * @param string $path Path of the file that has been restored
 	 */
@@ -173,6 +186,71 @@ class FilesHooks {
 			$this->addNotificationsForUser(
 				$user, $userSubject, $userParams,
 				$fileId, $path, true,
+				!empty($filteredStreamUsers[$user]),
+				!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
+				$activityType
+			);
+		}
+	}
+
+	/**
+	 * Creates the entries for file rename from $oldPath to $newPath
+	 *
+	 * @param string $oldPath          The previous path
+	 * @param string $newPath          The new path
+	 * @param string $subject          The subject for the actor
+	 * @param string $subjectBy        The subject for other users (with "by $actor")
+	 */
+	protected function addNotificationsForFileRename($oldPath, $newPath, $subject, $subjectBy) {
+		// Do not add activities for .part-files
+		if (substr($oldPath, -5) === '.part') {
+			return;
+		}
+
+		$activityType = Files::TYPE_SHARE_RENAMED;
+
+		list($oldPath, $oldUidOwner, $oldFileId) = $this->getSourcePathAndOwner($oldPath);
+		if (!$oldFileId) {
+			// no owner, possibly deleted or unknown
+			// skip notifications
+			return;
+		}
+		list($newPath, $newUidOwner, $newFileId) = $this->getSourcePathAndOwner($newPath);
+		if (!$newFileId) {
+			// no owner, possibly deleted or unknown
+			// skip notifications
+			return;
+		}
+
+		if ($oldFileId !== $newFileId) {
+			// should not happen, we can't link to the entry properly, skipping
+			return;
+		}
+
+		// TODO: for cross-storage move, different text in case the owner or recipient sees the file disappear
+		// TODO: for cross-storage move, different text in case the owner or recipient sees the file appear
+
+		$affectedUsers = $this->getUserPathsFromPath($oldPath, $oldUidOwner);
+		$affectedUsers = array_merge($affectedUsers, $this->getUserPathsFromPath($newPath, $newUidOwner));
+		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'stream', $activityType);
+		$filteredEmailUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'email', $activityType);
+
+		foreach ($affectedUsers as $user => $path) {
+			if (empty($filteredStreamUsers[$user]) && empty($filteredEmailUsers[$user])) {
+				continue;
+			}
+
+			if ($user === $this->currentUser) {
+				$userSubject = $subject;
+				$userParams = [[$oldFileId => [$oldPath, $newPath]]];
+			} else {
+				$userSubject = $subjectBy;
+				$userParams = [[$oldFileId => [$oldPath, $newPath]], $this->currentUser];
+			}
+
+			$this->addNotificationsForUser(
+				$user, $userSubject, $userParams,
+				$oldFileId, $newPath, true,
 				!empty($filteredStreamUsers[$user]),
 				!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
 				$activityType

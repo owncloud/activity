@@ -62,6 +62,17 @@ class FilesHooksStatic {
 	}
 
 	/**
+	 * Store the rename hook events
+	 * @param array $params The hook params
+	 */
+	public static function fileRename($params) {
+		self::getHooks()->fileRename(
+			$params['oldpath'],
+			$params['newpath']
+		);
+	}
+
+	/**
 	 * Store the restore hook events
 	 * @param array $params The hook params
 	 */
