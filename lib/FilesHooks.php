@@ -67,6 +67,9 @@ class FilesHooks {
 	/** @var string|false */
 	protected $currentUser;
 
+	/** @var array */
+	protected $renameInfo = [];
+
 	/**
 	 * Constructor
 	 *
@@ -130,12 +133,77 @@ class FilesHooks {
 	 * @param string $oldPath Path of the file before rename
 	 * @param string $newPath Path of the file after rename
 	 */
-	public function fileRename($oldPath, $newPath) {
-		if ($this->getCurrentUser() !== false) {
-			$this->addNotificationsForFileRename($oldPath, $newPath, 'renamed_self', 'renamed_by');
-		} else {
-			$this->addNotificationsForFileRename($oldPath, $newPath, '', 'renamed_public');
+	public function fileBeforeRename($oldPath, $newPath) {
+		// Do not add activities for .part-files
+		if (substr($oldPath, -5) === '.part') {
+			return;
 		}
+		list($filePath, $uidOwner, $fileId) = $this->getSourcePathAndOwner($oldPath);
+		if (!$fileId) {
+			// no owner, possibly deleted or unknown
+			// skip notifications
+			return;
+		}
+		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
+
+		$this->renameInfo[$oldPath] = [
+			'oldAffectedUsers' => $affectedUsers,
+			'oldPath' => $filePath,
+			'oldUidOwner' => $uidOwner,
+			'oldFileId' => $fileId,
+		];
+	}
+
+	/**
+	 * Store the rename hook events
+	 * @param string $oldPath Path of the file before rename
+	 * @param string $newPath Path of the file after rename
+	 */
+	public function fileRename($oldPath, $newPath) {
+		// Do not add activities for .part-files
+		if (substr($oldPath, -5) === '.part') {
+			return;
+		}
+
+		list($filePath, $uidOwner, $fileId) = $this->getSourcePathAndOwner($newPath);
+		if (!$fileId) {
+			// no owner, possibly deleted or unknown
+			// skip notifications
+			return;
+		}
+		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
+
+		if (!isset($this->renameInfo[$oldPath])) {
+			// no pre hook? can't do anything
+			return;
+		}
+
+		$renameInfo = $this->renameInfo[$oldPath];
+		unset($this->renameInfo[$oldPath]);
+
+		if ($fileId !== $renameInfo['oldFileId']) {
+			// file id changed, we can't point to it accurately
+			return;
+		}
+
+		if ($this->getCurrentUser() !== false) {
+			$subject = 'renamed_self';
+			$subjectBy = 'renamed_by';
+		} else {
+			$subject = '';
+			$subjectBy = 'renamed_public';
+		}
+		$this->addNotificationsForFileRename(
+			$renameInfo['oldPath'],
+			$renameInfo['oldUidOwner'],
+			$renameInfo['oldAffectedUsers'],
+			$filePath,
+			$uidOwner,
+			$affectedUsers,
+			$fileId,
+			$subject,
+			$subjectBy
+		);
 	}
 
 	/**
@@ -196,65 +264,64 @@ class FilesHooks {
 	/**
 	 * Creates the entries for file rename from $oldPath to $newPath
 	 *
-	 * @param string $oldPath          The previous path
-	 * @param string $newPath          The new path
+	 * @param string $oldPath          The source path including user name, relative to the data dir
+	 * @param string $oldUidOwner      The source path owner
+	 * @param string $oldAffectedUsers The affected users from the old path
+	 * @param string $newPath          The target path including user name, relative to the data dir
+	 * @param string $newUidOwner      The target path owner
+	 * @param string $newAffectedUsers The affected users from the new path
+	 * @param string $fileId           The file id
 	 * @param string $subject          The subject for the actor
 	 * @param string $subjectBy        The subject for other users (with "by $actor")
 	 */
-	protected function addNotificationsForFileRename($oldPath, $newPath, $subject, $subjectBy) {
-		// Do not add activities for .part-files
-		if (substr($oldPath, -5) === '.part') {
-			return;
-		}
-
+	protected function addNotificationsForFileRename(
+		$oldPath,
+		$oldUidOwner,
+		$oldAffectedUsers,
+		$newPath,
+		$newUidOwner,
+		$newAffectedUsers,
+		$fileId,
+		$subject,
+		$subjectBy
+	) {
 		$activityType = Files::TYPE_SHARE_RENAMED;
 
-		list($oldPath, $oldUidOwner, $oldFileId) = $this->getSourcePathAndOwner($oldPath);
-		if (!$oldFileId) {
-			// no owner, possibly deleted or unknown
-			// skip notifications
-			return;
-		}
-		list($newPath, $newUidOwner, $newFileId) = $this->getSourcePathAndOwner($newPath);
-		if (!$newFileId) {
-			// no owner, possibly deleted or unknown
-			// skip notifications
-			return;
-		}
+		// FIXME: use more efficient algo
+		$types = [
+			// users seeing a rename, both source and target visible
+			Files::TYPE_SHARE_RENAMED => array_intersect_key($oldAffectedUsers, $newAffectedUsers),
+			// users seeing a move in, only target visible
+			Files_Sharing::TYPE_SHARE_MOVEIN => array_diff_key($newAffectedUsers, $oldAffectedUsers),
+			// users seeing a move out, only target visible
+			Files_Sharing::TYPE_SHARE_MOVEOUT => array_diff_key($oldAffectedUsers, $newAffectedUsers),
+		];
 
-		if ($oldFileId !== $newFileId) {
-			// should not happen, we can't link to the entry properly, skipping
-			return;
-		}
+		foreach ($types as $activityType => $affectedUsers) {
+			// TODO filter streams, add new activity types
+			// $filteredStreamUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'stream', $activityType);
+			// $filteredEmailUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'email', $activityType);
+			foreach ($affectedUsers as $user => $path) {
+				if ($user === $this->currentUser) {
+					$userSubject = $subject;
+					$userParams = [[$fileId => [basename($oldPath), basename($newPath)]]];
+				} else {
+					$userSubject = $subjectBy;
+					$userParams = [[$fileId => [basename($oldPath), basename($newPath)]], $this->currentUser];
+				}
 
-		// TODO: for cross-storage move, different text in case the owner or recipient sees the file disappear
-		// TODO: for cross-storage move, different text in case the owner or recipient sees the file appear
-
-		$affectedUsers = $this->getUserPathsFromPath($oldPath, $oldUidOwner);
-		$affectedUsers = array_merge($affectedUsers, $this->getUserPathsFromPath($newPath, $newUidOwner));
-		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'stream', $activityType);
-		$filteredEmailUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'email', $activityType);
-
-		foreach ($affectedUsers as $user => $path) {
-			if (empty($filteredStreamUsers[$user]) && empty($filteredEmailUsers[$user])) {
-				continue;
+				$this->addNotificationsForUser(
+					$user,
+					$userSubject,
+					$userParams,
+					$fileId,
+					$newPath,
+					true,
+					true, //!empty($filteredStreamUsers[$user]),
+					true, //!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
+					$activityType
+				);
 			}
-
-			if ($user === $this->currentUser) {
-				$userSubject = $subject;
-				$userParams = [[$oldFileId => [$oldPath, $newPath]]];
-			} else {
-				$userSubject = $subjectBy;
-				$userParams = [[$oldFileId => [$oldPath, $newPath]], $this->currentUser];
-			}
-
-			$this->addNotificationsForUser(
-				$user, $userSubject, $userParams,
-				$oldFileId, $newPath, true,
-				!empty($filteredStreamUsers[$user]),
-				!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
-				$activityType
-			);
 		}
 	}
 

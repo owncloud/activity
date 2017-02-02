@@ -23,4 +23,6 @@ namespace OCA\Activity\Extension;
 
 class Files_Sharing {
 	const TYPE_SHARED = 'shared';
+	const TYPE_SHARE_MOVEIN = 'share_movein';
+	const TYPE_SHARE_MOVEOUT = 'share_moveout';
 }

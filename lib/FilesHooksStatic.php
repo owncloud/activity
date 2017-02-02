@@ -30,11 +30,18 @@ use OCP\Util;
 class FilesHooksStatic {
 
 	/**
+	 * @var Appinfo\Application
+	 */
+	private static $app = null;
+
+	/**
 	 * @return FilesHooks
 	 */
 	static protected function getHooks() {
-		$app = new AppInfo\Application();
-		return $app->getContainer()->query('Hooks');
+		if (self::$app === null) {
+			self::$app = new AppInfo\Application();
+		}
+		return self::$app->getContainer()->query('Hooks');
 	}
 
 	/**
@@ -59,6 +66,17 @@ class FilesHooksStatic {
 	 */
 	public static function fileDelete($params) {
 		self::getHooks()->fileDelete($params['path']);
+	}
+
+	/**
+	 * Store the preRename hook events
+	 * @param array $params The hook params
+	 */
+	public static function fileBeforeRename($params) {
+		self::getHooks()->fileBeforeRename(
+			$params['oldpath'],
+			$params['newpath']
+		);
 	}
 
 	/**
