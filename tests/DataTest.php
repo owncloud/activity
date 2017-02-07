@@ -21,6 +21,7 @@
 
 namespace OCA\Activity\Tests;
 
+use OC\DB\QueryBuilder\Literal;
 use OCA\Activity\Data;
 use OCA\Activity\Tests\Mock\Extension;
 use OCP\Activity\IExtension;
@@ -361,8 +362,8 @@ class DataTest extends TestCase {
 
 	public function dataSetOffsetFromSince() {
 		return [
-			['ASC', '`timestamp` >= \'123465789\'', '`activity_id` > \'{id}\'', null, null, null],
-			['DESC', '`timestamp` <= \'123465789\'', '`activity_id` < \'{id}\'', null, null, null],
+			['ASC', '`timestamp` >= 123465789', '`activity_id` > {id}', null, null, null],
+			['DESC', '`timestamp` <= 123465789', '`activity_id` < {id}', null, null, null],
 			['DESC', null, null, 'invalid-user', null, null],
 			['DESC', null, null, null, 1, 'X-Activity-First-Known'],
 			['DESC', null, null, 'user', false, null],
@@ -385,7 +386,9 @@ class DataTest extends TestCase {
 		if ($offsetUser === null) {
 			$offsetUser = $user;
 		} else if ($offsetUser === 'invalid-user') {
-			$this->setExpectedException('OutOfBoundsException', 'Invalid since', 2);
+			$this->expectException('OutOfBoundsException');
+			$this->expectExceptionMessage('Invalid since');
+			$this->expectExceptionCode(2);
 		}
 
 		$connection = \OC::$server->getDatabaseConnection();
@@ -411,7 +414,7 @@ class DataTest extends TestCase {
 		$mock->expects($this->any())
 			->method('createNamedParameter')
 			->willReturnCallback(function ($arg) use ($query) {
-				return $query->expr()->literal($arg);
+				return new Literal($arg);
 			});
 		if ($timestampWhere !== null && $idWhere !== null) {
 			$mock->expects($this->exactly(2))
