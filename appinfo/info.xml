@@ -42,4 +42,8 @@
 		<order>1</order>
 		<route>activity.Activities.showList</route>
 	</navigation>
+
+	<settings>
+		<personal>OCA\Activity\PersonalPanel</personal>
+	</settings>
 </info>

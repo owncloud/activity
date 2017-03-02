@@ -23,4 +23,3 @@
 $app = new \OCA\Activity\AppInfo\Application();
 $app->registerActivityConsumer();
 $app->registerHooksAndEvents();
-$app->registerPersonalPage();
