@@ -297,10 +297,4 @@ class Application extends App {
 		Util::connectHook('OCP\Share', 'pre_unshare', 'OCA\Activity\FilesHooksStatic', 'unShare');
 	}
 
-	/**
-	 * Register personal settings for notifications and emails
-	 */
-	public function registerPersonalPage() {
-		\OCP\App::registerPersonal($this->getContainer()->getAppName(), 'personal');
-	}
 }
