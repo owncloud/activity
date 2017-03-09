@@ -20,16 +20,35 @@
  */
 
 namespace OCA\Activity\Tests;
+use OCA\Activity\AppInfo\Application;
+use OCA\Activity\Controller\Settings;
+use OCA\Activity\PersonalPanel;
+use OCP\AppFramework\IAppContainer;
 
 /**
  * Class PersonalTest
  *
- * @group DB
  * @package OCA\Activity\Tests
  */
 class PersonalTest extends TestCase {
-	public function testInclude() {
-		$settingsPage = include '../personal.php';
-		$this->assertNotEmpty(include '../personal.php', 'Asserting that the personal.php does produce output.');
+
+	protected $panel;
+	protected $app;
+
+	public function setUp() {
+		parent::setUp();
+		$this->app = $this->getMockBuilder(Application::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$this->panel = new PersonalPanel($this->app);
+	}
+
+	public function testReturnsTemplateResponse() {
+		$container = $this->getMockBuilder(IAppContainer::class)->getMock();
+		$controller = $this->getMockBuilder(Settings::class)
+			->disableOriginalConstructor()->getMock();
+		$container->expects($this->once())->method('query')->willReturn($controller);
+		$this->app->expects($this->once())->method('getContainer')->willReturn($container);
+		$tmpl = $this->panel->getPanel();
 	}
 }
