@@ -77,8 +77,8 @@ class EmailNotificationTest extends TestCase {
 			->method('getAffectedUsers')
 			->with(2, 200)
 			->willReturn([
-				'test1',
-				'test2',
+				['uid' => 'test1', 'email' => 'test1@localhost'],
+				['uid' => 'test2', 'email' => ''],
 			]);
 		$mailQueueHandler->expects($this->once())
 			->method('sendEmailToUser')
@@ -86,13 +86,6 @@ class EmailNotificationTest extends TestCase {
 		$config->expects($this->any())
 			->method('getUserValueForUsers')
 			->willReturnMap([
-				['settings', 'email', [
-					'test1',
-					'test2',
-				], [
-					'test1' => 'test1@localhost',
-					'test2' => '',
-				]],
 				['core', 'lang', [
 					'test1',
 					'test2',
