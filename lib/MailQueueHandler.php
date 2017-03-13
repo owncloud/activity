@@ -112,7 +112,7 @@ class MailQueueHandler {
 		$query = $this->connection->prepare(
 			'SELECT `amq_affecteduser`, `email`, MIN(`amq_latest_send`) AS `amq_trigger_time` '
 			. ' FROM `*PREFIX*activity_mq` '
-			. ' JOIN `*PREFIX*oc_accounts` ON `user_id` = `amq_affecteduser` '
+			. ' JOIN `*PREFIX*accounts` ON `user_id` = `amq_affecteduser` '
 			. ' WHERE `amq_latest_send` < ? '
 			. ' GROUP BY `amq_affecteduser` '
 			. ' ORDER BY `amq_trigger_time` ASC',
