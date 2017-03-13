@@ -12,7 +12,9 @@
 	"contributors": [],
 	"dependencies": {},
 	"devDependencies": {
+		"jasmine-sinon": "*",
 		"karma-jasmine": "*",
+		"karma-jasmine-sinon": "*",
 		"karma-phantomjs-launcher": "*"
 	},
 	"engine": "node >= 0.8"
