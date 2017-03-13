@@ -116,22 +116,22 @@ class EmailNotification extends TimedJob {
 
 		$userLanguages = $this->config->getUserValueForUsers('core', 'lang', $affectedUsers);
 		$userTimezones = $this->config->getUserValueForUsers('core', 'timezone', $affectedUsers);
-		$userEmails = $this->config->getUserValueForUsers('settings', 'email', $affectedUsers);
 
 		// Send Email
 		$default_lang = $this->config->getSystemValue('default_language', 'en');
 		$defaultTimeZone = date_default_timezone_get();
 		foreach ($affectedUsers as $user) {
-			if (empty($userEmails[$user])) {
+			$uid = $user['uid'];
+			if (empty($user['email'])) {
 				// The user did not setup an email address
 				// So we will not send an email :(
-				$this->logger->debug("Couldn't send notification email to user '" . $user . "' (email address isn't set for that user)", ['app' => 'activity']);
+				$this->logger->debug("Couldn't send notification email to user '$uid' (email address isn't set for that user)", ['app' => 'activity']);
 				continue;
 			}
 
-			$language = (!empty($userLanguages[$user])) ? $userLanguages[$user] : $default_lang;
-			$timezone = (!empty($userTimezones[$user])) ? $userTimezones[$user] : $defaultTimeZone;
-			$this->mqHandler->sendEmailToUser($user, $userEmails[$user], $language, $timezone, $sendTime);
+			$language = (!empty($userLanguages[$uid])) ? $userLanguages[$uid] : $default_lang;
+			$timezone = (!empty($userTimezones[$uid])) ? $userTimezones[$uid] : $defaultTimeZone;
+			$this->mqHandler->sendEmailToUser($uid, $user['email'], $language, $timezone, $sendTime);
 		}
 
 		// Delete all entries we dealt with
@@ -139,4 +139,5 @@ class EmailNotification extends TimedJob {
 
 		return sizeof($affectedUsers);
 	}
+
 }
