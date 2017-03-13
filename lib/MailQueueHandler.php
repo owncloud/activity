@@ -114,7 +114,7 @@ class MailQueueHandler {
 			. ' FROM `*PREFIX*activity_mq` '
 			. ' JOIN `*PREFIX*accounts` ON `user_id` = `amq_affecteduser` '
 			. ' WHERE `amq_latest_send` < ? '
-			. ' GROUP BY `amq_affecteduser` '
+			. ' GROUP BY `amq_affecteduser`, `email` '
 			. ' ORDER BY `amq_trigger_time` ASC',
 			$limit);
 		$query->execute(array($latestSend));
