@@ -113,9 +113,12 @@ class EmailNotification extends TimedJob {
 			// No users found to notify, mission abort
 			return 0;
 		}
+		$affectedUIDs = array_map(function($u) {
+			return $u['uid'];
+		}, $affectedUsers);
 
-		$userLanguages = $this->config->getUserValueForUsers('core', 'lang', $affectedUsers);
-		$userTimezones = $this->config->getUserValueForUsers('core', 'timezone', $affectedUsers);
+		$userLanguages = $this->config->getUserValueForUsers('core', 'lang', $affectedUIDs);
+		$userTimezones = $this->config->getUserValueForUsers('core', 'timezone', $affectedUIDs);
 
 		// Send Email
 		$default_lang = $this->config->getSystemValue('default_language', 'en');
