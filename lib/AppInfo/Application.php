@@ -177,6 +177,13 @@ class Application extends App {
 			$user = $server->getUserSession()->getUser();
 			return ($user) ? $user->getUID() : '';
 		});
+		$container->registerService('CurrentUser', function(IContainer $c) {
+			/** @var \OC\Server $server */
+			$server = $c->query('ServerContainer');
+
+			$user = $server->getUserSession()->getUser();
+			return $user;
+		});
 
 		/**
 		 * Controller
@@ -189,12 +196,12 @@ class Application extends App {
 				$c->getAppName(),
 				$server->getRequest(),
 				$server->getConfig(),
-				$server->getSecureRandom()->getMediumStrengthGenerator(),
+				$server->getSecureRandom(),
 				$server->getURLGenerator(),
 				$c->query('ActivityData'),
 				$c->query('UserSettings'),
 				$c->query('OCP\IL10N'),
-				$c->query('CurrentUID')
+				$c->query('CurrentUser')
 			);
 		});
 

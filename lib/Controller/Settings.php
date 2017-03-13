@@ -32,6 +32,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUser;
 use OCP\Security\ISecureRandom;
 
 class Settings extends Controller {
@@ -53,7 +54,7 @@ class Settings extends Controller {
 	/** @var \OCP\IL10N */
 	protected $l10n;
 
-	/** @var string */
+	/** @var IUser */
 	protected $user;
 
 	/**
@@ -67,7 +68,7 @@ class Settings extends Controller {
 	 * @param Data $data
 	 * @param UserSettings $userSettings
 	 * @param IL10N $l10n
-	 * @param string $user
+	 * @param IUser $user
 	 */
 	public function __construct($appName,
 								IRequest $request,
@@ -77,7 +78,7 @@ class Settings extends Controller {
 								Data $data,
 								UserSettings $userSettings,
 								IL10N $l10n,
-								$user) {
+								IUser $user) {
 		parent::__construct($appName, $request);
 		$this->config = $config;
 		$this->random = $random;
@@ -105,7 +106,7 @@ class Settings extends Controller {
 		foreach ($types as $type => $data) {
 			if (!is_array($data) || (isset($data['methods']) && in_array(IExtension::METHOD_MAIL, $data['methods']))) {
 				$this->config->setUserValue(
-					$this->user, 'activity',
+					$this->user->getUID(), 'activity',
 					'notify_email_' . $type,
 					(int) $this->request->getParam($type . '_email', false)
 				);
@@ -113,7 +114,7 @@ class Settings extends Controller {
 
 			if (!is_array($data) || (isset($data['methods']) && in_array(IExtension::METHOD_STREAM, $data['methods']))) {
 				$this->config->setUserValue(
-					$this->user, 'activity',
+					$this->user->getUID(), 'activity',
 					'notify_stream_' . $type,
 					(int) $this->request->getParam($type . '_stream', false)
 				);
@@ -128,17 +129,17 @@ class Settings extends Controller {
 		}
 
 		$this->config->setUserValue(
-			$this->user, 'activity',
+			$this->user->getUID(), 'activity',
 			'notify_setting_batchtime',
 			$email_batch_time
 		);
 		$this->config->setUserValue(
-			$this->user, 'activity',
+			$this->user->getUID(), 'activity',
 			'notify_setting_self',
 			(int) $notify_setting_self
 		);
 		$this->config->setUserValue(
-			$this->user, 'activity',
+			$this->user->getUID(), 'activity',
 			'notify_setting_selfemail',
 			(int) $notify_setting_selfemail
 		);
@@ -170,14 +171,14 @@ class Settings extends Controller {
 
 			$activities[$type] = array(
 				'desc'		=> $desc,
-				IExtension::METHOD_MAIL		=> $this->userSettings->getUserSetting($this->user, 'email', $type),
-				IExtension::METHOD_STREAM	=> $this->userSettings->getUserSetting($this->user, 'stream', $type),
+				IExtension::METHOD_MAIL		=> $this->userSettings->getUserSetting($this->user->getUID(), 'email', $type),
+				IExtension::METHOD_STREAM	=> $this->userSettings->getUserSetting($this->user->getUID(), 'stream', $type),
 				'methods'	=> $methods,
 			);
 		}
 
 		$settingBatchTime = UserSettings::EMAIL_SEND_HOURLY;
-		$currentSetting = (int) $this->userSettings->getUserSetting($this->user, 'setting', 'batchtime');
+		$currentSetting = (int) $this->userSettings->getUserSetting($this->user->getUID(), 'setting', 'batchtime');
 		if ($currentSetting === 3600 * 24 * 7) {
 			$settingBatchTime = UserSettings::EMAIL_SEND_WEEKLY;
 		} else if ($currentSetting === 3600 * 24) {
@@ -186,12 +187,12 @@ class Settings extends Controller {
 
 		return new TemplateResponse('activity', 'personal', [
 			'activities'		=> $activities,
-			'activity_email'	=> $this->config->getUserValue($this->user, 'settings', 'email', ''),
+			'activity_email'	=> $this->user->getEMailAddress(),
 
 			'setting_batchtime'	=> $settingBatchTime,
 
-			'notify_self'		=> $this->userSettings->getUserSetting($this->user, 'setting', 'self'),
-			'notify_selfemail'	=> $this->userSettings->getUserSetting($this->user, 'setting', 'selfemail'),
+			'notify_self'		=> $this->userSettings->getUserSetting($this->user->getUID(), 'setting', 'self'),
+			'notify_selfemail'	=> $this->userSettings->getUserSetting($this->user->getUID(), 'setting', 'selfemail'),
 
 			'methods'			=> [
 				IExtension::METHOD_MAIL => $this->l10n->t('Mail'),
@@ -221,7 +222,7 @@ class Settings extends Controller {
 			$tokenUrl = $this->urlGenerator->linkToRouteAbsolute('activity.Feed.show', ['token' => $token]);
 		}
 
-		$this->config->setUserValue($this->user, 'activity', 'rsstoken', $token);
+		$this->config->setUserValue($this->user->getUID(), 'activity', 'rsstoken', $token);
 
 		return new DataResponse(array(
 			'data'		=> array(
