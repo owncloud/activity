@@ -44,7 +44,6 @@ module.exports = function(config) {
 
 	var coreModules = require(ownCloudPath + '../../core/js/core.json');
 	var coreLibs = [
-		ownCloudPath + 'core/js/tests/lib/sinon-1.15.4.js',
 		ownCloudPath + 'core/js/tests/specHelper.js'
 	];
 
@@ -71,7 +70,7 @@ module.exports = function(config) {
 		basePath: basePath,
 
 		// frameworks to use
-		frameworks: ['jasmine'],
+		frameworks: ['jasmine', 'jasmine-sinon'],
 
 		// list of files / patterns to load in the browser
 		files: files,
