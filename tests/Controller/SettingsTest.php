@@ -23,26 +23,34 @@
 namespace OCA\Activity\Tests\Controller;
 
 use OCA\Activity\Controller\Settings;
+use OCA\Activity\Data;
 use OCA\Activity\Tests\TestCase;
+use OCA\Activity\UserSettings;
 use OCP\Activity\IExtension;
+use OCP\IConfig;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\Security\ISecureRandom;
+use OCP\Util;
 
 class SettingsTest extends TestCase {
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IConfig |  \PHPUnit_Framework_MockObject_MockObject */
 	protected $config;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRequest | \PHPUnit_Framework_MockObject_MockObject */
 	protected $request;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IURLGenerator | \PHPUnit_Framework_MockObject_MockObject */
 	protected $urlGenerator;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var Data | \PHPUnit_Framework_MockObject_MockObject */
 	protected $data;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var ISecureRandom | \PHPUnit_Framework_MockObject_MockObject */
 	protected $random;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var UserSettings | \PHPUnit_Framework_MockObject_MockObject */
 	protected $userSettings;
 
 	/** @var \OCP\IL10N */
@@ -51,21 +59,27 @@ class SettingsTest extends TestCase {
 	/** @var Settings */
 	protected $controller;
 
+	/** @var IUser | \PHPUnit_Framework_MockObject_MockObject */
+	private $user;
+
 	protected function setUp() {
 		parent::setUp();
 
-		$this->data = $this->getMockBuilder('OCA\Activity\Data')
+		$this->data = $this->getMockBuilder(Data::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$this->userSettings = $this->getMockBuilder('OCA\Activity\UserSettings')
+		$this->userSettings = $this->getMockBuilder(UserSettings::class)
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->config = $this->createMock('OCP\IConfig');
-		$this->request = $this->createMock('OCP\IRequest');
-		$this->urlGenerator = $this->createMock('OCP\IURLGenerator');
-		$this->random = $this->createMock('OCP\Security\ISecureRandom');
-		$this->l10n = \OCP\Util::getL10N('activity', 'en');
+		$this->config = $this->createMock(IConfig::class);
+		$this->request = $this->createMock(IRequest::class);
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
+		$this->random = $this->createMock(ISecureRandom::class);
+		$this->l10n = Util::getL10N('activity', 'en');
+
+		$this->user = $this->createMock(IUser::class);
+		$this->user->expects($this->any())->method('getUID')->willReturn('test');
 
 		$this->controller = new Settings(
 			'activity',
@@ -76,7 +90,7 @@ class SettingsTest extends TestCase {
 			$this->data,
 			$this->userSettings,
 			$this->l10n,
-			'test'
+			$this->user
 		);
 	}
 
@@ -249,8 +263,8 @@ class SettingsTest extends TestCase {
 		$this->data->expects($this->any())
 			->method('getNotificationTypes')
 			->willReturn([]);
-		$this->config->expects($this->any())
-			->method('getUserValue')
+		$this->user->expects($this->any())
+			->method('getEmailAddress')
 			->willReturn($email);
 
 		$renderedResponse = $this->controller->displayPanel()->render();
