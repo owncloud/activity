@@ -24,6 +24,7 @@ cache:
     - $HOME/.composer/cache
     - $HOME/.npm
     - docker
+    - /tmp/phantomjs
   apt: true
 
 env:
