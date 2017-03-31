@@ -29,18 +29,6 @@ going on in your ownCloud.
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable8.2)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.2)
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable8.2)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.2)
 
-## QA metrics on stable8.1 branch:
-
-[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable8.1)](https://travis-ci.org/owncloud/activity/branches)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable8.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.1)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable8.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.1)
-
-## QA metrics on stable8 branch:
-
-[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable8)](https://travis-ci.org/owncloud/activity/branches)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable8)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable8)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8)
-
 # Add new activities / types for other apps
 
 With the activity manager extensions can be registered which allow any app to extend the activity behavior.
