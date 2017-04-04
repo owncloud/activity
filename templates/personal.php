@@ -17,7 +17,7 @@ style('activity', 'settings');
 			<tr>
 				<?php foreach ($_['methods'] as $method => $methodName): ?>
 				<th class="small activity_select_group" data-select-group="<?php p($method) ?>">
-					<?php p($methodName); ?>
+					<?php p($l->t($methodName)); ?>
 				</th>
 				<?php endforeach; ?>
 				<th><span id="activity_notifications_msg" class="msg"></span></th>
