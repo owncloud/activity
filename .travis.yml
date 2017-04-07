@@ -29,7 +29,7 @@ cache:
 
 env:
   global:
-    - CORE_BRANCH=central-account-table
+    - CORE_BRANCH=master
     - APP_NAME=activity
   matrix:
     - DB=sqlite
