@@ -138,7 +138,7 @@ class EmailNotification extends TimedJob {
 		}
 
 		// Delete all entries we dealt with
-		$this->mqHandler->deleteSentItems($affectedUsers, $sendTime);
+		$this->mqHandler->deleteSentItems($affectedUIDs, $sendTime);
 
 		return sizeof($affectedUsers);
 	}
