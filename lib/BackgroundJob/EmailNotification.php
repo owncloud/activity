@@ -127,7 +127,7 @@ class EmailNotification extends TimedJob {
 			$uid = $user['uid'];
 			if (empty($user['email'])) {
 				// The user did not setup an email address
-				// So we will not send an email :(
+				// So we will not send an email but still discard the queue entries
 				$this->logger->debug("Couldn't send notification email to user '$uid' (email address isn't set for that user)", ['app' => 'activity']);
 				continue;
 			}
