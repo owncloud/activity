@@ -25,6 +25,7 @@ namespace OCA\Activity\Tests;
 use OCA\Activity\MailQueueHandler;
 use OCA\Activity\UserSettings;
 use Test\Traits\UserTrait;
+use OCP\IUser;
 
 /**
  * Class MailQueueHandlerTest
@@ -46,9 +47,6 @@ class MailQueueHandlerTest extends TestCase {
 	protected $message;
 
 	/** @var \OCP\IUserManager */
-	protected $oldUserManager;
-
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCP\IUserManager */
 	protected $userManager;
 
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCP\Activity\IManager */
@@ -57,26 +55,41 @@ class MailQueueHandlerTest extends TestCase {
 	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCA\Activity\DataHelper */
 	protected $dataHelper;
 
+	/** @var IUser */
+	protected $user1;
+
+	/** @var IUser */
+	protected $user2;
+
+	/** @var IUser */
+	protected $user3;
+
 	protected function setUp() {
 		parent::setUp();
 
-		$u1 = $this->createUser('user1');
-		$u1 = $this->createUser('user2');
-		$u1 = $this->createUser('user3');
+		$user1Id = $this->getUniqueId('mailqueueuser1_');
+		$user2Id = $this->getUniqueId('mailqueueuser2_');
+		$user3Id = $this->getUniqueId('mailqueueuser3_');
 		$app = $this->getUniqueID('MailQueueHandlerTest');
-		$this->userManager = $this->createMock('OCP\IUserManager');
+
+		// we need an actual user manager because the class joins
+		// on the oc_accounts table
+		$this->userManager = \OC::$server->getUserManager();
+		$this->user1 = $this->userManager->createUser($user1Id, 'test');
+		$this->user2 = $this->userManager->createUser($user2Id, 'test');
+		$this->user3 = $this->userManager->createUser($user3Id, 'test');
 
 		$connection = \OC::$server->getDatabaseConnection();
 		$query = $connection->prepare('INSERT INTO `*PREFIX*activity_mq` '
 			. ' (`amq_appid`, `amq_subject`, `amq_subjectparams`, `amq_affecteduser`, `amq_timestamp`, `amq_type`, `amq_latest_send`) '
 			. ' VALUES(?, ?, ?, ?, ?, ?, ?)');
 
-		$query->execute([$app, 'Test data', 'Param1', 'user1', 150, 'phpunit', 152]);
-		$query->execute([$app, 'Test data', 'Param1', 'user1', 150, 'phpunit', 153]);
-		$query->execute([$app, 'Test data', 'Param1', 'user2', 150, 'phpunit', 150]);
-		$query->execute([$app, 'Test data', 'Param1', 'user2', 150, 'phpunit', 151]);
-		$query->execute([$app, 'Test data', 'Param1', 'user3', 150, 'phpunit', 154]);
-		$query->execute([$app, 'Test data', 'Param1', 'user3', 150, 'phpunit', 155]);
+		$query->execute([$app, 'Test data', 'Param1', $user1Id, 150, 'phpunit', 152]);
+		$query->execute([$app, 'Test data', 'Param1', $user1Id, 150, 'phpunit', 153]);
+		$query->execute([$app, 'Test data', 'Param1', $user2Id, 150, 'phpunit', 150]);
+		$query->execute([$app, 'Test data', 'Param1', $user2Id, 150, 'phpunit', 151]);
+		$query->execute([$app, 'Test data', 'Param1', $user3Id, 150, 'phpunit', 154]);
+		$query->execute([$app, 'Test data', 'Param1', $user3Id, 150, 'phpunit', 155]);
 
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
@@ -135,11 +148,14 @@ class MailQueueHandlerTest extends TestCase {
 		$query = \OC::$server->getDatabaseConnection()->prepare('DELETE FROM `*PREFIX*activity_mq` WHERE `amq_timestamp` < 500');
 		$query->execute();
 
+		$this->user1->delete();
+		$this->user2->delete();
+		$this->user3->delete();
+
 		parent::tearDown();
 	}
 
-	public function getAffectedUsersData()
-	{
+	public function getAffectedUsersData() {
 		return [
 			[null, ['user2', 'user1', 'user3'], []],
 			[5, ['user2', 'user1', 'user3'], []],
@@ -158,6 +174,13 @@ class MailQueueHandlerTest extends TestCase {
 	 */
 	public function testGetAffectedUsers($limit, $affected, $untouched) {
 		$maxTime = 200;
+
+		$affected = array_map(function($userVar) {
+			return $this->$userVar->getUID();
+		}, $affected);
+		$untouched = array_map(function($userVar) {
+			return $this->$userVar->getUID();
+		}, $untouched);
 
 		$this->assertRemainingMailEntries($untouched, $maxTime, 'before doing anything');
 		$users = $this->mailQueueHandler->getAffectedUsers($limit, $maxTime);
@@ -186,7 +209,7 @@ class MailQueueHandlerTest extends TestCase {
 	}
 
 	public function testGetItemsForUser() {
-		list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', ['user1', 200]);
+		list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$this->user1->getUID(), 200]);
 		$this->assertCount(2, $data, 'Failed to assert the user has 2 entries');
 		$this->assertSame(0, $skipped);
 
@@ -197,18 +220,19 @@ class MailQueueHandlerTest extends TestCase {
 
 		$app = $this->getUniqueID('MailQueueHandlerTest');
 		for ($i = 0; $i < 15; $i++) {
-			$query->execute(array($app, 'Test data', 'Param1', 'user1', 150, 'phpunit', 160 + $i));
+			$query->execute(array($app, 'Test data', 'Param1', $this->user1->getUID(), 150, 'phpunit', 160 + $i));
 		}
 
-		list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', ['user1', 200, 5]);
+		list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$this->user1->getUID(), 200, 5]);
 		$this->assertCount(5, $data, 'Failed to assert the user has 2 entries');
 		$this->assertSame(12, $skipped);
 	}
 
 	public function testSendEmailToUser() {
 		$maxTime = 200;
-		$user = 'user2';
+		$user = $this->user2->getUID();
 		$userDisplayName = 'user two';
+		$this->user2->setDisplayName($userDisplayName);
 		$email = $user . '@localhost';
 
 		$this->mailer->expects($this->once())
@@ -224,17 +248,6 @@ class MailQueueHandlerTest extends TestCase {
 			->method('setPlainBody');
 		$this->message->expects($this->once())
 			->method('setFrom');
-
-		$userObject = $this->createMock('OCP\IUser');
-		$userObject->expects($this->any())
-			->method('getDisplayName')
-			->willReturn($userDisplayName);
-		$this->userManager->expects($this->any())
-			->method('get')
-			->willReturnMap([
-				[$user, $userObject],
-				[$user . $user, null],
-			]);
 
 		$this->activityManager->expects($this->exactly(2))
 			->method('setCurrentUserId')
