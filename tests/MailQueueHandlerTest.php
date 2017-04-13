@@ -24,7 +24,6 @@ namespace OCA\Activity\Tests;
 
 use OCA\Activity\MailQueueHandler;
 use OCA\Activity\UserSettings;
-use Test\Traits\UserTrait;
 use OCP\IUser;
 
 /**
@@ -34,8 +33,6 @@ use OCP\IUser;
  * @package OCA\Activity\Tests
  */
 class MailQueueHandlerTest extends TestCase {
-
-	use UserTrait;
 
 	/** @var MailQueueHandler */
 	protected $mailQueueHandler;
@@ -76,7 +73,9 @@ class MailQueueHandlerTest extends TestCase {
 		// on the oc_accounts table
 		$this->userManager = \OC::$server->getUserManager();
 		$this->user1 = $this->userManager->createUser($user1Id, 'test');
+		$this->user1->setEMailAddress('user1@localhost');
 		$this->user2 = $this->userManager->createUser($user2Id, 'test');
+		$this->user2->setEMailAddress('user2@localhost');
 		$this->user3 = $this->userManager->createUser($user3Id, 'test');
 
 		$connection = \OC::$server->getDatabaseConnection();
@@ -176,9 +175,16 @@ class MailQueueHandlerTest extends TestCase {
 		$maxTime = 200;
 
 		$affected = array_map(function($userVar) {
-			return $this->$userVar->getUID();
+			return [
+				'uid' => $this->$userVar->getUID(),
+				'email' => $this->$userVar->getEMailAddress()
+			];
 		}, $affected);
 		$untouched = array_map(function($userVar) {
+			return [
+				'uid' => $this->$userVar->getUID(),
+				'email' => $this->$userVar->getEMailAddress()
+			];
 			return $this->$userVar->getUID();
 		}, $untouched);
 
@@ -186,11 +192,12 @@ class MailQueueHandlerTest extends TestCase {
 		$users = $this->mailQueueHandler->getAffectedUsers($limit, $maxTime);
 		$this->assertRemainingMailEntries($untouched, $maxTime, 'after getting the affected users');
 
+		$this->assertEquals($affected, $users);
+
 		$uids = array_map(function($u) {
 			return $u['uid'];
 		}, $users);
 
-		$this->assertEquals($affected, $uids);
 		foreach ($uids as $user) {
 			list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$user, $maxTime]);
 			$this->assertNotEmpty($data, 'Failed asserting that each user has a mail entry');
@@ -233,7 +240,8 @@ class MailQueueHandlerTest extends TestCase {
 		$user = $this->user2->getUID();
 		$userDisplayName = 'user two';
 		$this->user2->setDisplayName($userDisplayName);
-		$email = $user . '@localhost';
+		$email = 'usertwo@localhost';
+		$this->user2->setEMailAddress($email);
 
 		$this->mailer->expects($this->once())
 			->method('send')
@@ -257,7 +265,7 @@ class MailQueueHandlerTest extends TestCase {
 			);
 
 		$users = $this->mailQueueHandler->getAffectedUsers(1, $maxTime);
-		$this->assertEquals([['uid' => $user, 'email' => null]], $users);
+		$this->assertEquals([['uid' => $user, 'email' => $email]], $users);
 		$this->mailQueueHandler->sendEmailToUser($user, $email, 'en', 'UTC', $maxTime);
 
 		// Invalid user, no object no email
