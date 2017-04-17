@@ -29,7 +29,7 @@ cache:
 
 env:
   global:
-    - CORE_BRANCH=master
+    - CORE_BRANCH=strict_autoloader
     - APP_NAME=activity
   matrix:
     - DB=sqlite
