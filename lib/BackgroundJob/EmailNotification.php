@@ -123,24 +123,41 @@ class EmailNotification extends TimedJob {
 		// Send Email
 		$default_lang = $this->config->getSystemValue('default_language', 'en');
 		$defaultTimeZone = date_default_timezone_get();
+		$processedUsers = [];
 		foreach ($affectedUsers as $user) {
 			$uid = $user['uid'];
-			if (empty($user['email'])) {
+			$email = $user['email'];
+			if (empty($email)) {
 				// The user did not setup an email address
 				// So we will not send an email but still discard the queue entries
 				$this->logger->debug("Couldn't send notification email to user '$uid' (email address isn't set for that user)", ['app' => 'activity']);
+				$processedUsers[] = $uid;
 				continue;
 			}
 
 			$language = (!empty($userLanguages[$uid])) ? $userLanguages[$uid] : $default_lang;
 			$timezone = (!empty($userTimezones[$uid])) ? $userTimezones[$uid] : $defaultTimeZone;
-			$this->mqHandler->sendEmailToUser($uid, $user['email'], $language, $timezone, $sendTime);
+			try {
+				// only send if email address is valid
+				if ($this->mqHandler->validateMailAddress($email)) {
+					$this->mqHandler->sendEmailToUser($uid, $email, $language, $timezone, $sendTime);
+				} else {
+					$this->logger->debug("Couldn't send notification email to user '$uid' due to non-RFC compliant address '$email'", ['app' => 'activity']);
+				}
+				$processedUsers[] = $uid;
+			} catch (\Exception $e) {
+				// other possible exception, could be a faulty SMTP server in which
+				// case we should retry later
+				$this->logger->logException($e, ['app' => 'activity']);
+				// break the loop to avoid further failures
+				break;
+			}
 		}
 
-		// Delete all entries we dealt with
-		$this->mqHandler->deleteSentItems($affectedUIDs, $sendTime);
+		// Delete all entries we already dealt with
+		$this->mqHandler->deleteSentItems($processedUsers, $sendTime);
 
-		return sizeof($affectedUsers);
+		return sizeof($processedUsers);
 	}
 
 }
