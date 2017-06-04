@@ -51,7 +51,7 @@
 				<name>app</name>
 				<type>text</type>
 				<notnull>true</notnull>
-				<length>255</length>
+				<length>32</length>
 			</field>
 			<field>
 				<name>subject</name>
