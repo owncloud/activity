@@ -27,7 +27,7 @@ require_once __DIR__.'/../../../lib/base.php';
 
 $unitTestLocation = '/tests/unit/';
 
-if (!file_exists(OC::$SERVERROOT . $unitTestLocation)) {
+if (!is_dir(OC::$SERVERROOT . $unitTestLocation)) {
 	$unitTestLocation = '/tests/lib/';
 }
 
