@@ -23,13 +23,13 @@ if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
 
+require_once __DIR__.'/../../../lib/base.php';
+
 $unitTestLocation = '/tests/unit/';
 
-if (!file_exists(\OC::$SERVERROOT . $unitTestLocation)) {
+if (!file_exists(OC::$SERVERROOT . $unitTestLocation)) {
 	$unitTestLocation = '/tests/lib/';
 }
-
-require_once __DIR__.'/../../../lib/base.php';
 
 \OC::$composerAutoloader->addPsr4('Test\\', OC::$SERVERROOT . $unitTestLocation, true);
 
