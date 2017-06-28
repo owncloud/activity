@@ -23,9 +23,15 @@ if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
 
+$unitTestLocation = '/tests/unit/';
+
+if (!file_exists(OC::$SERVERROOT . $unitTestLocation)) {
+	$unitTestLocation = '/tests/lib/';
+}
+
 require_once __DIR__.'/../../../lib/base.php';
 
-\OC::$composerAutoloader->addPsr4('Test\\', OC::$SERVERROOT . '/tests/lib/', true);
+\OC::$composerAutoloader->addPsr4('Test\\', OC::$SERVERROOT . $unitTestLocation, true);
 
 // Fix for "Autoload path not allowed: .../tests/lib/testcase.php"
 \OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
