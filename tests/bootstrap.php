@@ -25,7 +25,7 @@ if (!defined('PHPUNIT_RUN')) {
 
 $unitTestLocation = '/tests/unit/';
 
-if (!file_exists(OC::$SERVERROOT . $unitTestLocation)) {
+if (!file_exists(\OC::$SERVERROOT . $unitTestLocation)) {
 	$unitTestLocation = '/tests/lib/';
 }
 
