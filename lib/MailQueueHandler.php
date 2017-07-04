@@ -202,6 +202,16 @@ class MailQueueHandler {
 	}
 
 	/**
+	 * Validate email address
+	 *
+	 * @param string $email email address
+	 * @return bool true if address is compliant, false otherwise
+	 */
+	public function validateMailAddress($email) {
+		return $this->mailer->validateMailAddress($email);
+	}
+
+	/**
 	 * Send a notification to one user
 	 *
 	 * @param string $userName Username of the recipient
