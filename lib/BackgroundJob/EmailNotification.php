@@ -123,22 +123,35 @@ class EmailNotification extends TimedJob {
 		// Send Email
 		$default_lang = $this->config->getSystemValue('default_language', 'en');
 		$defaultTimeZone = date_default_timezone_get();
+
+		$sentMailForUsers = [];
+
 		foreach ($affectedUsers as $user) {
 			$uid = $user['uid'];
 			if (empty($user['email'])) {
 				// The user did not setup an email address
 				// So we will not send an email but still discard the queue entries
 				$this->logger->debug("Couldn't send notification email to user '$uid' (email address isn't set for that user)", ['app' => 'activity']);
+				$sentMailForUsers[] = $uid;
 				continue;
 			}
 
 			$language = (!empty($userLanguages[$uid])) ? $userLanguages[$uid] : $default_lang;
 			$timezone = (!empty($userTimezones[$uid])) ? $userTimezones[$uid] : $defaultTimeZone;
-			$this->mqHandler->sendEmailToUser($uid, $user['email'], $language, $timezone, $sendTime);
+
+			try {
+				$this->mqHandler->sendEmailToUser($uid, $user['email'], $language, $timezone, $sendTime);
+				$sentMailForUsers[] = $uid;
+			} catch (\Exception $e) {
+				// Run cleanup before we die
+				$this->mqHandler->deleteSentItems($sentMailForUsers, $sendTime);
+				// Throw the exception again - which gets logged by core and the job is handled appropriately
+				throw $e;
+			}
 		}
 
 		// Delete all entries we dealt with
-		$this->mqHandler->deleteSentItems($affectedUIDs, $sendTime);
+		$this->mqHandler->deleteSentItems($sentMailForUsers, $sendTime);
 
 		return sizeof($affectedUsers);
 	}
