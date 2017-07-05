@@ -1,10 +1,10 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Aktivitet",
     "Activities" : "Aktiviteter",
     "Error loading activities" : "Feil ved innlasting av aktiviteter",
     "No activities" : "Ingen aktiviteter",
+    "Load more activities" : "Last flere aktiviteter",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} og {lastParameter}",
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} og {linkStart}%n mer{linkEnd}","{parameterList} og {linkStart}%n mer{linkEnd}"],
@@ -28,6 +28,8 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "Du mottar denne e-posten fordi følgende har hendt på %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* og %n til ","* og %n til "],
+    "Activity" : "Aktivitet",
+    "List your own file actions in the stream" : "Vis din egen filbehandling i strømmen",
     "Notify about your own actions via email" : "Varsle om dine egne handliger via e-post",
     "You need to set up your email address before you can receive notification emails." : "Du må sette opp e-postadressen din før du kan motta varslinger på e-post.",
     "Send emails:" : "Send e-poster:",
@@ -37,7 +39,7 @@ OC.L10N.register(
     "Activity feed" : "Aktivitetsstrøm",
     "Enable RSS feed" : "Aktiver RSS-strøm",
     "No activity yet" : "Ingen aktivitet ennå",
-    "No more events to load" : "Ingen flere hendelser å laste",
+    "No more events to load" : "Ingen flere hendelser å laste inn",
     "Files" : "Filer"
 },
 "nplurals=2; plural=(n != 1);");

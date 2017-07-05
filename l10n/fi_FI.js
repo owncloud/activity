@@ -1,7 +1,6 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Toimet",
     "Activities" : "Toimet",
     "Error loading activities" : "Virhe ladatessa toimia",
     "No activities" : "Ei toimia",
@@ -29,6 +28,7 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "Saat tämän viestin, koska kohteessa %s tapahtui seuraavaa",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* ja %n lisää","* ja %n lisää"],
+    "Activity" : "Toimet",
     "List your own file actions in the stream" : "Listaa omat tiedostotoiminnot luettelossa",
     "Notify about your own actions via email" : "Ilmoita omista toimista sähköpostitse",
     "You need to set up your email address before you can receive notification emails." : "Aseta sähköpostiosoite, jotta voit vastaanottaa sähköposti-ilmoituksia.",

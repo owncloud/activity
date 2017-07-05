@@ -1,8 +1,8 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Izmaiņas",
     ", " : ",",
+    "{parameterList} and {lastParameter}" : "{parameterList} un {lastParameter}",
     "This stream will show events like additions, changes & shares" : "Šajā straumē tiks parādītas koplietošanas, dalīšanās un citi notikumi.",
     "There are no events for this filter" : "Šim filtram nav notikumu",
     "Today" : "Šodien",
@@ -21,6 +21,7 @@ OC.L10N.register(
     "Hello %s," : "Sveicināti %s,",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["*","* un vēl %n","* un vēl %n"],
+    "Activity" : "Izmaiņas",
     "Notify about your own actions via email" : "Paziņot par savām darbībām, izmantojot e-pastu",
     "You need to set up your email address before you can receive notification emails." : "Vispirms profilam ir nepieciešams uzstādīt e-pasta adresi, lai pa to saņemtu paziņojumus.",
     "Send emails:" : "E-pastus sūtīt:",

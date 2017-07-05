@@ -1,10 +1,10 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Aktivitás",
-    "Activities" : "Aktivitások",
+    "Activities" : "Tevékenységek",
     "Error loading activities" : "Hiba történt az aktivitások betöltése közben",
     "No activities" : "Nincs aktivitás",
+    "Load more activities" : "További aktivitások betöltése",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} és {lastParameter}",
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} és {linkStart}%n{linkEnd}","{parameterList} és {linkStart}%n{linkEnd}"],
@@ -26,8 +26,8 @@ OC.L10N.register(
     "%s and %s" : "%s és %s",
     "Hello %s," : "Üdv %s!",
     "You are receiving this email because the following things happened at %s" : "Azért kapta ezt a levelet, mert ezek az események történtek itt: %s",
-    "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* és még %n","* és még %n"],
+    "Activity" : "Aktivitás",
     "List your own file actions in the stream" : "Listázza a saját fájl tevékenységeimet a hírfolyamban",
     "Notify about your own actions via email" : "Értesítsen a saját tevékenységeimről",
     "You need to set up your email address before you can receive notification emails." : "Értesítő üzenetek fogadásához adja meg az e-mail cimét!",

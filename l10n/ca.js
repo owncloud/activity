@@ -1,13 +1,13 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Activitat",
     "Activities" : "Activitats",
     "Error loading activities" : "Error en carregar les activitats",
     "No activities" : "sense activitats",
     "Load more activities" : "Carrega més activitats",
     ", " : ", ",
-    "{parameterList} and {lastParameter}" : "{parameterList} i {lastParameter}",
+    "{parameterList} and {lastParameter}" : "{llista de paràmetres} i {últim paràmetre}",
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} i {linkStart}%n més{linkEnd}","{parameterList} i{linkStart}%n més{linkEnd}"],
     "in {directory}" : "a {directory}",
     "This stream will show events like additions, changes & shares" : "Aquest corrent mostrarà esdeveniments afegits, modificats i compartits.",
     "There are no events for this filter" : "No hi ha esdeveniments en est filtre",
@@ -28,6 +28,7 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "Esteu rebent aquest correu perquè han succeït les següents coses a %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* i %n més","* i %n més"],
+    "Activity" : "Activitat",
     "List your own file actions in the stream" : "Llista les vostres propies accions de fitxers al flux",
     "Notify about your own actions via email" : "Notifica sobre les teves noves accions via email",
     "You need to set up your email address before you can receive notification emails." : "Heu d'establir l'adreça de correu electrònic abans que pugueu rebre correus de notificació",

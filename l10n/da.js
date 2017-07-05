@@ -1,10 +1,10 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Aktivitet",
     "Activities" : "Aktiviteter",
     "Error loading activities" : "Fejl ved indlæsning af aktiviteter",
     "No activities" : "Ingen aktiviteter",
+    "Load more activities" : "Indlæs flere aktiviteter",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} og {lastParameter}",
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} og {linkStart}%n mere {linkEnd}","{parameterList} og {linkStart}%n mere {linkEnd}"],
@@ -28,6 +28,8 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "Du modtager denne email fordi følgende ting er opstået ved %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* og %n flere","* og %n flere"],
+    "Activity" : "Aktivitet",
+    "List your own file actions in the stream" : "Få vist dine egne fil handlinger i strømmen",
     "Notify about your own actions via email" : "Giv meddelelse om egne handlinger via e-mail",
     "You need to set up your email address before you can receive notification emails." : "Du skal angive din e-mailadresse før du kan modtage notifikationer via e-mail.",
     "Send emails:" : "Send e-mails:",

@@ -1,10 +1,10 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Активност",
     "Activities" : "Активности",
     "Error loading activities" : "Грешка при вчитување на активностите",
     "No activities" : "Нема активности",
+    "Load more activities" : "Вчитај повеќе активности",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} и {lastParameter}",
     "in {directory}" : "во {directory}",
@@ -24,7 +24,9 @@ OC.L10N.register(
     "Activities by others" : "Активности на други",
     "%s and %s" : "%s и %s",
     "Hello %s," : "Здраво %s,",
+    "You are receiving this email because the following things happened at %s" : "Оваа порака ја добиваш бидејќи следните нешта се случија во %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
+    "Activity" : "Активност",
     "List your own file actions in the stream" : "Ги листа вашите активности во стримот",
     "Notify about your own actions via email" : "Извести за своите активности преку порака",
     "You need to set up your email address before you can receive notification emails." : "Ќе треба да ја внесете Вашата електронска адреса за да можете да примате известувања по електронска пошта.",

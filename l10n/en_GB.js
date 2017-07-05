@@ -1,7 +1,6 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "Activity",
     "Activities" : "Activities",
     "Error loading activities" : "Error loading activities",
     "No activities" : "No activities",
@@ -29,6 +28,7 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "You are receiving this email because the following things happened at %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* and %n more ","* and %n more "],
+    "Activity" : "Activity",
     "List your own file actions in the stream" : "List your own file actions in the stream",
     "Notify about your own actions via email" : "Notify about your own actions via email",
     "You need to set up your email address before you can receive notification emails." : "You need to set up your email address before you can receive notification emails.",

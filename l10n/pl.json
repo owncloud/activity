@@ -1,14 +1,13 @@
 { "translations": {
-    "Activity" : "Aktywność",
     "Activities" : "Aktywności",
     "Error loading activities" : "Błąd ładowania aktywności",
     "No activities" : "Brak aktywności",
     "Load more activities" : "Załaduj więcej aktywności",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} i {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} i {linkStart}%n więcej{linkEnd}","{parameterList} i {linkStart}%n więcej{linkEnd}","{parameterList} i {linkStart}%n więcej{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} i {linkStart}%n więcej{linkEnd}","{parameterList} i {linkStart}%n więcej{linkEnd}","{parameterList} i {linkStart}%n więcej{linkEnd}","{parameterList} i {linkStart}%n więcej{linkEnd}"],
     "in {directory}" : "w {directory}",
-    "This stream will show events like additions, changes & shares" : "Ta opcja pokazuje takie wydarzenia jak: dodatki, zmiany i udostępnienia",
+    "This stream will show events like additions, changes & shares" : "Ten strumień pokaże takie wydarzenia jak dodatki, zmiany i udostępnienia",
     "There are no events for this filter" : "Nie ma zdarzeń dla tych filtrów",
     "Today" : "Dziś",
     "Yesterday" : "Wczoraj",
@@ -24,9 +23,11 @@
     "Activities by others" : "Aktywności innych",
     "%s and %s" : "%s oraz %s",
     "Hello %s," : "Witaj %s,",
-    "You are receiving this email because the following things happened at %s" : "Otrzymujesz ten mail, ponieważ zdarzyły się następujące rzeczy w %s",
+    "You are receiving this email because the following things happened at %s" : "Otrzymujesz tę wiadomość, ponieważ w chmurze %s miały miejsce następujące aktywności:",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* i %n więcej ","* i %n więcej ","* i %n więcej "],
+    "_* and %n more _::_* and %n more _" : ["* i %n więcej ","* i %n więcej ","* i %n więcej ","* i %n więcej "],
+    "Activity" : "Aktywność",
+    "List your own file actions in the stream" : "Wyświetl Twoje czynności w strumieniu",
     "Notify about your own actions via email" : "Powiadamiaj mnie o moich aktywnościach przez email",
     "You need to set up your email address before you can receive notification emails." : "Musisz najpierw ustawić adres email zanim będziesz mógł otrzymywać powiadomienia.",
     "Send emails:" : "Wyślij maile:",
@@ -38,5 +39,5 @@
     "No activity yet" : "Brak aktywności.",
     "No more events to load" : "Nie ma już zdarzeń do załadowania",
     "Files" : "Pliki"
-},"pluralForm" :"nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+},"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

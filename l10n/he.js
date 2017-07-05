@@ -1,10 +1,10 @@
 OC.L10N.register(
     "activity",
     {
-    "Activity" : "פעילות",
     "Activities" : "פעילויות",
     "Error loading activities" : "שגיאה בטעינת פעילויות",
     "No activities" : "אין פעילויות",
+    "Load more activities" : "טעינת פעילויות נוספות",
     ", " : ",",
     "{parameterList} and {lastParameter}" : "{parameterList} וכן {lastParameter}",
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} וכן {linkStart}%n ועוד{linkEnd}","{parameterList} וכן {linkStart}%n ועוד{linkEnd}"],
@@ -28,6 +28,8 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "הודעת דואר אלקטרוני זו נשלחת כיוון שאירעו הדברים הבאים ב- %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* וכן %n נוסף ","* וכן %n נוספים "],
+    "Activity" : "פעילות",
+    "List your own file actions in the stream" : "רישום של פעילויות הקובץ שלך בהזרמת המידע",
     "Notify about your own actions via email" : "דיווח על האירועים שלך על בסיס דואר אלקטרוני",
     "You need to set up your email address before you can receive notification emails." : "יש להגדיר כתובת דואר אלקטרוני לפני שניתן יהיה לקבל דיווחים.",
     "Send emails:" : "שליחת הודעות דואר אלקטרוני:",
