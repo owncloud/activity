@@ -29,7 +29,7 @@ OC.L10N.register(
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* a %n další ","* a %n další ","* a %n dalších "],
     "Activity" : "Aktivita",
-    "List your own file actions in the stream" : "Seznam vašich souborových akcí v proudu",
+    "List your own file actions in the stream" : "Zobrazit vaše vlastní souborové akce v proudu",
     "Notify about your own actions via email" : "Posílat oznámení o vlastních činnostech emailem",
     "You need to set up your email address before you can receive notification emails." : "Pokud chcete dostávat upozornění emailem, musíte nejprve nastavit svou emailovou adresu.",
     "Send emails:" : "Posílat emaily:",
