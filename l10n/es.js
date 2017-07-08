@@ -14,7 +14,7 @@ OC.L10N.register(
     "Today" : "Hoy",
     "Yesterday" : "Ayer",
     "Personal activity feed for %s" : "Alimentador de actividad personal para %s",
-    "Your feed URL is invalid" : "Tu URL de comentarios no es válida",
+    "Your feed URL is invalid" : "El URL del suministro no es válido",
     "Your settings have been updated." : "Sus ajustes han sido actualizados.",
     "Mail" : "Correo electrónico",
     "Stream" : "Flujo",
