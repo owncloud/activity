@@ -23,6 +23,7 @@ namespace OCA\Activity\Tests\Parameter;
 
 use OCA\Activity\Parameter\Factory;
 use OCA\Activity\Tests\TestCase;
+use OCP\IGroupManager;
 
 class FactoryTest extends TestCase {
 	/** @var \OCP\Activity\IManager|\PHPUnit_Framework_MockObject_MockObject */
@@ -45,6 +46,9 @@ class FactoryTest extends TestCase {
 
 	/** @var \OCP\IL10N|\PHPUnit_Framework_MockObject_MockObject */
 	protected $l;
+
+	/** @var  \OCP\IGroupManager|\PHPUnit_Framework_MockObject_MockObject */
+	protected $groupManager;
 
 	protected function setUp() {
 		parent::setUp();
@@ -76,6 +80,8 @@ class FactoryTest extends TestCase {
 		$this->l = $this->getMockBuilder('OCP\IL10N')
 			->disableOriginalConstructor()
 			->getMock();
+
+		$this->groupManager = $this->createMock(IGroupManager::class);
 	}
 
 	/**
@@ -92,6 +98,7 @@ class FactoryTest extends TestCase {
 				$this->contactsManager,
 				$this->infoCache,
 				$this->l,
+				$this->groupManager,
 				$user
 			);
 		} else {
@@ -103,6 +110,7 @@ class FactoryTest extends TestCase {
 					$this->contactsManager,
 					$this->infoCache,
 					$this->l,
+					$this->groupManager,
 					$user,
 				])
 				->setMethods($methods)
@@ -198,6 +206,7 @@ class FactoryTest extends TestCase {
 	public function dataGetFormatter() {
 		return [
 			['base', 'OCA\Activity\Formatter\BaseFormatter'],
+			['group', 'OCA\Activity\Formatter\GroupFormatter'],
 			['file', 'OCA\Activity\Formatter\FileFormatter'],
 			['username', 'OCA\Activity\Formatter\UserFormatter'],
 			['federated_cloud_id', 'OCA\Activity\Formatter\CloudIDFormatter'],

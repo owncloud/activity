@@ -22,8 +22,9 @@
 namespace OCA\Activity\Parameter;
 
 
-use OCA\Activity\Formatter\IFormatter;
 use OCA\Activity\Formatter\BaseFormatter;
+use OCA\Activity\Formatter\GroupFormatter;
+use OCA\Activity\Formatter\IFormatter;
 use OCA\Activity\Formatter\CloudIDFormatter;
 use OCA\Activity\Formatter\FileFormatter;
 use OCA\Activity\Formatter\UserFormatter;
@@ -32,6 +33,7 @@ use OCP\Activity\IEvent;
 use OCP\Activity\IManager;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\IConfig;
+use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
@@ -48,6 +50,9 @@ class Factory {
 
 	/** @var IL10N */
 	protected $l;
+
+	/** @var IGroupManager  */
+	protected $groupManager;
 
 	/** @var ViewInfoCache */
 	protected $infoCache;
@@ -73,6 +78,7 @@ class Factory {
 								IContactsManager $contactsManager,
 								ViewInfoCache $infoCache,
 								IL10N $l,
+								IGroupManager $groupManager,
 								$user) {
 		$this->activityManager = $activityManager;
 		$this->userManager = $userManager;
@@ -80,6 +86,7 @@ class Factory {
 		$this->contactsManager = $contactsManager;
 		$this->infoCache = $infoCache;
 		$this->l = $l;
+		$this->groupManager = $groupManager;
 		$this->user = $user;
 	}
 
@@ -130,6 +137,8 @@ class Factory {
 			return new UserFormatter($this->userManager, $this->l);
 		} else if ($formatter === 'federated_cloud_id') {
 			return new CloudIDFormatter($this->contactsManager);
+		} else if ($formatter === 'group') {
+			return new GroupFormatter($this->groupManager);
 		} else {
 			return new BaseFormatter();
 		}
