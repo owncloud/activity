@@ -83,6 +83,7 @@ class Application extends App {
 					$server->getContactsManager(),
 					$c->query('OCA\Activity\ViewInfoCache'),
 					$c->query('OCP\IL10N'),
+					$server->getGroupManager(),
 					$c->query('CurrentUID')
 				),
 				$server->getL10NFactory(),
