@@ -12,7 +12,7 @@
     "Today" : "Hoy",
     "Yesterday" : "Ayer",
     "Personal activity feed for %s" : "Alimentador de actividad personal para %s",
-    "Your feed URL is invalid" : "El URL del suministro no es válido",
+    "Your feed URL is invalid" : "La dirección del feed RSS no es válida",
     "Your settings have been updated." : "Sus ajustes han sido actualizados.",
     "Mail" : "Correo electrónico",
     "Stream" : "Flujo",
