@@ -64,7 +64,6 @@ appstore:
 	l10n \
 	lib \
 	templates \
-	vendor \
 	$(appstore_package_name)
 
 ifdef CAN_SIGN
