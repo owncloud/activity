@@ -2,8 +2,8 @@ OC.L10N.register(
     "activity",
     {
     "Activities" : "Aktivitäten",
-    "Error loading activities" : "Fehler beim Laden von Aktivitäten.",
-    "No activities" : "Keine Aktivitäten.",
+    "Error loading activities" : "Fehler beim Laden von Aktivitäten",
+    "No activities" : "Keine Aktivitäten",
     "Load more activities" : "Weitere Aktivitäten laden",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} und {lastParameter}",
