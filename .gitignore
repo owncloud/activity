@@ -55,3 +55,4 @@ nbproject
 /tests/clover.xml
 /tests/js/node_modules
 /vendor/
+/build/

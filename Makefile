@@ -1,22 +1,37 @@
-# This file is licensed under the Affero General Public License version 3 or
-# later. See the COPYING file.
-# @author Ilja Neumann <ineumann@owncloud.com>
+SHELL := /bin/bash
 
+#
+# Define NPM and check if it is available on the system.
+#
+NPM := $(shell command -v npm 2> /dev/null)
+ifndef NPM
+    $(error npm is not available on your system, please install npm)
+endif
+
+NODE_PREFIX=$(shell pwd)
+
+PHPUNIT="$(PWD)/lib/composer/phpunit/phpunit/phpunit"
+BOWER=$(NODE_PREFIX)/node_modules/bower/bin/bower
+JSDOC=$(NODE_PREFIX)/node_modules/.bin/jsdoc
 
 app_name=$(notdir $(CURDIR))
-project_directory=$(CURDIR)/../$(app_name)
-build_tools_directory=$(CURDIR)/build/tools
-source_build_directory=$(CURDIR)/build/artifacts/source
-source_package_name=$(source_build_directory)/$(app_name)
-appstore_build_directory=$(CURDIR)/build/artifacts/appstore
-appstore_package_name=$(appstore_build_directory)/$(app_name)
-npm=$(shell which npm 2> /dev/null)
-composer=$(shell which composer 2> /dev/null)
+doc_files=README.md CHANGELOG.md CONTRIBUTING.md
+src_dirs=appinfo css img js l10n lib templates vendor
+all_src=$(src_dirs) $(doc_files)
+build_dir=$(CURDIR)/build
+dist_dir=$(build_dir)/dist
+COMPOSER_BIN=$(build_dir)/composer.phar
+
+# internal aliases
+composer_deps=
+composer_dev_deps=
+nodejs_deps=
+bower_deps=
 
 occ=$(CURDIR)/../../occ
 private_key=$(HOME)/.owncloud/certificates/$(app_name).key
 certificate=$(HOME)/.owncloud/certificates/$(app_name).crt
-sign=php -f $(occ) integrity:sign-app --privateKey="$(private_key)" --certificate="$(certificate)"
+sign=$(occ) integrity:sign-app --privateKey="$(private_key)" --certificate="$(certificate)"
 sign_skip_msg="Skipping signing, either no key and certificate found in $(private_key) and $(certificate) or occ can not be found at $(occ)"
 ifneq (,$(wildcard $(private_key)))
 ifneq (,$(wildcard $(certificate)))
@@ -26,49 +41,81 @@ endif
 endif
 endif
 
+#
+# Catch-all rules
+#
+.PHONY: all
+all: $(composer_dev_deps) $(bower_deps)
 
-# Removes the appstore build
 .PHONY: clean
-clean:
-	rm -rf ./build/artifacts
+clean: clean-composer-deps clean-dist clean-build
 
-# Builds the source and appstore package
-.PHONY: dist
-dist:
-	make source
-	make appstore
 
-# Builds the source package
-.PHONY: source
-source:
-	rm -rf $(source_build_directory)
-	mkdir -p $(source_build_directory)
-	tar cvzf $(source_package_name).tar.gz ../$(app_name) \
-	--exclude-vcs \
-	--exclude="../$(app_name)/build" \
-	--exclude="../$(app_name)/js/node_modules" \
-	--exclude="../$(app_name)/node_modules" \
-	--exclude="../$(app_name)/*.log" \
-	--exclude="../$(app_name)/js/*.log" \
+#
+# Basic required tools
+#
+$(COMPOSER_BIN):
+	mkdir $(build_dir)
+	cd $(build_dir) && curl -sS https://getcomposer.org/installer | php
 
-# Builds the source package for the app store, ignores php and js tests
-.PHONY: appstore
-appstore:
-	rm -rf $(appstore_build_directory)
-	mkdir -p $(appstore_package_name)
-	cp --parents -r \
-	appinfo \
-	css \
-	img \
-	js \
-	l10n \
-	lib \
-	templates \
-	$(appstore_package_name)
+#
+# ownCloud ldap PHP dependencies
+#
+$(composer_deps): $(COMPOSER_BIN) composer.json composer.lock
+	php $(COMPOSER_BIN) install --no-dev
+
+$(composer_dev_deps): $(COMPOSER_BIN) composer.json composer.lock
+	php $(COMPOSER_BIN) install --dev
+
+.PHONY: clean-composer-deps
+clean-composer-deps:
+	rm -f $(COMPOSER_BIN)
+	rm -Rf $(composer_deps)
+
+.PHONY: update-composer
+update-composer: $(COMPOSER_BIN)
+	rm -f composer.lock
+	php $(COMPOSER_BIN) install --prefer-dist
+
+#
+## Node JS dependencies for tools
+#
+$(nodejs_deps): package.json
+	$(NPM) install --prefix $(NODE_PREFIX) && touch $@
+
+$(BOWER): $(nodejs_deps)
+$(JSDOC): $(nodejs_deps)
+
+$(bower_deps): $(BOWER)
+	$(BOWER) install && touch $@
+
+#
+# dist
+#
+
+$(dist_dir)/$(app_name): $(composer_deps) $(bower_deps)
+	rm -Rf $@; mkdir -p $@
+	cp -R $(all_src) $@
+	find $@/vendor -type d -iname Test? -print | xargs rm -Rf
+	find $@/vendor -name travis -print | xargs rm -Rf
+	find $@/vendor -name doc -print | xargs rm -Rf
+	find $@/vendor -iname \*.sh -delete
+	find $@/vendor -iname \*.exe -delete
 
 ifdef CAN_SIGN
-	$(sign) --path="$(appstore_package_name)"
+	$(sign) --path="$(dist_dir)/$(app_name)"
 else
 	@echo $(sign_skip_msg)
 endif
-	tar -czf $(appstore_package_name).tar.gz -C $(appstore_package_name)/../ $(app_name)
+	tar -czf $(dist_dir)/$(app_name).tar.gz -C $(dist_dir) $(app_name)
+
+.PHONY: dist
+dist: $(dist_dir)/$(app_name)
+
+.PHONY: clean-dist
+clean-dist:
+	rm -Rf $(dist_dir)
+
+.PHONY: clean-build
+clean-build:
+	rm -Rf $(build_dir)
