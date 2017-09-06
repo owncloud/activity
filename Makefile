@@ -103,7 +103,7 @@ endif
 	tar -czf $(dist_dir)/$(app_name).tar.gz -C $(dist_dir) $(app_name)
 
 .PHONY: dist
-dist: $(dist_dir)/$(app_name)
+dist: clean-dist $(dist_dir)/$(app_name)
 
 .PHONY: clean-dist
 clean-dist:
