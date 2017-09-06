@@ -2,6 +2,7 @@
 <info>
   <id>activity</id>
   <name>Activity</name>
+  <summary>Activity feed with latest changes of your files.</summary>
   <description>
 		This application enables users to view actions related to their files in ownCloud.
 		Once enabled, users will see a new icon &#x201C;Activity&#x201D; in their apps menu.
