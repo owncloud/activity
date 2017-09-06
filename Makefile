@@ -22,7 +22,7 @@ build_dir=$(CURDIR)/build
 dist_dir=$(build_dir)/dist
 COMPOSER_BIN=$(build_dir)/composer.phar
 
-# internal aliases
+# dependency folders (leave empty if not required)
 composer_deps=
 composer_dev_deps=vendor
 nodejs_deps=
@@ -48,8 +48,7 @@ endif
 all: $(composer_dev_deps) $(bower_deps)
 
 .PHONY: clean
-clean: clean-composer-deps clean-dist clean-build
-
+clean: clean-deps clean-dist clean-build
 
 #
 # Basic required tools
@@ -70,7 +69,7 @@ $(composer_dev_deps): $(COMPOSER_BIN) composer.json composer.lock
 .PHONY: clean-composer-deps
 clean-composer-deps:
 	rm -f $(COMPOSER_BIN)
-	rm -Rf $(composer_deps)
+	rm -Rf $(composer_deps) $(composer_dev_deps)
 
 .PHONY: update-composer
 update-composer: $(COMPOSER_BIN)
@@ -113,3 +112,8 @@ clean-dist:
 .PHONY: clean-build
 clean-build:
 	rm -Rf $(build_dir)
+
+.PHONY: clean-deps
+clean-deps: clean-composer-deps
+	rm -Rf $(nodejs_deps) $(bower_deps)
+
