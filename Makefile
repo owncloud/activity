@@ -16,7 +16,7 @@ JSDOC=$(NODE_PREFIX)/node_modules/.bin/jsdoc
 
 app_name=$(notdir $(CURDIR))
 doc_files=README.md CHANGELOG.md CONTRIBUTING.md
-src_dirs=appinfo css img js l10n lib templates vendor
+src_dirs=appinfo css img js l10n lib templates
 all_src=$(src_dirs) $(doc_files)
 build_dir=$(CURDIR)/build
 dist_dir=$(build_dir)/dist
@@ -92,15 +92,9 @@ $(bower_deps): $(BOWER)
 #
 # dist
 #
-
 $(dist_dir)/$(app_name): $(composer_deps) $(bower_deps)
 	rm -Rf $@; mkdir -p $@
 	cp -R $(all_src) $@
-	find $@/vendor -type d -iname Test? -print | xargs rm -Rf
-	find $@/vendor -name travis -print | xargs rm -Rf
-	find $@/vendor -name doc -print | xargs rm -Rf
-	find $@/vendor -iname \*.sh -delete
-	find $@/vendor -iname \*.exe -delete
 
 ifdef CAN_SIGN
 	$(sign) --path="$(dist_dir)/$(app_name)"
