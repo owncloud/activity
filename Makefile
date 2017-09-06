@@ -24,7 +24,7 @@ COMPOSER_BIN=$(build_dir)/composer.phar
 
 # internal aliases
 composer_deps=
-composer_dev_deps=
+composer_dev_deps=vendor
 nodejs_deps=
 bower_deps=
 
@@ -59,7 +59,7 @@ $(COMPOSER_BIN):
 	cd $(build_dir) && curl -sS https://getcomposer.org/installer | php
 
 #
-# ownCloud ldap PHP dependencies
+# PHP dependencies
 #
 $(composer_deps): $(COMPOSER_BIN) composer.json composer.lock
 	php $(COMPOSER_BIN) install --no-dev
@@ -78,7 +78,7 @@ update-composer: $(COMPOSER_BIN)
 	php $(COMPOSER_BIN) install --prefer-dist
 
 #
-## Node JS dependencies for tools
+## Node dependencies
 #
 $(nodejs_deps): package.json
 	$(NPM) install --prefix $(NODE_PREFIX) && touch $@
