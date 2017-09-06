@@ -55,7 +55,7 @@ clean: clean-composer-deps clean-dist clean-build
 # Basic required tools
 #
 $(COMPOSER_BIN):
-	mkdir $(build_dir)
+	mkdir -p $(build_dir)
 	cd $(build_dir) && curl -sS https://getcomposer.org/installer | php
 
 #
