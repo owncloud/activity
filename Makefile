@@ -101,6 +101,7 @@ else
 	@echo $(sign_skip_msg)
 endif
 	tar -czf $(dist_dir)/$(app_name).tar.gz -C $(dist_dir) $(app_name)
+	tar -cjf $(dist_dir)/$(app_name).tar.bz2 -C $(dist_dir) $(app_name)
 
 .PHONY: dist
 dist: clean-dist $(dist_dir)/$(app_name)
