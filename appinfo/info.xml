@@ -2,16 +2,16 @@
 <info>
   <id>activity</id>
   <name>Activity</name>
-  <summary>Activity feed with latest changes of your files.</summary>
+  <summary>Activity feed with latest changes of your files</summary>
   <description>
-		This application enables users to view actions related to their files in ownCloud.
-		Once enabled, users will see a new icon &#x201C;Activity&#x201D; in their apps menu.
-		When clicked, a new page appears for users to track the activity related to files &#x2013; from new files, to deleted files, move, rename, updates and shared activity.
-		The user can configure their individual activity settings in their personal menu.
-		This sets the type of activity to record, as well as whether to the user sees their own activities,
-		whether these are only available online, and whether they get an email digest on a regular basis.
-		More information is available in the Activity documentation.
-	</description>
+This application enables users to view actions related to their files in ownCloud.
+Once enabled, users will see a new icon &#x201C;Activity&#x201D; in their apps menu.
+When clicked, a new page appears for users to track the activity related to files &#x2013; from new files, to deleted files, move, rename, updates and shared activity.
+The user can configure their individual activity settings in their personal menu.
+This sets the type of activity to record, as well as whether to the user sees their own activities, whether these are only available online, and whether they get an email digest on a regular basis.
+
+More information is available in the Activity documentation.
+  </description>
   <licence>AGPL</licence>
   <author>Frank Karlitschek, Joas Schilling</author>
   <version>2.3.6</version>
@@ -21,7 +21,7 @@
   </types>
   <use-migrations>true</use-migrations>
   <documentation>
-    <admin>https://doc.owncloud.org/server/10.0/admin_manual/configuration_server/activity_configuration.html</admin>
+    <admin>https://doc.owncloud.org/server/latest/admin_manual/configuration_server/activity_configuration.html</admin>
   </documentation>
   <website>https://github.com/owncloud/activity/</website>
   <bugs>https://github.com/owncloud/activity/issues</bugs>
