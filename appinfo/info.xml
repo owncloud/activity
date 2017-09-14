@@ -2,15 +2,16 @@
 <info>
   <id>activity</id>
   <name>Activity</name>
-  <summary>Activity feed with latest changes of your files</summary>
+  <summary>Keep track of events with Activity stream and email notifications</summary>
   <description>
-This application enables users to view actions related to their files in ownCloud.
-Once enabled, users will see a new icon &#x201C;Activity&#x201D; in their apps menu.
-When clicked, a new page appears for users to track the activity related to files &#x2013; from new files, to deleted files, move, rename, updates and shared activity.
-The user can configure their individual activity settings in their personal menu.
-This sets the type of activity to record, as well as whether to the user sees their own activities, whether these are only available online, and whether they get an email digest on a regular basis.
+The ownCloud Activity application enables users to not only get a summarized overview of all file and folder events in their ownCloud, but also to receive notifications for such via email. The user can configure their individual Activity preferences in their personal settings and can decide in detail which file or folder actions should be listed in the Activity stream (accessible via the app launcher) and also for which file or folder actions the users wants to receive email notifications.
+The bulk email notifications can either be sent out hourly, daily or weekly to fit the specific needs of the individual user. 
 
-More information is available in the Activity documentation.
+From creation of new files or folders, to file or folder changes, moves, renames, updates, restores from trash bin, sharing activities, comments, tags and downloads from public share links - the ownCloud Activity app gathers all file or folder related actions in one place for the user to review.
+For users with lot's of activity it is possible to limit the Activity stream to 'Favorites' in order to avoid noise. Furthermore the application provides filters to give users the means to maintain overview by reducing entries to relevant information.
+
+And there you have it - a complete overview of all file and folder activities in your ownCloud with the additional ability to receive activity notifications via email in a time interval of your choice.
+Never again miss an important event related to content in ownCloud and always be up-to-date on all activities of your files and folders.
   </description>
   <licence>AGPL</licence>
   <author>Frank Karlitschek, Joas Schilling</author>
