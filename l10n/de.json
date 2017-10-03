@@ -23,7 +23,7 @@
     "Activities by others" : "Aktivitäten von Anderen",
     "%s and %s" : "%s und %s",
     "Hello %s," : "Hallo %s,",
-    "You are receiving this email because the following things happened at %s" : "Du erhältst diese E-Mail, da folgende Dinge auf %s geschehen sind",
+    "You are receiving this email because the following things happened at %s" : "Du erhältst diese E-Mail, da folgende Ereignisse auf %s geschehen sind",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* und %n weiterer","* und %n weitere"],
     "Activity" : "Aktivität",
