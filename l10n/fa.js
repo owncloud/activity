@@ -7,7 +7,7 @@ OC.L10N.register(
     "Load more activities" : "بار کردن فعّالیت‌های بیش‌تر",
     ", " : "رشته های ترجمه نشده",
     "{parameterList} and {lastParameter}" : "{parameterList} و {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} و {linkStart}%n بیش‌تر{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} و {linkStart}%n بیشتر{linkEnd}"],
     "in {directory}" : "در {directory}",
     "This stream will show events like additions, changes & shares" : "این جریان رویدادهایی چون افزودن، تغییر و هم‌رسانی‌ها را نشان می‌دهد",
     "There are no events for this filter" : "هیچ رخدادی برای این فیلتر وجود ندارد",
