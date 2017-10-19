@@ -23,7 +23,7 @@ OC.L10N.register(
     "All Activities" : "กิจกรรมทั้งหมด",
     "Activities by you" : "กิจกรรมของคุณ",
     "Activities by others" : "กิจกรรมของคนอื่นๆ",
-    "%s and %s" : "%s และ %s",
+    "%s and %s" : "%s และอีก %s",
     "Hello %s," : "สวัสดี %s",
     "You are receiving this email because the following things happened at %s" : "หากคุณได้รับอีเมลนี้เป็นเพราะว่ามีบางอย่างผิดปกติที่ %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
