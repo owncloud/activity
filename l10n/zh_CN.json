@@ -25,7 +25,7 @@
     "Hello %s," : "%s 你好，",
     "You are receiving this email because the following things happened at %s" : "你收到此邮件是因为在 %s 发生了以下事件:",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* 以及其他 %n 项"],
+    "_* and %n more _::_* and %n more _" : ["* 以及其它 %n 项"],
     "Activity" : "动态",
     "List your own file actions in the stream" : "在动态信息中显示您自己的文件的操作",
     "Notify about your own actions via email" : "通过邮件通知您自己的动态",
