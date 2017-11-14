@@ -8,7 +8,7 @@
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} en {linkStart}%n meer{linkEnd}","{parameterList} en {linkStart}%n meer{linkEnd}"],
     "in {directory}" : "in {directory}",
     "This stream will show events like additions, changes & shares" : "Deze stream laat gebeurtenissen als toevoegingen, veranderingen en gedeelde bestanden zien",
-    "There are no events for this filter" : "Er zijn geen afspraken voor dit filter",
+    "There are no events for this filter" : "Er zijn geen gebeurtenissen voor dit filter",
     "Today" : "Vandaag",
     "Yesterday" : "Gisteren",
     "Personal activity feed for %s" : "Persoonlijk activiteitenkanaal voor %s",
@@ -37,7 +37,7 @@
     "Activity feed" : "Activiteitenkanaal",
     "Enable RSS feed" : "Aanzetten RSS kanaal",
     "No activity yet" : "Nog geen activiteit",
-    "No more events to load" : "Geen activiteiten meer om te laden ",
+    "No more events to load" : "Geen gebeurtenissen meer om te laden ",
     "Files" : "Bestanden"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
