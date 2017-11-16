@@ -76,6 +76,9 @@ script:
   - sh -c "if [ '$JSTESTS' = '1' ]; then npm install --deps; node_modules/karma/bin/karma start karma.config.js --single-run; fi"
   - cd ../
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  
 matrix:
   include:
     - php: 5.6
