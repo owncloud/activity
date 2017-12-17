@@ -1,9 +1,9 @@
 OC.L10N.register(
     "activity",
     {
-    "Activities" : "Актнивности",
+    "Activities" : "Активности",
     "Error loading activities" : "Грешка при зареждане на активностите",
-    "No activities" : "Няма активност",
+    "No activities" : "Няма активности",
     "Load more activities" : "Зареди повече активности",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} и {lastParameter}",
@@ -38,7 +38,7 @@ OC.L10N.register(
     "Weekly" : "Седмично",
     "Activity feed" : "Поток за активност",
     "Enable RSS feed" : "Разрешаване на RSS източници.",
-    "No activity yet" : "Няма активност все още",
+    "No activity yet" : "Все още няма активност",
     "No more events to load" : "Няма повече известия за зареждане.",
     "Files" : "Файлове"
 },
