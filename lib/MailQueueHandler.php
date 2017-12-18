@@ -276,7 +276,11 @@ class MailQueueHandler {
 	 * @param array $affectedUsers
 	 * @param int $maxTime
 	 */
-	public function deleteSentItems($affectedUsers, $maxTime) {
+	public function deleteSentItems(array $affectedUsers, $maxTime) {
+		// Don't try to delete if we are not considering any users
+		if(count($affectedUsers) === 0) {
+			return;
+		}
 		$placeholders = implode(',', array_fill(0, sizeof($affectedUsers), '?'));
 		$queryParams = $affectedUsers;
 		array_unshift($queryParams, (int) $maxTime);
