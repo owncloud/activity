@@ -23,6 +23,7 @@
 namespace OCA\Activity;
 
 use OCP\Util;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * The class to handle the filesystem hooks
@@ -71,17 +72,17 @@ class FilesHooksStatic {
 
 	/**
 	 * Manage sharing events
-	 * @param array $params The hook params
+	 * @param GenericEvent $params The hook params
 	 */
-	public static function share($params) {
+	public static function share(GenericEvent $params) {
 		self::getHooks()->share($params);
 	}
 
 	/**
 	 * Manage sharing events
-	 * @param array $params The hook params
+	 * @param GenericEvent $params The hook params
 	 */
-	public static function unShare($params) {
+	public static function unShare(GenericEvent $params) {
 		self::getHooks()->unShare($params);
 	}
 

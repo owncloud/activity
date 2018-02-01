@@ -36,6 +36,7 @@ use OCP\IGroupManager;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Share;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * The class to handle the filesystem hooks
@@ -224,32 +225,54 @@ class FilesHooks {
 
 	/**
 	 * Manage sharing events
-	 * @param array $params The hook params
+	 * @param GenericEvent $params The hook params
 	 */
-	public function share($params) {
-		if ($params['itemType'] === 'file' || $params['itemType'] === 'folder') {
-			if ((int) $params['shareType'] === Share::SHARE_TYPE_USER) {
-				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], true);
-			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
-				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], true);
+	public function share(GenericEvent $params) {
+		\OC::$server->getLogger()->warning(__METHOD__ . " LOOPING . First take the count = " . count($params->getArguments()));
+		foreach ($params->getArguments() as $argument) {
+			\OC::$server->getLogger()->warning(__METHOD__ . " val = $argument");
+		}
+		if ($params->getArgument('itemType') === 'file' || $params->getArgument('itemType') === 'folder') {
+			if ((int) $params->getArgument('shareType') === Share::SHARE_TYPE_USER) {
+				$this->shareFileOrFolderWithUser($params->getArgument('shareWith'),
+					(int) $params->getArgument('fileSource'),
+					$params->getArgument('itemType'),
+					$params->getArgument('fileTarget'), true);
+			} else if ((int) $params->getArgument('shareType') === Share::SHARE_TYPE_GROUP) {
+				$this->shareFileOrFolderWithGroup($params->getArgument('shareWith'),
+					(int) $params->getArgument('fileSource'),
+					$params->getArgument('itemType'),
+					$params->getArgument('fileTarget'),
+					(int) $params->getArgument('id'), true);
 			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
-				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], true);
+				$this->shareFileOrFolderByLink((int) $params->getArgument('fileSource'),
+					$params->getArgument('itemType'),
+					$params->getArgument('uidOwner'), true);
 			}
 		}
 	}
 
 	/**
 	 * Manage sharing events
-	 * @param array $params The hook params
+	 * @param GenericEvent $params The hook params
 	 */
-	public function unShare($params) {
-		if ($params['itemType'] === 'file' || $params['itemType'] === 'folder') {
-			if ((int) $params['shareType'] === Share::SHARE_TYPE_USER) {
-				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], false);
-			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
-				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], false);
+	public function unShare(GenericEvent $params) {
+		if ($params->getArgument('itemType') === 'file' || $params->getArgument('itemType') === 'folder') {
+			if ((int) $params->getArgument('shareType') === Share::SHARE_TYPE_USER) {
+				$this->shareFileOrFolderWithUser($params->getArgument('shareWith'),
+					(int) $params->getArgument('fileSource'),
+					$params->getArgument('itemType'),
+					$params->getArgument('fileTarget'), false);
+			} else if ((int) $params->getArgument('shareType') === Share::SHARE_TYPE_GROUP) {
+				$this->shareFileOrFolderWithGroup($params->getArgument('shareWith'),
+					(int) $params->getArgument('fileSource'),
+					$params->getArgument('itemType'),
+					$params->getArgument('fileTarget'),
+					(int) $params->getArgument('id'), false);
 			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
-				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], false);
+				$this->shareFileOrFolderByLink((int) $params->getArgument('fileSource'),
+					$params->getArgument('itemType'),
+					$params->getArgument('uidOwner'), false);
 			}
 		}
 	}

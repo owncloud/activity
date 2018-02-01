@@ -23,6 +23,7 @@ namespace OCA\Activity;
 
 use OCA\Activity\AppInfo\Application;
 use OCP\IDBConnection;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Handles the stream and mail queue of a user when he is being deleted
@@ -33,10 +34,10 @@ class Hooks {
 	 *
 	 * @param array $params The hook params
 	 */
-	static public function deleteUser($params) {
+	static public function deleteUser(GenericEvent $params) {
 		$connection = \OC::$server->getDatabaseConnection();
-		self::deleteUserStream($params['uid']);
-		self::deleteUserMailQueue($connection, $params['uid']);
+		self::deleteUserStream($params->getArgument('uid'));
+		self::deleteUserMailQueue($connection, $params->getArgument('uid'));
 	}
 
 	/**
