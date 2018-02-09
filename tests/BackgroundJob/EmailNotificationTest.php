@@ -97,4 +97,51 @@ class EmailNotificationTest extends TestCase {
 
 		$this->assertEquals(2, $this->invokePrivate($backgroundJob, 'runStep', [2, 200]));
 	}
+
+	/**
+	 * Test run where all emails fail to send - cleanup should error
+	 * @expectedException \Exception
+	 */
+	public function testRunStepWhereEmailThrowsException() {
+		$mailQueueHandler = $this->getMockBuilder('OCA\Activity\MailQueueHandler')
+			->disableOriginalConstructor()
+			->getMock();
+		$config = $this->getMockBuilder('OCP\IConfig')
+			->disableOriginalConstructor()
+			->getMock();
+		$backgroundJob = new EmailNotification(
+			$mailQueueHandler,
+			$config,
+			$this->createMock('OCP\ILogger'),
+			true
+		);
+
+		$mailQueueHandler->expects($this->any())
+			->method('getAffectedUsers')
+			->with(2, 200)
+			->willReturn([
+				['uid' => 'test1', 'email' => 'test1@localhost'],
+			]);
+		$e = new \Exception();
+		// Sending the email will throw an exception
+		$mailQueueHandler->expects($this->once())
+			->method('sendEmailToUser')
+			->with('test1', 'test1@localhost', 'de', date_default_timezone_get(), $this->anything())
+			->willThrowException($e);
+		$config->expects($this->any())
+			->method('getUserValueForUsers')
+			->willReturnMap([
+				['core', 'lang', [
+					'test1'
+				], [
+					'test1' => 'de'
+				]]
+			]);
+
+		// Cleanup will be performed, but should now handle having no users supplied to it
+		// This deals with the case that the first email in the queue throws
+		// an exception that we cannot handle.
+
+		$this->assertEquals(1, $this->invokePrivate($backgroundJob, 'runStep', [2, 200]));
+	}
 }
