@@ -273,6 +273,15 @@ class MailQueueHandlerTest extends TestCase {
 	}
 
 	/**
+	 * Trigger the cleanup with no users (if first email fails to send)
+	 * Should not throw an exception
+	 */
+	public function testDeleteSentItemsWithNoUsers() {
+		$this->mailQueueHandler->deleteSentItems([], time());
+	}
+
+
+	/**
 	 * @param array $users
 	 * @param int $maxTime
 	 * @param string $explain
