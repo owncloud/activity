@@ -1,8 +1,8 @@
 { "translations": {
-    "Activities" : "Activitéiten",
-    "Error loading activities" : "Feeler beim Luede vun den Activitéiten",
+    "Activities" : "Aktivitéiten",
+    "Error loading activities" : "Feeler beim Luede vun den Aktivitéiten",
     "No activities" : "Keng Aktivitéit",
-    "Load more activities" : "Lued méi Aktivitéiten",
+    "Load more activities" : "Méi Aktivitéiten lueden",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} an {lastParameter}",
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} an {linkStart}%n méi{linkEnd}","{parameterList} an {linkStart}%n méi{linkEnd}"],
