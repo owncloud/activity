@@ -41,7 +41,6 @@ branches:
     - /^stable\d+(\.\d+)?$/
 
 before_install:
-  - composer install
   - which php
   - more `which pecl`
   - which phpize
@@ -65,7 +64,7 @@ script:
 
   # Run phpunit tests
   - cd tests/
-  - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' != '1' -a '$CODECHECK' != '2' ]; then ../vendor/bin/phpunit --configuration phpunit.xml; fi"
+  - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' != '1' -a '$CODECHECK' != '2' ]; then ../../../lib/composer/bin/phpunit --configuration phpunit.xml; fi"
 
   # Create coverage report
   - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' != '1' -a '$CODECHECK' != '2' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
