@@ -30,7 +30,7 @@ Never again miss an important event related to content in ownCloud and always be
   <screenshot>https://raw.githubusercontent.com/owncloud/screenshots/68550c2b7c53e6309132ca1c7b177adca976db0b/activity/activity.png</screenshot>
   <category>tools</category>
   <dependencies>
-    <owncloud min-version="10.0.3" max-version="10.0"/>
+    <owncloud min-version="10.0.3" max-version="10.1"/>
   </dependencies>
   <background-jobs>
     <job>OCA\Activity\BackgroundJob\EmailNotification</job>

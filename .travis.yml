@@ -5,6 +5,7 @@ php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
 
 services:
   - docker
@@ -29,7 +30,7 @@ cache:
 
 env:
   global:
-    - CORE_BRANCH=master
+    - CORE_BRANCH=stable10
     - APP_NAME=activity
   matrix:
     - DB=sqlite
@@ -40,7 +41,6 @@ branches:
     - /^stable\d+(\.\d+)?$/
 
 before_install:
-  - composer install
   - which php
   - more `which pecl`
   - which phpize
@@ -64,7 +64,7 @@ script:
 
   # Run phpunit tests
   - cd tests/
-  - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' != '1' -a '$CODECHECK' != '2' ]; then ../vendor/bin/phpunit --configuration phpunit.xml; fi"
+  - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' != '1' -a '$CODECHECK' != '2' ]; then ../../../lib/composer/bin/phpunit --configuration phpunit.xml; fi"
 
   # Create coverage report
   - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' != '1' -a '$CODECHECK' != '2' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
@@ -89,6 +89,10 @@ matrix:
       env: DB=mysqlmb4
     - php: 5.6
       env: DB=pgsql
+    - php: 7.1
+      env: DB=pgsql CORE_BRANCH=master
+    - php: 7.2
+      env: DB=pgsql CORE_BRANCH=master
     - php: 5.6
       env: DB=mysql;CODECHECK=1
     - php: 5.6

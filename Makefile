@@ -20,11 +20,8 @@ src_dirs=appinfo css img js l10n lib templates
 all_src=$(src_dirs) $(doc_files)
 build_dir=$(CURDIR)/build
 dist_dir=$(build_dir)/dist
-COMPOSER_BIN=$(build_dir)/composer.phar
 
 # dependency folders (leave empty if not required)
-composer_deps=
-composer_dev_deps=vendor
 nodejs_deps=
 bower_deps=
 
@@ -45,36 +42,10 @@ endif
 # Catch-all rules
 #
 .PHONY: all
-all: $(composer_dev_deps) $(bower_deps)
+all: $(bower_deps)
 
 .PHONY: clean
 clean: clean-deps clean-dist clean-build
-
-#
-# Basic required tools
-#
-$(COMPOSER_BIN):
-	mkdir -p $(build_dir)
-	cd $(build_dir) && curl -sS https://getcomposer.org/installer | php
-
-#
-# PHP dependencies
-#
-$(composer_deps): $(COMPOSER_BIN) composer.json composer.lock
-	php $(COMPOSER_BIN) install --no-dev
-
-$(composer_dev_deps): $(COMPOSER_BIN) composer.json composer.lock
-	php $(COMPOSER_BIN) install --dev
-
-.PHONY: clean-composer-deps
-clean-composer-deps:
-	rm -f $(COMPOSER_BIN)
-	rm -Rf $(composer_deps) $(composer_dev_deps)
-
-.PHONY: update-composer
-update-composer: $(COMPOSER_BIN)
-	rm -f composer.lock
-	php $(COMPOSER_BIN) install --prefer-dist
 
 #
 ## Node dependencies
@@ -91,7 +62,7 @@ $(bower_deps): $(BOWER)
 #
 # dist
 #
-$(dist_dir)/$(app_name): $(composer_deps) $(bower_deps)
+$(dist_dir)/$(app_name): $(bower_deps)
 	rm -Rf $@; mkdir -p $@
 	cp -R $(all_src) $@
 
@@ -115,6 +86,6 @@ clean-build:
 	rm -Rf $(build_dir)
 
 .PHONY: clean-deps
-clean-deps: clean-composer-deps
+clean-deps:
 	rm -Rf $(nodejs_deps) $(bower_deps)
 
