@@ -105,6 +105,7 @@ class EmailNotification extends TimedJob {
 	 * @param int $limit Number of users we want to send an email to
 	 * @param int $sendTime The latest send time
 	 * @return int Number of users we sent an email to
+	 * @throws \Exception
 	 */
 	protected function runStep($limit, $sendTime) {
 		// Get all users which should receive an email
