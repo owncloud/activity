@@ -4,7 +4,7 @@ OC.L10N.register(
     "Activities" : "活動",
     "Error loading activities" : "載入活動時發生錯誤",
     "No activities" : "沒有活動",
-    "Load more activities" : "更多活動......",
+    "Load more activities" : "載入更多活動......",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} 和 {lastParameter}",
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} 和{linkStart}其他 %n 個{linkEnd}"],
