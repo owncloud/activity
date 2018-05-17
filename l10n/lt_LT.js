@@ -7,7 +7,7 @@ OC.L10N.register(
     "Load more activities" : "Įkelti daugiau veiksmų",
     ", " : ",",
     "{parameterList} and {lastParameter}" : "{parameterList} ir {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} ir {linkStart}%n daugiau{linkEnd}","{parameterList} ir {linkStart}%n daugiau{linkEnd}","{parameterList} ir {linkStart}%n daugiau{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} ir {linkStart}%n daugiau{linkEnd}","{parameterList} ir {linkStart}%n daugiau{linkEnd}","{parameterList} ir {linkStart}%n daugiau{linkEnd}","{parameterList} ir {linkStart}%n daugiau{linkEnd}"],
     "in {directory}" : "{directory}",
     "This stream will show events like additions, changes & shares" : "Pridėjimų, pakeitimų ir dalinimosi įvykių srautas.",
     "There are no events for this filter" : "Nėra įvykių pasirinktam filtrui",
@@ -27,7 +27,7 @@ OC.L10N.register(
     "Hello %s," : "Sveiki %s,",
     "You are receiving this email because the following things happened at %s" : "Informacinis pranešimas nes įvyko šie įvykiai: %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* ir %n vienas","* ir %n keli","* ir %n kiti"],
+    "_* and %n more _::_* and %n more _" : ["* ir %n vienas","* ir %n keli","* ir %n kiti","* ir %n kiti"],
     "Activity" : "Veikla",
     "List your own file actions in the stream" : "Į sąrašą įtraukti ir mano veiksmus su failais",
     "Notify about your own actions via email" : "Informuoti apie mano paties veiksmus per el. paštą",
@@ -42,4 +42,4 @@ OC.L10N.register(
     "No more events to load" : "Nėra daugiau įkeltinų įvykių",
     "Files" : "Failai"
 },
-"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);");
+"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 1 : (n%10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 3 : n % 1 != 0 ? 4);");

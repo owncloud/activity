@@ -7,7 +7,7 @@ OC.L10N.register(
     "Load more activities" : "بار کردن فعّالیت‌های بیش‌تر",
     ", " : "رشته های ترجمه نشده",
     "{parameterList} and {lastParameter}" : "{parameterList} و {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} و {linkStart}%n بیشتر{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} و {linkStart}%n بیشتر{linkEnd}","{parameterList} و {linkStart}%n بیشتر{linkEnd}"],
     "in {directory}" : "در {directory}",
     "This stream will show events like additions, changes & shares" : "این جریان رویدادهایی چون افزودن، تغییر و هم‌رسانی‌ها را نشان می‌دهد",
     "There are no events for this filter" : "هیچ رخدادی برای این فیلتر وجود ندارد",
@@ -27,7 +27,7 @@ OC.L10N.register(
     "Hello %s," : "سلام %s",
     "You are receiving this email because the following things happened at %s" : "شما به علت رویداد موارد زیر این ایمیل را دریافت کرده‌اید %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* و %n بیشتر"],
+    "_* and %n more _::_* and %n more _" : ["* و %n بیشتر","* و %n بیشتر"],
     "Activity" : "فعالیت",
     "List your own file actions in the stream" : "فهرست کردن اعمال پروندهٔ خودتان در جریان",
     "Notify about your own actions via email" : "اطلاع رسانی درباره اعمال شخصی تان با ایمیل",
@@ -42,4 +42,4 @@ OC.L10N.register(
     "No more events to load" : "رویداد دیگری برای بارگزاری وجود ندارد",
     "Files" : "پرونده‌ها"
 },
-"nplurals=1; plural=0;");
+"nplurals=2; plural=((n<=1 && n>= 0) ? 1);");

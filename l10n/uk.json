@@ -5,7 +5,7 @@
     "Load more activities" : "Завантажити більше подій",
     ", " : ",",
     "{parameterList} and {lastParameter}" : "{parameterList} та {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} та {linkStart}%n ще{linkEnd}","{parameterList} та {linkStart}%n ще{linkEnd}","{parameterList} та {linkStart}%n ще{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} та {linkStart}%n ще{linkEnd}","{parameterList} та {linkStart}%n ще{linkEnd}","{parameterList} та {linkStart}%n ще{linkEnd}","{parameterList} та {linkStart}%n ще{linkEnd}"],
     "in {directory}" : "у {directory}",
     "This stream will show events like additions, changes & shares" : "У цьому потоці будуть показані події, на кшталт доповнень, змін та спільного доступу",
     "There are no events for this filter" : "За цим фільтром події відсутні",
@@ -25,7 +25,7 @@
     "Hello %s," : "Привіт %s,",
     "You are receiving this email because the following things happened at %s" : "Ви отримали це повідомлення, оскільки на %s відбулося наступне",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* та ще %n","* та ще %n","* та ще %n"],
+    "_* and %n more _::_* and %n more _" : ["* та ще %n","* та ще %n","* та ще %n","* та ще %n"],
     "Activity" : "Активність",
     "List your own file actions in the stream" : "Показати ваші власні дії над файлами в потоці",
     "Notify about your own actions via email" : "Повідомляти про ваші особисті дії за допомогою електронної пошти",
@@ -39,5 +39,5 @@
     "No activity yet" : "Поки що активність відсутня",
     "No more events to load" : "Більше немає подій для завантаження",
     "Files" : "Файли"
-},"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+},"pluralForm" :"nplurals=4; plural=( n % 1 == 0 && n % 10 =1 && n % 100 != 11) ? 1 : ( n %1 == 0 && ( n >= 2 && n <=4) && ( n % 100 <12 || n % 100 > 14)) ? 3 : ( n % 1 ==0 && (n% 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14));"
 }

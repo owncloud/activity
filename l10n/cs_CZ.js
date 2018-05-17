@@ -7,7 +7,7 @@ OC.L10N.register(
     "Load more activities" : "Načíst více aktivit",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} a {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} a {linkStart}%n další{linkEnd}","{parameterList} a {linkStart}%n další{linkEnd}","{parameterList} a {linkStart}%n dalších{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} a {linkStart}%n další{linkEnd}","{parameterList} a {linkStart}%n další{linkEnd}","{parameterList} a {linkStart}%n dalších{linkEnd}","{parameterList} a {linkStart}%n dalších{linkEnd}"],
     "in {directory}" : "v {directory}",
     "This stream will show events like additions, changes & shares" : "Datový proud bude zobrazovat události jako přidání, změny a sdílení",
     "There are no events for this filter" : "Pro tato kritéria nejsou žádné události",
@@ -27,7 +27,7 @@ OC.L10N.register(
     "Hello %s," : "Vítejte %s,",
     "You are receiving this email because the following things happened at %s" : "Dostali jste tento email, protože došlo k následujícím událostem na %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* a %n další ","* a %n další ","* a %n dalších "],
+    "_* and %n more _::_* and %n more _" : ["* a %n další ","* a %n další ","* a %n dalších ","* a %n dalších "],
     "Activity" : "Aktivita",
     "List your own file actions in the stream" : "Zobrazit vaše vlastní souborové akce v proudu",
     "Notify about your own actions via email" : "Posílat oznámení o vlastních činnostech emailem",
@@ -42,4 +42,4 @@ OC.L10N.register(
     "No more events to load" : "Žádné další události k načtení",
     "Files" : "Soubory"
 },
-"nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;");
+"nplurals=4; plural=(n < 10 && n % 1 == 0) ? 1 : (n < 9999 && n >= 10 && n % 1 == 0) ? 3 : (n % 1 != 0) : 4;");
