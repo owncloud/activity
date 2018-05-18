@@ -42,4 +42,4 @@ OC.L10N.register(
     "No more events to load" : "رویداد دیگری برای بارگزاری وجود ندارد",
     "Files" : "پرونده‌ها"
 },
-"nplurals=2; plural=((n<=1 && n>= 0) ? 1);");
+"nplurals=2; plural=(n > 1);");

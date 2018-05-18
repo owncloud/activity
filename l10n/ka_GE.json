@@ -33,5 +33,5 @@
     "No activity yet" : "ჯერ-ჯერობით აქტივობები არაა",
     "No more events to load" : "ყველა მოვლენა ჩამოტვირთულია",
     "Files" : "ფაილები"
-},"pluralForm" :"nplurals=2; plural=(n==1);"
+},"pluralForm" :"nplurals=2; plural=(n!=1);"
 }
