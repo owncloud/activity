@@ -260,9 +260,18 @@ class MailQueueHandler {
 		$alttext->assign('overwriteL10N', $l);
 		$emailText = $alttext->fetchPage();
 
+		$htmltext = new Template('activity', 'html.notification', '', false);
+		$htmltext->assign('username', $user->getDisplayName());
+		$htmltext->assign('activities', $activityList);
+		$htmltext->assign('skippedCount', $skippedCount);
+		$htmltext->assign('owncloud_installation', $this->urlGenerator->getAbsoluteURL('/'));
+		$htmltext->assign('overwriteL10N', $l);
+		$htmlText = $htmltext->fetchPage();
+
 		$message = $this->mailer->createMessage();
 		$message->setTo([$email => $user->getDisplayName()]);
 		$message->setSubject((string) $l->t('Activity notification'));
+		$message->setHtmlBody($htmlText);
 		$message->setPlainBody($emailText);
 		$message->setFrom([$this->getSenderData('email') => $this->getSenderData('name')]);
 		$this->mailer->send($message);

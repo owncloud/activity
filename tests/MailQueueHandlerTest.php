@@ -255,6 +255,8 @@ class MailQueueHandlerTest extends TestCase {
 		$this->message->expects($this->once())
 			->method('setPlainBody');
 		$this->message->expects($this->once())
+			->method('setHtmlBody');
+		$this->message->expects($this->once())
 			->method('setFrom');
 
 		$this->activityManager->expects($this->exactly(2))
