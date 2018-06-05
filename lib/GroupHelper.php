@@ -163,7 +163,8 @@ class GroupHelper {
 	 * @return false|string False, if grouping is not allowed, grouping key otherwise
 	 */
 	protected function getGroupKey($activity) {
-		if ($this->getGroupParameter($activity) === false) {
+		$parameterIndex = $this->getGroupParameter($activity);
+		if ($parameterIndex === false) {
 			return false;
 		}
 
@@ -175,7 +176,13 @@ class GroupHelper {
 			return false;
 		}
 
-		return $activity['app'] . '|' . $activity['user'] . '|' . $activity['subject'] . '|' . $activity['object_type'];
+		// the group key is based on all parameters outside of the one
+		// pointed at by $parameterIndex as it's the varying part
+		$subjectParams = json_decode($activity['subjectparams'], true);
+		unset($subjectParams[$parameterIndex]);
+		$paramsKey = md5(json_encode($subjectParams));
+
+		return $activity['app'] . '|' . $activity['user'] . '|' . $activity['subject'] . '|' . $activity['object_type'] . '|' . $paramsKey;
 	}
 
 	/**

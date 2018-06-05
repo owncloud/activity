@@ -542,6 +542,7 @@ class GroupHelperTest extends TestCase {
 					'app' => 'app1',
 					'user' => 'user1',
 					'subject' => 'subject1',
+					'subjectparams' => '',
 					'object_type' => 'object_type1',
 				], false, false
 			],
@@ -550,6 +551,7 @@ class GroupHelperTest extends TestCase {
 					'app' => 'app1',
 					'user' => '',
 					'subject' => 'subject1',
+					'subjectparams' => '["param1", "param2"]',
 					'object_type' => 'object_type1',
 				], 0, false
 			],
@@ -558,8 +560,9 @@ class GroupHelperTest extends TestCase {
 					'app' => 'app1',
 					'user' => 'user1',
 					'subject' => 'subject1',
+					'subjectparams' => '["param1", "param2"]',
 					'object_type' => 'object_type1',
-				], 1, 'app1|user1|subject1|object_type1'
+				], 1, 'app1|user1|subject1|object_type1|05649ff25367e228c736c5d0be5425a4'
 			],
 		];
 	}
