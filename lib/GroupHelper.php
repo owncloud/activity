@@ -109,20 +109,30 @@ class GroupHelper {
 			abs($activity['timestamp'] - $this->groupTime) < (3 * 24 * 60 * 60)
 			&& (!isset($this->openGroup['activity_ids']) || sizeof($this->openGroup['activity_ids']) <= 5)
 		) {
-			$parameter = $this->getGroupParameter($activity);
-			if ($parameter !== false) {
-				/** @var IParameter $parameterInstance */
-				$parameterInstance = $this->openGroup['subjectparams_array'][$parameter];
+			$groupOnParameter = $this->getGroupParameter($activity);
+			if ($groupOnParameter !== false) {
+				// aggregate all parameter values outside of $groupOnParameter
+				$subjectParams = json_decode($activity['subjectparams'], true);
+				foreach ($subjectParams as $parameter => $subjectParam) {
+					if ($parameter === $groupOnParameter) {
+						// exclude $groupOnParameter
+						continue;
+					}
 
-				if (!($parameterInstance instanceof Collection)) {
-					$collection = $this->dataHelper->createCollection();
-					$collection->addParameter($parameterInstance);
-					$parameterInstance = $collection;
+					/** @var IParameter $parameterInstance */
+					$parameterInstance = $this->openGroup['subjectparams_array'][$parameter];
+
+					// convert parameter to collection as we have a second value coming in
+					if (!($parameterInstance instanceof Collection)) {
+						$collection = $this->dataHelper->createCollection();
+						$collection->addParameter($parameterInstance);
+						$parameterInstance = $collection;
+					}
+
+					/** @var Collection $parameterInstance */
+					$parameterInstance->addParameter($activity['subjectparams_array'][$parameter]);
+					$this->openGroup['subjectparams_array'][$parameter] = $parameterInstance;
 				}
-
-				/** @var Collection $parameterInstance */
-				$parameterInstance->addParameter($activity['subjectparams_array'][$parameter]);
-				$this->openGroup['subjectparams_array'][$parameter] = $parameterInstance;
 
 				if (!isset($this->openGroup['activity_ids'])) {
 					$this->openGroup['activity_ids'] = [(int) $this->openGroup['activity_id']];
@@ -163,7 +173,8 @@ class GroupHelper {
 	 * @return false|string False, if grouping is not allowed, grouping key otherwise
 	 */
 	protected function getGroupKey($activity) {
-		if ($this->getGroupParameter($activity) === false) {
+		$parameterIndex = $this->getGroupParameter($activity);
+		if ($parameterIndex === false) {
 			return false;
 		}
 
@@ -175,7 +186,12 @@ class GroupHelper {
 			return false;
 		}
 
-		return $activity['app'] . '|' . $activity['user'] . '|' . $activity['subject'] . '|' . $activity['object_type'];
+		// need to also group on subjectparams value
+		$subjectParams = json_decode($activity['subjectparams'], true);
+		$groupByParam = $subjectParams[$parameterIndex];
+		$paramsKey = md5(json_encode($groupByParam));
+
+		return $activity['app'] . '|' . $activity['user'] . '|' . $activity['subject'] . '|' . $activity['object_type'] . '|' . $paramsKey;
 	}
 
 	/**
