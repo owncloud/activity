@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [2.3.7]
 ### Fixed
+- Adjust preview URL generation based on new endpiont - [#631](https://github.com/owncloud/activity/pull/631)
 - Fix grouping for share messages - [#626](https://github.com/owncloud/activity/issues/626)
 - Add missing HTML template to activity email notification - [#620](https://github.com/owncloud/activity/issues/620)
 - Don't try to delete items when no users in context - [#604](https://github.com/owncloud/activity/issues/604)
