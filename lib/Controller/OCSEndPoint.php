@@ -310,12 +310,25 @@ class OCSEndPoint {
 				$preview['source'] = $pathPreview['source'];
 			} else if ($this->preview->isAvailable($fileInfo)) {
 				$preview['isMimeTypeIcon'] = false;
-				$preview['source'] = $this->urlGenerator->linkToRoute('core_ajax_preview', [
-					'file' => $info['path'],
-					'c' => $this->view->getETag($info['path']),
-					'x' => 150,
-					'y' => 150,
-				]);
+				if (\version_compare(\implode('.', \OCP\Util::getVersion()), '10.0.9', '>=')) {
+					$query = \http_build_query([
+						'c' => $this->view->getETag($info['path']),
+						'x' => 150,
+						'y' => 150
+					], '', '&');
+
+					$preview['source'] = $this->urlGenerator->linkTo('', 'remote.php')
+						. '/dav/files/' . \rawurlencode($this->user) . \OCP\Util::encodePath($filePath)
+						. "?$query";
+				} else {
+					$preview['source'] = $this->urlGenerator->linkToRoute('core_ajax_preview', [
+						'file' => $info['path'],
+						'c' => $this->view->getETag($info['path']),
+						'x' => 150,
+						'y' => 150,
+					]);
+				}
+
 			} else {
 				$preview['source'] = $this->getPreviewPathFromMimeType($fileInfo->getMimetype());
 			}

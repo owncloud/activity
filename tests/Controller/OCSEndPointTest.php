@@ -564,7 +564,7 @@ class OCSEndPointTest extends TestCase {
 		return [
 			['author', 42, '/path', '/currentPath', true, true, false, '/preview/dir', true],
 			['author', 42, '/file.txt', '/currentFile.txt', false, true, false, '/preview/mpeg', true],
-			['author', 42, '/file.txt', '/currentFile.txt', false, true, true, '/preview/currentFile.txt', false],
+			['author', 42, '/file.txt', '/currentFile.txt', false, true, true, 'remote.php/dav/files//file.txt?x=150&y=150', false],
 			['author', 42, '/file.txt', '/currentFile.txt', false, false, true, 'source::getPreviewFromPath', true],
 		];
 	}
@@ -640,12 +640,19 @@ class OCSEndPointTest extends TestCase {
 					->with('audio/mp3')
 					->willReturn('/preview/mpeg');
 			} else {
-				$this->urlGenerator->expects($this->once())
-					->method('linkToRoute')
-					->with('core_ajax_preview', $this->anything())
-					->willReturnCallback(function() use ($returnedPath) {
-						return '/preview' . $returnedPath;
-					});
+				if (!\version_compare(\implode('.', \OCP\Util::getVersion()), '10.0.9', '>=')) {
+					$this->urlGenerator->expects($this->once())
+						->method('linkToRoute')
+						->with('core_ajax_preview', $this->anything())
+						->willReturnCallback(function() use ($returnedPath) {
+							return '/preview' . $returnedPath;
+						});
+				} else {
+					$this->urlGenerator->expects($this->once())
+						->method('linkTo')
+						->with('', 'remote.php')
+						->willReturn('remote.php');
+				}
 			}
 		} else {
 			$this->view->expects($this->once())
