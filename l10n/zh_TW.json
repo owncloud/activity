@@ -27,6 +27,7 @@
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* 和其他 %n 個"],
     "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "因為發生以下的事情所以你收到這封郵件 <a href=\"%s\">%s</a>",
+    "%1$s - %2$s" : "%1$s - %2$s",
     "Activity" : "活動",
     "List your own file actions in the stream" : "在串流中列出您的活動狀態",
     "Notify about your own actions via email" : "透過郵件來通知有關於您的活動狀態",
