@@ -24,7 +24,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 $installedVersion = \OC::$server->getConfig()->getAppValue('activity', 'installed_version');
 $connection = \OC::$server->getDatabaseConnection();
 
-if (version_compare($installedVersion, '1.2.2', '<')) {
+if (\version_compare($installedVersion, '1.2.2', '<')) {
 	$mistakes = [
 		['*PREFIX*activity', 'subjectparams'],
 		['*PREFIX*activity', 'messageparams'],
@@ -42,9 +42,9 @@ if (version_compare($installedVersion, '1.2.2', '<')) {
 	}
 }
 
-if (version_compare($installedVersion, '1.2.2', '<')) {
-	$connection->executeUpdate('UPDATE `*PREFIX*activity` SET `app` = ? WHERE `type` = ?', array('files_sharing', 'shared'));
-	$connection->executeUpdate('UPDATE `*PREFIX*activity_mq` SET `amq_appid` = ? WHERE `amq_type` = ?', array('files_sharing', 'shared'));
+if (\version_compare($installedVersion, '1.2.2', '<')) {
+	$connection->executeUpdate('UPDATE `*PREFIX*activity` SET `app` = ? WHERE `type` = ?', ['files_sharing', 'shared']);
+	$connection->executeUpdate('UPDATE `*PREFIX*activity_mq` SET `amq_appid` = ? WHERE `amq_type` = ?', ['files_sharing', 'shared']);
 }
 
 // Delete notification settings that can not be changed, so we correctly fall

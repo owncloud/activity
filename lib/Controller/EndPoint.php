@@ -21,7 +21,6 @@
 
 namespace OCA\Activity\Controller;
 
-
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -87,7 +86,7 @@ class EndPoint extends Controller {
 			],
 			$ocsResult->getStatusCode() === 100 ? Http::STATUS_OK : $ocsResult->getStatusCode()
 		);
-		$response->setHeaders(array_merge(
+		$response->setHeaders(\array_merge(
 			$ocsResult->getHeaders(),
 			[
 				'Content-Type' => 'application/json; charset=utf-8'

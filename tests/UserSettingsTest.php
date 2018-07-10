@@ -41,7 +41,7 @@ class UserSettingsTest extends TestCase {
 			$this->createMock('OCP\IUserSession'),
 			$this->createMock('OCP\IConfig')
 		);
-		$activityManager->registerExtension(function() use ($activityLanguage) {
+		$activityManager->registerExtension(function () use ($activityLanguage) {
 			return new Extension($activityLanguage, $this->createMock('\OCP\IURLGenerator'));
 		});
 		$this->config = $this->createMock('OCP\IConfig');
@@ -57,14 +57,14 @@ class UserSettingsTest extends TestCase {
 	}
 
 	public function getDefaultSettingData() {
-		return array(
-			array('stream', 'type1', true),
-			array('email', 'type1', false),
-			array('setting', 'self', true),
-			array('setting', 'selfemail', false),
-			array('setting', 'batchtime', 3600),
-			array('setting', 'not-exists', false),
-		);
+		return [
+			['stream', 'type1', true],
+			['email', 'type1', false],
+			['setting', 'self', true],
+			['setting', 'selfemail', false],
+			['setting', 'batchtime', 3600],
+			['setting', 'not-exists', false],
+		];
 	}
 
 	/**
@@ -79,10 +79,10 @@ class UserSettingsTest extends TestCase {
 	}
 
 	public function getNotificationTypesData() {
-		return array(
+		return [
 			//array('test1', 'stream', array('type1')),
-			array('noPreferences', 'email', array('type2')),
-		);
+			['noPreferences', 'email', ['type2']],
+		];
 	}
 
 	/**
@@ -107,16 +107,16 @@ class UserSettingsTest extends TestCase {
 	}
 
 	public function filterUsersBySettingData() {
-		return array(
-			array(array(), 'stream', 'type1', array()),
-			array(array('test', 'test1', 'test2', 'test3', 'test4'), 'stream', 'type3', array('test1' => 1, 'test4' => 1)),
-			array(array('test', 'test1', 'test2', 'test3', 'test4', 'test5'), 'email', 'type3', array('test1' => '1', 'test4' => '4', 'test5' => 1)),
-			array(array('test', 'test6'), 'stream', 'type1', array('test' => 1, 'test6' => 1)),
-			array(array('test', 'test6'), 'stream', 'type4', array('test6' => 1)),
-			array(array('test6'), 'email', 'type2', array('test6' => '2700')),
-			array(array('test', 'test6'), 'email', 'type2', array('test' => '3600', 'test6' => '2700')),
-			array(array('test', 'test6'), 'email', 'type1', array('test6' => '2700')),
-		);
+		return [
+			[[], 'stream', 'type1', []],
+			[['test', 'test1', 'test2', 'test3', 'test4'], 'stream', 'type3', ['test1' => 1, 'test4' => 1]],
+			[['test', 'test1', 'test2', 'test3', 'test4', 'test5'], 'email', 'type3', ['test1' => '1', 'test4' => '4', 'test5' => 1]],
+			[['test', 'test6'], 'stream', 'type1', ['test' => 1, 'test6' => 1]],
+			[['test', 'test6'], 'stream', 'type4', ['test6' => 1]],
+			[['test6'], 'email', 'type2', ['test6' => '2700']],
+			[['test', 'test6'], 'email', 'type2', ['test' => '3600', 'test6' => '2700']],
+			[['test', 'test6'], 'email', 'type1', ['test6' => '2700']],
+		];
 	}
 
 	/**

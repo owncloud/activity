@@ -21,7 +21,6 @@
 
 namespace OCA\Activity;
 
-
 use OCP\IL10N;
 
 class PlainTextParser {
@@ -55,9 +54,9 @@ class PlainTextParser {
 	 * @return string
 	 */
 	protected function parseCollections($message) {
-		return preg_replace_callback('/<collection>(.*?)<\/collection>/', function($match) {
-			$parameterList = explode('><', $match[1]);
-			$parameterListLength = sizeof($parameterList);
+		return \preg_replace_callback('/<collection>(.*?)<\/collection>/', function ($match) {
+			$parameterList = \explode('><', $match[1]);
+			$parameterListLength = \sizeof($parameterList);
 
 			$parameters = [];
 			for ($i = 0; $i < $parameterListLength; $i++) {
@@ -72,11 +71,11 @@ class PlainTextParser {
 				$parameters[] = $this->parseParameters($parameter);
 			}
 			if ($parameterListLength === 1) {
-				return array_pop($parameters);
+				return \array_pop($parameters);
 			} else {
-				$lastParameter = array_pop($parameters);
+				$lastParameter = \array_pop($parameters);
 				return $this->l->t('%s and %s', [
-					implode($this->l->t(', '), $parameters),
+					\implode($this->l->t(', '), $parameters),
 					$lastParameter,
 				]);
 			}
@@ -104,7 +103,7 @@ class PlainTextParser {
 	 * @return string
 	 */
 	protected function parseUntypedParameters($message) {
-		return preg_replace_callback('/<parameter>(.*?)<\/parameter>/', function($match) {
+		return \preg_replace_callback('/<parameter>(.*?)<\/parameter>/', function ($match) {
 			return $match[1];
 		}, $message);
 	}
@@ -116,9 +115,9 @@ class PlainTextParser {
 	 * @return string
 	 */
 	protected function parseUserParameters($message) {
-		return preg_replace_callback('/<user\ display\-name=\"(.*?)\">(.*?)<\/user>/', function($match) {
+		return \preg_replace_callback('/<user\ display\-name=\"(.*?)\">(.*?)<\/user>/', function ($match) {
 			// We don't want HTML to work, but quote signs are okay.
-			return str_replace('&quot;', '"', $match[1]);
+			return \str_replace('&quot;', '"', $match[1]);
 		}, $message);
 	}
 
@@ -129,7 +128,7 @@ class PlainTextParser {
 	 * @return string
 	 */
 	protected function parseFederatedCloudIDParameters($message) {
-		return preg_replace_callback('/<federated-cloud-id\ display\-name=\"(.*?)\"\ user=\"(.*?)\"\ server=\"(.*?)\">(.*?)<\/federated-cloud-id>/', function($match) {
+		return \preg_replace_callback('/<federated-cloud-id\ display\-name=\"(.*?)\"\ user=\"(.*?)\"\ server=\"(.*?)\">(.*?)<\/federated-cloud-id>/', function ($match) {
 			return $match[1];
 		}, $message);
 	}
@@ -141,7 +140,7 @@ class PlainTextParser {
 	 * @return string
 	 */
 	protected function parseFileParameters($message) {
-		return preg_replace_callback('/<file\ link=\"(.*?)\"\ id=\"(.*?)\">(.*?)<\/file>/', function($match) {
+		return \preg_replace_callback('/<file\ link=\"(.*?)\"\ id=\"(.*?)\">(.*?)<\/file>/', function ($match) {
 			return $match[3];
 		}, $message);
 	}

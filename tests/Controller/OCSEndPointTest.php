@@ -114,7 +114,6 @@ class OCSEndPointTest extends TestCase {
 	}
 
 	public function tearDown() {
-
 		$this->restoreService('AvatarManager');
 		parent::tearDown();
 	}
@@ -404,7 +403,7 @@ class OCSEndPointTest extends TestCase {
 			$this->data->expects($this->once())
 				->method('get')
 				->willThrowException($dataGetThrows);
-		} else if ($dataGetThrows === false) {
+		} elseif ($dataGetThrows === false) {
 			$this->data->expects($this->once())
 				->method('get')
 				->willReturn([
@@ -426,17 +425,17 @@ class OCSEndPointTest extends TestCase {
 
 	public function dataGet() {
 		return [
-			[123456789, 'files', 42, [], false, 0, ['object_type' => 'files', 'object_id' => 42, 'datetime' => date('c', 123456789)]],
-			[12345678, 'calendar', 23, [], true, 0, ['object_type' => 'calendar', 'object_id' => 23, 'datetime' => date('c', 12345678), 'previews' => []]],
+			[123456789, 'files', 42, [], false, 0, ['object_type' => 'files', 'object_id' => 42, 'datetime' => \date('c', 123456789)]],
+			[12345678, 'calendar', 23, [], true, 0, ['object_type' => 'calendar', 'object_id' => 23, 'datetime' => \date('c', 12345678), 'previews' => []]],
 			[
 				12345678, 'files', 23, ['files' => [], 'affecteduser' => 'user1', 'object_name' => 'file.txt'],
 				true, 1,
-				['object_type' => 'files', 'object_id' => 23, 'files' => [], 'affecteduser' => 'user1', 'object_name' => 'file.txt', 'datetime' => date('c', 12345678), 'previews' => [['preview']]]
+				['object_type' => 'files', 'object_id' => 23, 'files' => [], 'affecteduser' => 'user1', 'object_name' => 'file.txt', 'datetime' => \date('c', 12345678), 'previews' => [['preview']]]
 			],
 			[
 				12345678, 'files', 23, ['files' => [12 => '12.png', 23 => '23.txt', 0 => '0.txt', 123 => ''], 'affecteduser' => 'user1'],
 				true, 2,
-				['object_type' => 'files', 'object_id' => 23, 'files' => [12 => '12.png', 23 => '23.txt', 0 => '0.txt', 123 => ''], 'affecteduser' => 'user1', 'datetime' => date('c', 12345678), 'previews' => [['preview'], ['preview']]]
+				['object_type' => 'files', 'object_id' => 23, 'files' => [12 => '12.png', 23 => '23.txt', 0 => '0.txt', 123 => ''], 'affecteduser' => 'user1', 'datetime' => \date('c', 12345678), 'previews' => [['preview'], ['preview']]]
 			],
 		];
 	}
@@ -470,7 +469,7 @@ class OCSEndPointTest extends TestCase {
 			->method('get')
 			->willReturn([
 				'data' => [
-					array_merge(['timestamp' => $time, 'object_type' => $objectType, 'object_id' => $objectId], $additionalArgs),
+					\array_merge(['timestamp' => $time, 'object_type' => $objectType, 'object_id' => $objectId], $additionalArgs),
 				],
 				'headers' => ['X-Activity-First-Known' => 23],
 				'has_more' => false,
@@ -583,7 +582,6 @@ class OCSEndPointTest extends TestCase {
 	 * @param bool $isMimeTypeIcon
 	 */
 	public function testGetPreview($author, $fileId, $path, $returnedPath, $isDir, $validFileInfo, $isMimeSup, $source, $isMimeTypeIcon) {
-
 		$controller = $this->getController([
 			'getPreviewLink',
 			'getPreviewFromPath',
@@ -603,7 +601,7 @@ class OCSEndPointTest extends TestCase {
 		$controller->expects($this->once())
 			->method('getPreviewLink')
 			->with($returnedPath, $isDir)
-			->willReturnCallback(function($path) {
+			->willReturnCallback(function ($path) {
 				return '/preview' . $path;
 			});
 
@@ -612,7 +610,7 @@ class OCSEndPointTest extends TestCase {
 				->method('getPreviewPathFromMimeType')
 				->with('dir')
 				->willReturn('/preview/dir');
-		} else if ($validFileInfo) {
+		} elseif ($validFileInfo) {
 			$fileInfo = $this->getMockBuilder('OCP\Files\FileInfo')
 				->disableOriginalConstructor()
 				->getMock();
@@ -644,7 +642,7 @@ class OCSEndPointTest extends TestCase {
 					$this->urlGenerator->expects($this->once())
 						->method('linkToRoute')
 						->with('core_ajax_preview', $this->anything())
-						->willReturnCallback(function() use ($returnedPath) {
+						->willReturnCallback(function () use ($returnedPath) {
 							return '/preview' . $returnedPath;
 						});
 				} else {

@@ -88,6 +88,6 @@ class Collection implements IParameter {
 			$parameterList[] = $parameter->format();
 		}
 
-		return '<collection>' . implode('', $parameterList) . '</collection>';
+		return '<collection>' . \implode('', $parameterList) . '</collection>';
 	}
 }

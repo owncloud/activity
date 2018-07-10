@@ -30,7 +30,7 @@ style('activity', 'settings');
 				<td class="small">
 					<input type="checkbox" id="<?php p($activity) ?>_<?php p($method) ?>" name="<?php p($activity) ?>_<?php p($method) ?>"
 						value="1" class="<?php p($activity) ?> <?php p($method) ?> checkbox"
-						<?php if (!in_array($method, $data['methods'])): ?> disabled="disabled"<?php endif; ?>
+						<?php if (!\in_array($method, $data['methods'])): ?> disabled="disabled"<?php endif; ?>
 						<?php if ($data[$method]): ?> checked="checked"<?php endif; ?> />
 					<label for="<?php p($activity) ?>_<?php p($method) ?>">
 					</label>

@@ -21,11 +21,10 @@
 
 namespace OCA\Activity\Tests\Template;
 
-
 use OCA\Activity\Tests\TestCase;
 use OCP\AppFramework\Http\TemplateResponse;
 
-class RssTest extends TestCase{
+class RssTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 	}
@@ -150,7 +149,7 @@ class RssTest extends TestCase{
 			$rendered
 		);
 
-		$rendered = substr($rendered, strlen($prefixStub), 0 - strlen($suffixStub));
+		$rendered = \substr($rendered, \strlen($prefixStub), 0 - \strlen($suffixStub));
 		$this->assertEquals($expected, $rendered);
 	}
 }

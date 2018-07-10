@@ -113,7 +113,7 @@ class DataHelper {
 			return $specialParameters;
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -171,27 +171,26 @@ class DataHelper {
 	 * @return array List of Parameters
 	 */
 	public function parseParameters($parameterString) {
-		if (!is_string($parameterString)) {
+		if (!\is_string($parameterString)) {
 			return [];
 		}
 		$parameters = $parameterString;
 
-		if ($parameterString[0] === '[' && substr($parameterString, -1) === ']' || $parameterString[0] === '"' && substr($parameterString, -1) === '"') {
+		if ($parameterString[0] === '[' && \substr($parameterString, -1) === ']' || $parameterString[0] === '"' && \substr($parameterString, -1) === '"') {
 			// ownCloud 8.1+
-			$parameters = json_decode($parameterString, true);
+			$parameters = \json_decode($parameterString, true);
 			if ($parameters === null) {
 				// Error on json decode
 				$parameters = $parameterString;
 			}
-
-		} else if (isset($parameterString[7]) && $parameterString[1] === ':' && ($parameterString[0] === 's' && substr($parameterString, -1) === ';' || $parameterString[0] === 'a' && substr($parameterString, -1) === '}')) {
+		} elseif (isset($parameterString[7]) && $parameterString[1] === ':' && ($parameterString[0] === 's' && \substr($parameterString, -1) === ';' || $parameterString[0] === 'a' && \substr($parameterString, -1) === '}')) {
 			// ownCloud 7+
 			// Min length 8: `s:1:"a";`
 			// Accepts: `s:1:"a";` for single string `a:1:{i:0;s:1:"a";}` for array
-			$parameters = unserialize($parameterString);
+			$parameters = \unserialize($parameterString);
 		}
 
-		if (is_array($parameters)) {
+		if (\is_array($parameters)) {
 			return $parameters;
 		}
 

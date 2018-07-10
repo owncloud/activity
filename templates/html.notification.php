@@ -30,18 +30,22 @@ $l = $_['overwriteL10N'];
 							) ?>
 						</p>
 						<ul>
-							<?php foreach ($_['activities'] as $activityData) { ?>
+							<?php foreach ($_['activities'] as $activityData) {
+								?>
 							<li>
 								<?php print_unescaped($l->t('%1$s - %2$s', $activityData)); ?>
 							</li>
-							<?php } ?>
-							<?php if ($_['skippedCount']) { ?>
+							<?php
+							} ?>
+							<?php if ($_['skippedCount']) {
+								?>
 							<li>
 								<?php print_unescaped(
 									$l->n('and %n more ', 'and %n more ', $_['skippedCount'])
 								); ?>
 							</li>
-							<?php } ?>
+							<?php
+							} ?>
 						</ul>
 					</td>
 				</tr>

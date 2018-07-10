@@ -489,7 +489,7 @@ class GroupHelperTest extends TestCase {
 		]);
 		$helper->expects($this->once())
 			->method('getEventFromArray')
-			->willReturnCallback(function($row) use ($event) {
+			->willReturnCallback(function ($row) use ($event) {
 				$this->assertSame([], $row['subjectparams']);
 				$this->assertSame([], $row['messageparams']);
 				return $event;
@@ -640,7 +640,7 @@ class GroupHelperTest extends TestCase {
 	 * @param array $expected
 	 */
 	public function testGetActivities(array $activities, array $expected) {
-		$numActivities = sizeof($activities);
+		$numActivities = \sizeof($activities);
 
 		$helper = $this->getHelper(['closeOpenGroup']);
 		$helper->expects($this->once())

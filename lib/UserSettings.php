@@ -67,7 +67,7 @@ class UserSettings {
 	 */
 	public function getUserSetting($user, $method, $type) {
 		$defaultSetting = $this->getDefaultSetting($method, $type);
-		if (is_bool($defaultSetting)) {
+		if (\is_bool($defaultSetting)) {
 			return (bool) $this->config->getUserValue(
 				$user,
 				'activity',
@@ -95,15 +95,15 @@ class UserSettings {
 		if ($method === 'setting') {
 			if ($type === 'batchtime') {
 				return 3600;
-			} else if ($type === 'self') {
+			} elseif ($type === 'self') {
 				return true;
-			} else if ($type === 'selfemail') {
+			} elseif ($type === 'selfemail') {
 				return false;
 			}
 		}
 
 		$settings = $this->manager->getDefaultTypes($method);
-		return in_array($type, $settings);
+		return \in_array($type, $settings);
 	}
 
 	/**
@@ -117,7 +117,7 @@ class UserSettings {
 		$l = Util::getL10N('activity');
 		$types = $this->data->getNotificationTypes($l);
 
-		$notificationTypes = array();
+		$notificationTypes = [];
 		foreach ($types as $type => $desc) {
 			if ($this->getUserSetting($user, $method, $type)) {
 				$notificationTypes[] = $type;
@@ -137,22 +137,22 @@ class UserSettings {
 	 *               Returns a "username => i:batchtime" Map for method = email
 	 */
 	public function filterUsersBySetting($users, $method, $type) {
-		if (empty($users) || !is_array($users)) {
-			return array();
+		if (empty($users) || !\is_array($users)) {
+			return [];
 		}
 
-		$filteredUsers = array();
+		$filteredUsers = [];
 		$potentialUsers = $this->config->getUserValueForUsers('activity', 'notify_' . $method . '_' . $type, $users);
 		foreach ($potentialUsers as $user => $value) {
 			if ($value) {
 				$filteredUsers[$user] = true;
 			}
-			unset($users[array_search($user, $users)]);
+			unset($users[\array_search($user, $users)]);
 		}
 
 		// Get the batch time setting from the database
 		if ($method === 'email') {
-			$potentialUsers = $this->config->getUserValueForUsers('activity', 'notify_setting_batchtime', array_keys($filteredUsers));
+			$potentialUsers = $this->config->getUserValueForUsers('activity', 'notify_setting_batchtime', \array_keys($filteredUsers));
 			foreach ($potentialUsers as $user => $value) {
 				$filteredUsers[$user] = $value;
 			}

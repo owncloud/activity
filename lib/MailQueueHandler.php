@@ -117,9 +117,9 @@ class MailQueueHandler {
 			. ' GROUP BY `amq_affecteduser`, `email` '
 			. ' ORDER BY `amq_trigger_time` ASC',
 			$limit);
-		$query->execute(array($latestSend));
+		$query->execute([$latestSend]);
 
-		$affectedUsers = array();
+		$affectedUsers = [];
 		while ($row = $query->fetch()) {
 			$affectedUsers[] = [
 				'uid' => $row['amq_affecteduser'],
@@ -149,7 +149,7 @@ class MailQueueHandler {
 		);
 		$query->execute([(int) $maxTime, $affectedUser]);
 
-		$activities = array();
+		$activities = [];
 		while ($row = $query->fetch()) {
 			$activities[] = $row;
 		}
@@ -228,7 +228,7 @@ class MailQueueHandler {
 		$this->dataHelper->setL10n($l);
 		$this->activityManager->setCurrentUserId($userName);
 
-		$activityList = array();
+		$activityList = [];
 		foreach ($mailData as $activity) {
 			$event = $this->activityManager->generateEvent();
 			$event->setApp($activity['amq_appid'])
@@ -242,14 +242,14 @@ class MailQueueHandler {
 				new \DateTimeZone($timezone), $l
 			);
 
-			$activityList[] = array(
+			$activityList[] = [
 				$parser->parseMessage(
 					$this->dataHelper->translation(
 						$activity['amq_appid'], $activity['amq_subject'], $this->dataHelper->getParameters($event, 'subject', $activity['amq_subjectparams'])
 					)
 				),
 				$relativeDateTime,
-			);
+			];
 		}
 
 		$alttext = new Template('activity', 'email.notification', '', false);
@@ -287,12 +287,12 @@ class MailQueueHandler {
 	 */
 	public function deleteSentItems(array $affectedUsers, $maxTime) {
 		// Don't try to delete if we are not considering any users
-		if(count($affectedUsers) === 0) {
+		if (\count($affectedUsers) === 0) {
 			return;
 		}
-		$placeholders = implode(',', array_fill(0, sizeof($affectedUsers), '?'));
+		$placeholders = \implode(',', \array_fill(0, \sizeof($affectedUsers), '?'));
 		$queryParams = $affectedUsers;
-		array_unshift($queryParams, (int) $maxTime);
+		\array_unshift($queryParams, (int) $maxTime);
 
 		$query = $this->connection->prepare(
 			'DELETE FROM `*PREFIX*activity_mq` '

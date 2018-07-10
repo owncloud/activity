@@ -49,22 +49,22 @@ class ApplicationTest extends TestCase {
 	}
 
 	public function queryData() {
-		return array(
-			array('ActivityData', 'OCA\Activity\Data'),
-			array('OCP\IL10N', 'OCP\IL10N'),
-			array('Consumer', 'OCA\Activity\Consumer'),
-			array('Consumer', 'OCP\Activity\IConsumer'),
-			array('DataHelper', 'OCA\Activity\DataHelper'),
-			array('GroupHelper', 'OCA\Activity\GroupHelper'),
-			array('Hooks', 'OCA\Activity\FilesHooks'),
-			array('MailQueueHandler', 'OCA\Activity\MailQueueHandler'),
-			array('Navigation', 'OCA\Activity\Navigation'),
-			array('UserSettings', 'OCA\Activity\UserSettings'),
-			array('OCA\Activity\ViewInfoCache', 'OCA\Activity\ViewInfoCache'),
-			array('SettingsController', 'OCP\AppFramework\Controller'),
-			array('ActivitiesController', 'OCP\AppFramework\Controller'),
-			array('FeedController', 'OCP\AppFramework\Controller'),
-		);
+		return [
+			['ActivityData', 'OCA\Activity\Data'],
+			['OCP\IL10N', 'OCP\IL10N'],
+			['Consumer', 'OCA\Activity\Consumer'],
+			['Consumer', 'OCP\Activity\IConsumer'],
+			['DataHelper', 'OCA\Activity\DataHelper'],
+			['GroupHelper', 'OCA\Activity\GroupHelper'],
+			['Hooks', 'OCA\Activity\FilesHooks'],
+			['MailQueueHandler', 'OCA\Activity\MailQueueHandler'],
+			['Navigation', 'OCA\Activity\Navigation'],
+			['UserSettings', 'OCA\Activity\UserSettings'],
+			['OCA\Activity\ViewInfoCache', 'OCA\Activity\ViewInfoCache'],
+			['SettingsController', 'OCP\AppFramework\Controller'],
+			['ActivitiesController', 'OCP\AppFramework\Controller'],
+			['FeedController', 'OCP\AppFramework\Controller'],
+		];
 	}
 
 	/**

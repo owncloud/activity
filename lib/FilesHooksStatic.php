@@ -32,7 +32,7 @@ class FilesHooksStatic {
 	/**
 	 * @return FilesHooks
 	 */
-	static protected function getHooks() {
+	protected static function getHooks() {
 		$app = new AppInfo\Application();
 		return $app->getContainer()->query('Hooks');
 	}

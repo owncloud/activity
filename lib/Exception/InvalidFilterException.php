@@ -21,5 +21,5 @@
 
 namespace OCA\Activity\Exception;
 
-
-class InvalidFilterException extends \InvalidArgumentException { }
+class InvalidFilterException extends \InvalidArgumentException {
+}

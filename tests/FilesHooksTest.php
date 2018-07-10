@@ -506,7 +506,7 @@ class FilesHooksTest extends TestCase {
 		$group = $this->getMockBuilder('OCP\IGroup')
 			->disableOriginalConstructor()
 			->getMock();
-		for ($i = 0; $i < sizeof($usersInGroup); $i++) {
+		for ($i = 0; $i < \sizeof($usersInGroup); $i++) {
 			$group->expects($this->at($i))
 				->method('searchUsers')
 				->with('')

@@ -22,5 +22,4 @@ class PersonalPanel implements ISettings {
 	public function getSectionID() {
 		return 'general';
 	}
-
 }

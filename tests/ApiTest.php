@@ -42,38 +42,38 @@ class ApiTest extends TestCase {
 		\OC::$server->getUserManager()->createUser('activity-api-user1', 'activity-api-user1');
 		\OC::$server->getUserManager()->createUser('activity-api-user2', 'activity-api-user2');
 
-		$activities = array(
-			array(
+		$activities = [
+			[
 				'affectedUser' => 'activity-api-user1',
 				'subject' => 'subject1',
-				'subjectparams' => array('/A/B.txt'),
+				'subjectparams' => ['/A/B.txt'],
 				'type' => 'type1',
-			),
-			array(
+			],
+			[
 				'affectedUser' => 'activity-api-user1',
 				'subject' => 'subject2',
-				'subjectparams' => array('/A/B.txt', 'User'),
+				'subjectparams' => ['/A/B.txt', 'User'],
 				'type' => 'type2',
-			),
-		);
+			],
+		];
 
 		$queryActivity = \OC::$server->getDatabaseConnection()->prepare('INSERT INTO `*PREFIX*activity`(`app`, `subject`, `subjectparams`, `message`, `messageparams`, `file`, `link`, `user`, `affecteduser`, `timestamp`, `priority`, `type`)' . ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )');
 		$loop = 0;
 		foreach ($activities as $activity) {
-			$queryActivity->execute(array(
+			$queryActivity->execute([
 				'app1',
 				$activity['subject'],
-				json_encode($activity['subjectparams']),
+				\json_encode($activity['subjectparams']),
 				'',
-				json_encode([]),
+				\json_encode([]),
 				'file',
 				'link',
 				'user',
 				$activity['affectedUser'],
-				time() + $loop,
+				\time() + $loop,
 				IExtension::PRIORITY_MEDIUM,
 				$activity['type'],
-			));
+			]);
 			$loop++;
 		}
 	}
@@ -88,18 +88,18 @@ class ApiTest extends TestCase {
 		$this->deleteUser($data, 'activity-api-user1');
 		$this->deleteUser($data, 'activity-api-user2');
 
-		$data->deleteActivities(array(
+		$data->deleteActivities([
 			'app' => 'app1',
-		));
+		]);
 		\OC::$WEBROOT = $this->originalWEBROOT;
 
 		parent::tearDown();
 	}
 
 	protected function deleteUser(Data $data, $uid) {
-		$data->deleteActivities(array(
+		$data->deleteActivities([
 			'affecteduser' => $uid,
-		));
+		]);
 		$user = \OC::$server->getUserManager()->get($uid);
 		if ($user) {
 			$user->delete();
@@ -107,57 +107,57 @@ class ApiTest extends TestCase {
 	}
 
 	public function getData() {
-		return array(
-			array('activity-api-user2', 0, 30, array()),
-			array('activity-api-user1', 0, 30, array(
-				array(
+		return [
+			['activity-api-user2', 0, 30, []],
+			['activity-api-user1', 0, 30, [
+				[
 					'link' => 'link',
 					'file' => 'file',
 					'date' => null,
 					'id' => null,
 					'message' => '',
 					'subject' => 'Subject2 @User #A/B.txt',
-				),
-				array(
+				],
+				[
 					'link' => 'link',
 					'file' => 'file',
 					'date' => null,
 					'id' => null,
 					'message' => '',
 					'subject' => 'Subject1 #A/B.txt',
-				),
-			)),
-			array('activity-api-user1', 0, 1, array(
-				array(
+				],
+			]],
+			['activity-api-user1', 0, 1, [
+				[
 					'link' => 'link',
 					'file' => 'file',
 					'date' => null,
 					'id' => null,
 					'message' => '',
 					'subject' => 'Subject2 @User #A/B.txt',
-				),
-			)),
-			array('activity-api-user1', 1, 1, array(
-				array(
+				],
+			]],
+			['activity-api-user1', 1, 1, [
+				[
 					'link' => 'link',
 					'file' => 'file',
 					'date' => null,
 					'id' => null,
 					'message' => '',
 					'subject' => 'Subject1 #A/B.txt',
-				),
-			)),
-			array('activity-api-user1', 5, 1, array(
-				array(
+				],
+			]],
+			['activity-api-user1', 5, 1, [
+				[
 					'link' => 'link',
 					'file' => 'file',
 					'date' => null,
 					'id' => null,
 					'message' => '',
 					'subject' => 'Subject2 @User #A/B.txt',
-				),
-			)),
-		);
+				],
+			]],
+		];
 	}
 
 	/**
@@ -176,7 +176,7 @@ class ApiTest extends TestCase {
 			$this->createMock('OCP\IUserSession'),
 			$this->createMock('OCP\IConfig')
 		);
-		$activityManager->registerExtension(function() {
+		$activityManager->registerExtension(function () {
 			return new Extension(\OCP\Util::getL10N('activity', 'en'), $this->createMock('\OCP\IURLGenerator'));
 		});
 		$this->overwriteService('ActivityManager', $activityManager);
@@ -185,11 +185,11 @@ class ApiTest extends TestCase {
 
 		$this->assertEquals(100, $result->getStatusCode());
 		$data = $result->getData();
-		$this->assertEquals(sizeof($expected), sizeof($data));
+		$this->assertEquals(\sizeof($expected), \sizeof($data));
 
 		while (!empty($expected)) {
-			$assertExpected = array_shift($expected);
-			$assertData = array_shift($data);
+			$assertExpected = \array_shift($expected);
+			$assertData = \array_shift($data);
 			foreach ($assertExpected as $key => $value) {
 				$this->assertArrayHasKey($key, $assertData);
 				if ($value !== null) {

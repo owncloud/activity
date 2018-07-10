@@ -62,7 +62,7 @@ class Extension implements IExtension {
 	public function filterNotificationTypes($types, $filter) {
 		switch ($filter) {
 			case 'filter1':
-				return array_intersect([
+				return \array_intersect([
 					'type1',
 				], $types);
 		}
@@ -90,11 +90,11 @@ class Extension implements IExtension {
 
 		switch ($text) {
 			case 'subject1':
-				return vsprintf('Subject1 #%1$s', $params);
+				return \vsprintf('Subject1 #%1$s', $params);
 			case 'subject2':
-				return vsprintf('Subject2 @%2$s #%1$s', $params);
+				return \vsprintf('Subject2 @%2$s #%1$s', $params);
 			case 'subject3':
-				return vsprintf('Subject3 #%1$s @%2$s', $params);
+				return \vsprintf('Subject3 #%1$s @%2$s', $params);
 
 			default:
 				return false;

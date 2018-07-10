@@ -21,7 +21,6 @@
 
 namespace OCA\Activity;
 
-
 use OC\Files\View;
 use OCP\Files\NotFoundException;
 
@@ -125,7 +124,7 @@ class ViewInfoCache {
 				$path = $this->view->getPath($fileId);
 
 				$cache = [
-					'path'		=> substr($path, strlen('/files')),
+					'path'		=> \substr($path, \strlen('/files')),
 					'exists'	=> true,
 					'is_dir'	=> $this->view->is_dir($path),
 					'view'		=> 'trashbin',

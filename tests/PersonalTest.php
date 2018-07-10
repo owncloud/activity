@@ -31,7 +31,6 @@ use OCP\AppFramework\IAppContainer;
  * @package OCA\Activity\Tests
  */
 class PersonalTest extends TestCase {
-
 	protected $panel;
 	protected $app;
 

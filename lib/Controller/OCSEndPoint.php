@@ -21,7 +21,6 @@
 
 namespace OCA\Activity\Controller;
 
-
 use OC\Files\View;
 use OCA\Activity\Data;
 use OCA\Activity\Exception\InvalidFilterException;
@@ -62,7 +61,6 @@ class OCSEndPoint {
 
 	/** @var bool */
 	protected $loadPreviews;
-
 
 	/** @var Data */
 	protected $data;
@@ -136,7 +134,7 @@ class OCSEndPoint {
 	 * @throws \OutOfBoundsException when no user is given
 	 */
 	protected function readParameters(array $parameters) {
-		$this->filter = isset($parameters['filter']) && is_string($parameters['filter']) ? (string) $parameters['filter'] : 'all';
+		$this->filter = isset($parameters['filter']) && \is_string($parameters['filter']) ? (string) $parameters['filter'] : 'all';
 		if ($this->filter !== $this->data->validateFilter($this->filter)) {
 			throw new InvalidFilterException();
 		}
@@ -146,7 +144,7 @@ class OCSEndPoint {
 		$this->objectType = (string) $this->request->getParam('object_type', '');
 		$this->objectId = (int) $this->request->getParam('object_id', 0);
 		$this->sort = (string) $this->request->getParam('sort', '');
-		$this->sort = in_array($this->sort, ['asc', 'desc']) ? $this->sort : 'desc';
+		$this->sort = \in_array($this->sort, ['asc', 'desc']) ? $this->sort : 'desc';
 
 		if ($this->objectType !== '' && $this->objectId === 0 || $this->objectType === '' && $this->objectId !== 0) {
 			// Only allowed together
@@ -168,7 +166,7 @@ class OCSEndPoint {
 	 * @return \OC_OCS_Result
 	 */
 	public function getDefault(array $parameters) {
-		return $this->get(array_merge($parameters, [
+		return $this->get(\array_merge($parameters, [
 			'filter' => 'all',
 		]));
 	}
@@ -223,7 +221,7 @@ class OCSEndPoint {
 
 		$preparedActivities = [];
 		foreach ($response['data'] as $activity) {
-			$activity['datetime'] = date('c', $activity['timestamp']);
+			$activity['datetime'] = \date('c', $activity['timestamp']);
 			unset($activity['timestamp']);
 
 			if ($this->loadPreviews) {
@@ -237,7 +235,7 @@ class OCSEndPoint {
 
 						$activity['previews'][] = $this->getPreview($activity['affecteduser'], (int) $objectId, $objectName);
 					}
-				} else if ($activity['object_type'] === 'files' && $activity['object_id']) {
+				} elseif ($activity['object_type'] === 'files' && $activity['object_id']) {
 					$activity['previews'][] = $this->getPreview($activity['affecteduser'], (int) $activity['object_id'], $activity['object_name']);
 				}
 			}
@@ -273,7 +271,7 @@ class OCSEndPoint {
 			$nextPage .= '://' . $this->request->getServerHost(); # localhost
 			$nextPage .= $this->request->getScriptName(); # /ocs/v2.php
 			$nextPage .= $this->request->getPathInfo(); # /apps/activity/api/v2/activity
-			$nextPage .= '?' . http_build_query($nextPageParameters);
+			$nextPage .= '?' . \http_build_query($nextPageParameters);
 			$headers['Link'] = '<' . $nextPage . '>; rel="next"';
 		}
 
@@ -308,7 +306,7 @@ class OCSEndPoint {
 			if (!($fileInfo instanceof FileInfo)) {
 				$pathPreview = $this->getPreviewFromPath($filePath, $info);
 				$preview['source'] = $pathPreview['source'];
-			} else if ($this->preview->isAvailable($fileInfo)) {
+			} elseif ($this->preview->isAvailable($fileInfo)) {
 				$preview['isMimeTypeIcon'] = false;
 				if (\version_compare(\implode('.', \OCP\Util::getVersion()), '10.0.9', '>=')) {
 					$query = \http_build_query([
@@ -328,7 +326,6 @@ class OCSEndPoint {
 						'y' => 150,
 					]);
 				}
-
 			} else {
 				$preview['source'] = $this->getPreviewPathFromMimeType($fileInfo->getMimetype());
 			}
@@ -359,8 +356,8 @@ class OCSEndPoint {
 	 */
 	protected function getPreviewPathFromMimeType($mimeType) {
 		$mimeTypeIcon = $this->mimeTypeDetector->mimeTypeIcon($mimeType);
-		if (substr($mimeTypeIcon, -4) === '.png') {
-			$mimeTypeIcon = substr($mimeTypeIcon, 0, -4) . '.svg';
+		if (\substr($mimeTypeIcon, -4) === '.png') {
+			$mimeTypeIcon = \substr($mimeTypeIcon, 0, -4) . '.svg';
 		}
 
 		return $mimeTypeIcon;
@@ -377,8 +374,8 @@ class OCSEndPoint {
 			'dir' => $path,
 		];
 		if (!$isDir) {
-			$params['dir'] = (substr_count($path, '/') === 1) ? '/' : dirname($path);
-			$params['scrollto'] = basename($path);
+			$params['dir'] = (\substr_count($path, '/') === 1) ? '/' : \dirname($path);
+			$params['scrollto'] = \basename($path);
 		}
 		if ($view !== '') {
 			$params['view'] = $view;

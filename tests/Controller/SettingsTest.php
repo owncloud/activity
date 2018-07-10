@@ -94,7 +94,6 @@ class SettingsTest extends TestCase {
 		);
 	}
 
-
 	public function personalNonTypeSettingsData() {
 		return [
 			[3600, false, false, 0, false, false],
@@ -208,10 +207,10 @@ class SettingsTest extends TestCase {
 	 * @param array $response
 	 */
 	protected function assertDataResponse($response) {
-		$this->assertEquals(1, sizeof($response));
+		$this->assertEquals(1, \sizeof($response));
 		$this->assertArrayHasKey('data', $response);
 		$data = $response['data'];
-		$this->assertEquals(1, sizeof($data));
+		$this->assertEquals(1, \sizeof($data));
 		$this->assertArrayHasKey('message', $data);
 		$this->assertEquals('Your settings have been updated.', $data['message']);
 	}
@@ -234,15 +233,15 @@ class SettingsTest extends TestCase {
 		$this->assertContains('<label for="NotificationTestTypeShared_email">', $renderedResponse);
 		$this->assertContains('<label for="NotificationTestTypeShared_stream">', $renderedResponse);
 
-		$cleanedResponse = str_replace(["\n", "\t"], ' ', $renderedResponse);
-		while (strpos($cleanedResponse, '  ') !== false) {
-			$cleanedResponse = str_replace('  ', ' ', $cleanedResponse);
+		$cleanedResponse = \str_replace(["\n", "\t"], ' ', $renderedResponse);
+		while (\strpos($cleanedResponse, '  ') !== false) {
+			$cleanedResponse = \str_replace('  ', ' ', $cleanedResponse);
 		}
 		$this->assertContains('<input type="checkbox" id="NotificationTestTypeShared2_email" name="NotificationTestTypeShared2_email" value="1" class="NotificationTestTypeShared2 email checkbox" />', $cleanedResponse);
 		$this->assertContains('<input type="checkbox" id="NotificationTestTypeShared2_stream" name="NotificationTestTypeShared2_stream" value="1" class="NotificationTestTypeShared2 stream checkbox" disabled="disabled" />', $cleanedResponse);
 
 		// Description of the type
-		$cleanedResponse = str_replace(["\n", "\t"], '', $renderedResponse);
+		$cleanedResponse = \str_replace(["\n", "\t"], '', $renderedResponse);
 		$this->assertContains('<td class="activity_select_group" data-select-group="NotificationTestTypeShared">Share description</td>', $cleanedResponse);
 	}
 
@@ -339,10 +338,10 @@ class SettingsTest extends TestCase {
 			->with('test', 'activity', 'rsstoken', $token);
 
 		$response = $this->controller->feed($enabled)->getData();
-		$this->assertEquals(1, sizeof($response));
+		$this->assertEquals(1, \sizeof($response));
 		$this->assertArrayHasKey('data', $response);
 		$data = $response['data'];
-		$this->assertEquals(2, sizeof($data));
+		$this->assertEquals(2, \sizeof($data));
 		$this->assertArrayHasKey('message', $data);
 		$this->assertArrayHasKey('rsslink', $data);
 

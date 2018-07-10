@@ -59,7 +59,7 @@ class DataTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->activityManager->registerExtension(function() use ($activityLanguage) {
+		$this->activityManager->registerExtension(function () use ($activityLanguage) {
 			return new Extension($activityLanguage, $this->createMock('\OCP\IURLGenerator'));
 		});
 		$this->data = new Data(
@@ -91,19 +91,19 @@ class DataTest extends TestCase {
 	}
 
 	public function validateFilterData() {
-		return array(
+		return [
 			// Default filters
-			array('all', 'all'),
-			array('by', 'by'),
-			array('self', 'self'),
+			['all', 'all'],
+			['by', 'by'],
+			['self', 'self'],
 
 			// Filter from extension
-			array('filter1', 'filter1'),
+			['filter1', 'filter1'],
 
 			// Inexistent or empty filter
-			array('test', 'all'),
-			array(null, 'all'),
-		);
+			['test', 'all'],
+			[null, 'all'],
+		];
 	}
 
 	/**
@@ -189,7 +189,7 @@ class DataTest extends TestCase {
 		$this->overwriteService('UserSession', $mockSession);
 		$this->deleteTestMails();
 
-		$time = time();
+		$time = \time();
 
 		$event = \OC::$server->getActivityManager()->generateEvent();
 		$event->setApp('test')
@@ -385,7 +385,7 @@ class DataTest extends TestCase {
 		$user = $this->getUniqueID('testing');
 		if ($offsetUser === null) {
 			$offsetUser = $user;
-		} else if ($offsetUser === 'invalid-user') {
+		} elseif ($offsetUser === 'invalid-user') {
 			$this->expectException('OutOfBoundsException');
 			$this->expectExceptionMessage('Invalid since');
 			$this->expectExceptionCode(2);
@@ -421,7 +421,7 @@ class DataTest extends TestCase {
 				->method('andWhere')
 				->withConsecutive(
 					[$timestampWhere],
-					[str_replace('{id}', $id, $idWhere)]
+					[\str_replace('{id}', $id, $idWhere)]
 				);
 		} else {
 			$mock->expects($this->never())
@@ -430,7 +430,7 @@ class DataTest extends TestCase {
 
 		if ($offsetId === null) {
 			$offsetId = $id;
-		} else if ($offsetId === false) {
+		} elseif ($offsetId === false) {
 			$offsetId = 0;
 		} else {
 			$offsetId += $id;

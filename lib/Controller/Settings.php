@@ -104,7 +104,7 @@ class Settings extends Controller {
 		$types = $this->data->getNotificationTypes($this->l10n);
 
 		foreach ($types as $type => $data) {
-			if (!is_array($data) || (isset($data['methods']) && in_array(IExtension::METHOD_MAIL, $data['methods']))) {
+			if (!\is_array($data) || (isset($data['methods']) && \in_array(IExtension::METHOD_MAIL, $data['methods']))) {
 				$this->config->setUserValue(
 					$this->user->getUID(), 'activity',
 					'notify_email_' . $type,
@@ -112,7 +112,7 @@ class Settings extends Controller {
 				);
 			}
 
-			if (!is_array($data) || (isset($data['methods']) && in_array(IExtension::METHOD_STREAM, $data['methods']))) {
+			if (!\is_array($data) || (isset($data['methods']) && \in_array(IExtension::METHOD_STREAM, $data['methods']))) {
 				$this->config->setUserValue(
 					$this->user->getUID(), 'activity',
 					'notify_stream_' . $type,
@@ -124,7 +124,7 @@ class Settings extends Controller {
 		$email_batch_time = 3600;
 		if ($notify_setting_batchtime === UserSettings::EMAIL_SEND_DAILY) {
 			$email_batch_time = 3600 * 24;
-		} else if ($notify_setting_batchtime === UserSettings::EMAIL_SEND_WEEKLY) {
+		} elseif ($notify_setting_batchtime === UserSettings::EMAIL_SEND_WEEKLY) {
 			$email_batch_time = 3600 * 24 * 7;
 		}
 
@@ -144,11 +144,11 @@ class Settings extends Controller {
 			(int) $notify_setting_selfemail
 		);
 
-		return new DataResponse(array(
-			'data'		=> array(
+		return new DataResponse([
+			'data'		=> [
 				'message'	=> (string) $this->l10n->t('Your settings have been updated.'),
-			),
-		));
+			],
+		]);
 	}
 
 	/**
@@ -160,28 +160,28 @@ class Settings extends Controller {
 	public function displayPanel() {
 		$types = $this->data->getNotificationTypes($this->l10n);
 
-		$activities = array();
+		$activities = [];
 		foreach ($types as $type => $desc) {
-			if (is_array($desc)) {
+			if (\is_array($desc)) {
 				$methods = isset($desc['methods']) ? $desc['methods'] : [IExtension::METHOD_STREAM, IExtension::METHOD_MAIL];
 				$desc = isset($desc['desc']) ? $desc['desc'] : '';
 			} else {
 				$methods = [IExtension::METHOD_STREAM, IExtension::METHOD_MAIL];
 			}
 
-			$activities[$type] = array(
+			$activities[$type] = [
 				'desc'		=> $desc,
 				IExtension::METHOD_MAIL		=> $this->userSettings->getUserSetting($this->user->getUID(), 'email', $type),
 				IExtension::METHOD_STREAM	=> $this->userSettings->getUserSetting($this->user->getUID(), 'stream', $type),
 				'methods'	=> $methods,
-			);
+			];
 		}
 
 		$settingBatchTime = UserSettings::EMAIL_SEND_HOURLY;
 		$currentSetting = (int) $this->userSettings->getUserSetting($this->user->getUID(), 'setting', 'batchtime');
 		if ($currentSetting === 3600 * 24 * 7) {
 			$settingBatchTime = UserSettings::EMAIL_SEND_WEEKLY;
-		} else if ($currentSetting === 3600 * 24) {
+		} elseif ($currentSetting === 3600 * 24) {
 			$settingBatchTime = UserSettings::EMAIL_SEND_DAILY;
 		}
 
@@ -224,11 +224,11 @@ class Settings extends Controller {
 
 		$this->config->setUserValue($this->user->getUID(), 'activity', 'rsstoken', $token);
 
-		return new DataResponse(array(
-			'data'		=> array(
+		return new DataResponse([
+			'data'		=> [
 				'message'	=> (string) $this->l10n->t('Your settings have been updated.'),
 				'rsslink'	=> $tokenUrl,
-			),
-		));
+			],
+		]);
 	}
 }

@@ -86,7 +86,7 @@ class UserFormatterTest extends TestCase {
 		$this->l->expects($this->once())
 			->method('t')
 			->willReturnCallback(function ($string, $parameters) {
-				return vsprintf($string, $parameters);
+				return \vsprintf($string, $parameters);
 			});
 		$this->userManager->expects($this->never())
 			->method('get');

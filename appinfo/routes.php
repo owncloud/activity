@@ -41,7 +41,7 @@ $app = new \OCA\Activity\AppInfo\Application();
 API::register(
 	'get',
 	'/cloud/activity',
-	array('OCA\Activity\Api', 'get'),
+	['OCA\Activity\Api', 'get'],
 	'activity'
 );
 

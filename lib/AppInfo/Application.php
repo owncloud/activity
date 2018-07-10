@@ -43,14 +43,14 @@ use OCP\IContainer;
 use OCP\Util;
 
 class Application extends App {
-	public function __construct (array $urlParams = array()) {
+	public function __construct(array $urlParams = []) {
 		parent::__construct('activity', $urlParams);
 		$container = $this->getContainer();
 
 		/**
 		 * Activity Services
 		 */
-		$container->registerService('ActivityData', function(IContainer $c) {
+		$container->registerService('ActivityData', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 			return new Data(
@@ -60,7 +60,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('Consumer', function(IContainer $c) {
+		$container->registerService('Consumer', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -71,7 +71,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('DataHelper', function(IContainer $c) {
+		$container->registerService('DataHelper', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 			return new DataHelper(
@@ -91,7 +91,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('GroupHelper', function(IContainer $c) {
+		$container->registerService('GroupHelper', function (IContainer $c) {
 			return new GroupHelper(
 				$c->query('ServerContainer')->getActivityManager(),
 				$c->query('DataHelper'),
@@ -99,7 +99,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('GroupHelperSingleEntries', function(IContainer $c) {
+		$container->registerService('GroupHelperSingleEntries', function (IContainer $c) {
 			return new GroupHelper(
 				$c->query('ServerContainer')->getActivityManager(),
 				$c->query('DataHelper'),
@@ -107,7 +107,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('Hooks', function(IContainer $c) {
+		$container->registerService('Hooks', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -123,7 +123,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('MailQueueHandler', function(IContainer $c) {
+		$container->registerService('MailQueueHandler', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -138,7 +138,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('Navigation', function(IContainer $c) {
+		$container->registerService('Navigation', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 			$rssToken = ($c->query('CurrentUID') !== '') ? $server->getConfig()->getUserValue($c->query('CurrentUID'), 'activity', 'rsstoken') : '';
@@ -152,7 +152,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('UserSettings', function(IContainer $c) {
+		$container->registerService('UserSettings', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 			return new UserSettings(
@@ -162,7 +162,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('OCA\Activity\ViewInfoCache', function() {
+		$container->registerService('OCA\Activity\ViewInfoCache', function () {
 			return new ViewInfoCache(
 				new View('')
 			);
@@ -171,14 +171,14 @@ class Application extends App {
 		/**
 		 * Core Services
 		 */
-		$container->registerService('CurrentUID', function(IContainer $c) {
+		$container->registerService('CurrentUID', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
 			$user = $server->getUserSession()->getUser();
 			return ($user) ? $user->getUID() : '';
 		});
-		$container->registerService('CurrentUser', function(IContainer $c) {
+		$container->registerService('CurrentUser', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -189,7 +189,7 @@ class Application extends App {
 		/**
 		 * Controller
 		 */
-		$container->registerService('SettingsController', function(IAppContainer $c) {
+		$container->registerService('SettingsController', function (IAppContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -206,7 +206,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('OCA\Activity\Controller\OCSEndPoint', function(IAppContainer $c) {
+		$container->registerService('OCA\Activity\Controller\OCSEndPoint', function (IAppContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -224,7 +224,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('EndPointController', function(IAppContainer $c) {
+		$container->registerService('EndPointController', function (IAppContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -235,7 +235,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('ActivitiesController', function(IAppContainer $c) {
+		$container->registerService('ActivitiesController', function (IAppContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -248,7 +248,7 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('FeedController', function(IAppContainer $c) {
+		$container->registerService('FeedController', function (IAppContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
 
@@ -275,7 +275,7 @@ class Application extends App {
 		/** @var \OCP\IServerContainer $server */
 		$server = $c->getServer();
 
-		$server->getActivityManager()->registerConsumer(function() use ($c) {
+		$server->getActivityManager()->registerConsumer(function () use ($c) {
 			return $c->query('Consumer');
 		});
 	}
@@ -304,5 +304,4 @@ class Application extends App {
 		Util::connectHook('OCP\Share', 'post_shared', 'OCA\Activity\FilesHooksStatic', 'share');
 		Util::connectHook('OCP\Share', 'pre_unshare', 'OCA\Activity\FilesHooksStatic', 'unShare');
 	}
-
 }

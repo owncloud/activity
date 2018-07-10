@@ -28,5 +28,5 @@ class Version20161122092159 implements ISchemaMigration {
 		$table = $schema->getTable($tableName);
 		$table->changeColumn('subjectparams', ['type' => Type::getType('text')]);
 		$table->changeColumn('messageparams', ['type' => Type::getType('text')]);
-    }
+	}
 }

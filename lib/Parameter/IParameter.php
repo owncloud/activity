@@ -21,7 +21,6 @@
 
 namespace OCA\Activity\Parameter;
 
-
 interface IParameter {
 
 	/**

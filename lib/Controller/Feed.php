@@ -131,7 +131,6 @@ class Feed extends Controller {
 				$activity['message_prepared'] = $parser->parseMessage($activity['message_prepared']);
 				$activities[] = $activity;
 			}
-
 		} catch (\UnexpectedValueException $e) {
 			$this->l = $this->l10nFactory->get('activity');
 			$description = (string) $this->l->t('Your feed URL is invalid');
@@ -139,7 +138,7 @@ class Feed extends Controller {
 			$activities = [
 				[
 					'activity_id'	=> -1,
-					'timestamp'		=> time(),
+					'timestamp'		=> \time(),
 					'subject'		=> true,
 					'subject_prepared'	=> $description,
 				]
@@ -149,12 +148,12 @@ class Feed extends Controller {
 		$response = new TemplateResponse('activity', 'rss', [
 			'rssLang'		=> $this->l->getLanguageCode(),
 			'rssLink'		=> $this->urlGenerator->linkToRouteAbsolute('activity.Feed.show'),
-			'rssPubDate'	=> date('r'),
+			'rssPubDate'	=> \date('r'),
 			'description'	=> $description,
 			'activities'	=> $activities,
 		], '');
 
-		if ($this->request->getHeader('accept') !== null && stristr($this->request->getHeader('accept'), 'application/rss+xml')) {
+		if ($this->request->getHeader('accept') !== null && \stristr($this->request->getHeader('accept'), 'application/rss+xml')) {
 			$response->addHeader('Content-Type', 'application/rss+xml');
 		} else {
 			$response->addHeader('Content-Type', 'text/xml; charset=UTF-8');
