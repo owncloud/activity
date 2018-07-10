@@ -312,6 +312,7 @@ class OCSEndPoint {
 				$preview['isMimeTypeIcon'] = false;
 				if (\version_compare(\implode('.', \OCP\Util::getVersion()), '10.0.9', '>=')) {
 					$query = \http_build_query([
+						'preview' => 1,
 						'c' => $this->view->getETag($info['path']),
 						'x' => 150,
 						'y' => 150
