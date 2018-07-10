@@ -564,7 +564,7 @@ class OCSEndPointTest extends TestCase {
 		return [
 			['author', 42, '/path', '/currentPath', true, true, false, '/preview/dir', true],
 			['author', 42, '/file.txt', '/currentFile.txt', false, true, false, '/preview/mpeg', true],
-			['author', 42, '/file.txt', '/currentFile.txt', false, true, true, 'remote.php/dav/files//file.txt?x=150&y=150', false],
+			['author', 42, '/file.txt', '/currentFile.txt', false, true, true, 'remote.php/dav/files//file.txt?preview=1&x=150&y=150', false],
 			['author', 42, '/file.txt', '/currentFile.txt', false, false, true, 'source::getPreviewFromPath', true],
 		];
 	}
