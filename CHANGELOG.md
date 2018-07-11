@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## [2.3.7]
+## [2.3.7] - 2019-07-11
 ### Fixed
 - Adjust preview URL generation based on new endpiont - [#631](https://github.com/owncloud/activity/pull/631)
 - Fix grouping for share messages - [#626](https://github.com/owncloud/activity/issues/626)
