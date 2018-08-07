@@ -26,6 +26,7 @@
     "You are receiving this email because the following things happened at %s" : "U ontvangt deze e-mail, omdat het volgende plaatsvond op %s.",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* en %n meer","* en %n meer"],
+    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "U ontvangt deze e-mail, omdat het volgende plaatsvond op <a href=\"%s\">%s</a>",
     "Activity" : "Activiteit",
     "List your own file actions in the stream" : "Toon uw eigen bestandsacties in de stroom",
     "Notify about your own actions via email" : "Melding van uw eigen acties via e-mail",
