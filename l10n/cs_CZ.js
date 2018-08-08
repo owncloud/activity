@@ -24,7 +24,7 @@ OC.L10N.register(
     "Activities by you" : "Vlastní aktivity",
     "Activities by others" : "Aktivity ostatních",
     "%s and %s" : "%s a %s",
-    "Hello %s," : "Vítejte %s,",
+    "Hello %s," : "Dobrý den %s,",
     "You are receiving this email because the following things happened at %s" : "Dostali jste tento email, protože došlo k následujícím událostem na %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* a %n další ","* a %n další ","* a %n dalších ","* a %n dalších "],
