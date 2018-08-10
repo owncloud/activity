@@ -257,7 +257,7 @@ $(function(){
 				}
 			});
 
-			$element.find('.activity-more-link').click(function() {
+			$element.find('.activity-more-link').on('click', function() {
 				var $moreElement = $(this),
 					activityId = $moreElement.closest('.box').data('activity-id'),
 					$subject = $moreElement.closest('.activitysubject');
