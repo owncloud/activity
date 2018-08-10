@@ -20,3 +20,4 @@ if ($_['skippedCount']) {
 	p("\n");
 }
 p("\n");
+print_unescaped($this->inc('plain.mail.footer', ['app' => 'core']));

@@ -45,19 +45,14 @@ $l = $_['overwriteL10N'];
 						</ul>
 					</td>
 				</tr>
-				<tr><td colspan="2">&nbsp;</td></tr>
-				<tr>
-					<td width="20px">&nbsp;</td>
-					<td style="font-weight:normal; font-size:0.8em; line-height:1.2em; font-family:verdana,'arial',sans;">--<br>
-						<?php p($theme->getName()); ?> -
-						<?php p($theme->getSlogan()); ?>
-						<br><a href="<?php p($theme->getBaseUrl()); ?>">
-							<?php p($theme->getBaseUrl());?>
-						</a>
-					</td>
-				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
+				</tr>
+				<tr>
+					<td width="20px">&nbsp;</td>
+					<td style="font-weight:normal; font-size:0.8em; line-height:1.2em; font-family:verdana,'arial',sans;">
+						<?php print_unescaped($this->inc('html.mail.footer', ['app' => 'core'])); ?>
+					</td>
 				</tr>
 			</table>
 		</td></tr>
