@@ -26,6 +26,8 @@
     "You are receiving this email because the following things happened at %s" : "Informacinis pranešimas nes įvyko šie įvykiai: %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* ir %n vienas","* ir %n keli","* ir %n kiti","* ir %n kiti"],
+    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Jūs gavote šį laišką nes įvyko <a href=\"%s\">%s</a>",
+    "%1$s - %2$s" : "%1$s - %2$s",
     "Activity" : "Veikla",
     "List your own file actions in the stream" : "Į sąrašą įtraukti ir mano veiksmus su failais",
     "Notify about your own actions via email" : "Informuoti apie mano paties veiksmus per el. paštą",
