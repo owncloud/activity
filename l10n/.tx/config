@@ -7,3 +7,4 @@ file_filter = <lang>/activity.po
 source_file = templates/activity.pot
 source_lang = en
 type = PO
+
