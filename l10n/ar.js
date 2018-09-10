@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Activities" : "نشاطات",
     "Error loading activities" : "خطأ أثناء تحميل النشاطات",
-    "No activities" : "لا نشاط",
+    "No activities" : "لا نشاطات",
     "Load more activities" : "تحميل نشاطات أكثر",
     ", " : "،",
     "{parameterList} and {lastParameter}" : "{parameterList} و {lastParameter}",
@@ -28,6 +28,9 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "تستلم هذه الرسالة البريدية لأن هذه الأشياء حدثت على %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* و %n بعد","* و %n بعد","* و %n بعد","* و %n بعد","* و %n بعد","* و %n بعد"],
+    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "لقد تم ارسال هذا الايميل اليك لان هذه الاشياء قد حدثت في <a href=\"%s\">%s</a>",
+    "%1$s - %2$s" : "%1$s - %2$s",
+    "_and %n more _::_and %n more _" : ["ايضا %n اكثر","ايضا  %n اكثر","ايضا %n اكثر","ايضا %n اكثر","ايضا %nاكثر","ايضا %n واكثر"],
     "Activity" : "نشاط",
     "List your own file actions in the stream" : "أسرد مهام ملفاتك الخاصة في التدفق",
     "Notify about your own actions via email" : "التنبيه عن أنشطتي عبر البريد الإلكتروني",
