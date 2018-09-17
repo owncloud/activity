@@ -30,8 +30,10 @@ use OCA\Activity\Controller\OCSEndPoint;
 use OCA\Activity\Controller\Settings;
 use OCA\Activity\Data;
 use OCA\Activity\DataHelper;
+use OCA\Activity\FilesHooksStatic;
 use OCA\Activity\GroupHelper;
 use OCA\Activity\FilesHooks;
+use OCA\Activity\Hooks;
 use OCA\Activity\MailQueueHandler;
 use OCA\Activity\Navigation;
 use OCA\Activity\Parameter\Factory;
@@ -287,7 +289,8 @@ class Application extends App {
 		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
 		$eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', ['OCA\Activity\FilesHooksStatic', 'onLoadFilesAppScripts']);
 
-		Util::connectHook('OC_User', 'post_deleteUser', 'OCA\Activity\Hooks', 'deleteUser');
+		$activityHook = new Hooks();
+		$eventDispatcher->addListener('user.afterdelete', [$activityHook, 'deleteUser']);
 
 		$this->registerFilesActivity();
 	}
@@ -296,13 +299,16 @@ class Application extends App {
 	 * Register the hooks for filesystem operations
 	 */
 	public function registerFilesActivity() {
+		$filesHooksStatic = new FilesHooksStatic();
+		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
+
 		// All other events from other apps have to be send via the Consumer
 		Util::connectHook('OC_Filesystem', 'post_create', 'OCA\Activity\FilesHooksStatic', 'fileCreate');
 		Util::connectHook('OC_Filesystem', 'post_update', 'OCA\Activity\FilesHooksStatic', 'fileUpdate');
 		Util::connectHook('OC_Filesystem', 'delete', 'OCA\Activity\FilesHooksStatic', 'fileDelete');
 		Util::connectHook('\OCA\Files_Trashbin\Trashbin', 'post_restore', 'OCA\Activity\FilesHooksStatic', 'fileRestore');
-		Util::connectHook('OCP\Share', 'post_shared', 'OCA\Activity\FilesHooksStatic', 'share');
-		Util::connectHook('OCP\Share', 'pre_unshare', 'OCA\Activity\FilesHooksStatic', 'unShare');
+		$eventDispatcher->addListener('file.aftercreateshare', [$filesHooksStatic, 'share']);
+		$eventDispatcher->addListener('file.beforeunshare', [$filesHooksStatic, 'unshare']);
 	}
 
 }
