@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## [2.3.8] - 2019-09-25
+### Added
+- New mail footers to template files. - [#639](https://github.com/owncloud/activity/issues/639)
+
+### Fixed
+- Prepare for jquery 2 update - [#638](https://github.com/owncloud/activity/issues/638)
+
 ## [2.3.7] - 2019-07-11
 ### Fixed
 - Adjust preview URL generation based on new endpiont - [#631](https://github.com/owncloud/activity/pull/631)
