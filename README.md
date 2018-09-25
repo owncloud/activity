@@ -7,6 +7,12 @@ From creation of new files or folders, to file or folder changes, updates, resto
 
 And there you have it - a complete overview of all file and folder activities in your ownCloud with the additional ability to receive activity notifications via email in a time interval of your choice. Never again miss an important event related to content in ownCloud and always be up-to-date on all activities of your files and folders.
 
+## QA metrics on master branch:
+
+[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=master)](https://travis-ci.org/owncloud/activity/branches)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
+
 # Add new activities / types for other apps
 
 With the activity manager extensions can be registered which allow any app to extend the activity behavior.
