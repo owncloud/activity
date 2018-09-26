@@ -58,7 +58,7 @@ class Data {
 		$this->userSession = $userSession;
 	}
 
-	protected $notificationTypes = array();
+	protected $notificationTypes = [];
 
 	/**
 	 * @param IL10N $l
@@ -116,9 +116,9 @@ class Data {
 				'user' => $event->getAuthor(),
 				'timestamp' => (int) $event->getTimestamp(),
 				'subject' => $event->getSubject(),
-				'subjectparams' => json_encode($event->getSubjectParameters()),
+				'subjectparams' => \json_encode($event->getSubjectParameters()),
 				'message' => $event->getMessage(),
-				'messageparams' => json_encode($event->getMessageParameters()),
+				'messageparams' => \json_encode($event->getMessageParameters()),
 				'priority' => IExtension::PRIORITY_MEDIUM,
 				'object_type' => $event->getObjectType(),
 				'object_id' => (int) $event->getObjectId(),
@@ -157,7 +157,7 @@ class Data {
 			->setParameters([
 				'app' => $event->getApp(),
 				'subject' => $event->getSubject(),
-				'subjectparams' => json_encode($event->getSubjectParameters()),
+				'subjectparams' => \json_encode($event->getSubjectParameters()),
 				'affecteduser' => $event->getAffectedUser(),
 				'timestamp' => (int) $event->getTimestamp(),
 				'type' => $event->getType(),
@@ -197,7 +197,7 @@ class Data {
 
 		$enabledNotifications = $userSettings->getNotificationTypes($user, 'stream');
 		$enabledNotifications = $this->activityManager->filterNotificationTypes($enabledNotifications, $filter);
-		$enabledNotifications = array_unique($enabledNotifications);
+		$enabledNotifications = \array_unique($enabledNotifications);
 
 		// We don't want to display any activities
 		if (empty($enabledNotifications)) {
@@ -212,11 +212,9 @@ class Data {
 			->andWhere($query->expr()->in('type', $query->createNamedParameter($enabledNotifications, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)));
 		if ($filter === 'self') {
 			$query->andWhere($query->expr()->eq('user', $query->createNamedParameter($user)));
-
-		} else if ($filter === 'by') {
+		} elseif ($filter === 'by') {
 			$query->andWhere($query->expr()->neq('user', $query->createNamedParameter($user)));
-
-		} else if ($filter === 'all' && !$userSettings->getUserSetting($user, 'setting', 'self')) {
+		} elseif ($filter === 'all' && !$userSettings->getUserSetting($user, 'setting', 'self')) {
 			$query->andWhere($query->expr()->orX(
 				$query->expr()->neq('user', $query->createNamedParameter($user)),
 				$query->expr()->notIn('type', $query->createNamedParameter([
@@ -226,8 +224,7 @@ class Data {
 					'file_restored',
 				], IQueryBuilder::PARAM_STR_ARRAY))
 			));
-
-		} else if ($filter === 'filter') {
+		} elseif ($filter === 'filter') {
 			if (!$userSettings->getUserSetting($user, 'setting', 'self')) {
 				$query->andWhere($query->expr()->orX(
 					$query->expr()->neq('user', $query->createNamedParameter($user)),
@@ -245,16 +242,16 @@ class Data {
 		}
 
 		list($condition, $params) = $this->activityManager->getQueryForFilter($filter);
-		if (!is_null($condition)) {
+		if ($condition !== null) {
 			// Strip away ' and '
-			$condition = substr($condition, 5);
+			$condition = \substr($condition, 5);
 
-			if (is_array($params)) {
+			if (\is_array($params)) {
 				// Replace ? placeholders with named parameters
 				foreach ($params as $param) {
-					$pos = strpos($condition, '?');
+					$pos = \strpos($condition, '?');
 					if ($pos !== false) {
-						$condition = substr($condition, 0, $pos) . $query->createNamedParameter($param) . substr($condition, $pos + 1);
+						$condition = \substr($condition, 0, $pos) . $query->createNamedParameter($param) . \substr($condition, $pos + 1);
 					}
 				}
 			}
@@ -379,12 +376,12 @@ class Data {
 	 * @return null
 	 */
 	public function expire($expireDays = 365) {
-		$ttl = (60 * 60 * 24 * max(1, $expireDays));
+		$ttl = (60 * 60 * 24 * \max(1, $expireDays));
 
-		$timelimit = time() - $ttl;
-		$this->deleteActivities(array(
-			'timestamp' => array($timelimit, '<'),
-		));
+		$timelimit = \time() - $ttl;
+		$this->deleteActivities([
+			'timestamp' => [$timelimit, '<'],
+		]);
 	}
 
 	/**
@@ -397,19 +394,19 @@ class Data {
 	 */
 	public function deleteActivities($conditions) {
 		$sqlWhere = '';
-		$sqlParameters = $sqlWhereList = array();
+		$sqlParameters = $sqlWhereList = [];
 		foreach ($conditions as $column => $comparison) {
-			$sqlWhereList[] = " `$column` " . ((is_array($comparison) && isset($comparison[1])) ? $comparison[1] : '=') . ' ? ';
-			$sqlParameters[] = (is_array($comparison)) ? $comparison[0] : $comparison;
+			$sqlWhereList[] = " `$column` " . ((\is_array($comparison) && isset($comparison[1])) ? $comparison[1] : '=') . ' ? ';
+			$sqlParameters[] = (\is_array($comparison)) ? $comparison[0] : $comparison;
 		}
 
 		if (!empty($sqlWhereList)) {
-			$sqlWhere = ' WHERE ' . implode(' AND ', $sqlWhereList);
+			$sqlWhere = ' WHERE ' . \implode(' AND ', $sqlWhereList);
 		}
 
 		// Add galera safe delete chunking if using mysql
 		// Stops us hitting wsrep_max_ws_rows when large row counts are deleted
-		if($this->connection->getDatabasePlatform() instanceof MySqlPlatform) {
+		if ($this->connection->getDatabasePlatform() instanceof MySqlPlatform) {
 			// Then use chunked delete
 			$max = 100000;
 			$query = $this->connection->prepare(
@@ -417,14 +414,12 @@ class Data {
 			do {
 				$query->execute($sqlParameters);
 				$deleted = $query->rowCount();
-			} while($deleted === $max);
+			} while ($deleted === $max);
 		} else {
 			// Dont use chunked delete - let the DB handle the large row count natively
 			$query = $this->connection->prepare(
 				'DELETE FROM `*PREFIX*activity`' . $sqlWhere);
 			$query->execute($sqlParameters);
 		}
-
-
 	}
 }

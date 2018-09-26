@@ -61,8 +61,8 @@ class FileFormatter implements IFormatter {
 		// If the activity is about the very same file, we use the current path
 		// for the link generation instead of the one that was saved.
 		$fileId = '';
-		if (is_array($param)) {
-			$fileId = key($param);
+		if (\is_array($param)) {
+			$fileId = \key($param);
 			$param = $param[$fileId];
 			$info = $this->infoCache->getInfoById($this->user, $fileId, $param);
 		} elseif ($event->getObjectType() === 'files' && $event->getObjectName() === $param) {
@@ -75,8 +75,8 @@ class FileFormatter implements IFormatter {
 		if ($info['is_dir']) {
 			$linkData = ['dir' => $info['path']];
 		} else {
-			$parentDir = (substr_count($info['path'], '/') === 1) ? '/' : dirname($info['path']);
-			$fileName = basename($info['path']);
+			$parentDir = (\substr_count($info['path'], '/') === 1) ? '/' : \dirname($info['path']);
+			$fileName = \basename($info['path']);
 			$linkData = [
 				'dir' => $parentDir,
 				'scrollto' => $fileName,
@@ -87,7 +87,7 @@ class FileFormatter implements IFormatter {
 			$linkData['view'] = $info['view'];
 		}
 
-		$param = trim($param, '/');
+		$param = \trim($param, '/');
 		if ($param === '') {
 			$param = '/';
 		}
@@ -103,11 +103,11 @@ class FileFormatter implements IFormatter {
 	 * @return string|array
 	 */
 	protected function fixLegacyFilename($filename) {
-		if (is_array($filename)) {
+		if (\is_array($filename)) {
 			// 9.0: [fileId => path]
 			return $filename;
 		}
-		if (strpos($filename, '/') !== 0) {
+		if (\strpos($filename, '/') !== 0) {
 			return '/' . $filename;
 		}
 		return $filename;
@@ -120,12 +120,12 @@ class FileFormatter implements IFormatter {
 	 * @return array Array with path and filename
 	 */
 	protected function splitPathFromFilename($filename) {
-		if (strrpos($filename, '/') !== false) {
-			return array(
-				trim(substr($filename, 0, strrpos($filename, '/')), '/'),
-				substr($filename, strrpos($filename, '/') + 1),
-			);
+		if (\strrpos($filename, '/') !== false) {
+			return [
+				\trim(\substr($filename, 0, \strrpos($filename, '/')), '/'),
+				\substr($filename, \strrpos($filename, '/') + 1),
+			];
 		}
-		return array('', $filename);
+		return ['', $filename];
 	}
 }

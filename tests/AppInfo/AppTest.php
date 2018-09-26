@@ -34,7 +34,7 @@ class AppTest extends TestCase {
 		$navigationManager = \OC::$server->getNavigationManager();
 		$navigationManager->clear();
 		$all = $navigationManager->getAll();
-		$onlyActivity = array_filter($all, function($element) {
+		$onlyActivity = \array_filter($all, function ($element) {
 			return $element['id'] === 'activity';
 		});
 
@@ -42,7 +42,7 @@ class AppTest extends TestCase {
 		$this->assertCount(1, $onlyActivity);
 	}
 
-// FIXME: Uncomment once the OC_App stuff is not static anymore
+	// FIXME: Uncomment once the OC_App stuff is not static anymore
 //	public function testPersonalPanel() {
 //		require '../appinfo/app.php';
 //

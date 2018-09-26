@@ -85,7 +85,7 @@ class EmailNotification extends TimedJob {
 		// We don't use time() but "time() - 1" here, so we don't run into
 		// runtime issues later and delete emails, which were created in the
 		// same second, but were not collected for the emails.
-		$sendTime = time() - 1;
+		$sendTime = \time() - 1;
 
 		if ($this->isCLI) {
 			do {
@@ -114,7 +114,7 @@ class EmailNotification extends TimedJob {
 			// No users found to notify, mission abort
 			return 0;
 		}
-		$affectedUIDs = array_map(function($u) {
+		$affectedUIDs = \array_map(function ($u) {
 			return $u['uid'];
 		}, $affectedUsers);
 
@@ -123,7 +123,7 @@ class EmailNotification extends TimedJob {
 
 		// Send Email
 		$default_lang = $this->config->getSystemValue('default_language', 'en');
-		$defaultTimeZone = date_default_timezone_get();
+		$defaultTimeZone = \date_default_timezone_get();
 
 		$sentMailForUsers = [];
 
@@ -154,7 +154,6 @@ class EmailNotification extends TimedJob {
 		// Delete all entries we dealt with
 		$this->mqHandler->deleteSentItems($sentMailForUsers, $sendTime);
 
-		return sizeof($affectedUsers);
+		return \sizeof($affectedUsers);
 	}
-
 }

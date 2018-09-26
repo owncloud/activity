@@ -38,5 +38,5 @@ class Version20170724182159 implements ISchemaMigration {
 			$mailIdColumn->setType(Type::getType(Type::BIGINT));
 			$mailIdColumn->setOptions(['length' => 20]);
 		}
-    }
+	}
 }

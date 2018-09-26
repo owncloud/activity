@@ -52,7 +52,7 @@ class ConsumerTest extends TestCase {
 			->getMock();
 
 		$this->userSettings = $this->getMockBuilder('OCA\Activity\UserSettings')
-			->setMethods(array('getUserSetting'))
+			->setMethods(['getUserSetting'])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -71,18 +71,18 @@ class ConsumerTest extends TestCase {
 		$this->userSettings->expects($this->any())
 			->method('getUserSetting')
 			->with($this->stringContains('affectedUser'), $this->anything(), $this->anything())
-			->will($this->returnValueMap(array(
-				array('affectedUser', 'stream', 'type', true),
-				array('affectedUser2', 'stream', 'type', true),
-				array('affectedUser', 'setting', 'self', true),
-				array('affectedUser2', 'setting', 'self', false),
-				array('affectedUser', 'email', 'type', true),
-				array('affectedUser2', 'email', 'type', true),
-				array('affectedUser', 'setting', 'selfemail', true),
-				array('affectedUser2', 'setting', 'selfemail', false),
-				array('affectedUser', 'setting', 'batchtime', 10),
-				array('affectedUser2', 'setting', 'batchtime', 10),
-			)));
+			->will($this->returnValueMap([
+				['affectedUser', 'stream', 'type', true],
+				['affectedUser2', 'stream', 'type', true],
+				['affectedUser', 'setting', 'self', true],
+				['affectedUser2', 'setting', 'self', false],
+				['affectedUser', 'email', 'type', true],
+				['affectedUser2', 'email', 'type', true],
+				['affectedUser', 'setting', 'selfemail', true],
+				['affectedUser2', 'setting', 'selfemail', false],
+				['affectedUser', 'setting', 'batchtime', 10],
+				['affectedUser2', 'setting', 'batchtime', 10],
+			]));
 	}
 
 	protected function tearDown() {
@@ -92,9 +92,9 @@ class ConsumerTest extends TestCase {
 
 	protected function deleteTestActivities() {
 		$query = DB::prepare('DELETE FROM `*PREFIX*activity` WHERE `app` = ?');
-		$query->execute(array('test'));
+		$query->execute(['test']);
 		$query = DB::prepare('DELETE FROM `*PREFIX*activity_mq` WHERE `amq_appid` = ?');
-		$query->execute(array('test'));
+		$query->execute(['test']);
 	}
 
 	public function receiveData() {
@@ -130,10 +130,10 @@ class ConsumerTest extends TestCase {
 			->setType($type)
 			->setAffectedUser($affectedUser)
 			->setAuthor($author)
-			->setTimestamp(time())
+			->setTimestamp(\time())
 			->setSubject($subject, ['subjectParam1', 'subjectParam2'])
 			->setMessage('message', ['messageParam1', 'messageParam2'])
-			->setObject('', 0 , 'file')
+			->setObject('', 0, 'file')
 			->setLink('link');
 		$this->deleteTestActivities();
 
@@ -158,7 +158,7 @@ class ConsumerTest extends TestCase {
 	 * @param array|false $expected
 	 */
 	public function testReceiveEmail($type, $author, $affectedUser, $subject, $expected) {
-		$time = time();
+		$time = \time();
 		$consumer = new Consumer($this->data, $this->userSettings, $this->l10nFactory);
 		$event = \OC::$server->getActivityManager()->generateEvent();
 		$event->setApp('test')
@@ -168,7 +168,7 @@ class ConsumerTest extends TestCase {
 			->setTimestamp($time)
 			->setSubject($subject, ['subjectParam1', 'subjectParam2'])
 			->setMessage('message', ['messageParam1', 'messageParam2'])
-			->setObject('', 0 , 'file')
+			->setObject('', 0, 'file')
 			->setLink('link');
 
 		if ($expected === false) {

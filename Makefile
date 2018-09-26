@@ -25,6 +25,11 @@ dist_dir=$(build_dir)/dist
 nodejs_deps=
 bower_deps=
 
+# composer
+composer_deps=vendor
+composer_dev_deps=vendor/php-cs-fixer
+COMPOSER_BIN=$(build_dir)/composer.phar
+
 occ=$(CURDIR)/../../occ
 private_key=$(HOME)/.owncloud/certificates/$(app_name).key
 certificate=$(HOME)/.owncloud/certificates/$(app_name).crt
@@ -46,6 +51,23 @@ all: $(bower_deps)
 
 .PHONY: clean
 clean: clean-deps clean-dist clean-build
+
+#
+# Basic required tools
+#
+$(COMPOSER_BIN):
+	mkdir -p $(build_dir)
+	cd $(build_dir) && curl -sS https://getcomposer.org/installer | php
+
+#
+# ownCloud core PHP dependencies
+#
+$(composer_deps): $(COMPOSER_BIN) composer.json composer.lock
+	php $(COMPOSER_BIN) install --no-dev
+
+$(composer_dev_deps): $(COMPOSER_BIN) composer.json composer.lock
+	php $(COMPOSER_BIN) install --dev
+
 
 #
 ## Node dependencies
@@ -87,5 +109,9 @@ clean-build:
 
 .PHONY: clean-deps
 clean-deps:
-	rm -Rf $(nodejs_deps) $(bower_deps)
+	rm -Rf $(nodejs_deps) $(bower_deps) ${composer_deps}
 
+
+.PHONY: test-php-style
+test-php-style: $(composer_dev_deps)
+	$(composer_deps)/bin/php-cs-fixer fix -v --diff --diff-format udiff --dry-run --allow-risky yes

@@ -143,7 +143,7 @@ class FilesHooks {
 	 */
 	protected function addNotificationsForFileAction($filePath, $activityType, $subject, $subjectBy) {
 		// Do not add activities for .part-files
-		if (substr($filePath, -5) === '.part') {
+		if (\substr($filePath, -5) === '.part') {
 			return;
 		}
 
@@ -154,8 +154,8 @@ class FilesHooks {
 			return;
 		}
 		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
-		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'stream', $activityType);
-		$filteredEmailUsers = $this->userSettings->filterUsersBySetting(array_keys($affectedUsers), 'email', $activityType);
+		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(\array_keys($affectedUsers), 'stream', $activityType);
+		$filteredEmailUsers = $this->userSettings->filterUsersBySetting(\array_keys($affectedUsers), 'email', $activityType);
 
 		foreach ($affectedUsers as $user => $path) {
 			if (empty($filteredStreamUsers[$user]) && empty($filteredEmailUsers[$user])) {
@@ -219,7 +219,7 @@ class FilesHooks {
 			$path = $ownerView->getPath($fileId);
 		}
 
-		return array($path, $uidOwner, $fileId);
+		return [$path, $uidOwner, $fileId];
 	}
 
 	/**
@@ -230,9 +230,9 @@ class FilesHooks {
 		if ($params['itemType'] === 'file' || $params['itemType'] === 'folder') {
 			if ((int) $params['shareType'] === Share::SHARE_TYPE_USER) {
 				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], true);
-			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
+			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
 				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], true);
-			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
+			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
 				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], true);
 			}
 		}
@@ -246,9 +246,9 @@ class FilesHooks {
 		if ($params['itemType'] === 'file' || $params['itemType'] === 'folder') {
 			if ((int) $params['shareType'] === Share::SHARE_TYPE_USER) {
 				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], false);
-			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
+			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
 				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], false);
-			} else if ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
+			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
 				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], false);
 			}
 		}
@@ -349,7 +349,7 @@ class FilesHooks {
 			return;
 		}
 
-		$userIds = array_keys($affectedUsers);
+		$userIds = \array_keys($affectedUsers);
 		$filteredStreamUsersInGroup = $this->userSettings->filterUsersBySetting($userIds, 'stream', Files_Sharing::TYPE_SHARED);
 		$filteredEmailUsersInGroup = $this->userSettings->filterUsersBySetting($userIds, 'email', Files_Sharing::TYPE_SHARED);
 
@@ -403,7 +403,7 @@ class FilesHooks {
 		if ($isSharing) {
 			$actionSharer = 'shared_link_self';
 			$actionOwner = 'reshared_link_by';
-		} else if ($this->currentUser !== $linkOwner) {
+		} elseif ($this->currentUser !== $linkOwner) {
 			// Link expired
 			$actionSharer = 'link_expired';
 			$actionOwner = 'link_by_expired';
@@ -553,9 +553,9 @@ class FilesHooks {
 
 		$selfAction = $user === $this->currentUser;
 		$app = $type === Files_Sharing::TYPE_SHARED ? 'files_sharing' : 'files';
-		$link = $this->urlGenerator->linkToRouteAbsolute('files.view.index', array(
-			'dir' => ($isFile) ? dirname($path) : $path,
-		));
+		$link = $this->urlGenerator->linkToRouteAbsolute('files.view.index', [
+			'dir' => ($isFile) ? \dirname($path) : $path,
+		]);
 
 		$objectType = ($fileId) ? 'files' : '';
 
@@ -564,7 +564,7 @@ class FilesHooks {
 			->setType($type)
 			->setAffectedUser($user)
 			->setAuthor($this->currentUser)
-			->setTimestamp(time())
+			->setTimestamp(\time())
 			->setSubject($subject, $subjectParams)
 			->setObject($objectType, $fileId, $path)
 			->setLink($link);
@@ -576,7 +576,7 @@ class FilesHooks {
 
 		// Add activity to mail queue
 		if ($emailSetting && (!$selfAction || $this->userSettings->getUserSetting($this->currentUser, 'setting', 'selfemail'))) {
-			$latestSend = time() + $emailSetting;
+			$latestSend = \time() + $emailSetting;
 			$this->activityData->storeMail($event, $latestSend);
 		}
 	}

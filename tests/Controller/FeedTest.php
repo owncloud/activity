@@ -95,7 +95,6 @@ class FeedTest extends TestCase {
 		);
 	}
 
-
 	public function showData() {
 		return [
 			['application/rss+xml', 'application/rss+xml'],

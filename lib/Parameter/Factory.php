@@ -21,7 +21,6 @@
 
 namespace OCA\Activity\Parameter;
 
-
 use OCA\Activity\Formatter\BaseFormatter;
 use OCA\Activity\Formatter\GroupFormatter;
 use OCA\Activity\Formatter\IFormatter;
@@ -123,7 +122,7 @@ class Factory {
 	 * @return Collection
 	 */
 	public function createCollection() {
-		return new Collection($this->l, sha1(microtime() . mt_rand()));
+		return new Collection($this->l, \sha1(\microtime() . \mt_rand()));
 	}
 
 	/**
@@ -133,11 +132,11 @@ class Factory {
 	protected function getFormatter($formatter) {
 		if ($formatter === 'file') {
 			return new FileFormatter($this->infoCache, $this->urlGenerator, $this->l, $this->user);
-		} else if ($formatter === 'username') {
+		} elseif ($formatter === 'username') {
 			return new UserFormatter($this->userManager, $this->l);
-		} else if ($formatter === 'federated_cloud_id') {
+		} elseif ($formatter === 'federated_cloud_id') {
 			return new CloudIDFormatter($this->contactsManager);
-		} else if ($formatter === 'group') {
+		} elseif ($formatter === 'group') {
 			return new GroupFormatter($this->groupManager);
 		} else {
 			return new BaseFormatter();

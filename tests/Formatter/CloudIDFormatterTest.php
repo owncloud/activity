@@ -134,7 +134,6 @@ class CloudIDFormatterTest extends TestCase {
 		$this->assertSame($expected, $this->invokePrivate($formatter, 'getDisplayNameFromContact', [$cloudId]));
 	}
 
-
 	public function dataGetDisplayNameFromContactThrows() {
 		return [
 			[

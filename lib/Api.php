@@ -26,11 +26,10 @@ namespace OCA\Activity;
  *
  * @package OCA\Activity
  */
-class Api
-{
+class Api {
 	const DEFAULT_LIMIT = 30;
 
-	static public function get() {
+	public static function get() {
 		$app = new AppInfo\Application();
 		/** @var Data $data */
 		$data = $app->getContainer()->query('ActivityData');
@@ -50,16 +49,16 @@ class Api
 		);
 		$parser = new PlainTextParser(\OC::$server->getL10NFactory()->get('activity'));
 
-		$entries = array();
-		foreach($activities['data'] as $entry) {
-			$entries[] = array(
+		$entries = [];
+		foreach ($activities['data'] as $entry) {
+			$entries[] = [
 				'id' => $entry['activity_id'],
 				'subject' => $parser->parseMessage($entry['subject_prepared']),
 				'message' => $parser->parseMessage($entry['message_prepared']),
 				'file' => $entry['object_name'],
 				'link' => $entry['link'],
-				'date' => date('c', $entry['timestamp']),
-			);
+				'date' => \date('c', $entry['timestamp']),
+			];
 		}
 
 		return new \OC_OCS_Result($entries);

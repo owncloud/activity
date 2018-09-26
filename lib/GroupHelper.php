@@ -29,10 +29,10 @@ use OCP\IL10N;
 
 class GroupHelper {
 	/** @var array */
-	protected $activities = array();
+	protected $activities = [];
 
 	/** @var array */
-	protected $openGroup = array();
+	protected $openGroup = [];
 
 	/** @var string */
 	protected $groupKey = '';
@@ -85,10 +85,9 @@ class GroupHelper {
 		$activity['timestamp'] = (int) $activity['timestamp'];
 		$activity['object_id'] = (int) $activity['object_id'];
 		$activity['object_name'] = (string) $activity['file'];
-		unset($activity['priority']);
-		unset($activity['file']);
-
-		$event = $this->getEventFromArray(array_merge($activity, [
+		unset($activity['priority'], $activity['file']);
+		
+		$event = $this->getEventFromArray(\array_merge($activity, [
 			'subjectparams' => [],
 			'messageparams' => [],
 		]));
@@ -106,8 +105,8 @@ class GroupHelper {
 		// Only group when the event has the same group key
 		// and the time difference is not bigger than 3 days.
 		if ($groupKey === $this->groupKey &&
-			abs($activity['timestamp'] - $this->groupTime) < (3 * 24 * 60 * 60)
-			&& (!isset($this->openGroup['activity_ids']) || sizeof($this->openGroup['activity_ids']) <= 5)
+			\abs($activity['timestamp'] - $this->groupTime) < (3 * 24 * 60 * 60)
+			&& (!isset($this->openGroup['activity_ids']) || \sizeof($this->openGroup['activity_ids']) <= 5)
 		) {
 			$parameter = $this->getGroupParameter($activity);
 			if ($parameter !== false) {
@@ -178,9 +177,9 @@ class GroupHelper {
 
 		// the group key is based on all parameters outside of the one
 		// pointed at by $parameterIndex as it's the varying part
-		$subjectParams = json_decode($activity['subjectparams'], true);
+		$subjectParams = \json_decode($activity['subjectparams'], true);
 		unset($subjectParams[$parameterIndex]);
-		$paramsKey = md5(json_encode($subjectParams));
+		$paramsKey = \md5(\json_encode($subjectParams));
 
 		return $activity['app'] . '|' . $activity['user'] . '|' . $activity['subject'] . '|' . $activity['object_type'] . '|' . $paramsKey;
 	}
@@ -208,7 +207,7 @@ class GroupHelper {
 	public function getActivities() {
 		$this->closeOpenGroup();
 
-		$return = array();
+		$return = [];
 		foreach ($this->activities as $activity) {
 			$this->activityManager->setFormattingObject($activity['object_type'], $activity['object_id']);
 			$activity = $this->dataHelper->formatStrings($activity, 'subject');

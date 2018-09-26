@@ -33,7 +33,7 @@ class Hooks {
 	 *
 	 * @param array $params The hook params
 	 */
-	static public function deleteUser($params) {
+	public static function deleteUser($params) {
 		$connection = \OC::$server->getDatabaseConnection();
 		self::deleteUserStream($params['uid']);
 		self::deleteUserMailQueue($connection, $params['uid']);
@@ -44,12 +44,12 @@ class Hooks {
 	 *
 	 * @param string $user
 	 */
-	static protected function deleteUserStream($user) {
+	protected static function deleteUserStream($user) {
 		// Delete activity entries
 		$app = new Application();
 		/** @var Data $activityData */
 		$activityData = $app->getContainer()->query('ActivityData');
-		$activityData->deleteActivities(array('affecteduser' => $user));
+		$activityData->deleteActivities(['affecteduser' => $user]);
 	}
 
 	/**
@@ -58,7 +58,7 @@ class Hooks {
 	 * @param IDBConnection $connection
 	 * @param string $user
 	 */
-	static protected function deleteUserMailQueue(IDBConnection $connection, $user) {
+	protected static function deleteUserMailQueue(IDBConnection $connection, $user) {
 		// Delete entries from mail queue
 		$queryBuilder = $connection->getQueryBuilder();
 

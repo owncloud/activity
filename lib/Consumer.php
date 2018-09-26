@@ -71,7 +71,7 @@ class Consumer implements IConsumer {
 		// User is not the author or wants to see their own actions
 		$createStream = !$selfAction || $this->userSettings->getUserSetting($event->getAffectedUser(), 'setting', 'self');
 		// User can not control the setting
-		$createStream = $createStream || is_array($typeData) && isset($typeData['methods']) && !in_array(IExtension::METHOD_STREAM, $typeData['methods']);
+		$createStream = $createStream || \is_array($typeData) && isset($typeData['methods']) && !\in_array(IExtension::METHOD_STREAM, $typeData['methods']);
 
 		// Add activity to stream
 		if ($streamSetting && $createStream) {
@@ -81,7 +81,7 @@ class Consumer implements IConsumer {
 		// User is not the author or wants to see their own actions
 		$createEmail = !$selfAction || $this->userSettings->getUserSetting($event->getAffectedUser(), 'setting', 'selfemail');
 		// User can not control the setting
-		$createEmail = $createEmail || is_array($typeData) && isset($typeData['methods']) && !in_array(IExtension::METHOD_MAIL, $typeData['methods']);
+		$createEmail = $createEmail || \is_array($typeData) && isset($typeData['methods']) && !\in_array(IExtension::METHOD_MAIL, $typeData['methods']);
 
 		// Add activity to mail queue
 		if ($emailSetting && $createEmail) {

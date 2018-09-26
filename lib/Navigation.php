@@ -22,7 +22,6 @@
 
 namespace OCA\Activity;
 
-
 use OCP\Activity\IManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -75,7 +74,7 @@ class Navigation {
 		$this->active = $active;
 
 		if ($rssToken) {
-			$this->rssLink = $this->URLGenerator->linkToRouteAbsolute('activity.Feed.show', array('token' => $rssToken));
+			$this->rssLink = $this->URLGenerator->linkToRouteAbsolute('activity.Feed.show', ['token' => $rssToken]);
 		} else {
 			$this->rssLink = '';
 		}
@@ -93,10 +92,10 @@ class Navigation {
 		$template = new Template('activity', 'stream.app.navigation', '');
 		$entries = $this->getLinkList();
 
-		if (sizeof($entries['apps']) === 1) {
+		if (\sizeof($entries['apps']) === 1) {
 			// If there is only the files app, we simply do not show it,
 			// as it is the same as the 'all' filter.
-			$entries['apps'] = array();
+			$entries['apps'] = [];
 		}
 
 		$template->assign('activeNavigation', $active);
@@ -123,20 +122,20 @@ class Navigation {
 		$topEntries[] = [
 			'id' => 'self',
 			'name' => (string) $this->l->t('Activities by you'),
-			'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', array('filter' => 'self')),
+			'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', ['filter' => 'self']),
 		];
 		$topEntries[] = [
 			'id' => 'by',
 			'name' => (string) $this->l->t('Activities by others'),
-			'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', array('filter' => 'by')),
+			'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', ['filter' => 'by']),
 		];
 
 		$additionalEntries = $this->activityManager->getNavigation();
-		$topEntries = array_merge($topEntries, $additionalEntries['top']);
+		$topEntries = \array_merge($topEntries, $additionalEntries['top']);
 
-		return array(
+		return [
 			'top'		=> $topEntries,
 			'apps'		=> $additionalEntries['apps'],
-		);
+		];
 	}
 }

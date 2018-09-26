@@ -174,13 +174,13 @@ class MailQueueHandlerTest extends TestCase {
 	public function testGetAffectedUsers($limit, $affected, $untouched) {
 		$maxTime = 200;
 
-		$affected = array_map(function($userVar) {
+		$affected = \array_map(function ($userVar) {
 			return [
 				'uid' => $this->$userVar->getUID(),
 				'email' => $this->$userVar->getEMailAddress()
 			];
 		}, $affected);
-		$untouched = array_map(function($userVar) {
+		$untouched = \array_map(function ($userVar) {
 			return [
 				'uid' => $this->$userVar->getUID(),
 				'email' => $this->$userVar->getEMailAddress()
@@ -194,7 +194,7 @@ class MailQueueHandlerTest extends TestCase {
 
 		$this->assertEquals($affected, $users);
 
-		$uids = array_map(function($u) {
+		$uids = \array_map(function ($u) {
 			return $u['uid'];
 		}, $users);
 
@@ -227,7 +227,7 @@ class MailQueueHandlerTest extends TestCase {
 
 		$app = $this->getUniqueID('MailQueueHandlerTest');
 		for ($i = 0; $i < 15; $i++) {
-			$query->execute(array($app, 'Test data', 'Param1', $this->user1->getUID(), 150, 'phpunit', 160 + $i));
+			$query->execute([$app, 'Test data', 'Param1', $this->user1->getUID(), 150, 'phpunit', 160 + $i]);
 		}
 
 		list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$this->user1->getUID(), 200, 5]);
@@ -279,9 +279,8 @@ class MailQueueHandlerTest extends TestCase {
 	 * Should not throw an exception
 	 */
 	public function testDeleteSentItemsWithNoUsers() {
-		$this->mailQueueHandler->deleteSentItems([], time());
+		$this->mailQueueHandler->deleteSentItems([], \time());
 	}
-
 
 	/**
 	 * @param array $users
@@ -291,7 +290,7 @@ class MailQueueHandlerTest extends TestCase {
 	protected function assertRemainingMailEntries(array $users, $maxTime, $explain) {
 		if (!empty($untouched)) {
 			foreach ($users as $user) {
-				list($data,) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$user, $maxTime]);
+				list($data, ) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$user, $maxTime]);
 				$this->assertNotEmpty(
 					$data,
 					'Failed asserting that the remaining user ' . $user. ' still has mails in the queue ' . $explain

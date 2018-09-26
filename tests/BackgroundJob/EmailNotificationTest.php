@@ -82,7 +82,7 @@ class EmailNotificationTest extends TestCase {
 			]);
 		$mailQueueHandler->expects($this->once())
 			->method('sendEmailToUser')
-			->with('test1', 'test1@localhost', 'de', date_default_timezone_get(), $this->anything());
+			->with('test1', 'test1@localhost', 'de', \date_default_timezone_get(), $this->anything());
 		$config->expects($this->any())
 			->method('getUserValueForUsers')
 			->willReturnMap([
@@ -126,7 +126,7 @@ class EmailNotificationTest extends TestCase {
 		// Sending the email will throw an exception
 		$mailQueueHandler->expects($this->once())
 			->method('sendEmailToUser')
-			->with('test1', 'test1@localhost', 'de', date_default_timezone_get(), $this->anything())
+			->with('test1', 'test1@localhost', 'de', \date_default_timezone_get(), $this->anything())
 			->willThrowException($e);
 		$config->expects($this->any())
 			->method('getUserValueForUsers')

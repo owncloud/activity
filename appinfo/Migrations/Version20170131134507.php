@@ -9,7 +9,6 @@ use OCP\Migration\ISqlMigration;
  * Auto-generated migration step: Please modify to your needs!
  */
 class Version20170131134507 implements ISqlMigration {
-
 	public function sql(IDBConnection $connection) {
 		if ($connection->getDatabasePlatform() instanceof OraclePlatform) {
 			$tableName = "*PREFIX*activity";

@@ -52,7 +52,7 @@ class FileFormatterTest extends TestCase {
 		$this->l->expects($this->any())
 			->method('t')
 			->willReturnCallback(function ($string, $parameters) {
-				return vsprintf($string, $parameters);
+				return \vsprintf($string, $parameters);
 			});
 	}
 
@@ -139,12 +139,12 @@ class FileFormatterTest extends TestCase {
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRouteAbsolute')
 			->with('files.view.index', $this->anything())
-			->willReturnCallback(function($route, $parameters) {
+			->willReturnCallback(function ($route, $parameters) {
 				$paramList = [];
 				foreach ($parameters as $key => $value) {
-					$paramList[] = $key . '=' . urlencode($value);
+					$paramList[] = $key . '=' . \urlencode($value);
 				}
-				return 'apps/files/' . '?' . implode('&', $paramList);
+				return 'apps/files/' . '?' . \implode('&', $paramList);
 			});
 
 		$formatter = $this->getFormatter([

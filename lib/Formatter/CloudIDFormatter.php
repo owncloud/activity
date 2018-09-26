@@ -61,7 +61,8 @@ class CloudIDFormatter implements IFormatter {
 
 		try {
 			$displayName = $this->getDisplayNameFromContact($parameter);
-		} catch (\OutOfBoundsException $e) {}
+		} catch (\OutOfBoundsException $e) {
+		}
 
 		return '<federated-cloud-id display-name="' . Util::sanitizeHTML($displayName) . '" user="' . Util::sanitizeHTML($user) . '" server="' . Util::sanitizeHTML($server) . '">' . Util::sanitizeHTML($parameter) . '</federated-cloud-id>';
 	}
@@ -74,7 +75,7 @@ class CloudIDFormatter implements IFormatter {
 	 * @throws \OutOfBoundsException when there is no contact for the id
 	 */
 	protected function getDisplayNameFromContact($federatedCloudId) {
-		$federatedCloudId = strtolower($federatedCloudId);
+		$federatedCloudId = \strtolower($federatedCloudId);
 		if (isset($this->federatedContacts[$federatedCloudId])) {
 			if ($this->federatedContacts[$federatedCloudId] !== '') {
 				return $this->federatedContacts[$federatedCloudId];

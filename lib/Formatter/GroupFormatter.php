@@ -45,4 +45,3 @@ class GroupFormatter implements IFormatter {
 		return '<parameter>' . Util::sanitizeHTML($displayName) . '</parameter>';
 	}
 }
-

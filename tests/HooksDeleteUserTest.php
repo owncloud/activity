@@ -36,39 +36,39 @@ class HooksDeleteUserTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$activities = array(
-			array('affectedUser' => 'delete', 'subject' => 'subject'),
-			array('affectedUser' => 'delete', 'subject' => 'subject2'),
-			array('affectedUser' => 'otherUser', 'subject' => 'subject'),
-			array('affectedUser' => 'otherUser', 'subject' => 'subject2'),
-		);
+		$activities = [
+			['affectedUser' => 'delete', 'subject' => 'subject'],
+			['affectedUser' => 'delete', 'subject' => 'subject2'],
+			['affectedUser' => 'otherUser', 'subject' => 'subject'],
+			['affectedUser' => 'otherUser', 'subject' => 'subject2'],
+		];
 
 		$queryActivity = \OC::$server->getDatabaseConnection()->prepare('INSERT INTO `*PREFIX*activity`(`app`, `subject`, `subjectparams`, `message`, `messageparams`, `file`, `link`, `user`, `affecteduser`, `timestamp`, `priority`, `type`)' . ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )');
 		$queryMailQueue = \OC::$server->getDatabaseConnection()->prepare('INSERT INTO `*PREFIX*activity_mq`(`amq_appid`, `amq_subject`, `amq_subjectparams`, `amq_affecteduser`, `amq_timestamp`, `amq_type`, `amq_latest_send`)' . ' VALUES(?, ?, ?, ?, ?, ?, ?)');
 		foreach ($activities as $activity) {
-			$queryActivity->execute(array(
+			$queryActivity->execute([
 				'app',
 				$activity['subject'],
-				json_encode([]),
+				\json_encode([]),
 				'',
-				json_encode([]),
+				\json_encode([]),
 				'file',
 				'link',
 				'user',
 				$activity['affectedUser'],
-				time(),
+				\time(),
 				IExtension::PRIORITY_MEDIUM,
 				'test',
-			));
-			$queryMailQueue->execute(array(
+			]);
+			$queryMailQueue->execute([
 				'app',
 				$activity['subject'],
-				json_encode([]),
+				\json_encode([]),
 				$activity['affectedUser'],
-				time(),
+				\time(),
 				'test',
-				time() + 10,
-			));
+				\time() + 10,
+			]);
 		}
 	}
 
@@ -78,9 +78,9 @@ class HooksDeleteUserTest extends TestCase {
 			\OC::$server->getDatabaseConnection(),
 			$this->createMock('\OCP\IUserSession')
 		);
-		$data->deleteActivities(array(
+		$data->deleteActivities([
 			'type' => 'test',
-		));
+		]);
 		$query = \OC::$server->getDatabaseConnection()->prepare("DELETE FROM `*PREFIX*activity_mq` WHERE `amq_type` = 'test'");
 		$query->execute();
 
@@ -88,12 +88,11 @@ class HooksDeleteUserTest extends TestCase {
 	}
 
 	public function testHooksDeleteUser() {
-
-		$this->assertUserActivities(array('delete', 'otherUser'));
-		$this->assertUserMailQueue(array('delete', 'otherUser'));
-		Hooks::deleteUser(array('uid' => 'delete'));
-		$this->assertUserActivities(array('otherUser'));
-		$this->assertUserMailQueue(array('otherUser'));
+		$this->assertUserActivities(['delete', 'otherUser']);
+		$this->assertUserMailQueue(['delete', 'otherUser']);
+		Hooks::deleteUser(['uid' => 'delete']);
+		$this->assertUserActivities(['otherUser']);
+		$this->assertUserMailQueue(['otherUser']);
 	}
 
 	protected function assertUserActivities($expected) {
@@ -109,14 +108,14 @@ class HooksDeleteUserTest extends TestCase {
 	protected function assertTableKeys($expected, Statement $query, $keyName) {
 		$query->execute();
 
-		$users = array();
+		$users = [];
 		while ($row = $query->fetch()) {
 			$users[] = $row[$keyName];
 		}
 		$query->closeCursor();
-		$users = array_unique($users);
-		sort($users);
-		sort($expected);
+		$users = \array_unique($users);
+		\sort($users);
+		\sort($expected);
 
 		$this->assertEquals($expected, $users);
 	}

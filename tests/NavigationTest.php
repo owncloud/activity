@@ -32,12 +32,12 @@ use OCA\Activity\Tests\Mock\Extension;
  */
 class NavigationTest extends TestCase {
 	public function getTemplateData() {
-		return array(
-			array('all'),
-			array('all', 'self'),
-			array('all', 'self', 'thisIsTheRSSToken'),
-			array('random'),
-		);
+		return [
+			['all'],
+			['all', 'self'],
+			['all', 'self', 'thisIsTheRSSToken'],
+			['random'],
+		];
 	}
 
 	/**
@@ -50,7 +50,7 @@ class NavigationTest extends TestCase {
 			$this->createMock('OCP\IUserSession'),
 			$this->createMock('OCP\IConfig')
 		);
-		$activityManager->registerExtension(function() use ($activityLanguage) {
+		$activityManager->registerExtension(function () use ($activityLanguage) {
 			return new Extension($activityLanguage, $this->createMock('\OCP\IURLGenerator'));
 		});
 		$navigation = new Navigation(
@@ -64,14 +64,14 @@ class NavigationTest extends TestCase {
 		$output = $navigation->getTemplate($forceActive)->fetchPage();
 
 		// Get only the template part with the navigation links
-		$navigationLinks = substr($output, strpos($output, '<ul>') + 4);
-		$navigationLinks = substr($navigationLinks, 0, strrpos($navigationLinks, '</li>'));
+		$navigationLinks = \substr($output, \strpos($output, '<ul>') + 4);
+		$navigationLinks = \substr($navigationLinks, 0, \strrpos($navigationLinks, '</li>'));
 
 		// Remove tabs and new lines
-		$navigationLinks = str_replace(array("\t", "\n"), '', $navigationLinks);
+		$navigationLinks = \str_replace(["\t", "\n"], '', $navigationLinks);
 
 		// Turn the list of links into an array
-		$navigationEntries = explode('</li>', $navigationLinks);
+		$navigationEntries = \explode('</li>', $navigationLinks);
 
 		$links = $navigation->getLinkList();
 
@@ -79,7 +79,7 @@ class NavigationTest extends TestCase {
 		foreach ($links['top'] as $link) {
 			$found = false;
 			foreach ($navigationEntries as $navigationEntry) {
-				if (strpos($navigationEntry, 'data-navigation="' . $link['id'] . '"') !== false) {
+				if (\strpos($navigationEntry, 'data-navigation="' . $link['id'] . '"') !== false) {
 					$found = true;
 					$this->assertContains(
 						'href="' . $link['url'] . '">' . $link['name']. '</a>',
@@ -96,16 +96,15 @@ class NavigationTest extends TestCase {
 		}
 
 		// Check size of app links
-		$this->assertSame(1, sizeof($links['apps']));
+		$this->assertSame(1, \sizeof($links['apps']));
 		$this->assertNotContains('data-navigation="files"', $navigationLinks, 'Files app should not be included when there are no other apps.');
 
 		if ($rssToken) {
-			$rssInputField = strpos($output, 'input id="rssurl"');
+			$rssInputField = \strpos($output, 'input id="rssurl"');
 			$this->assertGreaterThan(0, $rssInputField);
-			$endOfInputField = strpos($output, ' />', $rssInputField);
+			$endOfInputField = \strpos($output, ' />', $rssInputField);
 
-			$this->assertNotSame(false, strpos(substr($output, $rssInputField, $endOfInputField - $rssInputField), $rssToken));
+			$this->assertNotSame(false, \strpos(\substr($output, $rssInputField, $endOfInputField - $rssInputField), $rssToken));
 		}
 	}
-
 }

@@ -57,6 +57,7 @@ script:
 
   # Test the app
   - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' = '1' ]; then find . -name \*.php -exec php -l \"{}\" \;; fi"
+  - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' = '1' ]; then make test-php-style; fi"
   - cd ../../
   - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' = '1' ]; then ./occ app:check-code $APP_NAME -c private -c strong-comparison; fi"
   - sh -c "if [ '$JSTESTS' != '1' -a '$CODECHECK' = '2' ]; then ./occ app:check-code $APP_NAME -c deprecation; fi"

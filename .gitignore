@@ -56,3 +56,6 @@ nbproject
 /tests/js/node_modules
 /vendor/
 /build/
+
+# php-cs-fixer
+.php_cs.cache

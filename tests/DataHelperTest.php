@@ -119,7 +119,6 @@ class DataHelperTest extends TestCase {
 	 * @param string $expected
 	 */
 	public function testTranslation($app, $text, array $params, array $prepared, $managerReturn, $expected) {
-
 		$this->activityManager->expects($this->once())
 			->method('translate')
 			->with($app, $text, $prepared, false, false)
@@ -233,7 +232,7 @@ class DataHelperTest extends TestCase {
 		$instance->expects($this->once())
 			->method('translation')
 			->with($activity['app'], $activity[$message], $activity[$message . 'params_array'])
-			->willReturnCallback(function() {
+			->willReturnCallback(function () {
 				return 'translation';
 			});
 
@@ -309,7 +308,7 @@ class DataHelperTest extends TestCase {
 			$this->parameterFactory->expects($this->at($i))
 				->method('get')
 				->with($factoryCall[0], $event, $factoryCall[1])
-				->willReturnCallback(function() {
+				->willReturnCallback(function () {
 					global $call;
 					$call++;
 					return 'param' . $call;
@@ -358,9 +357,9 @@ class DataHelperTest extends TestCase {
 			[false, []],
 			['a', ['a']],
 			['"foo"bar"', ['"foo"bar"']],
-			[serialize('a'), ['a']],
-			[serialize(['a']), ['a']],
-			[json_encode(['a']), ['a']],
+			[\serialize('a'), ['a']],
+			[\serialize(['a']), ['a']],
+			[\json_encode(['a']), ['a']],
 		];
 	}
 
