@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
 ## [2.3.8] - 2019-09-25
 ### Added
 - New mail footers to template files. - [#639](https://github.com/owncloud/activity/issues/639)
