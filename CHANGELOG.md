@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+## [2.3.8] - 2019-09-25
+### Added
+- New mail footers to template files. - [#639](https://github.com/owncloud/activity/issues/639)
+
+### Fixed
+- Prepare for jquery 2 update - [#638](https://github.com/owncloud/activity/issues/638)
+
 ## [2.3.7] - 2019-07-11
 ### Fixed
 - Adjust preview URL generation based on new endpiont - [#631](https://github.com/owncloud/activity/pull/631)
@@ -20,7 +29,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.3.7...master
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.3.8...master
+[2.3.8]: https://github.com/owncloud/activity/compare/v2.3.7...v2.3.8
 [2.3.7]: https://github.com/owncloud/activity/compare/v2.3.6...v2.3.7
 [2.3.6]: https://github.com/owncloud/activity/compare/v10.0.2...v2.3.6
 
