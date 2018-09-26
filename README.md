@@ -1,33 +1,17 @@
-# ownCloud Activity App
+Activity App
+===============
 
-The activity app for ownCloud
+The ownCloud Activity application enables users to not only get a summarized overview of all file and folder events in their ownCloud, but also to receive notifications for such via email. The user can configure their individual Activity preferences in their personal settings and can decide in detail which file or folder actions should be listed in the Activity stream (accessible via the app launcher) and also for which file or folder actions the users wants to receive email notifications. The bulk email notifications can either be sent out hourly, daily or weekly to fit the specific needs of the individual user.
 
-Provides an activity feed showing your file changes and other interesting things
-going on in your ownCloud.
+From creation of new files or folders, to file or folder changes, updates, restores from trash bin, sharing activities, comments, tags and downloads from public share links - the ownCloud Activity app gathers all file or folder related actions in one place for the user to review. For users with lots of activity it is possible to limit the Activity stream to 'Favorites' in order to avoid noise. Furthermore the application provides filters to give users the means to maintain overview by reducing entries to relevant information.
+
+And there you have it - a complete overview of all file and folder activities in your ownCloud with the additional ability to receive activity notifications via email in a time interval of your choice. Never again miss an important event related to content in ownCloud and always be up-to-date on all activities of your files and folders.
 
 ## QA metrics on master branch:
 
 [![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=master)](https://travis-ci.org/owncloud/activity/branches)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
-
-## QA metrics on stable9.1 branch:
-
-[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable9.1)](https://travis-ci.org/owncloud/activity/branches)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable9.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9.1)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable9.1)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9.1)
-
-## QA metrics on stable9 branch:
-
-[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable9)](https://travis-ci.org/owncloud/activity/branches)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable9)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable9)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable9)
-
-## QA metrics on stable8.2 branch:
-
-[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=stable8.2)](https://travis-ci.org/owncloud/activity/branches)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=stable8.2)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.2)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=stable8.2)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=stable8.2)
 
 # Add new activities / types for other apps
 
