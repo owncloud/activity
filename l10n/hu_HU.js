@@ -30,6 +30,7 @@ OC.L10N.register(
     "_* and %n more _::_* and %n more _" : ["* és még %n","* és még %n"],
     "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Ezt a levelet azért kapjam mert <a href=\"%s\">%s</a>-kor a következők történtek",
     "%1$s - %2$s" : "%1$s - %2$s",
+    "_and %n more _::_and %n more _" : ["és még %n","és még %n"],
     "Activity" : "Tevékenység",
     "List your own file actions in the stream" : "Listázza a saját fájl tevékenységeimet a hírfolyamban",
     "Notify about your own actions via email" : "Értesítsen a saját tevékenységeimről",
