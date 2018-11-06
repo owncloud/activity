@@ -6,14 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-## [2.3.8] - 2019-09-25
+## [2.4.0]
+### Fixed
+- Add missing migrations for longtext and indices - [#654](https://github.com/owncloud/activity/issues/654)
+
+## [2.3.8] - 2018-09-25
 ### Added
 - New mail footers to template files. - [#639](https://github.com/owncloud/activity/issues/639)
 
 ### Fixed
 - Prepare for jquery 2 update - [#638](https://github.com/owncloud/activity/issues/638)
 
-## [2.3.7] - 2019-07-11
+## [2.3.7] - 2018-07-11
 ### Fixed
 - Adjust preview URL generation based on new endpiont - [#631](https://github.com/owncloud/activity/pull/631)
 - Fix grouping for share messages - [#626](https://github.com/owncloud/activity/issues/626)
