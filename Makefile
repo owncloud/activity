@@ -1,16 +1,19 @@
+#
+# Define NPM and COMPOSER_BIN and check if they are available on the system.
+#
 SHELL := /bin/bash
 
-#
-# Define NPM and check if it is available on the system.
-#
+COMPOSER_BIN := $(shell command -v composer 2> /dev/null)
+ifndef COMPOSER_BIN
+    $(error composer is not available on your system, please install composer)
+endif
+
 NPM := $(shell command -v npm 2> /dev/null)
 ifndef NPM
     $(error npm is not available on your system, please install npm)
 endif
 
 NODE_PREFIX=$(shell pwd)
-
-PHPUNIT="$(PWD)/lib/composer/phpunit/phpunit/phpunit"
 BOWER=$(NODE_PREFIX)/node_modules/bower/bin/bower
 JSDOC=$(NODE_PREFIX)/node_modules/.bin/jsdoc
 
@@ -43,6 +46,13 @@ endif
 endif
 endif
 
+# bin file definitions
+PHPUNIT=php -d zend.enable_gc=0 "$(PWD)/../../lib/composer/bin/phpunit"
+PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0 "$(PWD)/../../lib/composer/bin/phpunit"
+PHP_CS_FIXER=php -d zend.enable_gc=0 vendor-bin/owncloud-codestyle/vendor/bin/php-cs-fixer
+
+all: build
+
 #
 # Catch-all rules
 #
@@ -52,38 +62,72 @@ all: $(bower_deps)
 .PHONY: clean
 clean: clean-deps clean-dist clean-build
 
-#
-# Basic required tools
-#
-$(COMPOSER_BIN):
-	mkdir -p $(build_dir)
-	cd $(build_dir) && curl -sS https://getcomposer.org/installer | php
+# Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
+# is present, the composer step is skipped, if no package.json or js/package.json
+# is present, the npm step is skipped
+.PHONY: build
+build:
+ifneq (,$(wildcard $(CURDIR)/composer.json))
+	make composer
+endif
+ifneq (,$(wildcard $(CURDIR)/package.json))
+	make npm
+endif
+ifneq (,$(wildcard $(CURDIR)/js/package.json))
+	make npm
+endif
 
-#
-# ownCloud core PHP dependencies
-#
-$(composer_deps): $(COMPOSER_BIN) composer.json composer.lock
-	php $(COMPOSER_BIN) install --no-dev
+# Installs and updates the composer dependencies. If composer is not installed
+# a copy is fetched from the web
+.PHONY: composer
+composer:
+ifeq (, $(composer))
+	@echo "No composer command available, downloading a copy from the web"
+	mkdir -p $(build_tools_directory)
+	curl -sS https://getcomposer.org/installer | php
+	mv composer.phar $(build_tools_directory)
+	php $(build_tools_directory)/composer.phar install --prefer-dist
+	php $(build_tools_directory)/composer.phar update --prefer-dist
+else
+	composer install --prefer-dist
+	composer update --prefer-dist
+endif
 
-$(composer_dev_deps): $(COMPOSER_BIN) composer.json composer.lock
-	php $(COMPOSER_BIN) install --dev
-
-
-#
-## Node dependencies
-#
-$(nodejs_deps): package.json
-	$(NPM) install --prefix $(NODE_PREFIX) && touch $@
-
-$(BOWER): $(nodejs_deps)
-$(JSDOC): $(nodejs_deps)
-
-$(bower_deps): $(BOWER)
-	$(BOWER) install && touch $@
+# Installs npm dependencies
+.PHONY: npm
+npm:
+ifeq (,$(wildcard $(CURDIR)/package.json))
+	cd js && $(npm) run build
+else
+	npm run build
+endif
 
 #
 # dist
 #
+
+# Builds the source and appstore package
+.PHONY: dist
+dist:
+	make appstore
+
+# Builds the source package for the app store, ignores php and js tests
+.PHONY: appstore
+appstore:
+	rm -rf $(appstore_build_directory)
+	mkdir -p $(appstore_package_name)
+	cp --parents -r \
+	appinfo \
+	css \
+	img \
+	js \
+	l10n \
+	lib \
+	templates \
+	LICENSE \
+	README.md \
+	$(appstore_package_name)
+
 $(dist_dir)/$(app_name): $(bower_deps)
 	rm -Rf $@; mkdir -p $@
 	cp -R $(all_src) $@
@@ -95,6 +139,31 @@ else
 endif
 	tar -czf $(dist_dir)/$(app_name).tar.gz -C $(dist_dir) $(app_name)
 	tar -cjf $(dist_dir)/$(app_name).tar.bz2 -C $(dist_dir) $(app_name)
+
+.PHONY: test-php-unit
+test-php-unit:             ## Run php unit tests
+test-php-unit: vendor/bin/phpunit
+	$(PHPUNIT) --configuration ./phpunit.xml --testsuite unit
+
+.PHONY: test-php-unit-dbg
+test-php-unit-dbg:         ## Run php unit tests using phpdbg
+test-php-unit-dbg: vendor/bin/phpunit
+	$(PHPUNITDBG) --configuration ./phpunit.xml --testsuite unit
+
+.PHONY: test-js
+test-js:
+	cd tests/Unit/js && npm install --deps
+	cd tests/Unit/js && node_modules/karma/bin/karma start karma.config.js --single-run
+
+.PHONY: test-php-style
+test-php-style:            ## Run php-cs-fixer and check owncloud code-style
+test-php-style: vendor-bin/owncloud-codestyle/vendor
+	$(PHP_CS_FIXER) fix -v --diff --diff-format udiff --allow-risky yes --dry-run
+
+.PHONY: test-php-style-fix
+test-php-style-fix:        ## Run php-cs-fixer and fix code style issues
+test-php-style-fix: vendor-bin/owncloud-codestyle/vendor
+	$(PHP_CS_FIXER) fix -v --diff --diff-format udiff --allow-risky yes
 
 .PHONY: dist
 dist: clean-dist $(dist_dir)/$(app_name)
@@ -111,7 +180,25 @@ clean-build:
 clean-deps:
 	rm -Rf $(nodejs_deps) $(bower_deps) ${composer_deps}
 
+#
+# Dependency management
+#--------------------------------------
 
-.PHONY: test-php-style
-test-php-style: $(composer_dev_deps)
-	$(composer_deps)/bin/php-cs-fixer fix -v --diff --diff-format udiff --dry-run --allow-risky yes
+composer.lock: composer.json
+	@echo composer.lock is not up to date.
+
+vendor: composer.lock
+	composer install --no-dev
+
+vendor/bin/phpunit: composer.lock
+	composer install
+
+vendor/bamarni/composer-bin-plugin: composer.lock
+	composer install
+
+vendor-bin/owncloud-codestyle/vendor: vendor/bamarni/composer-bin-plugin vendor-bin/owncloud-codestyle/composer.lock
+	composer bin owncloud-codestyle install --no-progress
+
+vendor-bin/owncloud-codestyle/composer.lock: vendor-bin/owncloud-codestyle/composer.json
+	@echo owncloud-codestyle composer.lock is not up to date.
+
