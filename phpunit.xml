@@ -8,7 +8,7 @@
 		 timeoutForLargeTests="900"
 >
 	<testsuite name='unit'>
-		<directory suffix='Test.php'>./tests/Unit</directory>
+		<directory suffix='Test.php'>./tests/unit</directory>
 	</testsuite>
 	<!-- filters for code coverage -->
 	<filter>
