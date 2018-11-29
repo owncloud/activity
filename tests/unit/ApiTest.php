@@ -24,7 +24,6 @@ namespace OCA\Activity\Tests\Unit;
 use OCA\Activity\Data;
 use OCA\Activity\Tests\Unit\Mock\Extension;
 use OCP\Activity\IExtension;
-use OCA\Activity\Tests\Unit\TestCase;
 
 /**
  * Class ApiTest
