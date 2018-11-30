@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-## [2.4.1]
+## [2.4.1] - 2018-11-30
 
 - Set max version to 10 because core platform switches to Semver
 
@@ -45,6 +45,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.4.1...master
 [2.4.1]: https://github.com/owncloud/activity/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/owncloud/activity/compare/v2.3.8...v2.4.0
 [2.3.8]: https://github.com/owncloud/activity/compare/v2.3.7...v2.3.8
