@@ -9,7 +9,7 @@ And there you have it - a complete overview of all file and folder activities in
 
 ## QA metrics on master branch:
 
-[![Build Status](https://travis-ci.org/owncloud/activity.svg?branch=master)](https://travis-ci.org/owncloud/activity/branches)
+[![Build Status](https://drone.owncloud.com/api/badges/owncloud/activity/status.svg?branch=master)](https://drone.owncloud.com/owncloud/activity)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
 
