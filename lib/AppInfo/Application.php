@@ -110,6 +110,19 @@ class Application extends App {
 		$container->registerService('Hooks', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
+			$currentUser = $c->query('CurrentUID');
+			if ($currentUser === "") {
+				// Dirty solution to get the federated user from dav v1 server
+				// FIXME: $authBackend is a global var at https://github.com/owncloud/core/blob/master/apps/dav/appinfo/v1/publicwebdav.php#L38
+				global $authBackend;
+
+				if ($authBackend instanceof \OCA\DAV\Connector\PublicAuth) {
+					$share = $authBackend->getShare();
+					if ($share instanceof \OC\Share20\Share) {
+						$currentUser = $share->getSharedWith();
+					}
+				}
+			}
 
 			return new FilesHooks(
 				$server->getActivityManager(),
@@ -119,7 +132,7 @@ class Application extends App {
 				new View(''),
 				$server->getDatabaseConnection(),
 				$server->getURLGenerator(),
-				$c->query('CurrentUID')
+				$currentUser
 			);
 		});
 
