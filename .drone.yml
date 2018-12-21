@@ -33,6 +33,17 @@ pipeline:
       matrix:
         NEED_INSTALL_APP: true
 
+  fix-permissions:
+    image: owncloudci/php:${PHP_VERSION}
+    pull: true
+    commands:
+      - chown www-data /var/www/owncloud -R
+      - chmod 777 /var/www/owncloud/tests/acceptance/filesForUpload -R
+      - chmod +x /var/www/owncloud/tests/acceptance/run.sh
+    when:
+      matrix:
+        NEED_SERVER: true
+
   owncloud-coding-standard:
     image: owncloudci/php:${PHP_VERSION}
     pull: true
@@ -62,6 +73,22 @@ pipeline:
     when:
       matrix:
         TEST_SUITE: javascript
+
+  webui-acceptance-tests:
+    image: owncloudci/php:${PHP_VERSION}
+    pull: true
+    environment:
+      - BROWSER=chrome #chrome or firefox
+      - SELENIUM_HOST=selenium
+      - SELENIUM_PORT=4444
+      - TEST_SERVER_URL=http://owncloud
+      - PLATFORM=Linux
+      - BEHAT_SUITE=${BEHAT_SUITE}
+    commands:
+      - make test-acceptance-webui
+    when:
+      matrix:
+        TEST_SUITE: web-acceptance
 
   codecov:
     image: plugins/codecov:2
@@ -113,6 +140,23 @@ services:
     when:
       matrix:
         DB_TYPE: oci
+
+  owncloud:
+    image: owncloudci/php:${PHP_VERSION}
+    pull: true
+    environment:
+      - APACHE_WEBROOT=/var/www/owncloud/
+    command: ["/usr/local/bin/apachectl", "-e", "debug", "-D", "FOREGROUND"]
+    when:
+      matrix:
+        NEED_SERVER: true
+
+  selenium:
+    image: selenium/standalone-chrome-debug:latest
+    pull: true
+    when:
+      matrix:
+        TEST_SUITE: web-acceptance
 
 matrix:
   include:
@@ -203,4 +247,26 @@ matrix:
       DB_TYPE: mysql
       DB_NAME: owncloud
       NEED_CORE: true
+      NEED_INSTALL_APP: true
+
+    # acceptance tests
+
+    - PHP_VERSION: 7.1
+      OC_VERSION: daily-master-qa
+      TEST_SUITE: web-acceptance
+      BEHAT_SUITE: webUIActivity
+      DB_TYPE: mysql
+      DB_NAME: owncloud
+      NEED_CORE: true
+      NEED_SERVER: true
+      NEED_INSTALL_APP: true
+
+    - PHP_VERSION: 7.1
+      OC_VERSION: daily-stable10-qa
+      TEST_SUITE: web-acceptance
+      BEHAT_SUITE: webUIActivity
+      DB_TYPE: mysql
+      DB_NAME: owncloud
+      NEED_CORE: true
+      NEED_SERVER: true
       NEED_INSTALL_APP: true
