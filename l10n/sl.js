@@ -28,6 +28,8 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "To sporočilo ste prejeli, ker so se zgodili naslednji dogodki na %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* in %n dodaten","* in %n dodatna","* in %n dodatni","* in %n dodatnih"],
+    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Dobili ste ta e-mail zaradi naslednjih stvari, ki so se zgodile pri <a href=\"%s\">%s</a>",
+    "%1$s - %2$s" : "%1$s-%2$s",
     "Activity" : "Dejavnosti",
     "List your own file actions in the stream" : "Izpiši seznam datotečnih opravil v pretoku",
     "Notify about your own actions via email" : "O dejanjih me obvesti po elektronski pošti",
