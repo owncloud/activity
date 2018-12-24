@@ -31,7 +31,7 @@ OC.L10N.register(
     "%1$s - %2$s" : "%1$s — %2$s",
     "_and %n more _::_and %n more _" : ["и ещё %n ","и ещё %n ","и ещё %n ","и ещё %n "],
     "Activity" : "События",
-    "List your own file actions in the stream" : "Список ваших собственных действий файлов в потоке",
+    "List your own file actions in the stream" : "Список ваших собственных действий с файлами в потоке",
     "Notify about your own actions via email" : "Уведомлять о моих действиях по email",
     "You need to set up your email address before you can receive notification emails." : "Для получения уведомлений укажите свой e-mail в настройках.",
     "Send emails:" : "Отправлять электронные сообщения:",
