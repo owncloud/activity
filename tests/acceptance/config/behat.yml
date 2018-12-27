@@ -20,3 +20,10 @@ default:
             regularUserPassword: 123456
             ocPath: apps/testing/api/v1/occ
         - WebUIGeneralContext:
+
+    apiActivity:
+      paths:
+        - %paths.base%/../features/apiActivity
+      contexts:
+        - ActivityContext:
+        - FeatureContext: *common_feature_context_params

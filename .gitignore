@@ -52,7 +52,8 @@ nbproject
 
 # Tests - auto-generated files
 /tests/coverage*
-/tests/output/clover.xml
+/tests/acceptance/output*
+/tests/output
 node_modules
 vendor-bin/**/composer.lock
 vendor/
