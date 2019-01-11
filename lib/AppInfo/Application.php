@@ -41,6 +41,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
 use OCP\IContainer;
 use OCP\Util;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Application extends App {
 	public function __construct(array $urlParams = []) {
@@ -112,16 +113,12 @@ class Application extends App {
 			$server = $c->query('ServerContainer');
 			$currentUser = $c->query('CurrentUID');
 			if ($currentUser === "") {
-				// Dirty solution to get the federated user from dav v1 server
-				// FIXME: $authBackend is a global var at https://github.com/owncloud/core/blob/master/apps/dav/appinfo/v1/publicwebdav.php#L38
-				global $authBackend;
-
-				if ($authBackend instanceof \OCA\DAV\Connector\PublicAuth) {
-					$share = $authBackend->getShare();
-					if ($share instanceof \OC\Share20\Share) {
-						$currentUser = $share->getSharedWith();
-					}
-				}
+				// Get the federated user from dav v1 server
+				$event = $server->getEventDispatcher()->dispatch(
+					'public.user.resolve',
+					new GenericEvent('', ['user' => ""])
+				);
+				$currentUser = $event->getArgument("user");
 			}
 
 			return new FilesHooks(
