@@ -41,6 +41,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
 use OCP\IContainer;
 use OCP\Util;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Application extends App {
 	public function __construct(array $urlParams = []) {
@@ -110,6 +111,15 @@ class Application extends App {
 		$container->registerService('Hooks', function (IContainer $c) {
 			/** @var \OC\Server $server */
 			$server = $c->query('ServerContainer');
+			$currentUser = $c->query('CurrentUID');
+			if ($currentUser === "") {
+				// Get the federated user from dav v1 server
+				$event = $server->getEventDispatcher()->dispatch(
+					'public.user.resolve',
+					new GenericEvent('', ['user' => ""])
+				);
+				$currentUser = $event->getArgument("user");
+			}
 
 			return new FilesHooks(
 				$server->getActivityManager(),
@@ -119,7 +129,7 @@ class Application extends App {
 				new View(''),
 				$server->getDatabaseConnection(),
 				$server->getURLGenerator(),
-				$c->query('CurrentUID')
+				$currentUser
 			);
 		});
 
