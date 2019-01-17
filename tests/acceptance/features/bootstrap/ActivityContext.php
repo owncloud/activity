@@ -91,4 +91,19 @@ class ActivityContext implements Context {
 		// Get all the contexts you need in this context
 		$this->featureContext = $environment->getContext('FeatureContext');
 	}
+
+	/**
+	 * @Given /^user "([^"]*)" has been created with default attributes and without skeleton files$/
+	 *
+	 * @param string $user
+	 *
+	 * @return void
+	 */
+	public function userHasBeenCreatedWithDefaultAttributesAndWithoutSkeletonFiles($user) {
+		$this->featureContext->runOcc(["config:system:get skeletondirectory"]);
+		$path = \trim($this->featureContext->getStdOutOfOccCommand());
+		$this->featureContext->runOcc(["config:system:delete skeletondirectory"]);
+		$this->featureContext->userHasBeenCreatedWithDefaultAttributes($user);
+		$this->featureContext->runOcc(["config:system:set skeletondirectory --value $path"]);
+	}
 }
