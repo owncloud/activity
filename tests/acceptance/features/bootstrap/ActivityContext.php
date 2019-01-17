@@ -35,10 +35,15 @@ class ActivityContext implements Context {
 	 * @var FeatureContext
 	 */
 	private $featureContext;
-	
+
 	/**
 	 * @Then the activity number :index of user :user should match these properties:
+	 *
 	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param string $user
+	 * @param TableNode $expectedProperties
+	 *
+	 * @return void
 	 */
 	public function activityWithIndexShouldMatch(
 		$index, $user, TableNode $expectedProperties
