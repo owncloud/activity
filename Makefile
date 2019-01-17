@@ -50,6 +50,7 @@ endif
 PHPUNIT=php -d zend.enable_gc=0 "$(PWD)/../../lib/composer/bin/phpunit"
 PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0 "$(PWD)/../../lib/composer/bin/phpunit"
 PHP_CS_FIXER=php -d zend.enable_gc=0 vendor-bin/owncloud-codestyle/vendor/bin/php-cs-fixer
+PHP_CS=php -d zend.enable_gc=0 "$(PWD)/../../lib/composer/bin/phpcs"
 
 all: build
 
@@ -159,6 +160,7 @@ test-js:
 test-php-style:            ## Run php-cs-fixer and check owncloud code-style
 test-php-style: vendor-bin/owncloud-codestyle/vendor
 	$(PHP_CS_FIXER) fix -v --diff --diff-format udiff --allow-risky yes --dry-run
+	$(PHP_CS) --runtime-set ignore_warnings_on_exit --standard=../../phpcs.xml tests/acceptance
 
 .PHONY: test-php-style-fix
 test-php-style-fix:        ## Run php-cs-fixer and fix code style issues
