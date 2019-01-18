@@ -39,6 +39,21 @@ Feature: Created files/folders activities
     When user "user0" browses to the activity page
     Then the activity number 1 should contain message "You created Doc3, Doc2, Doc1" in the activity page
 
+  Scenario: Uploading new file using async should register in the activity list
+    Given the administrator has enabled async operations
+    And using new DAV path
+    And user "user0" has uploaded the following chunks asynchronously to "/text.txt" with new chunking
+      | 1 | AAAAA |
+      | 2 | BBBBB |
+      | 3 | CCCCC |
+    When user "user0" browses to the activity page
+    Then the activity number 1 should contain message "You created text.txt" in the activity page
+
+  Scenario: Uploading new files using all mechanisms should be listed in the activity list
+    When user "user0" uploads file "filesForUpload/textfile.txt" to filenames based on "/text.txt" with all mechanisms using the WebDAV API
+    And user "user0" browses to the activity page
+    Then the activity number 1 should contain message "You created text.txt-newdav-newchunking, text.txt-newdav-regular, text.txt-olddav-oldchunking" in the activity page
+
   Scenario: Creating multiple folders should be listed in the activity list with contracted list
     Given user "user0" has created folder "Doc1"
     And user "user0" has created folder "Doc2"
@@ -53,3 +68,28 @@ Feature: Created files/folders activities
     And user "user0" has created folder "doc/nested"
     When user "user0" browses to the activity page
     Then the activity number 1 should contain message "You created nested, text1.txt, doc" in the activity page
+
+  Scenario: Creating files inside folder should be listed in the activity list
+    Given user "user0" has created folder "doc"
+    And user "user0" has uploaded file "filesForUpload/lorem.txt" to "/doc/text1.txt"
+    When user "user0" browses to the activity page
+    Then the activity number 1 should contain message "You created text1.txt, doc" in the activity page
+
+  Scenario: Copying files should be shown in activity log
+    Given user "user0" has uploaded file "filesForUpload/lorem.txt" to "/text1.txt"
+    And user "user0" has copied file "/text1.txt" to "/text2.txt"
+    When user "user0" browses to the activity page
+    And the activity number 1 should contain message "You created text2.txt, text1.txt" in the activity page
+
+  Scenario: Copying folder should be shown in activity log as created
+    Given user "user0" has created folder "doc"
+    And user "user0" has copied file "/doc" to "/doc2"
+    When user "user0" browses to the activity page
+    And the activity number 1 should contain message "You created doc2, doc" in the activity page
+
+  Scenario: Copying files to another folder should be shown in log
+    Given user "user0" has created folder "doc"
+    And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
+    And user "user0" has copied file "/text.txt" to "/doc/text.txt"
+    When user "user0" browses to the activity page
+    And the activity number 1 should contain message "You created text.txt, text.txt, doc" in the activity page
