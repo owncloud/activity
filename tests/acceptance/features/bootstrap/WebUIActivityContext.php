@@ -74,6 +74,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 
 	/**
 	 * @Given user :user has browsed to the activity page
+	 * @When user :user browses to the activity page
 	 *
 	 * @param string $user
 	 *
@@ -131,6 +132,19 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$message = \sprintf($this->shareMessageFramework, $entry, $avatarText, $user);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then /^the activity number (\d+) should contain message "([^"]*)" in the activity page$/
+	 *
+	 * @param int $index
+	 * @param string $message
+	 *
+	 * @return void
+	 */
+	public function theActivityNumberShouldContainMessageInTheActivityPage($index, $message) {
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
+		PHPUnit_Framework_Assert::assertContains($message, $latestActivityMessage);
 	}
 
 	/**

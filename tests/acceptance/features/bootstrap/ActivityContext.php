@@ -35,10 +35,15 @@ class ActivityContext implements Context {
 	 * @var FeatureContext
 	 */
 	private $featureContext;
-	
+
 	/**
 	 * @Then the activity number :index of user :user should match these properties:
+	 *
 	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param string $user
+	 * @param TableNode $expectedProperties
+	 *
+	 * @return void
 	 */
 	public function activityWithIndexShouldMatch(
 		$index, $user, TableNode $expectedProperties
@@ -85,5 +90,20 @@ class ActivityContext implements Context {
 		$environment = $scope->getEnvironment();
 		// Get all the contexts you need in this context
 		$this->featureContext = $environment->getContext('FeatureContext');
+	}
+
+	/**
+	 * @Given /^user "([^"]*)" has been created with default attributes and without skeleton files$/
+	 *
+	 * @param string $user
+	 *
+	 * @return void
+	 */
+	public function userHasBeenCreatedWithDefaultAttributesAndWithoutSkeletonFiles($user) {
+		$this->featureContext->runOcc(["config:system:get skeletondirectory"]);
+		$path = \trim($this->featureContext->getStdOutOfOccCommand());
+		$this->featureContext->runOcc(["config:system:delete skeletondirectory"]);
+		$this->featureContext->userHasBeenCreatedWithDefaultAttributes($user);
+		$this->featureContext->runOcc(["config:system:set skeletondirectory --value $path"]);
 	}
 }
