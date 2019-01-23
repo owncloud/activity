@@ -193,6 +193,7 @@ clean-build:
 .PHONY: clean-deps
 clean-deps:
 	rm -Rf $(nodejs_deps) $(bower_deps) ${composer_deps}
+	rm -Rf vendor-bin/**/vendor vendor-bin/**/composer.lock
 
 #
 # Dependency management
