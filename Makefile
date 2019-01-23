@@ -31,6 +31,7 @@ bower_deps=
 # composer
 composer_deps=vendor
 composer_dev_deps=vendor/php-cs-fixer
+acceptance_test_deps=vendor-bin/behat/vendor
 COMPOSER_BIN=$(build_dir)/composer.phar
 
 occ=$(CURDIR)/../../occ
@@ -51,6 +52,7 @@ PHPUNIT=php -d zend.enable_gc=0 "$(PWD)/../../lib/composer/bin/phpunit"
 PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0 "$(PWD)/../../lib/composer/bin/phpunit"
 PHP_CS_FIXER=php -d zend.enable_gc=0 vendor-bin/owncloud-codestyle/vendor/bin/php-cs-fixer
 PHP_CODESNIFFER=vendor-bin/php_codesniffer/vendor/bin/phpcs
+BEHAT_BIN=vendor-bin/behat/vendor/bin/behat
 
 all: build
 
@@ -169,13 +171,13 @@ test-php-style-fix: vendor-bin/owncloud-codestyle/vendor
 
 .PHONY: test-acceptance-api
 test-acceptance-api: ## Run API acceptance tests
-test-acceptance-api:
-	../../tests/acceptance/run.sh --remote --type api
+test-acceptance-api: $(acceptance_test_deps)
+	BEHAT_BIN=$(BEHAT_BIN) ../../tests/acceptance/run.sh --remote --type api
 
 .PHONY: test-acceptance-webui
 test-acceptance-webui: ## Run webUI acceptance tests
-test-acceptance-webui:
-	../../tests/acceptance/run.sh --remote --type webUI
+test-acceptance-webui: $(acceptance_test_deps)
+	BEHAT_BIN=$(BEHAT_BIN) ../../tests/acceptance/run.sh --remote --type webUI
 
 .PHONY: dist
 dist: clean-dist $(dist_dir)/$(app_name)
@@ -219,3 +221,9 @@ vendor-bin/php_codesniffer/vendor: vendor/bamarni/composer-bin-plugin vendor-bin
 
 vendor-bin/php_codesniffer/composer.lock: vendor-bin/php_codesniffer/composer.json
 	@echo php_codesniffer composer.lock is not up to date.
+
+vendor-bin/behat/vendor: vendor/bamarni/composer-bin-plugin vendor-bin/behat/composer.lock
+	composer bin behat install --no-progress
+
+vendor-bin/behat/composer.lock: vendor-bin/behat/composer.json
+	@echo behat composer.lock is not up to date.

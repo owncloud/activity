@@ -1,16 +1,16 @@
 default:
   autoload:
-    '': %paths.base%/../features/bootstrap
+    '': '%paths.base%/../features/bootstrap'
 
   extensions:
       jarnaiz\JUnitFormatter\JUnitFormatterExtension:
           filename: report.xml
-          outputDir: %paths.base%/../output/
+          outputDir: '%paths.base%/../output/'
 
   suites:
     webUIActivity:
       paths:
-        - %paths.base%/../features/webUIActivity
+        - '%paths.base%/../features/webUIActivity'
       contexts:
         - WebUIActivityContext:
         - FeatureContext: &common_feature_context_params
@@ -24,7 +24,7 @@ default:
 
     apiActivity:
       paths:
-        - %paths.base%/../features/apiActivity
+        - '%paths.base%/../features/apiActivity'
       contexts:
         - ActivityContext:
         - FeatureContext: *common_feature_context_params
