@@ -3,18 +3,6 @@ Feature: List activity
   As a user I want to be able to see the activity list
   So that I know what is happening with my files/folders
 
-  Scenario: file deletion should be listed in the activity list
-    Given user "user0" has been created with default attributes
-    And user "user0" has deleted file "lorem.txt"
-    And user "user0" has browsed to the activity page
-    Then the activity number 1 should have message "You deleted lorem.txt" in the activity page
-
-  Scenario: folder deletion should be listed in the activity list
-    Given user "user0" has been created with default attributes
-    And user "user0" has deleted folder "simple-folder"
-    And user "user0" has browsed to the activity page
-    Then the activity number 1 should have message "You deleted simple-folder" in the activity page
-
   Scenario: folder share should be listed in the activity list
     Given these users have been created with default attributes but not initialized:
       | username |
