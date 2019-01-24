@@ -20,6 +20,7 @@ default:
             regularUserPassword: 123456
             ocPath: apps/testing/api/v1/occ
         - WebUIGeneralContext:
+        - TrashbinContext:
         - ActivityContext:
 
     apiActivity:
