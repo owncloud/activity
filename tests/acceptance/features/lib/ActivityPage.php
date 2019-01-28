@@ -44,6 +44,8 @@ class ActivityPage extends OwncloudPage {
 	protected $avatarClassXpath = "(//div[@class='activitysubject'])[%s]//div[@class='avatar']";
 	protected $fileNameFieldXpath = "(//div[@class='activitysubject'])[%s]//a[@class='filename has-tooltip']";
 
+	protected $activityListFilterXpath = "//a[@data-navigation='%s']";
+
 	/**
 	 * get specified activity message
 	 *
@@ -59,17 +61,60 @@ class ActivityPage extends OwncloudPage {
 			__METHOD__ .
 			"Could not find the index $index in the activity list"
 		);
-		$activity  = $activities[$index];
-		return $this->getTrimmedText($activity);
+		return $activities[$index];
 	}
 
 	/**
 	 * get all activity list
 	 *
-	 * @return NodeElement[]
+	 * @return string[]
 	 */
 	public function getAllActivityMessageLists() {
-		return $this->findAll("xpath", $this->activityListXpath);
+		$messages = [];
+		$messagesElement =  $this->findAll("xpath", $this->activityListXpath);
+		foreach ($messagesElement as $messageElement) {
+			\array_push($messages, $this->getTrimmedText($messageElement));
+		}
+		return $messages;
+	}
+
+	/**
+	 * filter activity list
+	 *
+	 * @param Session $session
+	 * @param string $activityType
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function filterActivityListBy($session, $activityType) {
+		$activityFilters = [
+			'All Activities' => 'all',
+			'Activities by you' => 'self',
+			'Activity by others' => 'by',
+			'Favourites' => 'files_favorites',
+			'Comments' => 'comments',
+			'Shares' => 'shares'
+		];
+		PHPUnit_Framework_Assert::assertArrayHasKey(
+			$activityType,
+			$activityFilters,
+			__METHOD__ .
+			"Could not find filter $activityType"
+		);
+		$filterXpath = \sprintf(
+			$this->activityListFilterXpath,
+			$activityFilters[$activityType]
+		);
+		$filter = $this->find("xpath", $filterXpath);
+		$this->assertElementNotNull(
+			$filter,
+			__METHOD__ .
+			" xpath $filterXpath" .
+			"could not find filter"
+		);
+		$filter->click();
+		$this->waitForAjaxCallsToStartAndFinish($session);
 	}
 
 	/**

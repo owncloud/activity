@@ -56,7 +56,12 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	/**
 	 * @var string
 	 */
-	private $shareMessageFramework = "You shared %s with %s%s";
+	private $youSharedMsgFramework = "You shared %s with %s%s";
+
+	/**
+	 * @var string
+	 */
+	private $sharedWithYouMsgFramework = "%s%s shared %s with you";
 
 	/**
 	 * WebUIAdminSharingSettingsContext constructor.
@@ -88,6 +93,17 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$this->activityPage->open();
 		$this->activityPage->waitTillPageIsLoaded($this->getSession());
 		$this->webUIGeneralContext->setCurrentPageObject($this->activityPage);
+	}
+
+	/**
+	 * @When the user filters activity list by :activityType
+	 *
+	 * @param string $activityType
+	 *
+	 * @return void
+	 */
+	public function theUserFiltersActivityListBy($activityType) {
+		$this->activityPage->filterActivityListBy($this->getSession(), $activityType);
 	}
 
 	/**
@@ -129,7 +145,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$avatarText = \strtoupper($user[0]);
 		//Need to add username initial at the beginning because if there is no avatar of the user then,
 		// the username initial is shown in the webUI
-		$message = \sprintf($this->shareMessageFramework, $entry, $avatarText, $user);
+		$message = \sprintf($this->youSharedMsgFramework, $entry, $avatarText, $user);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
 	}
@@ -145,6 +161,43 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	public function theActivityNumberShouldContainMessageInTheActivityPage($index, $message) {
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit_Framework_Assert::assertContains($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then the activity number :index should have a message saying that user :user has shared :entry with you
+	 *
+	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param string $user
+	 * @param string $entry
+	 *
+	 * @return void
+	 */
+	public function theActivityNumberShouldHaveAMessageSayingThatUserHasSharedWithYou(
+		$index, $user, $entry
+	) {
+		if ($index < 1) {
+			throw new InvalidArgumentException(
+				"activity index starts from 1"
+			);
+		}
+		$avatarText = \strtoupper($user[0]);
+		$message = \sprintf($this->sharedWithYouMsgFramework, $avatarText, $user, $entry);
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
+		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then the activity should not have any message with keyword :tag
+	 *
+	 * @param string $tag
+	 *
+	 * @return void
+	 */
+	public function theActivityShouldNotHaveAnyMessageWithKeyword($tag) {
+		$activities = $this->activityPage->getAllActivityMessageLists();
+		foreach ($activities as $activity) {
+			PHPUnit_Framework_Assert::assertNotContains($tag, $activity);
+		}
 	}
 
 	/**
