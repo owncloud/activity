@@ -23,6 +23,7 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Page\ActivityPage;
 use Page\LoginPage;
@@ -104,6 +105,35 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 */
 	public function theUserFiltersActivityListBy($activityType) {
 		$this->activityPage->filterActivityListBy($this->getSession(), $activityType);
+	}
+
+	/**
+	 * @Then the comment message for activity number :index in the activity page should be:
+	 *
+	 * @param int $index
+	 * @param string $message
+	 *
+	 * @return void
+	 *
+	 * @throws \Exception
+	 */
+	public function theCommentMessageShouldBeListedOnTheActivityPage($index, PyStringNode $message) {
+		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index - 1);
+		PHPUnit_Framework_Assert::assertNotNull($commentMsg, "Could not find comment message.");
+		PHPUnit_Framework_Assert::assertEquals($message, $commentMsg);
+	}
+
+	/**
+	 * @Then the activity number :index should not contain any comment message in the activity page
+	 *
+	 * @param int $index
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function theActivityNumberShouldNotContainAnyCommentMessageInTheActivityPage($index) {
+		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index - 1);
+		PHPUnit_Framework_Assert::assertNull($commentMsg, "Comment exists with content: $commentMsg");
 	}
 
 	/**

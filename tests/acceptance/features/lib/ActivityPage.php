@@ -25,7 +25,6 @@ namespace Page;
 
 use PHPUnit_Framework_Assert;
 use Behat\Mink\Session;
-use Behat\Mink\Element\NodeElement;
 
 /**
  * Activity page.
@@ -43,6 +42,8 @@ class ActivityPage extends OwncloudPage {
 	protected $activityListXpath = "//div[@class='activitysubject']";
 	protected $avatarClassXpath = "(//div[@class='activitysubject'])[%s]//div[@class='avatar']";
 	protected $fileNameFieldXpath = "(//div[@class='activitysubject'])[%s]//a[@class='filename has-tooltip']";
+	protected $messageContainerXpath = "//div[@class='messagecontainer']";
+	protected $messageTextXpath = "//div[@class='activitymessage']";
 
 	protected $activityListFilterXpath = "//a[@data-navigation='%s']";
 
@@ -115,6 +116,24 @@ class ActivityPage extends OwncloudPage {
 		);
 		$filter->click();
 		$this->waitForAjaxCallsToStartAndFinish($session);
+	}
+
+	/**
+	 * Return comment message of the given activity index
+	 *
+	 * @param string $index
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 */
+	public function getCommentMessageOfIndex($index) {
+		$messages = $this->findAll('xpath', $this->messageContainerXpath);
+		$message = $messages[$index];
+		$comment = $message->find('xpath', $this->messageTextXpath);
+		if ($comment === null) {
+			return null;
+		}
+		return $this->getTrimmedText($comment);
 	}
 
 	/**
