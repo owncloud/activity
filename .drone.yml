@@ -1,6 +1,6 @@
 workspace:
   base: /var/www/owncloud
-  path: apps/activity
+  path: server/apps/activity
 
 branches: [ master, release* ]
 
@@ -9,6 +9,7 @@ pipeline:
     image: owncloudci/core
     version: ${OC_VERSION}
     pull: true
+    core_path: /var/www/owncloud/server
     db_type: ${DB_TYPE}
     db_name: ${DB_NAME}
     db_host: ${DB_TYPE}
@@ -18,16 +19,41 @@ pipeline:
       matrix:
         NEED_CORE: true
 
+  install-fed-server:
+    image: owncloudci/core
+    pull: true
+    version: ${FEDERATION_OC_VERSION}
+    core_path: /var/www/owncloud/fed-server
+    when:
+      matrix:
+        USE_FEDERATED_SERVER: true
+
+  configure-federation-server:
+    image: owncloudci/php:${PHP_VERSION}
+    pull: true
+    commands:
+      - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+      - cd /var/www/owncloud/fed-server
+      - php occ a:l
+      - php occ a:e testing
+      - php occ a:l
+      - php occ config:system:set trusted_domains 1 --value=federated
+      - php occ log:manage --level 0
+      - php occ config:list
+    when:
+      matrix:
+        USE_FEDERATED_SERVER: true
+
   install-app:
     image: owncloudci/php:${PHP_VERSION}
     pull: true
     commands:
-      - cd /var/www/owncloud/
+      - cd /var/www/owncloud/server
       - php occ a:l
       - php occ a:e activity
       - php occ a:e testing
       - php occ a:l
-      - php occ config:system:set trusted_domains 1 --value=owncloud
+      - php occ config:system:set trusted_domains 1 --value=server
       - php occ log:manage --level 0
     when:
       matrix:
@@ -38,8 +64,8 @@ pipeline:
     pull: true
     commands:
       - chown www-data /var/www/owncloud -R
-      - chmod 777 /var/www/owncloud/tests/acceptance/filesForUpload -R
-      - chmod +x /var/www/owncloud/tests/acceptance/run.sh
+      - chmod 777 /var/www/owncloud/server/tests/acceptance/filesForUpload -R
+      - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
     when:
       matrix:
         NEED_SERVER: true
@@ -78,7 +104,7 @@ pipeline:
     image: owncloudci/php:${PHP_VERSION}
     pull: true
     environment:
-      - TEST_SERVER_URL=http://owncloud
+      - TEST_SERVER_URL=http://server
       - BEHAT_SUITE=${BEHAT_SUITE}
     commands:
       - make test-acceptance-api
@@ -93,10 +119,12 @@ pipeline:
       - BROWSER=chrome #chrome or firefox
       - SELENIUM_HOST=selenium
       - SELENIUM_PORT=4444
-      - TEST_SERVER_URL=http://owncloud
+      - TEST_SERVER_URL=http://server
       - PLATFORM=Linux
       - BEHAT_SUITE=${BEHAT_SUITE}
     commands:
+      - touch /var/www/owncloud/saved-settings.sh
+      - . /var/www/owncloud/saved-settings.sh
       - make test-acceptance-webui
     when:
       matrix:
@@ -153,15 +181,25 @@ services:
       matrix:
         DB_TYPE: oci
 
-  owncloud:
+  server:
     image: owncloudci/php:${PHP_VERSION}
     pull: true
     environment:
-      - APACHE_WEBROOT=/var/www/owncloud/
+      - APACHE_WEBROOT=/var/www/owncloud/server/
     command: ["/usr/local/bin/apachectl", "-e", "debug", "-D", "FOREGROUND"]
     when:
       matrix:
         NEED_SERVER: true
+
+  federated:
+    image: owncloudci/php:${PHP_VERSION}
+    pull: true
+    environment:
+      - APACHE_WEBROOT=/var/www/owncloud/fed-server/
+    command: [ "/usr/local/bin/apachectl", "-e", "debug" , "-D" , "FOREGROUND" ]
+    when:
+      matrix:
+        USE_FEDERATED_SERVER: true
 
   selenium:
     image: selenium/standalone-chrome-debug:latest
@@ -282,6 +320,30 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
+
+    - PHP_VERSION: 7.1
+      OC_VERSION: daily-master-qa
+      TEST_SUITE: web-acceptance
+      BEHAT_SUITE: webUIActivitySharingExternal
+      DB_TYPE: mysql
+      DB_NAME: owncloud
+      NEED_CORE: true
+      NEED_SERVER: true
+      NEED_INSTALL_APP: true
+      USE_FEDERATED_SERVER: true
+      FEDERATION_OC_VERSION: daily-stable10-qa
+
+    - PHP_VERSION: 7.1
+      OC_VERSION: daily-stable10-qa
+      TEST_SUITE: web-acceptance
+      BEHAT_SUITE: webUIActivitySharingExternal
+      DB_TYPE: mysql
+      DB_NAME: owncloud
+      NEED_CORE: true
+      NEED_SERVER: true
+      NEED_INSTALL_APP: true
+      USE_FEDERATED_SERVER: true
+      FEDERATION_OC_VERSION: daily-stable10-qa
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa

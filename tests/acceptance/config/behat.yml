@@ -25,6 +25,20 @@ default:
         - CommentsContext:
         - ActivityContext:
 
+    webUIActivitySharingExternal:
+      paths:
+        - '%paths.base%/../features/webUIActivitySharingExternal'
+      contexts:
+        - WebUIActivityContext:
+        - FeatureContext: *common_feature_context_params
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIFilesContext:
+        - WebUISharingContext:
+        - FederationContext:
+        - PublicWebDavContext:
+        - ActivityContext:
+
     apiActivity:
       paths:
         - '%paths.base%/../features/apiActivity'
