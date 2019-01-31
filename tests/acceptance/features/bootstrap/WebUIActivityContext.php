@@ -65,6 +65,11 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	private $sharedWithYouMsgFramework = "%s%s shared %s with you";
 
 	/**
+	 * @var string
+	 */
+	private $userSharedWithUserMsgFramework = "%s%s shared %s with %s%s";
+
+	/**
 	 * WebUIAdminSharingSettingsContext constructor.
 	 *
 	 * @param ActivityPage $activityPage
@@ -208,6 +213,38 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		}
 		$avatarText = \strtoupper($user[0]);
 		$message = \sprintf($this->sharedWithYouMsgFramework, $avatarText, $user, $entry);
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
+		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then the activity number :index should have a message saying that user :user1 has shared :entry with user :user2
+	 *
+	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param string $user1
+	 * @param string $entry
+	 * @param string $user2
+	 *
+	 * @return void
+	 */
+	public function theActivityNumberShouldHaveAMessageSayingThatUserHasSharedWithUser(
+		$index, $user1, $entry, $user2
+	) {
+		if ($index < 1) {
+			throw new InvalidArgumentException(
+				"activity index starts from 1"
+			);
+		}
+		$avatarTextUser1 = \strtoupper($user1[0]);
+		$avatarTextUser2 = \strtoupper($user2[0]);
+		$message = \sprintf(
+			$this->userSharedWithUserMsgFramework,
+			$avatarTextUser1,
+			$user1,
+			$entry,
+			$avatarTextUser2,
+			$user2
+		);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
 	}
