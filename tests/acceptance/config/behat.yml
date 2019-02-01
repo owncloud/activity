@@ -21,6 +21,7 @@ default:
             ocPath: apps/testing/api/v1/occ
         - WebUIGeneralContext:
         - TrashbinContext:
+        - WebUILoginContext:
         - TagsContext:
         - CommentsContext:
         - ActivityContext:

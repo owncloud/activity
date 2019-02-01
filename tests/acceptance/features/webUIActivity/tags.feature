@@ -6,10 +6,11 @@ Feature: Tag files/folders activities
 
   Scenario Outline: Adding a tag on a file/folder should be listed on the activity list
     Given user "user0" has been created with default attributes
+    And user "user0" has logged in using the webUI
     And user "user0" has created a "normal" tag with name "lorem"
     # <filepath> already has an ending slash('/')
     And user "user0" has added tag "lorem" to file "<filepath><filename>"
-    When user "user0" browses to the activity page
+    When the user browses to the activity page
     Then the activity number 1 should contain message "You assigned system tag lorem to <filename>" in the activity page
     Examples:
       | filepath                            | filename            |
