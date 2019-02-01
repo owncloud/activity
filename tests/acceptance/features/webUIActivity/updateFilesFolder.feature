@@ -6,11 +6,12 @@ Feature: Updated files/folders activities
 
   Background:
     Given user "user0" has been created with default attributes
+    And user "user0" has logged in using the webUI
 
   Scenario: Changing file contents should be shown in activity log
     Given user "user0" has uploaded file "filesForUpload/lorem.txt" to "/text.txt"
     And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
-    When user "user0" browses to the activity page
+    When the user browses to the activity page
     Then the activity number 1 should have message "You changed text.txt" in the activity page
     And the activity number 2 should contain message "You created text.txt" in the activity page
 
@@ -19,7 +20,7 @@ Feature: Updated files/folders activities
     And user "user0" has uploaded file "filesForUpload/new-lorem.txt" to "/text1.txt"
     And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
     And user "user0" has uploaded file "filesForUpload/new-lorem-big.txt" to "/text1.txt"
-    When user "user0" browses to the activity page
+    When the user browses to the activity page
     Then the activity number 1 should have message "You changed text1.txt and text.txt" in the activity page
     And the activity number 2 should contain message "You created text1.txt, text.txt" in the activity page
 
@@ -28,7 +29,7 @@ Feature: Updated files/folders activities
     And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
     And user "user0" has uploaded file "filesForUpload/new-lorem.txt" to "/text1.txt"
     And user "user0" has uploaded file "filesForUpload/new-lorem-big.txt" to "/text1.txt"
-    When user "user0" browses to the activity page
+    When the user browses to the activity page
     Then the activity number 1 should have message "You changed text1.txt" in the activity page
     And the activity number 2 should have message "You created text1.txt" in the activity page
     And the activity number 3 should have message "You changed text.txt" in the activity page
@@ -40,7 +41,7 @@ Feature: Updated files/folders activities
     And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/doc/text.txt"
     And user "user0" has uploaded file "filesForUpload/new-lorem.txt" to "/doc/text1.txt"
     And user "user0" has uploaded file "filesForUpload/new-lorem-big.txt" to "/doc/text1.txt"
-    When user "user0" browses to the activity page
+    When the user browses to the activity page
     Then the activity number 1 should have message "You changed text1.txt" in the activity page
     And the activity number 2 should have message "You created text1.txt" in the activity page
     And the activity number 3 should have message "You changed text.txt" in the activity page

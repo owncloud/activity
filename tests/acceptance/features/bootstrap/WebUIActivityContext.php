@@ -79,21 +79,17 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	}
 
 	/**
-	 * @Given user :user has browsed to the activity page
-	 * @When user :user browses to the activity page
-	 *
-	 * @param string $user
+	 * @Given the user has browsed to the activity page
+	 * @When the user browses to the activity page
 	 *
 	 * @return void
 	 */
-	public function userHasBrowsedToTheActivityPage($user) {
-		$this->loginPage->open();
-		$this->webUIGeneralContext->loginAs(
-			$user, $this->featureContext->getUserPassword($user)
-		);
-		$this->activityPage->open();
-		$this->activityPage->waitTillPageIsLoaded($this->getSession());
-		$this->webUIGeneralContext->setCurrentPageObject($this->activityPage);
+	public function userHasBrowsedToTheActivityPage() {
+		if (!$this->activityPage->isOpen()) {
+			$this->activityPage->open();
+			$this->activityPage->waitTillPageIsLoaded($this->getSession());
+			$this->webUIGeneralContext->setCurrentPageObject($this->activityPage);
+		}
 	}
 
 	/**

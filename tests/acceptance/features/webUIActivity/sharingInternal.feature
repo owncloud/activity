@@ -16,7 +16,8 @@ Feature: Sharing file/folders activities
     And user "user0" has shared folder "folder with space" with user "user2"
     And user "user0" has shared file "simple-folder/lorem.txt" with user "user1"
     And user "user0" has shared folder "simple-folder/simple-empty-folder" with user "user2"
-    When user "user0" browses to the activity page
+    And user "user0" has logged in using the webUI
+    When the user browses to the activity page
     Then the activity number 1 should have a message saying that you have shared folder "simple-empty-folder" with user "User Two"
     And the activity number 2 should have a message saying that you have shared file "lorem.txt" with user "User One"
     And the activity number 3 should have a message saying that you have shared folder "folder with space" with user "User Two"
@@ -39,7 +40,8 @@ Feature: Sharing file/folders activities
     And user "user0" has shared folder "folder with space" with group "grp2"
     And user "user0" has shared file "simple-folder/lorem.txt" with group "grp1"
     And user "user0" has shared folder "simple-folder/simple-empty-folder" with group "grp2"
-    When user "user0" browses to the activity page
+    And user "user0" has logged in using the webUI
+    When the user browses to the activity page
     Then the activity number 1 should contain message "You shared simple-empty-folder with group grp2" in the activity page
     And the activity number 2 should contain message "You shared lorem.txt with group grp1" in the activity page
     And the activity number 3 should contain message "You shared folder with space with group grp2" in the activity page
@@ -61,7 +63,8 @@ Feature: Sharing file/folders activities
     And user "user0" has shared folder "folder with space" with user "user1"
     And user "user0" has shared file "simple-folder/lorem.txt" with user "user1"
     And user "user0" has shared folder "simple-folder/simple-empty-folder" with user "user1"
-    When user "user1" browses to the activity page
+    And user "user1" has logged in using the webUI
+    When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "User Zero" has shared "simple-empty-folder, lorem.txt, folder with space and textfile0.txt" with you
     When the user filters activity list by "Activities by you"
     Then the activity should not have any message with keyword "shared"
@@ -76,7 +79,8 @@ Feature: Sharing file/folders activities
     And user "user0" has shared folder "folder with space" with group "grp1"
     And user "user0" has shared file "simple-folder/lorem.txt" with group "grp1"
     And user "user0" has shared folder "simple-folder/simple-empty-folder" with group "grp1"
-    When user "user1" browses to the activity page
+    And user "user1" has logged in using the webUI
+    When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "User Zero" has shared "simple-empty-folder, lorem.txt, folder with space and textfile0.txt" with you
     When the user filters activity list by "Activities by you"
     Then the activity should not have any message with keyword "shared"
