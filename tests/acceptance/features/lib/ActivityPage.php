@@ -38,6 +38,7 @@ class ActivityPage extends OwncloudPage {
 	protected $path = '/index.php/apps/activity';
 
 	protected $activityContainerXpath = "//div[@class='boxcontainer']";
+	protected $noActivityIconXpath = "//div[@class='icon-activity']";
 
 	protected $activityListXpath = "//div[@class='activitysubject']";
 	protected $avatarClassXpath = "(//div[@class='activitysubject'])[%s]//div[@class='avatar']";
@@ -148,8 +149,13 @@ class ActivityPage extends OwncloudPage {
 		Session $session,
 		$timeout_msec = STANDARD_UI_WAIT_TIMEOUT_MILLISEC
 	) {
-		$this->waitTillXpathIsVisible(
+		$container = $this->waitTillElementIsNotNull(
 			$this->activityContainerXpath, $timeout_msec
 		);
+		if ($container === null) {
+			$this->waitTillXpathIsVisible(
+				$this->noActivityIconXpath, $timeout_msec
+			);
+		}
 	}
 }
