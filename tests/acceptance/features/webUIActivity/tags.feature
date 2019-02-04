@@ -117,3 +117,31 @@ Feature: Tag files/folders activities
     Then the activity number 1 should have message "You assigned system tag simple to simple-empty-folder" in the activity page
     And the activity number 2 should have a message saying that user "User One" has shared "simple-empty-folder" with you
     And the activity should not have any message with keyword "User Zero"
+
+  Scenario: Activity for creating a normal system tag by a user should be listed in activity list of an admin
+    Given user "user0" has been created with default attributes
+    And user "user0" has created a "normal" tag with name "lorem"
+    And the administrator has logged in using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" created system tag "lorem"
+
+  Scenario: Activity for deleting a normal system tag by a user should be listed in activity list of an admin
+    Given user "user0" has been created with default attributes
+    And user "user0" has created a "normal" tag with name "lorem"
+    And user "user0" has deleted the tag with name "lorem"
+    And the administrator has logged in using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" deleted system tag "lorem"
+
+  Scenario: Activity for creating a static system tag by a administrator should be listed in activity list of an admin
+    Given the administrator has created a "static" tag with name "StaticTagName"
+    And the administrator has logged in using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should have message "You created system tag StaticTagName (static)" in the activity page
+
+  Scenario: Activity for deleting a static system tag by a administrator should be listed in activity list of an admin
+    Given the administrator has created a "static" tag with name "StaticTagName"
+    And the administrator has deleted the tag with name "StaticTagName"
+    And the administrator has logged in using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should have message "You deleted system tag StaticTagName (static)" in the activity page
