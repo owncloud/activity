@@ -149,3 +149,23 @@ Feature: Comment files/folders activities
     """
     And the activity number 2 should have a message saying that user "User One" has shared "simple-empty-folder" with you
     And the activity should not have any message with keyword "User Zero"
+
+  Scenario: Activity for commenting on a shared file/folder by sharee should be listed for sharer and sharee as well in the activity tab
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared file "lorem.txt" with user "user1"
+    And user "user1" has commented with content "My first comment" on file "lorem.txt"
+    When the user browses directly to display the details of file "lorem.txt" in folder "/"
+    Then the activity number 1 should contain message "User One commented" in the activity tab
+    And the comment message for activity number 1 in the activity tab should be:
+    """
+    My first comment
+    """
+    And the activity number 2 should have message saying that the file is shared with user "User One" in the activity tab
+    When the user re-logs in as "user1" using the webUI
+    And the user browses directly to display the details of file "lorem.txt" in folder "/"
+    Then the activity number 1 should have message "You commented" in the activity tab
+    And the comment message for activity number 1 in the activity tab should be:
+    """
+    My first comment
+    """
+    And the activity number 2 should have message saying that the file is shared by user "User Zero" in the activity tab

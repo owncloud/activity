@@ -27,7 +27,12 @@ use PHPUnit_Framework_Assert;
 use Behat\Mink\Session;
 
 /**
- * Activity page.
+ * Activity page
+ *
+ * Works for both Activity page and 'Activity' tab on the details dialog currently.
+ *
+ * As they both are sharing the similar structure, if, in the future, the
+ * activity app gets an overhaul, it might require us to have two separate pages.
  */
 class ActivityPage extends OwncloudPage {
 
@@ -43,8 +48,8 @@ class ActivityPage extends OwncloudPage {
 	protected $activityListXpath = "//div[@class='activitysubject']";
 	protected $avatarClassXpath = "(//div[@class='activitysubject'])[%s]//div[@class='avatar']";
 	protected $fileNameFieldXpath = "(//div[@class='activitysubject'])[%s]//a[@class='filename has-tooltip']";
-	protected $messageContainerXpath = "//div[@class='messagecontainer']";
-	protected $messageTextXpath = "//div[@class='activitymessage']";
+
+	protected $messageTextXpath = "(//div[@class='activitysubject'])[%s]/../*[@class='activitymessage']";
 
 	protected $activityListFilterXpath = "//a[@data-navigation='%s']";
 
@@ -123,18 +128,24 @@ class ActivityPage extends OwncloudPage {
 	 * Return comment message of the given activity index
 	 *
 	 * @param string $index
+	 * 		The index starts from 1 as it's retrieved from xpath directly
+	 *
+	 * @throws \Exception
 	 *
 	 * @return string|null
-	 * @throws \Exception
 	 */
 	public function getCommentMessageOfIndex($index) {
-		$messages = $this->findAll('xpath', $this->messageContainerXpath);
-		$message = $messages[$index];
-		$comment = $message->find('xpath', $this->messageTextXpath);
-		if ($comment === null) {
+		if ($index < 1) {
+			throw new InvalidArgumentException(
+				"comment index starts from 1"
+			);
+		}
+		$commentMsgXpath = \sprintf($this->messageTextXpath, $index);
+		$messageElement =  $this->find('xpath', $commentMsgXpath);
+		if ($messageElement === null) {
 			return null;
 		}
-		return $this->getTrimmedText($comment);
+		return $this->getTrimmedText($messageElement);
 	}
 
 	/**

@@ -299,3 +299,10 @@ Feature: Deleted and Restored files/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have message "You deleted lorem.txt" in the activity page
     And the activity should not have any message with keyword "restored"
+
+  Scenario: Restoring deleted file should be listed in the activity tab
+    Given user "user0" has deleted folder "lorem.txt"
+    And user "user0" has restored the folder with original path "lorem.txt"
+    When the user browses directly to display the details of file "lorem.txt" in folder "/"
+    Then the activity number 1 should have message "You restored lorem.txt" in the activity tab
+    And the activity number 2 should have message "You deleted lorem.txt" in the activity tab
