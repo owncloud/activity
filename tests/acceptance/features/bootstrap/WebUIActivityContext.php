@@ -70,6 +70,16 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	private $userSharedWithUserMsgFramework = "%s%s shared %s with %s%s";
 
 	/**
+	 * @var string
+	 */
+	private $userCreatedSystemTagMsgFramework = "%s%s created system tag %s";
+
+	/**
+	 * @var string
+	 */
+	private $userDeletedSystemTagMsgFramework = "%s%s deleted system tag %s";
+
+	/**
 	 * WebUIAdminSharingSettingsContext constructor.
 	 *
 	 * @param ActivityPage $activityPage
@@ -261,6 +271,39 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		foreach ($activities as $activity) {
 			PHPUnit_Framework_Assert::assertNotContains($tag, $activity);
 		}
+	}
+
+	/**
+	 * @Then /^the activity number (\d+) should have a message saying that user "([^"]*)" (created|deleted) system tag "([^"]*)"$/
+	 *
+	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param string $user
+	 * @param string $createdOrDeleted
+	 * @param string $tagName
+	 *
+	 * @return void
+	 */
+	public function theActivityNumberShouldHaveAMessageSayingThatUserCreatedOrDeletedSystemTagLorem(
+		$index, $user, $createdOrDeleted, $tagName
+	) {
+		if ($index < 1) {
+			throw new InvalidArgumentException(
+				"activity index starts from 1"
+			);
+		}
+		$avatarText = \strtoupper($user[0]);
+		if ($createdOrDeleted === "created") {
+			$msgFramework = $this->userCreatedSystemTagMsgFramework;
+		} else {
+			$msgFramework = $this->userDeletedSystemTagMsgFramework;
+		}
+		$message = \sprintf(
+			$msgFramework, $avatarText, $user, $tagName
+		);
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
+			$index - 1
+		);
+		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
