@@ -8,22 +8,90 @@ Feature: Created files/folders activities
     Given user "user0" has been created with default attributes and without skeleton files
     And user "user0" has logged in using the webUI
 
-  Scenario: Creating new file should be listed in the activity list
+  @issue-622
+  Scenario Outline: Creating new file should be listed in the activity list
     Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
     When the user browses to the activity page
+    And the user filters activity list by "<filter>"
     Then the activity number 1 should contain message "You created text.txt" in the activity page
+    Examples:
+      | filter            |
+      | All Activities    |
+      | Activities by you |
+      # Favorites shows the same as 'All Activities'. Remove after fix.
+      | Favorites         |
 
-  Scenario: Creating new folder should be listed in the activity list
+  @issue-622
+  Scenario Outline: Creating new file should not be listed in the activity list on following filter
+    Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
+    When the user browses to the activity page
+    And the user filters activity list by "<filter>"
+    Then the activity should not have any message with keyword "text.txt"
+    Examples:
+      | filter               |
+      | Shares               |
+      | Comments             |
+      | Activities by others |
+      # Favorites shows the same as 'All Activities'. Uncomment after the fix
+      #| Favorites            |
+
+  @issue-622
+  Scenario Outline: Creating new folder should be listed in the activity list for following filters
     Given user "user0" has created folder "Docs"
     When the user browses to the activity page
+    And the user filters activity list by "<filter>"
     Then the activity number 1 should contain message "You created Docs" in the activity page
+    Examples:
+      | filter            |
+      | All Activities    |
+      | Activities by you |
+    # Favorites shows the same as 'All Activities'. Remove after fix.
+      | Favorites         |
 
-  Scenario: Creating multiple files should be listed in the activity list
+  @issue-622
+  Scenario Outline: Creating new folder should not be listed in the activity list for following filters
+    Given user "user0" has created folder "Docs"
+    When the user browses to the activity page
+    And the user filters activity list by "<filter>"
+    Then the activity should not have any message with keyword "Docs"
+    Examples:
+      | filter               |
+      | Shares               |
+      | Comments             |
+      | Activities by others |
+      # Favorites shows the same as 'All Activities'. Uncomment after the fix
+      #| Favorites            |
+
+  @issue-622
+  Scenario Outline: Creating multiple files should be listed in the activity list for following filters
     Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
     And user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text1.txt"
     And user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text2.txt"
     When the user browses to the activity page
+    And the user filters activity list by "<filter>"
     Then the activity number 1 should contain message "You created text2.txt, text1.txt, text.txt" in the activity page
+    Examples:
+      | filter            |
+      | All Activities    |
+      | Activities by you |
+    # Favorites shows the same as 'All Activities'. Remove after fix.
+      | Favorites         |
+
+  @issue-622
+  Scenario Outline: Creating multiple files should not be listed in the activity list for following filters
+    Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
+    And user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text1.txt"
+    And user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text2.txt"
+    When the user browses to the activity page
+    And the user filters activity list by "<filter>"
+    Then the activity should not have any message with keyword "text"
+    Examples:
+      | filter               |
+      | Shares               |
+      | Comments             |
+      | Activities by others |
+      # Favorites shows the same as 'All Activities'. Uncomment after the fix
+      #| Favorites            |
 
   Scenario: Creating multiple files should be listed in the activity list with contracted list
     Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
@@ -33,12 +101,36 @@ Feature: Created files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should contain message "You created text3.txt, text2.txt, text1.txt" in the activity page
 
-  Scenario: Creating multiple folders should be listed in the activity list
+  @issue-622
+  Scenario Outline: Creating multiple folders should be listed in the activity list for following filters
     Given user "user0" has created folder "Doc1"
     And user "user0" has created folder "Doc2"
     And user "user0" has created folder "Doc3"
     When the user browses to the activity page
+    And the user filters activity list by "<filter>"
     Then the activity number 1 should contain message "You created Doc3, Doc2, Doc1" in the activity page
+    Examples:
+      | filter            |
+      | All Activities    |
+      | Activities by you |
+    # Favorites shows the same as 'All Activities'. Remove after fix.
+      | Favorites         |
+
+  @issue-622
+  Scenario Outline: Creating multiple folders should not be listed in the activity list for following filters
+    Given user "user0" has created folder "Doc1"
+    And user "user0" has created folder "Doc2"
+    And user "user0" has created folder "Doc3"
+    When the user browses to the activity page
+    And the user filters activity list by "<filter>"
+    Then the activity should not have any message with keyword "Doc"
+    Examples:
+      | filter               |
+      | Shares               |
+      | Comments             |
+      | Activities by others |
+      # Favorites shows the same as 'All Activities'. Uncomment after the fix
+      #| Favorites            |
 
   Scenario: Uploading new file using async should register in the activity list
     Given the administrator has enabled async operations
@@ -88,12 +180,36 @@ Feature: Created files/folders activities
     When the user browses to the activity page
     And the activity number 1 should contain message "You created doc2, doc" in the activity page
 
-  Scenario: Copying files to another folder should be shown in log
+  @issue-622
+  Scenario Outline: Copying files to another folder should be shown in activity list for following filters
     Given user "user0" has created folder "doc"
     And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
     And user "user0" has copied file "/text.txt" to "/doc/text.txt"
     When the user browses to the activity page
-    And the activity number 1 should contain message "You created text.txt, text.txt, doc" in the activity page
+    And the user filters activity list by "<filter>"
+    Then the activity number 1 should contain message "You created text.txt, text.txt, doc" in the activity page
+    Examples:
+      | filter            |
+      | All Activities    |
+      | Activities by you |
+    # Favorites shows the same as 'All Activities'. Remove after fix.
+      | Favorites         |
+
+  @issue-622
+  Scenario Outline: Copying files to another folder should not be shown in activity list for following filters
+    Given user "user0" has created folder "doc"
+    And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
+    And user "user0" has copied file "/text.txt" to "/doc/text.txt"
+    When the user browses to the activity page
+    And the user filters activity list by "<filter>"
+    Then the activity should not have any message with keyword "text.txt"
+    Examples:
+      | filter               |
+      | Shares               |
+      | Comments             |
+      | Activities by others |
+      # Favorites shows the same as 'All Activities'. Uncomment after the fix
+      #| Favorites            |
 
   Scenario: Creating new file should not be listed in the activity list when file creation activity has been disabled
     Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
