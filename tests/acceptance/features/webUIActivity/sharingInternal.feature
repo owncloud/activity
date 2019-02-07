@@ -312,3 +312,15 @@ Feature: Sharing file/folders activities
     When the user opens the file action menu of folder "folder with space" in the webUI
     And the user clicks the details file action in the webUI
     Then the activity number 1 should have message saying that the folder is shared by user "User Zero" in the activity tab
+
+  @issue-695
+  Scenario: Sharing a file with a user should be listed in the activity list of a sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user2" has been created with default attributes and without skeleton files
+    And user "user0" has shared file "textfile0.txt" with user "user1"
+    And user "user0" has shared file "textfile0.txt" with user "user2"
+    And user "user0" has logged in using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "User Two"
+    #remove the above step when issue is fixed
+    #Then the activity number 1 should contain message "You shared textfile0.txt with User One and User Two" in the activity page
