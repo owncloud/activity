@@ -26,7 +26,7 @@
     "You are receiving this email because the following things happened at %s" : "Ви отримали це повідомлення, оскільки на %s відбулося наступне",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* та ще %n","* та ще %n","* та ще %n","* та ще %n"],
-    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Ви отримуєте цей лист, тому що трапилися наступні події <a href=\"%s\">%s</a>",
+    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Ви отримали цей лист, тому що <a href=\"%s\">%s</a> відбулися наступні події",
     "%1$s - %2$s" : "* %1$s - %2$s",
     "_and %n more _::_and %n more _" : ["і ще %n","і ще %n","і ще %n ","і ще %n"],
     "Activity" : "Активність",
