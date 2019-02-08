@@ -48,4 +48,5 @@ default:
         - '%paths.base%/../features/apiActivity'
       contexts:
         - ActivityContext:
+        - TrashbinContext:
         - FeatureContext: *common_feature_context_params
