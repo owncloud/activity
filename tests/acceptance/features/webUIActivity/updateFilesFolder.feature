@@ -46,3 +46,11 @@ Feature: Updated files/folders activities
     And the activity number 2 should have message "You created text1.txt" in the activity page
     And the activity number 3 should have message "You changed text.txt" in the activity page
     And the activity number 4 should contain message "You created text.txt, doc" in the activity page
+
+  Scenario: Changing file contents should not be listed in the activity list stream when file changed activity has been disabled
+    Given user "user0" has uploaded file "filesForUpload/lorem.txt" to "/text.txt"
+    And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_changed" using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "changed"

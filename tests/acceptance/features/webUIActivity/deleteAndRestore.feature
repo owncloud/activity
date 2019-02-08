@@ -267,3 +267,35 @@ Feature: Deleted and Restored files/folders activities
     Then the activity number 1 should have message "You deleted simple-empty-folder, textfile0.txt, testavatar.png, 'single'quotes and 0" in the activity page
     And the activity number 2 should have message "You restored textfile0.txt, 0, 'single'quotes, simple-empty-folder and testavatar.png" in the activity page
     And the activity number 3 should have message "You deleted simple-empty-folder, textfile0.txt, 'single'quotes, testavatar.png and 0" in the activity page
+
+  Scenario: folder deletion should not be listed in the activity list stream when file deleted activity has been disabled
+    Given user "user0" has deleted folder "simple-folder"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_deleted" using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "deleted"
+
+  Scenario: file inside folder deleted should not be listed in the activity list stream when file deleted activity has been disabled
+    Given user "user0" has deleted file "simple-folder/block-aligned.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_deleted" using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "deleted"
+
+  Scenario: Restoring deleted folder should not be listed in the activity list stream when file restored activity has been disabled
+    Given user "user0" has deleted folder "simple-folder"
+    And user "user0" has restored the folder with original path "simple-folder"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_restored" using the webUI
+    And the user browses to the activity page
+    Then the activity number 1 should have message "You deleted simple-folder" in the activity page
+    And the activity should not have any message with keyword "restored"
+
+  Scenario: Restoring deleted file should not be listed in the activity list stream when file restored activity has been disabled
+    Given user "user0" has deleted file "lorem.txt"
+    And user "user0" has restored the file with original path "lorem.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_restored" using the webUI
+    And the user browses to the activity page
+    Then the activity number 1 should have message "You deleted lorem.txt" in the activity page
+    And the activity should not have any message with keyword "restored"

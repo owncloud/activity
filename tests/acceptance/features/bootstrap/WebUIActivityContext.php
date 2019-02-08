@@ -26,6 +26,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Page\ActivityPage;
+use Page\ActivitySettingForm;
 use Page\LoginPage;
 
 require_once 'bootstrap.php';
@@ -55,6 +56,12 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	private $loginPage;
 
 	/**
+	 *
+	 * @var ActivitySettingForm
+	 */
+	private $activitySettingForm;
+
+	/**
 	 * @var string
 	 */
 	private $youSharedMsgFramework = "You shared %s with %s%s";
@@ -82,13 +89,16 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	/**
 	 * WebUIAdminSharingSettingsContext constructor.
 	 *
+	 * @param ActivitySettingForm $activitySettingForm
 	 * @param ActivityPage $activityPage
 	 * @param LoginPage $loginPage
 	 */
 	public function __construct(
+		ActivitySettingForm $activitySettingForm,
 		ActivityPage $activityPage,
 		LoginPage $loginPage
 	) {
+		$this->activitySettingForm = $activitySettingForm;
 		$this->activityPage = $activityPage;
 		$this->loginPage = $loginPage;
 	}
@@ -116,6 +126,23 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 */
 	public function theUserFiltersActivityListBy($activityType) {
 		$this->activityPage->filterActivityListBy($this->getSession(), $activityType);
+	}
+
+	/**
+	 * @When /^the user (disables|enables) activity log (stream|mail) for "([^"]*)" using the webUI$/
+	 *
+	 * @param string $disablesOrEnables
+	 * @param string $streamOrMail
+	 * @param string $activityType
+	 *
+	 * @return void
+	 */
+	public function theUseTriggersActivityLogSettingUsingTheWebui(
+		$disablesOrEnables, $streamOrMail, $activityType
+	) {
+		$this->activitySettingForm->changeActivityLogSetting(
+			$disablesOrEnables, $streamOrMail, $activityType, $this->getSession()
+		);
 	}
 
 	/**
@@ -304,6 +331,18 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 			$index - 1
 		);
 		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then the activity list should be empty
+	 *
+	 * @return void
+	 */
+	public function theActivityListShouldBeEmpty() {
+		$activities = $this->activityPage->getAllActivityMessageLists();
+		PHPUnit_Framework_Assert::assertEmpty(
+			$activities, "Activity list was expected to be empty but was not"
+		);
 	}
 
 	/**
