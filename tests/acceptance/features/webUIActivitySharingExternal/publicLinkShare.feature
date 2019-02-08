@@ -40,6 +40,45 @@ Feature: public link sharing file/folders activities
   Scenario: Downloading a public shared folder from a webUI should be listed in the activity list
     Given the user has created a new public link for folder "simple-folder" using the webUI
     And the public accesses the last created public link using the webUI
-    When the public downloads the last created file using the webUI
+    When the public downloads the last created folder using the webUI
     And the user browses to the activity page
     Then the activity number 1 should contain message "Public shared folder simple-folder was downloaded" in the activity page
+
+  Scenario: Creating a public link of a folder and file should not be listed in the activity list stream when shared activity has been disabled
+    Given user "user1" has created a public link share of folder "simple-folder"
+    And user "user1" has created a public link share of file "textfile0.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "shared" using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "shared"
+
+  Scenario: Uploading a file to a public shared folder should not be listed in the activity list stream when file created activity has been disabled
+    Given user "user1" has created a public link share with settings
+      | path        | simple-folder |
+      | permissions | create        |
+    And the public has uploaded file "test.txt" with content "This is a test"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "created"
+    And the activity number 1 should contain message "You shared simple-folder via link" in the activity page
+
+  Scenario: Downloading a public shared file from a webUI should not be listed in the activity list stream when public link download activity has been disabled
+    Given the user has created a new public link for file "textfile0.txt" using the webUI
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "public_links" using the webUI
+    And the public accesses the last created public link using the webUI
+    And the public downloads the last created file using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "downloaded"
+    And the activity number 1 should contain message "You shared textfile0.txt via link" in the activity page
+
+  Scenario: Downloading a public shared folder from a webUI should not be listed in the activity list stream when public link download activity has been disabled
+    Given the user has created a new public link for folder "simple-folder" using the webUI
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "public_links" using the webUI
+    And the public accesses the last created public link using the webUI
+    And the public downloads the last created folder using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "downloaded"
+    And the activity number 1 should contain message "You shared simple-folder via link" in the activity page

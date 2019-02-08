@@ -28,7 +28,7 @@ Feature: federation sharing file/folder activities
     And the user browses to the activity page
     Then the activity number 1 should contain message "user2@… accepted remote share textfile0.txt" in the activity page
 
-  Scenario: Sharing a file/folder with a remote server should be listed in the activity list of a sharee eventhough they have not accepted the sharee
+  Scenario: Sharing a file/folder with a remote server should be listed in the activity list of a sharee eventhough they have not accepted the share
     Given user "user2" from server "REMOTE" has shared "textfile0.txt" with user "user1" from server "LOCAL"
     And user "user2" from server "REMOTE" has shared "simple-folder" with user "user1" from server "LOCAL"
     When the user browses to the activity page
@@ -40,3 +40,27 @@ Feature: federation sharing file/folder activities
     When user "user1" from server "LOCAL" accepts the last pending share using the sharing API
     And the user browses to the activity page
     Then the activity number 1 should contain message "You received a new remote share textfile0.txt from user2@…" in the activity page
+
+  Scenario: Sharing a folder with a remote server should not be listed in the activity list stream when remote share activity has been disabled
+    Given user "user1" from server "LOCAL" has shared "simple-folder" with user "user2" from server "REMOTE"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "remote_share" using the webUI
+    And user "user2" from server "REMOTE" accepts the last pending share using the sharing API
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "remote share"
+
+  Scenario: Sharing a file with a remote server should not be listed in the activity list stream when remote share activity has been disabled
+    Given user "user1" from server "LOCAL" has shared "textfile0.txt" with user "user2" from server "REMOTE"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "remote_share" using the webUI
+    And user "user2" from server "REMOTE" accepts the last pending share using the sharing API
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "remote share"
+
+  Scenario: Receiving a file/folder from a remote server should not be listed in the activity list stream when remote share activity has been disabled
+    Given user "user2" from server "REMOTE" has shared "textfile0.txt" with user "user1" from server "LOCAL"
+    And user "user2" from server "REMOTE" has shared "simple-folder" with user "user1" from server "LOCAL"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "remote_share" using the webUI
+    And the user browses to the activity page
+    Then the activity should not have any message with keyword "remote share"

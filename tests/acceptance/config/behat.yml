@@ -20,9 +20,11 @@ default:
             regularUserPassword: 123456
             ocPath: apps/testing/api/v1/occ
         - WebUIGeneralContext:
+        - WebUIPersonalGeneralSettingsContext:
         - TrashbinContext:
         - WebUILoginContext:
         - TagsContext:
+        - WebUILoginContext:
         - CommentsContext:
         - ActivityContext:
 
@@ -33,6 +35,7 @@ default:
         - WebUIActivityContext:
         - FeatureContext: *common_feature_context_params
         - WebUIGeneralContext:
+        - WebUIPersonalGeneralSettingsContext:
         - WebUILoginContext:
         - WebUIFilesContext:
         - WebUISharingContext:

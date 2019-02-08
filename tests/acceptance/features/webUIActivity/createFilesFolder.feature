@@ -94,3 +94,69 @@ Feature: Created files/folders activities
     And user "user0" has copied file "/text.txt" to "/doc/text.txt"
     When the user browses to the activity page
     And the activity number 1 should contain message "You created text.txt, text.txt, doc" in the activity page
+
+  Scenario: Creating new file should not be listed in the activity list when file creation activity has been disabled
+    Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
+
+  Scenario: Creating new folder should not be listed in the activity list when file creation activity has been disabled
+    Given user "user0" has created folder "Docs"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
+
+  Scenario: Uploading new file using async should not be listed in the activity list when file creation activity has been disabled
+    Given the administrator has enabled async operations
+    And using new DAV path
+    And user "user0" has uploaded the following chunks asynchronously to "/text.txt" with new chunking
+      | 1 | AAAAA |
+      | 2 | BBBBB |
+      | 3 | CCCCC |
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
+
+  Scenario: Uploading new files using all mechanisms should not be listed in the activity list when file created activity has been disabled
+    Given the user has browsed to the personal general settings page
+    When user "user0" uploads file "filesForUpload/textfile.txt" to filenames based on "/text.txt" with all mechanisms using the WebDAV API
+    And the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
+
+  Scenario: Creating files inside folder should not be listed in the activity list stream when file created activity has been disabled
+    Given user "user0" has created folder "doc"
+    And user "user0" has uploaded file "filesForUpload/lorem.txt" to "/doc/text1.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
+
+  Scenario: Copying files should not be listed in the activity list stream when file created activity has been disabled
+    Given user "user0" has uploaded file "filesForUpload/lorem.txt" to "/text1.txt"
+    And user "user0" has copied file "/text1.txt" to "/text2.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
+
+  Scenario: Copying folder should not be listed in the activity list stream when file created activity has been disabled
+    Given user "user0" has created folder "doc"
+    And user "user0" has copied file "/doc" to "/doc2"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
+
+  Scenario: Copying files to another folder should not be listed in the activity list stream when file created activity has been disabled
+    Given user "user0" has created folder "doc"
+    And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
+    And user "user0" has copied file "/text.txt" to "/doc/text.txt"
+    And the user has browsed to the personal general settings page
+    When the user disables activity log stream for "file_created" using the webUI
+    And the user browses to the activity page
+    Then the activity list should be empty
