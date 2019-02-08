@@ -245,3 +245,136 @@ Feature: List activity
       | object_type      | /^files$/            |
       | typeicon         | /^icon-share$/       |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/one\" id=\"\d+\">one<\/file> with <user display-name=\"User One\">user1<\/user>$/|
+
+  Scenario: folder creation should be listed in the activity list
+    Given user "user0" has been created with default attributes and without skeleton files
+    When user "user0" creates folder "/one" using the WebDAV API
+    Then the activity number 1 of user "user0" should match these properties:
+      | type             | /^file_created$/   |
+      | user             | /^user0$/          |
+      | affecteduser     | /^user0$/          |
+      | app              | /^files$/          |
+      | subject          | /^created_self$/   |
+      | object_name      | /^\/one$/          |
+      | object_type      | /^files$/          |
+      | typeicon         | /^icon-add-color$/ |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^You created <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/one\" id=\"\d+\">one<\/file>/|
+
+  Scenario: file upload should be listed in activity list
+     Given user "user0" has been created with default attributes and without skeleton files
+     When user "user0" uploads file "filesForUpload/textfile.txt" to "/text.txt" using the WebDAV API
+     Then the activity number 1 of user "user0" should match these properties:
+      | type             | /^file_created$/   |
+      | user             | /^user0$/          |
+      | affecteduser     | /^user0$/          |
+      | app              | /^files$/          |
+      | subject          | /^created_self$/   |
+      | object_name      | /^\/text.txt$/     |
+      | object_type      | /^files$/          |
+      | typeicon         | /^icon-add-color$/ |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^You created <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=text.txt" id=\"\d+\">text.txt<\/file>/|
+
+  Scenario: different files share with different user should be listed in activity list of sharer
+    Given user "user0" has been created with default attributes
+    And user "user1" has been created with default attributes and without skeleton files
+    And user "user2" has been created with default attributes and without skeleton files
+    When user "user0" shares file "PARENT/parent.txt" with user "user2" using the sharing API
+    And user "user0" shares file "textfile0.txt" with user "user1" using the sharing API
+    Then the activity number 1 of user "user0" should match these properties:
+      | type             | /^shared$/           |
+      | user             | /^user0$/            |
+      | affecteduser     | /^user0$/            |
+      | app              | /^files_sharing$/    |
+      | subject          | /^shared_user_self$/ |
+      | object_name      | /^\/textfile0.txt$/  |
+      | object_type      | /^files$/            |
+      | typeicon         | /^icon-share$/       |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
+    And the activity number 2 of user "user0" should match these properties:
+      | type             | /^shared$/               |
+      | user             | /^user0$/                |
+      | affecteduser     | /^user0$/                |
+      | app              | /^files_sharing$/        |
+      | subject          | /^shared_user_self$/     |
+      | object_name      | /^\/PARENT\/parent.txt$/ |
+      | object_type      | /^files$/                |
+      | typeicon         | /^icon-share$/           |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT$/ |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT&scrollto=parent.txt" id=\"\d+\">PARENT\/parent.txt<\/file> with <user display-name=\"User Two\">user2<\/user>$/|
+
+  Scenario: different files shared with same user should be listed in activity list of sharer
+    Given user "user0" has been created with default attributes
+    And user "user1" has been created with default attributes and without skeleton files
+    When user "user0" shares file "PARENT/parent.txt" with user "user1" using the sharing API
+    And user "user0" shares file "textfile0.txt" with user "user1" using the sharing API
+    Then the activity number 1 of user "user0" should match these properties:
+      | type             | /^shared$/           |
+      | user             | /^user0$/            |
+      | affecteduser     | /^user0$/            |
+      | app              | /^files_sharing$/    |
+      | subject          | /^shared_user_self$/ |
+      | object_name      | /^\/textfile0.txt$/  |
+      | object_type      | /^files$/            |
+      | typeicon         | /^icon-share$/       |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
+    And the activity number 2 of user "user0" should match these properties:
+      | type             | /^shared$/               |
+      | user             | /^user0$/                |
+      | affecteduser     | /^user0$/                |
+      | app              | /^files_sharing$/        |
+      | subject          | /^shared_user_self$/     |
+      | object_name      | /^\/PARENT\/parent.txt$/ |
+      | object_type      | /^files$/                |
+      | typeicon         | /^icon-share$/           |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT$/ |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT&scrollto=parent.txt" id=\"\d+\">PARENT\/parent.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
+
+  Scenario: different files shared with different user should be listed in activity list of sharee
+    Given user "user0" has been created with default attributes
+    And user "user1" has been created with default attributes and without skeleton files
+    And user "user2" has been created with default attributes and without skeleton files
+    When user "user0" shares file "PARENT/parent.txt" with user "user1" using the sharing API
+    And user "user0" shares file "textfile0.txt" with user "user2" using the sharing API
+    Then the activity number 1 of user "user2" should match these properties:
+      | type             | /^shared$/          |
+      | user             | /^user0$/           |
+      | affecteduser     | /^user2$/           |
+      | app              | /^files_sharing$/   |
+      | subject          | /^shared_with_by$/  |
+      | object_name      | /^\/textfile0.txt$/ |
+      | object_type      | /^files$/           |
+      | typeicon         | /^icon-share$/      |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with you$/|
+    And the activity number 1 of user "user1" should match these properties:
+      | type             | /^shared$/         |
+      | user             | /^user0$/          |
+      | affecteduser     | /^user1$/          |
+      | app              | /^files_sharing$/  |
+      | subject          | /^shared_with_by$/ |
+      | object_name      | /^\/parent.txt$/   |
+      | object_type      | /^files$/          |
+      | typeicon         | /^icon-share$/     |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent.txt" id=\"\d+\">parent.txt<\/file> with you$/|
+
+  Scenario: different files shared with same user should be listed in activity list of sharee
+    Given user "user0" has been created with default attributes
+    And user "user1" has been created with default attributes and without skeleton files
+    When user "user0" shares file "PARENT/parent.txt" with user "user1" using the sharing API
+    And user "user0" shares file "textfile0.txt" with user "user1" using the sharing API
+    Then the activity number 1 of user "user1" should match these properties:
+      | type             | /^shared$/          |
+      | user             | /^user0$/           |
+      | affecteduser     | /^user1$/           |
+      | app              | /^files_sharing$/   |
+      | subject          | /^shared_with_by$/  |
+      | object_name      | /^\/textfile0.txt$/ |
+      | object_type      | /^files$/           |
+      | typeicon         | /^icon-share$/      |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent.txt" id=\"\d+\">parent.txt<\/file><\/collection> with you$/|
