@@ -871,7 +871,7 @@ class FilesHooksTest extends TestCase {
 
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRouteAbsolute')
-			->with('files.view.index', ['dir' => $urlPath])
+			->with('files.viewcontroller.showFile', ['fileId' => $fileId])
 			->willReturn('routeToFilesIndex');
 
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')

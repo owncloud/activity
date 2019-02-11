@@ -769,4 +769,12 @@ class OCSEndPointTest extends TestCase {
 
 		$this->invokePrivate($this->controller, 'getPreviewLink', [$path, $isDir, $view]);
 	}
+
+	public function testGetPreviewLinkFileId() {
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRoute')
+			->with('files.viewcontroller.showFile', ['fileId' => 123]);
+
+		$this->invokePrivate($this->controller, 'getPreviewLink', [123]);
+	}
 }

@@ -95,18 +95,29 @@ class FileFormatterTest extends TestCase {
 			'exists'	=> true,
 			'view'		=> 'trashbin',
 		];
+		$trash2 = [
+			'path'		=> '/test2',
+			'is_dir'	=> true,
+			'exists'	=> true,
+			'view'		=> 'trashbin',
+			'fileid'	=> 42
+		];
 
 		return [
-			['user1', '/test1', false, [], '<file link="apps/files/?dir=%2F&scrollto=test1" id="">test1</file>'],
-			['user1', '/test1', true, [], '<file link="apps/files/?dir=%2Ftest1" id="">test1</file>'],
-			['user1', '/', true, [], '<file link="apps/files/?dir=%2F" id="">/</file>'],
-			['user1', '/test1/test2', false, [], '<file link="apps/files/?dir=%2Ftest1&scrollto=test2" id="">test1/test2</file>'],
-			['user1', '/test1/test2', true, [], '<file link="apps/files/?dir=%2Ftest1%2Ftest2" id="">test1/test2</file>'],
+			['user1', '/test1', false, [], '<file link="apps/files/?dir=%2F&scrollto=test1" id="">test1</file>', 'files.view.index'],
+			['user1', '/test1', true, [], '<file link="apps/files/?dir=%2Ftest1" id="">test1</file>', 'files.view.index'],
+			['user1', '/', true, [], '<file link="apps/files/?dir=%2F" id="">/</file>', 'files.view.index'],
+			['user1', '/test1/test2', false, [], '<file link="apps/files/?dir=%2Ftest1&scrollto=test2" id="">test1/test2</file>', 'files.view.index'],
+			['user1', '/test1/test2', true, [], '<file link="apps/files/?dir=%2Ftest1%2Ftest2" id="">test1/test2</file>', 'files.view.index'],
 
-			['user1', '/test1/test2', false, $trash0, '<file link="apps/files/?dir=%2F&scrollto=test2&view=trashbin" id="42">test1/test2</file>'],
-			['user1', '/test1/test2', true, $trash1, '<file link="apps/files/?dir=%2Ftest2&view=trashbin" id="42">test1/test2</file>'],
+			['user1', [42 => '/test1/test2'], false, [], '<file link="f/42" id="42">test1/test2</file>', 'files.viewcontroller.showFile'],
+			['user1', [42 => '/test1/test2'], true, [], '<file link="f/42" id="42">test1/test2</file>', 'files.viewcontroller.showFile'],
 
-			['user2', '/test1', false, [], '<file link="apps/files/?dir=%2F&scrollto=test1" id="">test1</file>'],
+			['user1', '/test1/test2', false, $trash0, '<file link="apps/files/?dir=%2F&scrollto=test2&view=trashbin" id="42">test1/test2</file>', 'files.view.index'],
+			['user1', '/test1/test2', true, $trash1, '<file link="apps/files/?dir=%2Ftest2&view=trashbin" id="42">test1/test2</file>', 'files.view.index'],
+			['user1', '/test1/test2', true, $trash2, '<file link="f/42" id="42">test1/test2</file>', 'files.viewcontroller.showFile'],
+
+			['user2', '/test1', false, [], '<file link="apps/files/?dir=%2F&scrollto=test1" id="">test1</file>', 'files.view.index'],
 		];
 	}
 
@@ -119,7 +130,7 @@ class FileFormatterTest extends TestCase {
 	 * @param array $info
 	 * @param string $expected
 	 */
-	public function testFormat($user, $parameter, $isDir, array $info, $expected) {
+	public function testFormat($user, $parameter, $isDir, array $info, $expected, $routeName) {
 		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
@@ -138,8 +149,8 @@ class FileFormatterTest extends TestCase {
 
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRouteAbsolute')
-			->with('files.view.index', $this->anything())
-			->willReturnCallback(function ($route, $parameters) {
+			->with($routeName, $this->anything())
+			->willReturnCallback(function($route, $parameters) {
 				$paramList = [];
 				foreach ($parameters as $key => $value) {
 					$paramList[] = $key . '=' . \urlencode($value);

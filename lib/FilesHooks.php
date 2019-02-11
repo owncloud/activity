@@ -553,9 +553,9 @@ class FilesHooks {
 
 		$selfAction = $user === $this->currentUser;
 		$app = $type === Files_Sharing::TYPE_SHARED ? 'files_sharing' : 'files';
-		$link = $this->urlGenerator->linkToRouteAbsolute('files.view.index', [
-			'dir' => ($isFile) ? \dirname($path) : $path,
-		]);
+		$link = $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', array(
+			'fileId' => $fileId
+		));
 
 		$objectType = ($fileId) ? 'files' : '';
 

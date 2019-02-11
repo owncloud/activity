@@ -1,6 +1,7 @@
 <?php
 /**
  * @author Joas Schilling <nickvergessen@owncloud.com>
+ * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @license AGPL-3.0
@@ -72,27 +73,27 @@ class FileFormatter implements IFormatter {
 			$info = $this->infoCache->getInfoByPath($this->user, $param);
 		}
 
-		if ($info['is_dir']) {
-			$linkData = ['dir' => $info['path']];
+		$param = trim($param, '/');
+		if ($fileId !== '') {
+			$fileLink = $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileId' => $fileId]);
 		} else {
-			$parentDir = (\substr_count($info['path'], '/') === 1) ? '/' : \dirname($info['path']);
-			$fileName = \basename($info['path']);
-			$linkData = [
-				'dir' => $parentDir,
-				'scrollto' => $fileName,
-			];
-		}
+			if ($info['is_dir']) {
+				$linkData = ['dir' => $info['path']];
+			} else {
+				$parentDir = (\substr_count($info['path'], '/') === 1) ? '/' : \dirname($info['path']);
+				$fileName = \basename($info['path']);
+				$linkData = [
+					'dir' => $parentDir,
+					'scrollto' => $fileName,
+				];
+			}
 
-		if ($info['view'] !== '') {
-			$linkData['view'] = $info['view'];
-		}
+			if ($info['view'] !== '') {
+				$linkData['view'] = $info['view'];
+			}
 
-		$param = \trim($param, '/');
-		if ($param === '') {
-			$param = '/';
+			$fileLink = $this->urlGenerator->linkToRouteAbsolute('files.view.index', $linkData);
 		}
-
-		$fileLink = $this->urlGenerator->linkToRouteAbsolute('files.view.index', $linkData);
 
 		return '<file link="' . $fileLink . '" id="' . Util::sanitizeHTML($fileId) . '">' . Util::sanitizeHTML($param) . '</file>';
 	}
