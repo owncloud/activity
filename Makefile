@@ -97,28 +97,6 @@ endif
 # dist
 #
 
-# Builds the source and appstore package
-.PHONY: dist
-dist:
-	make appstore
-
-# Builds the source package for the app store, ignores php and js tests
-.PHONY: appstore
-appstore:
-	rm -rf $(appstore_build_directory)
-	mkdir -p $(appstore_package_name)
-	cp --parents -r \
-	appinfo \
-	css \
-	img \
-	js \
-	l10n \
-	lib \
-	templates \
-	LICENSE \
-	README.md \
-	$(appstore_package_name)
-
 $(dist_dir)/$(app_name): $(bower_deps)
 	rm -Rf $@; mkdir -p $@
 	cp -R $(all_src) $@
