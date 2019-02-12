@@ -30,9 +30,7 @@ bower_deps=
 
 # composer
 composer_deps=vendor
-composer_dev_deps=vendor/php-cs-fixer
 acceptance_test_deps=vendor-bin/behat/vendor
-COMPOSER_BIN=$(build_dir)/composer.phar
 
 occ=$(CURDIR)/../../occ
 private_key=$(HOME)/.owncloud/certificates/$(app_name).key
@@ -80,21 +78,11 @@ ifneq (,$(wildcard $(CURDIR)/js/package.json))
 	make npm
 endif
 
-# Installs and updates the composer dependencies. If composer is not installed
-# a copy is fetched from the web
+# Installs and updates the composer dependencies.
 .PHONY: composer
 composer:
-ifeq (, $(composer))
-	@echo "No composer command available, downloading a copy from the web"
-	mkdir -p $(build_tools_directory)
-	curl -sS https://getcomposer.org/installer | php
-	mv composer.phar $(build_tools_directory)
-	php $(build_tools_directory)/composer.phar install --prefer-dist
-	php $(build_tools_directory)/composer.phar update --prefer-dist
-else
 	composer install --prefer-dist
 	composer update --prefer-dist
-endif
 
 # Installs npm dependencies
 .PHONY: npm
