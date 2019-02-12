@@ -73,7 +73,7 @@ class FileFormatter implements IFormatter {
 			$info = $this->infoCache->getInfoByPath($this->user, $param);
 		}
 
-		$param = trim($param, '/');
+		$param = \trim($param, '/');
 		if ($fileId !== '') {
 			$fileLink = $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileId' => $fileId]);
 		} else {
