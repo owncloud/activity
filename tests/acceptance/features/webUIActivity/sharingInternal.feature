@@ -140,3 +140,149 @@ Feature: Sharing file/folders activities
     When the user disables activity log stream for "shared" using the webUI
     And the user browses to the activity page
     Then the activity should not have any message with keyword "shared"
+
+  Scenario: Uploading a file inside a shared folder by a sharee should be listed in the activity list of a sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has uploaded file "filesForUpload/textfile.txt" to "simple-folder/textfilemoved.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User One" created "textfilemoved.txt"
+
+  Scenario: Creating a folder inside a shared folder by a sharee should be listed in the activity list of a sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has created folder "simple-folder/newFolder"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User One" created "newFolder"
+
+  Scenario: Uploading a file inside a shared folder by a sharer should be listed in the activity list of a sharee
+    Given user "user1" has been created with default attributes
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has uploaded file "filesForUpload/textfile.txt" to "simple-folder/textfilemoved.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" created "textfilemoved.txt"
+
+  Scenario: Creating a folder inside a shared folder by a sharer should be listed in the activity list of a sharee
+    Given user "user1" has been created with default attributes
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has created folder "simple-folder/newFolder"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" created "newFolder"
+
+  Scenario: Deleting a file inside a shared folder by a sharee should be listed in the activity list of a sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has deleted file "simple-folder/lorem.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User One" deleted "lorem.txt"
+
+  Scenario: Deleting a folder inside a shared folder by a sharee should be listed in the activity list of a sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has deleted folder "simple-folder/simple-empty-folder"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User One" deleted "simple-empty-folder"
+
+  Scenario: Deleting a file inside a shared folder by a sharer should be listed in the activity list of a sharee
+    Given user "user1" has been created with default attributes
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has deleted file "simple-folder/lorem.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" deleted "lorem.txt"
+
+  Scenario: Deleting a folder inside a shared folder by a sharer should be listed in the activity list of a sharee
+    Given user "user1" has been created with default attributes
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has deleted folder "simple-folder/simple-empty-folder"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" deleted "simple-empty-folder"
+
+  Scenario: Changing a shared file by a sharee should be listed in the activity list of a sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared file "lorem.txt" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has uploaded file "filesForUpload/new-lorem-big.txt" to "lorem.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User One" changed "lorem.txt"
+
+  Scenario: Changing a file inside a shared folder by a sharee should be listed in the activity list of a sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has uploaded file "filesForUpload/new-lorem-big.txt" to "simple-folder/lorem.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User One" changed "lorem.txt"
+
+  Scenario: Changing a shared file by a sharer should be listed in the activity list of a sharee
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared file "lorem.txt" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has uploaded file "filesForUpload/new-lorem-big.txt" to "lorem.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" changed "lorem.txt"
+
+  Scenario: Changing a file inside a shared folder by a sharer should be listed in the activity list of a sharee
+    Given user "user1" has been created with default attributes
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has uploaded file "filesForUpload/new-lorem-big.txt" to "simple-folder/lorem.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" changed "lorem.txt"
+
+  Scenario: Creating a folder inside a shared folder by a sharer should be listed in the activity list of a sharee even after the sharee has unshared the share
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has created folder "simple-folder/newFolder"
+    And user "user1" has declined the share "/simple-folder" offered by user "user0"
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User Zero" created "newFolder"
+
+  Scenario: Creating a folder inside a shared folder by a sharee should be listed in the activity list of a sharer even after the sharee has unshared the share
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has created folder "simple-folder/newFolder"
+    And user "user1" has declined the share "/simple-folder" offered by user "user0"
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that user "User One" created "newFolder"
+
+  Scenario: Deleting a share by a sharer should be listed in the activity list of the sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user0" has deleted the last share
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that "User Zero" removed the share for "simple-folder"
+
+  Scenario: Deleting a share by a sharer should be listed in the activity list of the sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user0" has deleted the last share
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that you removed the share of "User One" for "simple-folder"
+
+  Scenario: Deleting a share by a sharee should be listed in the activity list of the sharee
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user1" has deleted the last share
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that "User One" removed the share for "simple-folder"
+
+  Scenario: Deleting a share by a sharee should be listed in the activity list of the sharer
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared folder "simple-folder" with user "user1"
+    And user "user0" has logged in using the webUI
+    And user "user1" has deleted the last share
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that "User One" removed the share of "User One" for "simple-folder"

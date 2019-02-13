@@ -87,6 +87,36 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	private $userDeletedSystemTagMsgFramework = "%s%s deleted system tag %s";
 
 	/**
+	 * @var string
+	 */
+	private $userCreatedMsgFramework = "%s%s created %s";
+
+	/**
+	 * @var string
+	 */
+	private $userDeletedMsgFramework = "%s%s deleted %s";
+
+	/**
+	 * @var string
+	 */
+	private $userChangedMsgFramework = "%s%s changed %s";
+
+	/**
+	 * @var string
+	 */
+	private $youRemovedTheShareOfForMsgFramework = "You removed the share of %s%s for %s";
+
+	/**
+	 * @var string
+	 */
+	private $userRemovedTheShareOfForMsgFramework = "%s%s removed the share of %s%s for %s";
+
+	/**
+	 * @var string
+	 */
+	private $userRemovedTheShareForMsgFramework = "%s%s removed the share for %s";
+
+	/**
 	 * WebUIAdminSharingSettingsContext constructor.
 	 *
 	 * @param ActivitySettingForm $activitySettingForm
@@ -343,6 +373,117 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		PHPUnit_Framework_Assert::assertEmpty(
 			$activities, "Activity list was expected to be empty but was not"
 		);
+	}
+
+	/**
+	 * @Then /^the activity number (\d+) should have a message saying that user "([^"]*)" (created|deleted|changed) "([^"]*)"$/
+	 *
+	 * @param integer $index
+	 * @param string $user
+	 * @param string $createdDeletedOrChanged
+	 * @param string $entry
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function theActivityNumberShouldHaveAMessageUserCreatedOrDeletedOrChanged(
+		$index, $user, $createdDeletedOrChanged, $entry
+	) {
+		if ($index < 1) {
+			throw new InvalidArgumentException(
+				"activity index starts from 1"
+			);
+		}
+		$avatarText = \strtoupper($user[0]);
+		if ($createdDeletedOrChanged === "created") {
+			$msgFramework = $this->userCreatedMsgFramework;
+		} elseif ($createdDeletedOrChanged === "deleted") {
+			$msgFramework = $this->userDeletedMsgFramework;
+		} else {
+			$msgFramework = $this->userChangedMsgFramework;
+		}
+		$message = \sprintf(
+			$msgFramework, $avatarText, $user, $entry
+		);
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
+			$index - 1
+		);
+		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then /^the activity number (\d+) should have a message saying that (you|"[^"]*") removed the share of "([^"]*)" for "([^"]*)"$/
+	 *
+	 * @param integer $index
+	 * @param string $youOrUser
+	 * @param string $sharer
+	 * @param string $entry
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function theActivityNumberShouldHaveAMessageSayingThatYouRemovedTheShareOfFor(
+		$index, $youOrUser, $sharer, $entry
+	) {
+		if ($index < 1) {
+			throw new InvalidArgumentException(
+				"activity index starts from 1"
+			);
+		}
+		$sharerAvaterText = \strtoupper($sharer[0]);
+		if ($youOrUser === "you") {
+			$message = \sprintf(
+				$this->youRemovedTheShareOfForMsgFramework,
+				$sharerAvaterText,
+				$sharer,
+				$entry
+			);
+		} else {
+			$youOrUser = \trim($youOrUser, '"');
+			$userAvatarText = \strtoupper($youOrUser[0]);
+			$message = \sprintf(
+				$this->userRemovedTheShareOfForMsgFramework,
+				$userAvatarText,
+				$youOrUser,
+				$sharerAvaterText,
+				$sharer,
+				$entry
+			);
+		}
+		
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
+			$index - 1
+		);
+		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then /^the activity number (\d+) should have a message saying that "([^"]*)" removed the share for "([^"]*)"$/
+	 *
+	 * @param integer $index
+	 * @param string $user
+	 * @param string $entry
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function theActivityNumberShouldHaveAMessageSayingThatRemovedTheShareFor($index, $user, $entry) {
+		if ($index < 1) {
+			throw new InvalidArgumentException(
+				"activity index starts from 1"
+			);
+		}
+		$userAvatarText = \strtoupper($user[0]);
+		$message = \sprintf(
+			$this->userRemovedTheShareForMsgFramework,
+			$userAvatarText,
+			$user,
+			$entry
+		);
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
+			$index - 1
+		);
+		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
