@@ -164,3 +164,12 @@ Feature: Tag files/folders activities
       | 'single'quotes/                     | simple-empty-folder |
       | 0/                                  | lorem.txt           |
       | 'single'quotes/simple-empty-folder/ | for-git-commit      |
+
+  Scenario: Adding a tag on a file/folder should be listed on the activity tab
+    Given user "user0" has been created with default attributes
+    And user "user0" has logged in using the webUI
+    And user "user0" has created a "normal" tag with name "lorem"
+    And user "user0" has added tag "lorem" to file "lorem.txt"
+    When the user browses directly to display the details of file "lorem.txt" in folder "/"
+    Then the activity number 1 should contain message "You assigned system tag lorem" in the activity tab
+    And the activity number 2 should contain message "You created lorem.txt" in the activity tab

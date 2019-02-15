@@ -160,3 +160,15 @@ Feature: Created files/folders activities
     When the user disables activity log stream for "file_created" using the webUI
     And the user browses to the activity page
     Then the activity list should be empty
+
+  Scenario: Creating new file activity should be listed in the activity tab
+    Given user "user0" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
+    When the user browses directly to display the details of file "/text.txt" in folder "/"
+    Then the activity number 1 should contain message "You created text.txt" in the activity tab
+
+  Scenario: Creating folders should be listed in the activity tab
+    Given user "user0" has created folder "/Doc1"
+    When the user browses to the files page
+    And the user opens the file action menu of folder "Doc1" in the webUI
+    And the user clicks the details file action in the webUI
+    Then the activity number 1 should contain message "You created Doc1" in the activity tab

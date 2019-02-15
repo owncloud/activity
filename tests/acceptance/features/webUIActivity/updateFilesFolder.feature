@@ -54,3 +54,11 @@ Feature: Updated files/folders activities
     When the user disables activity log stream for "file_changed" using the webUI
     And the user browses to the activity page
     Then the activity should not have any message with keyword "changed"
+
+  Scenario: Changing contents of file should be shown in the activity tab
+    Given user "user0" has created folder "doc"
+    And user "user0" has uploaded file "filesForUpload/lorem.txt" to "/doc/text.txt"
+    And user "user0" has uploaded file "filesForUpload/lorem-big.txt" to "/doc/text.txt"
+    When the user browses directly to display the details of file "/doc/text.txt" in folder "/"
+    Then the activity number 1 should have message "You changed text.txt" in the activity tab
+    And the activity number 2 should have message "You created text.txt" in the activity tab

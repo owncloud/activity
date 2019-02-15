@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ownCloud
  *
@@ -117,6 +118,11 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	private $userRemovedTheShareForMsgFramework = "%s%s removed the share for %s";
 
 	/**
+	 * @var string
+	 */
+	private $sharedWithUserTabMsgFramework = "Shared %s %s%s";
+
+	/**
 	 * WebUIAdminSharingSettingsContext constructor.
 	 *
 	 * @param ActivitySettingForm $activitySettingForm
@@ -168,15 +174,20 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @return void
 	 */
 	public function theUseTriggersActivityLogSettingUsingTheWebui(
-		$disablesOrEnables, $streamOrMail, $activityType
+		$disablesOrEnables,
+		$streamOrMail,
+		$activityType
 	) {
 		$this->activitySettingForm->changeActivityLogSetting(
-			$disablesOrEnables, $streamOrMail, $activityType, $this->getSession()
+			$disablesOrEnables,
+			$streamOrMail,
+			$activityType,
+			$this->getSession()
 		);
 	}
 
 	/**
-	 * @Then the comment message for activity number :index in the activity page should be:
+	 * @Then the comment message for activity number :index in the activity page/tab should be:
 	 *
 	 * @param int $index
 	 * @param string $message
@@ -186,7 +197,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @throws \Exception
 	 */
 	public function theCommentMessageShouldBeListedOnTheActivityPage($index, PyStringNode $message) {
-		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index - 1);
+		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index);
 		PHPUnit_Framework_Assert::assertNotNull($commentMsg, "Could not find comment message.");
 		PHPUnit_Framework_Assert::assertEquals($message, $commentMsg);
 	}
@@ -200,12 +211,12 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @throws \Exception
 	 */
 	public function theActivityNumberShouldNotContainAnyCommentMessageInTheActivityPage($index) {
-		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index - 1);
+		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index);
 		PHPUnit_Framework_Assert::assertNull($commentMsg, "Comment exists with content: $commentMsg");
 	}
 
 	/**
-	 * @Then the activity number :index should have message :message in the activity page
+	 * @Then the activity number :index should have message :message in the activity page/tab
 	 *
 	 * @param integer $index (starting from 1, newest to the oldest)
 	 * @param string $message
@@ -233,7 +244,9 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @return void
 	 */
 	public function theActivityNumberShouldHaveAMessageSayingSharedFolderWithUser(
-		$index, $entry, $user
+		$index,
+		$entry,
+		$user
 	) {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
@@ -249,7 +262,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	}
 
 	/**
-	 * @Then /^the activity number (\d+) should contain message "([^"]*)" in the activity page$/
+	 * @Then /^the activity number (\d+) should contain message "([^"]*)" in the activity (page|tab)$/
 	 *
 	 * @param int $index
 	 * @param string $message
@@ -271,7 +284,9 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @return void
 	 */
 	public function theActivityNumberShouldHaveAMessageSayingThatUserHasSharedWithYou(
-		$index, $user, $entry
+		$index,
+		$user,
+		$entry
 	) {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
@@ -295,7 +310,10 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @return void
 	 */
 	public function theActivityNumberShouldHaveAMessageSayingThatUserHasSharedWithUser(
-		$index, $user1, $entry, $user2
+		$index,
+		$user1,
+		$entry,
+		$user2
 	) {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
@@ -341,7 +359,10 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @return void
 	 */
 	public function theActivityNumberShouldHaveAMessageSayingThatUserCreatedOrDeletedSystemTagLorem(
-		$index, $user, $createdOrDeleted, $tagName
+		$index,
+		$user,
+		$createdOrDeleted,
+		$tagName
 	) {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
@@ -355,7 +376,10 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 			$msgFramework = $this->userDeletedSystemTagMsgFramework;
 		}
 		$message = \sprintf(
-			$msgFramework, $avatarText, $user, $tagName
+			$msgFramework,
+			$avatarText,
+			$user,
+			$tagName
 		);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
 			$index - 1
@@ -371,7 +395,8 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	public function theActivityListShouldBeEmpty() {
 		$activities = $this->activityPage->getAllActivityMessageLists();
 		PHPUnit_Framework_Assert::assertEmpty(
-			$activities, "Activity list was expected to be empty but was not"
+			$activities,
+			"Activity list was expected to be empty but was not"
 		);
 	}
 
@@ -387,7 +412,10 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @throws \Exception
 	 */
 	public function theActivityNumberShouldHaveAMessageUserCreatedOrDeletedOrChanged(
-		$index, $user, $createdDeletedOrChanged, $entry
+		$index,
+		$user,
+		$createdDeletedOrChanged,
+		$entry
 	) {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
@@ -402,9 +430,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		} else {
 			$msgFramework = $this->userChangedMsgFramework;
 		}
-		$message = \sprintf(
-			$msgFramework, $avatarText, $user, $entry
-		);
+		$message = \sprintf($msgFramework, $avatarText, $user, $entry);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
 			$index - 1
 		);
@@ -423,7 +449,10 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 * @throws \Exception
 	 */
 	public function theActivityNumberShouldHaveAMessageSayingThatYouRemovedTheShareOfFor(
-		$index, $youOrUser, $sharer, $entry
+		$index,
+		$youOrUser,
+		$sharer,
+		$entry
 	) {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
@@ -450,7 +479,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 				$entry
 			);
 		}
-		
+
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
 			$index - 1
 		);
@@ -484,6 +513,30 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 			$index - 1
 		);
 		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then /^the activity number (\d+) should have message saying that the (?:file|folder|entry) is shared (with|by) user "([^"]*)" in the activity tab$/
+	 *
+	 * @param string  $index
+	 * @param string  $prepos
+	 * @param string  $user
+	 *
+	 * @return void
+	 */
+	public function theActivityNumberShouldHaveMessageSayingSharedWithInTheActivityTab(
+		$index,
+		$prepos,
+		$user
+	) {
+		$actualMsg = $this->activityPage->getActivityMessageOfIndex($index - 1);
+		$expectedMsg = \sprintf(
+			$this->sharedWithUserTabMsgFramework,
+			$prepos,
+			\strtoupper($user[0]),
+			$user
+		);
+		PHPUnit_Framework_Assert::assertEquals($expectedMsg, $actualMsg);
 	}
 
 	/**

@@ -27,6 +27,7 @@ default:
         - WebUILoginContext:
         - CommentsContext:
         - ActivityContext:
+        - WebUIFilesContext:
 
     webUIActivitySharingExternal:
       paths:

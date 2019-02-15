@@ -286,3 +286,29 @@ Feature: Sharing file/folders activities
     And user "user1" has deleted the last share
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that "User One" removed the share of "User One" for "simple-folder"
+  Scenario: Sharing a file/folder with a user should be listed in the activity tab of the sharer for the file
+    Given these users have been created with default attributes but not initialized:
+      | username |
+      | user1    |
+      | user2    |
+    And user "user0" has shared file "block-aligned.txt" with user "user1"
+    And user "user0" has shared folder "folder with space" with user "user2"
+    And user "user0" has logged in using the webUI
+    When the user browses directly to display the details of file "block-aligned.txt" in folder "/"
+    Then the activity number 1 should have message saying that the file is shared with user "User One" in the activity tab
+    And the activity number 2 should contain message "You created block-aligned.txt" in the activity tab
+    When the user opens the file action menu of folder "folder with space" in the webUI
+    And the user clicks the details file action in the webUI
+    Then the activity number 1 should have message saying that the folder is shared with user "User Two" in the activity tab
+    And the activity number 2 should contain message "You created folder with space" in the activity tab
+
+  Scenario: Sharing a file/folder with a user should be listed in the activity tab of the sharee for the file
+    Given user "user1" has been created with default attributes and without skeleton files
+    And user "user0" has shared file "block-aligned.txt" with user "user1"
+    And user "user0" has shared folder "folder with space" with user "user1"
+    And user "user1" has logged in using the webUI
+    When the user browses directly to display the details of file "block-aligned.txt" in folder "/"
+    Then the activity number 1 should have message saying that the file is shared by user "User Zero" in the activity tab
+    When the user opens the file action menu of folder "folder with space" in the webUI
+    And the user clicks the details file action in the webUI
+    Then the activity number 1 should have message saying that the folder is shared by user "User Zero" in the activity tab
