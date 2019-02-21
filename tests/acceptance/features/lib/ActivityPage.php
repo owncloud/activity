@@ -101,7 +101,8 @@ class ActivityPage extends OwncloudPage {
 			'Activity by others' => 'by',
 			'Favourites' => 'files_favorites',
 			'Comments' => 'comments',
-			'Shares' => 'shares'
+			'Shares' => 'shares',
+			'Antivirus' => 'files_antivirus'
 		];
 		PHPUnit_Framework_Assert::assertArrayHasKey(
 			$activityType,
