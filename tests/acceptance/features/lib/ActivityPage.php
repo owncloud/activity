@@ -98,11 +98,12 @@ class ActivityPage extends OwncloudPage {
 		$activityFilters = [
 			'All Activities' => 'all',
 			'Activities by you' => 'self',
-			'Activity by others' => 'by',
-			'Favourites' => 'files_favorites',
+			'Activities by others' => 'by',
+			'Favorites' => 'files_favorites',
 			'Comments' => 'comments',
 			'Shares' => 'shares',
-			'Antivirus' => 'files_antivirus'
+			'Antivirus' => 'files_antivirus',
+			'Files' => 'files'
 		];
 		PHPUnit_Framework_Assert::assertArrayHasKey(
 			$activityType,
