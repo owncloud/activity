@@ -212,7 +212,9 @@ matrix:
   include:
     # owncloud-coding-standard
     - PHP_VERSION: 5.6
+      OC_VERSION: daily-stable10-qa
       TEST_SUITE: owncloud-coding-standard
+      NEED_CORE: true
 
     # Unit Tests
     - PHP_VERSION: 5.6
