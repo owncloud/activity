@@ -8,9 +8,9 @@ default:
           outputDir: '%paths.base%/../output/'
 
   suites:
-    webUIActivity:
+    webUIActivityComments:
       paths:
-        - '%paths.base%/../features/webUIActivity'
+        - '%paths.base%/../features/webUIActivityComments'
       contexts:
         - WebUIActivityContext:
         - FeatureContext: &common_feature_context_params
@@ -19,15 +19,37 @@ default:
             adminPassword: admin
             regularUserPassword: 123456
             ocPath: apps/testing/api/v1/occ
-        - WebUIGeneralContext:
-        - WebUIPersonalGeneralSettingsContext:
-        - TrashbinContext:
-        - WebUILoginContext:
-        - TagsContext:
-        - WebUILoginContext:
+        - ActivityContext:
         - CommentsContext:
+        - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
+
+    webUIActivityCreateUpdate:
+      paths:
+        - '%paths.base%/../features/webUIActivityCreateUpdate'
+      contexts:
+        - WebUIActivityContext:
+        - FeatureContext: *common_feature_context_params
         - ActivityContext:
         - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
+
+    webUIActivityDeleteRestore:
+      paths:
+        - '%paths.base%/../features/webUIActivityDeleteRestore'
+      contexts:
+        - WebUIActivityContext:
+        - FeatureContext: *common_feature_context_params
+        - ActivityContext:
+        - TrashbinContext:
+        - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
 
     webUIActivitySharingExternal:
       paths:
@@ -35,14 +57,40 @@ default:
       contexts:
         - WebUIActivityContext:
         - FeatureContext: *common_feature_context_params
-        - WebUIGeneralContext:
-        - WebUIPersonalGeneralSettingsContext:
-        - WebUILoginContext:
-        - WebUIFilesContext:
-        - WebUISharingContext:
+        - ActivityContext:
         - FederationContext:
         - PublicWebDavContext:
+        - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
+        - WebUISharingContext:
+
+    webUIActivitySharingInternal:
+      paths:
+        - '%paths.base%/../features/webUIActivitySharingInternal'
+      contexts:
+        - WebUIActivityContext:
+        - FeatureContext: *common_feature_context_params
         - ActivityContext:
+        - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
+        - WebUISharingContext:
+
+    webUIActivityTags:
+      paths:
+        - '%paths.base%/../features/webUIActivityTags'
+      contexts:
+        - WebUIActivityContext:
+        - FeatureContext: *common_feature_context_params
+        - ActivityContext:
+        - TagsContext:
+        - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
 
     apiActivity:
       paths:
