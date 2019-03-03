@@ -60,6 +60,5 @@ vendor/
 /build/
 tests/js/package-lock.json
 
-
 # php-cs-fixer
 .php_cs.cache
