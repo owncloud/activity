@@ -15,6 +15,7 @@ endif
 
 NODE_PREFIX=$(shell pwd)
 BOWER=$(NODE_PREFIX)/node_modules/bower/bin/bower
+KARMA=$(NODE_PREFIX)/node_modules/.bin/karma
 JSDOC=$(NODE_PREFIX)/node_modules/.bin/jsdoc
 
 app_name=$(notdir $(CURDIR))
@@ -25,7 +26,7 @@ build_dir=$(CURDIR)/build
 dist_dir=$(build_dir)/dist
 
 # dependency folders (leave empty if not required)
-nodejs_deps=
+nodejs_deps=node_modules
 bower_deps=
 
 # composer
@@ -109,6 +110,16 @@ endif
 	tar -czf $(dist_dir)/$(app_name).tar.gz -C $(dist_dir) $(app_name)
 	tar -cjf $(dist_dir)/$(app_name).tar.bz2 -C $(dist_dir) $(app_name)
 
+$(nodejs_deps): package.json yarn.lock
+	yarn install
+	touch $@
+
+$(KARMA): $(nodejs_deps)
+
+##------------
+## Tests
+##------------
+
 .PHONY: test-php-unit
 test-php-unit:             ## Run php unit tests
 test-php-unit: vendor/bin/phpunit
@@ -120,9 +131,9 @@ test-php-unit-dbg: vendor/bin/phpunit
 	$(PHPUNITDBG) --configuration ./phpunit.xml --testsuite unit
 
 .PHONY: test-js
-test-js:
-	cd tests/js && npm install --deps
-	cd tests/js && node_modules/karma/bin/karma start karma.config.js --single-run
+test-js: ## Run JavaScript tests
+test-js: $(nodejs_deps)
+	$(KARMA) start tests/js/karma.config.js --single-run
 
 .PHONY: test-php-style
 test-php-style:            ## Run php-cs-fixer and check owncloud code-style
