@@ -7,7 +7,7 @@ JSDOC=$(NODE_PREFIX)/node_modules/.bin/jsdoc
 doc_files=README.md CHANGELOG.md CONTRIBUTING.md
 
 # dependency folders (leave empty if not required)
-nodejs_deps=
+nodejs_deps=node_modules
 bower_deps=
 
 include ../../build/rules/help.mk
@@ -47,6 +47,10 @@ ifeq (,$(wildcard $(CURDIR)/package.json))
 else
 	npm run build
 endif
+
+$(nodejs_deps): package.json
+	yarn install
+	touch $@
 
 clean_deps_rules+=clean-js-deps
 
