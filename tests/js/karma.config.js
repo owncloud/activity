@@ -36,13 +36,13 @@ module.exports = function(config) {
 	];
 
 	var testFiles = [
-		'tests/Unit/js/*.js'
+		'tests/js/*.js'
 	];
 
-	var basePath = '../../../';
+	var basePath = '../../';
 	var ownCloudPath = '../../';
 
-	var coreModules = require(ownCloudPath + '../../../core/js/core.json');
+	var coreModules = require(ownCloudPath + '../../core/js/core.json');
 	var coreLibs = [
 		ownCloudPath + 'core/js/tests/specHelper.js'
 	];

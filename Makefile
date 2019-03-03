@@ -121,8 +121,8 @@ test-php-unit-dbg: vendor/bin/phpunit
 
 .PHONY: test-js
 test-js:
-	cd tests/Unit/js && npm install --deps
-	cd tests/Unit/js && node_modules/karma/bin/karma start karma.config.js --single-run
+	cd tests/js && npm install --deps
+	cd tests/js && node_modules/karma/bin/karma start karma.config.js --single-run
 
 .PHONY: test-php-style
 test-php-style:            ## Run php-cs-fixer and check owncloud code-style
