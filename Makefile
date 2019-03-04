@@ -1,5 +1,3 @@
-SHELL := /bin/bash
-
 doc_files=README.md CHANGELOG.md CONTRIBUTING.md
 
 include ../../build/rules/help.mk
