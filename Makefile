@@ -1,10 +1,5 @@
 SHELL := /bin/bash
 
-NODE_PREFIX=$(shell pwd)
-BOWER=$(NODE_PREFIX)/node_modules/bower/bin/bower
-KARMA=$(NODE_PREFIX)/node_modules/.bin/karma
-JSDOC=$(NODE_PREFIX)/node_modules/.bin/jsdoc
-
 doc_files=README.md CHANGELOG.md CONTRIBUTING.md
 
 include ../../build/rules/help.mk
