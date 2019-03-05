@@ -19,7 +19,7 @@ KARMA=$(NODE_PREFIX)/node_modules/.bin/karma
 JSDOC=$(NODE_PREFIX)/node_modules/.bin/jsdoc
 
 app_name=$(notdir $(CURDIR))
-doc_files=README.md CHANGELOG.md CONTRIBUTING.md
+doc_files=README.md CHANGELOG.md CONTRIBUTING.md LICENSE
 src_dirs=appinfo css img js l10n lib templates
 all_src=$(src_dirs) $(doc_files)
 build_dir=$(CURDIR)/build
