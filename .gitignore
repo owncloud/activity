@@ -58,8 +58,7 @@ node_modules
 vendor-bin/**/composer.lock
 vendor/
 /build/
-tests/Unit/js/package-lock.json
-
+tests/js/package-lock.json
 
 # php-cs-fixer
 .php_cs.cache
