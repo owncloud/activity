@@ -211,18 +211,10 @@ services:
 matrix:
   include:
     # owncloud-coding-standard
-    - PHP_VERSION: 5.6
+    - PHP_VERSION: 7.0
       TEST_SUITE: owncloud-coding-standard
 
     # Unit Tests
-    - PHP_VERSION: 5.6
-      OC_VERSION: daily-stable10-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: sqlite
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
-
     - PHP_VERSION: 7.0
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
@@ -250,7 +242,7 @@ matrix:
       NEED_INSTALL_APP: true
       COVERAGE: true
 
-    - PHP_VERSION: 5.6
+    - PHP_VERSION: 7.0
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: oci
@@ -258,7 +250,7 @@ matrix:
       NEED_CORE: true
       NEED_INSTALL_APP: true
 
-    - PHP_VERSION: 5.6
+    - PHP_VERSION: 7.0
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: mysql
@@ -266,7 +258,7 @@ matrix:
       NEED_CORE: true
       NEED_INSTALL_APP: true
 
-    - PHP_VERSION: 5.6
+    - PHP_VERSION: 7.0
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: pgsql
