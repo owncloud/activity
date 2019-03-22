@@ -24,14 +24,12 @@
 namespace OCA\Activity;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use OCA\Activity\Exception\InvalidFilterException;
 use OCP\Activity\IEvent;
 use OCP\Activity\IExtension;
 use OCP\Activity\IManager;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IL10N;
-use OCP\IUser;
 use OCP\IUserSession;
 
 /**

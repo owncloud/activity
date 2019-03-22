@@ -22,7 +22,6 @@
 namespace OCA\Activity\Formatter;
 
 use OCP\Activity\IEvent;
-use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\Util;

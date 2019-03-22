@@ -21,7 +21,6 @@
 
 namespace OCA\Activity\Tests\Parameter;
 
-use OCA\Activity\Parameter\Collection;
 use OCA\Activity\Parameter\Parameter;
 use OCA\Activity\Tests\Unit\TestCase;
 
