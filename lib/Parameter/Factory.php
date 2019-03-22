@@ -31,7 +31,6 @@ use OCA\Activity\ViewInfoCache;
 use OCP\Activity\IEvent;
 use OCP\Activity\IManager;
 use OCP\Contacts\IManager as IContactsManager;
-use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
