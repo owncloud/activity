@@ -278,7 +278,9 @@ class MailQueueHandlerTest extends TestCase {
 	 * Should not throw an exception
 	 */
 	public function testDeleteSentItemsWithNoUsers() {
-		$this->mailQueueHandler->deleteSentItems([], \time());
+		$this->assertNull(
+			$this->mailQueueHandler->deleteSentItems([], \time())
+		);
 	}
 
 	/**
