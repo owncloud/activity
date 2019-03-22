@@ -23,7 +23,6 @@
 namespace OCA\Activity\Tests\Unit;
 
 use OCA\Activity\MailQueueHandler;
-use OCA\Activity\UserSettings;
 use OCP\IUser;
 
 /**
