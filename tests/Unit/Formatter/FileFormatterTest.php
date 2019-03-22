@@ -26,13 +26,13 @@ use OCA\Activity\Formatter\IFormatter;
 use OCA\Activity\Tests\Unit\TestCase;
 
 class FileFormatterTest extends TestCase {
-	/** @var \OCP\IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IURLGenerator|\PHPUnit\Framework\MockObject\MockObject */
 	protected $urlGenerator;
 
-	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit\Framework\MockObject\MockObject */
 	protected $infoCache;
 
-	/** @var \OCP\IL10N|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
 	protected function setUp() {
@@ -59,7 +59,7 @@ class FileFormatterTest extends TestCase {
 	/**
 	 * @param array $methods
 	 * @param string $user
-	 * @return IFormatter|\PHPUnit_Framework_MockObject_MockObject
+	 * @return IFormatter|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	public function getFormatter(array $methods = [], $user = 'user') {
 		if (empty($methods)) {
@@ -120,7 +120,7 @@ class FileFormatterTest extends TestCase {
 	 * @param string $expected
 	 */
 	public function testFormat($user, $parameter, $isDir, array $info, $expected) {
-		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();

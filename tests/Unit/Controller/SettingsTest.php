@@ -35,22 +35,22 @@ use OCP\Security\ISecureRandom;
 use OCP\Util;
 
 class SettingsTest extends TestCase {
-	/** @var IConfig |  \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IConfig |  \PHPUnit\Framework\MockObject\MockObject */
 	protected $config;
 
-	/** @var IRequest | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRequest | \PHPUnit\Framework\MockObject\MockObject */
 	protected $request;
 
-	/** @var IURLGenerator | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IURLGenerator | \PHPUnit\Framework\MockObject\MockObject */
 	protected $urlGenerator;
 
-	/** @var Data | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var Data | \PHPUnit\Framework\MockObject\MockObject */
 	protected $data;
 
-	/** @var ISecureRandom | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var ISecureRandom | \PHPUnit\Framework\MockObject\MockObject */
 	protected $random;
 
-	/** @var UserSettings | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var UserSettings | \PHPUnit\Framework\MockObject\MockObject */
 	protected $userSettings;
 
 	/** @var \OCP\IL10N */
@@ -59,7 +59,7 @@ class SettingsTest extends TestCase {
 	/** @var Settings */
 	protected $controller;
 
-	/** @var IUser | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IUser | \PHPUnit\Framework\MockObject\MockObject */
 	private $user;
 
 	protected function setUp() {

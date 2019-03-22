@@ -25,13 +25,13 @@ use OCA\Activity\DataHelper;
 
 class DataHelperTest extends TestCase {
 	protected $originalWEBROOT;
-	/** @var \OCP\Activity\IManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Activity\IManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $activityManager;
-	/** @var \OCA\Activity\Parameter\Factory|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\Parameter\Factory|\PHPUnit\Framework\MockObject\MockObject */
 	protected $parameterFactory;
-	/** @var \OCP\L10N\IFactory|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\L10N\IFactory|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l10Nfactory;
-	/** @var \OCP\IL10N|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
 	protected function setUp() {
@@ -64,7 +64,7 @@ class DataHelperTest extends TestCase {
 
 	/**
 	 * @param array $methods
-	 * @return DataHelper|\PHPUnit_Framework_MockObject_MockObject
+	 * @return DataHelper|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	protected function getHelper(array $methods = []) {
 		if (empty($methods)) {
@@ -280,7 +280,7 @@ class DataHelperTest extends TestCase {
 	 * @param array $expected
 	 */
 	public function testGetParameters($parsing, $parameterString, array $parameters, array $parameterTypes, array $factoryCalls, array $expected) {
-		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();

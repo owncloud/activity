@@ -25,9 +25,9 @@ use OCA\Activity\Parameter\Parameter;
 use OCA\Activity\Tests\Unit\TestCase;
 
 class ParameterTest extends TestCase {
-	/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject */
 	protected $event;
-	/** @var \OCA\Activity\Formatter\IFormatter|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\Formatter\IFormatter|\PHPUnit\Framework\MockObject\MockObject */
 	protected $formatter;
 
 	protected function setUp() {

@@ -25,10 +25,10 @@ use OCA\Activity\ViewInfoCache;
 use OCP\Files\NotFoundException;
 
 class ViewInfoCacheTest extends TestCase {
-	/** @var \OC\Files\View|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OC\Files\View|\PHPUnit\Framework\MockObject\MockObject */
 	protected $view;
 
-	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit\Framework\MockObject\MockObject */
 	protected $infoCache;
 
 	protected function setUp() {
@@ -41,7 +41,7 @@ class ViewInfoCacheTest extends TestCase {
 
 	/**
 	 * @param array $methods
-	 * @return ViewInfoCache|\PHPUnit_Framework_MockObject_MockObject
+	 * @return ViewInfoCache|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	public function getCache(array $methods = []) {
 		if (empty($methods)) {

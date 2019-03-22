@@ -25,7 +25,7 @@ use OCA\Activity\Parameter\Collection;
 use OCA\Activity\Tests\Unit\TestCase;
 
 class CollectionTest extends TestCase {
-	/** @var \OCP\IL10N|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
 	protected function setUp() {
@@ -39,7 +39,7 @@ class CollectionTest extends TestCase {
 	/**
 	 * @param array $methods
 	 * @param string $random
-	 * @return Collection|\PHPUnit_Framework_MockObject_MockObject
+	 * @return Collection|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	public function getCollection(array $methods = [], $random = 'random') {
 		if (empty($methods)) {
@@ -133,7 +133,7 @@ class CollectionTest extends TestCase {
 	public function testAddParameter() {
 		$collection = $this->getCollection();
 
-		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit_Framework_MockObject_MockObject $parameter1 */
+		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit\Framework\MockObject\MockObject $parameter1 */
 		$parameter1 = $this->getMockBuilder('OCA\Activity\Parameter\IParameter')
 			->disableOriginalConstructor()
 			->getMock();
@@ -141,7 +141,7 @@ class CollectionTest extends TestCase {
 			->method('getParameter')
 			->willReturn('One');
 
-		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit_Framework_MockObject_MockObject $parameter2 */
+		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit\Framework\MockObject\MockObject $parameter2 */
 		$parameter2 = $this->getMockBuilder('OCA\Activity\Parameter\IParameter')
 			->disableOriginalConstructor()
 			->getMock();
@@ -161,7 +161,7 @@ class CollectionTest extends TestCase {
 	public function testFormat() {
 		$collection = $this->getCollection();
 
-		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit_Framework_MockObject_MockObject $parameter1 */
+		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit\Framework\MockObject\MockObject $parameter1 */
 		$parameter1 = $this->getMockBuilder('OCA\Activity\Parameter\IParameter')
 			->disableOriginalConstructor()
 			->getMock();
@@ -169,7 +169,7 @@ class CollectionTest extends TestCase {
 			->method('format')
 			->willReturn('OneNull');
 
-		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit_Framework_MockObject_MockObject $parameter2 */
+		/** @var \OCA\Activity\Parameter\IParameter|\PHPUnit\Framework\MockObject\MockObject $parameter2 */
 		$parameter2 = $this->getMockBuilder('OCA\Activity\Parameter\IParameter')
 			->disableOriginalConstructor()
 			->getMock();

@@ -36,19 +36,19 @@ class MailQueueHandlerTest extends TestCase {
 	/** @var MailQueueHandler */
 	protected $mailQueueHandler;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCP\Mail\IMailer */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\Mail\IMailer */
 	protected $mailer;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var \PHPUnit\Framework\MockObject\MockObject */
 	protected $message;
 
 	/** @var \OCP\IUserManager */
 	protected $userManager;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCP\Activity\IManager */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\Activity\IManager */
 	protected $activityManager;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCA\Activity\DataHelper */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCA\Activity\DataHelper */
 	protected $dataHelper;
 
 	/** @var IUser */

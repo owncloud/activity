@@ -27,25 +27,25 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Util;
 
 class FeedTest extends TestCase {
-	/** @var \OCP\IConfig|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IConfig|\PHPUnit\Framework\MockObject\MockObject */
 	protected $config;
 
-	/** @var \OCP\IRequest|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IRequest|\PHPUnit\Framework\MockObject\MockObject */
 	protected $request;
 
-	/** @var \OCA\Activity\Data|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\Data|\PHPUnit\Framework\MockObject\MockObject */
 	protected $data;
 
-	/** @var \OCA\Activity\GroupHelper|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\GroupHelper|\PHPUnit\Framework\MockObject\MockObject */
 	protected $helper;
 
-	/** @var \OCA\Activity\UserSettings|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\UserSettings|\PHPUnit\Framework\MockObject\MockObject */
 	protected $userSettings;
 
-	/** @var \OCP\Activity\IManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Activity\IManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $manager;
 
-	/** @var \OCP\IUserSession|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IUserSession|\PHPUnit\Framework\MockObject\MockObject */
 	protected $session;
 
 	/** @var \OCP\IL10N */
@@ -76,7 +76,7 @@ class FeedTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		/** @var $urlGenerator \OCP\IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
+		/** @var $urlGenerator \OCP\IURLGenerator|\PHPUnit\Framework\MockObject\MockObject */
 		$urlGenerator = $this->getMockBuilder('OCP\IURLGenerator')
 			->disableOriginalConstructor()
 			->getMock();

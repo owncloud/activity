@@ -29,7 +29,7 @@ class BaseFormatterTest extends TestCase {
 
 	/**
 	 * @param array $methods
-	 * @return IFormatter|\PHPUnit_Framework_MockObject_MockObject
+	 * @return IFormatter|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	public function getFormatter(array $methods = []) {
 		if (empty($methods)) {
@@ -57,7 +57,7 @@ class BaseFormatterTest extends TestCase {
 	 * @param string $expected
 	 */
 	public function testFormat($parameter, $expected) {
-		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();

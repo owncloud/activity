@@ -25,9 +25,9 @@ use OCA\Activity\GroupHelper;
 use OCA\Activity\Parameter\Collection;
 
 class GroupHelperTest extends TestCase {
-	/** @var \OCP\Activity\IManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Activity\IManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $activityManager;
-	/** @var \OCA\Activity\DataHelper|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\DataHelper|\PHPUnit\Framework\MockObject\MockObject */
 	protected $dataHelper;
 
 	protected function setUp() {
@@ -45,7 +45,7 @@ class GroupHelperTest extends TestCase {
 	/**
 	 * @param array $methods
 	 * @param bool $grouping
-	 * @return GroupHelper|\PHPUnit_Framework_MockObject_MockObject
+	 * @return GroupHelper|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	protected function getHelper(array $methods = [], $grouping = false) {
 		if (empty($methods)) {

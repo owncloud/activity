@@ -32,19 +32,19 @@ use OCP\Template;
  * @package OCA\Activity\Tests\Controller
  */
 class ActivitiesTest extends TestCase {
-	/** @var \OCP\IRequest|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IRequest|\PHPUnit\Framework\MockObject\MockObject */
 	protected $request;
 
-	/** @var \OCP\IConfig|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IConfig|\PHPUnit\Framework\MockObject\MockObject */
 	protected $config;
 
-	/** @var \OCA\Activity\Data|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\Data|\PHPUnit\Framework\MockObject\MockObject */
 	protected $data;
 
-	/** @var \OCA\Activity\Navigation|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\Navigation|\PHPUnit\Framework\MockObject\MockObject */
 	protected $navigation;
 
-	/** @var \OCP\IAvatarManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IAvatarManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $avatarManager;
 
 	/** @var Activities */
