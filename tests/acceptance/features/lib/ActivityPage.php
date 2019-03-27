@@ -23,7 +23,7 @@
  */
 namespace Page;
 
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert;
 use Behat\Mink\Session;
 
 /**
@@ -62,7 +62,7 @@ class ActivityPage extends OwncloudPage {
 	 */
 	public function getActivityMessageOfIndex($index) {
 		$activities = $this->getAllActivityMessageLists();
-		PHPUnit_Framework_Assert::assertArrayHasKey(
+		Assert::assertArrayHasKey(
 			$index,
 			$activities,
 			__METHOD__ .
@@ -105,7 +105,7 @@ class ActivityPage extends OwncloudPage {
 			'Antivirus' => 'files_antivirus',
 			'Files' => 'files'
 		];
-		PHPUnit_Framework_Assert::assertArrayHasKey(
+		Assert::assertArrayHasKey(
 			$activityType,
 			$activityFilters,
 			__METHOD__ .

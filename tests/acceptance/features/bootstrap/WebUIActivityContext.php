@@ -198,8 +198,8 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 */
 	public function theCommentMessageShouldBeListedOnTheActivityPage($index, PyStringNode $message) {
 		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index);
-		PHPUnit_Framework_Assert::assertNotNull($commentMsg, "Could not find comment message.");
-		PHPUnit_Framework_Assert::assertEquals($message, $commentMsg);
+		PHPUnit\Framework\Assert::assertNotNull($commentMsg, "Could not find comment message.");
+		PHPUnit\Framework\Assert::assertEquals($message, $commentMsg);
 	}
 
 	/**
@@ -212,7 +212,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 */
 	public function theActivityNumberShouldNotContainAnyCommentMessageInTheActivityPage($index) {
 		$commentMsg = $this->activityPage->getCommentMessageOfIndex($index);
-		PHPUnit_Framework_Assert::assertNull($commentMsg, "Comment exists with content: $commentMsg");
+		PHPUnit\Framework\Assert::assertNull($commentMsg, "Comment exists with content: $commentMsg");
 	}
 
 	/**
@@ -231,7 +231,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		}
 		$message = $this->featureContext->substituteInLineCodes($message);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -258,7 +258,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		// the username initial is shown in the webUI
 		$message = \sprintf($this->youSharedMsgFramework, $entry, $avatarText, $user);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -271,7 +271,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 */
 	public function theActivityNumberShouldContainMessageInTheActivityPage($index, $message) {
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
-		PHPUnit_Framework_Assert::assertContains($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertContains($message, $latestActivityMessage);
 	}
 
 	/**
@@ -296,7 +296,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$avatarText = \strtoupper($user[0]);
 		$message = \sprintf($this->sharedWithYouMsgFramework, $avatarText, $user, $entry);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -331,7 +331,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 			$user2
 		);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -344,7 +344,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	public function theActivityShouldNotHaveAnyMessageWithKeyword($tag) {
 		$activities = $this->activityPage->getAllActivityMessageLists();
 		foreach ($activities as $activity) {
-			PHPUnit_Framework_Assert::assertNotContains($tag, $activity);
+			PHPUnit\Framework\Assert::assertNotContains($tag, $activity);
 		}
 	}
 
@@ -384,7 +384,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
 			$index - 1
 		);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -394,7 +394,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 */
 	public function theActivityListShouldBeEmpty() {
 		$activities = $this->activityPage->getAllActivityMessageLists();
-		PHPUnit_Framework_Assert::assertEmpty(
+		PHPUnit\Framework\Assert::assertEmpty(
 			$activities,
 			"Activity list was expected to be empty but was not"
 		);
@@ -434,7 +434,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
 			$index - 1
 		);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -483,7 +483,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
 			$index - 1
 		);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -512,7 +512,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex(
 			$index - 1
 		);
-		PHPUnit_Framework_Assert::assertEquals($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
 
 	/**
@@ -536,7 +536,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 			\strtoupper($user[0]),
 			$user
 		);
-		PHPUnit_Framework_Assert::assertEquals($expectedMsg, $actualMsg);
+		PHPUnit\Framework\Assert::assertEquals($expectedMsg, $actualMsg);
 	}
 
 	/**
