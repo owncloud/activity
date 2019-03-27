@@ -56,7 +56,7 @@ class ActivityContext implements Context {
 			$user,
 			$this->featureContext->getPasswordForUser($user)
 		);
-		PHPUnit_Framework_Assert::assertEquals(
+		PHPUnit\Framework\Assert::assertEquals(
 			200, $response->getStatusCode()
 		);
 		$responseDecoded = \json_decode(
@@ -64,13 +64,13 @@ class ActivityContext implements Context {
 		);
 		$activityData = $responseDecoded['ocs']['data'][$index - 1];
 		foreach ($expectedProperties->getRowsHash() as $key => $value) {
-			PHPUnit_Framework_Assert::assertArrayHasKey(
+			PHPUnit\Framework\Assert::assertArrayHasKey(
 				$key, $activityData
 			);
 			$value = $this->featureContext->substituteInLineCodes(
 				$value, ['preg_quote' => ['/']]
 			);
-			PHPUnit_Framework_Assert::assertNotFalse(
+			PHPUnit\Framework\Assert::assertNotFalse(
 				(bool)\preg_match($value, $activityData[$key]),
 				"'$value' does not match '{$activityData[$key]}'"
 			);
