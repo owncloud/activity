@@ -7,7 +7,7 @@ branches: [ master, release* ]
 pipeline:
   install-core:
     image: owncloudci/core
-    version: ${OC_VERSION}
+    git_reference: ${GIT_REFERENCE}
     pull: true
     core_path: /var/www/owncloud/server
     db_type: ${DB_TYPE}
@@ -216,6 +216,7 @@ matrix:
 
     # Unit Tests
     - PHP_VERSION: 7.0
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: sqlite
@@ -225,6 +226,7 @@ matrix:
       COVERAGE: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: sqlite
@@ -234,6 +236,7 @@ matrix:
       COVERAGE: true
 
     - PHP_VERSION: 7.2
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: sqlite
@@ -243,6 +246,7 @@ matrix:
       COVERAGE: true
 
     - PHP_VERSION: 7.0
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: oci
@@ -251,6 +255,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.0
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: mysql
@@ -259,6 +264,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.0
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: phpunit
       DB_TYPE: pgsql
@@ -267,6 +273,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: pgsql
@@ -276,6 +283,7 @@ matrix:
       COVERAGE: true
 
     - PHP_VERSION: 7.2
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: pgsql
@@ -284,6 +292,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.2
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: javascript
       DB_TYPE: mysql
@@ -294,6 +303,7 @@ matrix:
     # acceptance tests
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityComments
@@ -304,6 +314,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityComments
@@ -314,6 +325,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityCreateUpdate
@@ -324,6 +336,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityCreateUpdate
@@ -334,6 +347,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityDeleteRestore
@@ -344,6 +358,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityDeleteRestore
@@ -354,6 +369,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingExternal
@@ -366,6 +382,7 @@ matrix:
       FEDERATION_OC_VERSION: daily-stable10-qa
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingExternal
@@ -378,6 +395,7 @@ matrix:
       FEDERATION_OC_VERSION: daily-stable10-qa
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingInternal
@@ -390,6 +408,7 @@ matrix:
       FEDERATION_OC_VERSION: daily-stable10-qa
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingInternal
@@ -402,6 +421,7 @@ matrix:
       FEDERATION_OC_VERSION: daily-stable10-qa
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityTags
@@ -412,6 +432,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityTags
@@ -422,6 +443,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: bump-phpunit-6
       OC_VERSION: daily-master-qa
       TEST_SUITE: api-acceptance
       BEHAT_SUITE: apiActivity
@@ -432,6 +454,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
+      GIT_REFERENCE: stable10-bump-phpunit-6
       OC_VERSION: daily-stable10-qa
       TEST_SUITE: api-acceptance
       BEHAT_SUITE: apiActivity
