@@ -34,10 +34,10 @@ class ConsumerTest extends TestCase {
 	/** @var \OCA\Activity\Consumer */
 	protected $consumer;
 
-	/** @var \OCA\Activity\Data|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\Data|\PHPUnit\Framework\MockObject\MockObject */
 	protected $data;
 
-	/** @var \OCP\L10N\IFactory|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\L10N\IFactory|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l10nFactory;
 
 	/** @var \OCA\Activity\UserSettings */

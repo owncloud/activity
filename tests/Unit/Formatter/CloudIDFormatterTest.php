@@ -26,7 +26,7 @@ use OCA\Activity\Formatter\IFormatter;
 use OCA\Activity\Tests\Unit\TestCase;
 
 class CloudIDFormatterTest extends TestCase {
-	/** @var \OCP\Contacts\IManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Contacts\IManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $contactsManager;
 
 	protected function setUp() {
@@ -39,7 +39,7 @@ class CloudIDFormatterTest extends TestCase {
 
 	/**
 	 * @param array $methods
-	 * @return IFormatter|\PHPUnit_Framework_MockObject_MockObject
+	 * @return IFormatter|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	public function getFormatter(array $methods = []) {
 		if (empty($methods)) {
@@ -73,7 +73,7 @@ class CloudIDFormatterTest extends TestCase {
 	 * @param string $expected
 	 */
 	public function testFormat($parameter, $expected) {
-		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();

@@ -26,28 +26,28 @@ use OCA\Activity\Tests\Unit\TestCase;
 use OCP\IGroupManager;
 
 class FactoryTest extends TestCase {
-	/** @var \OCP\Activity\IManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Activity\IManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $activityManager;
 
-	/** @var \OCP\IUserManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IUserManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $userManager;
 
-	/** @var \OCP\IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IURLGenerator|\PHPUnit\Framework\MockObject\MockObject */
 	protected $urlGenerator;
 
-	/** @var \OCP\Contacts\IManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Contacts\IManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $contactsManager;
 
-	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit\Framework\MockObject\MockObject */
 	protected $infoCache;
 
-	/** @var \OCP\IConfig|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IConfig|\PHPUnit\Framework\MockObject\MockObject */
 	protected $config;
 
-	/** @var \OCP\IL10N|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
-	/** @var  \OCP\IGroupManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var  \OCP\IGroupManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $groupManager;
 
 	protected function setUp() {
@@ -87,7 +87,7 @@ class FactoryTest extends TestCase {
 	/**
 	 * @param array $methods
 	 * @param string $user
-	 * @return Factory|\PHPUnit_Framework_MockObject_MockObject
+	 * @return Factory|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	public function getFactory(array $methods = [], $user = 'user') {
 		if (empty($methods)) {
@@ -144,7 +144,7 @@ class FactoryTest extends TestCase {
 		$factory = $this->getFactory();
 		$this->assertSame($this->l, $this->invokePrivate($factory, 'l'));
 
-		/** @var \OCP\IL10N|\PHPUnit_Framework_MockObject_MockObject $l2 */
+		/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject $l2 */
 		$l2 = $this->getMockBuilder('OCP\IL10N')
 			->disableOriginalConstructor()
 			->getMock();
@@ -170,7 +170,7 @@ class FactoryTest extends TestCase {
 	public function testGetParameter($parameter, $formatter) {
 		$factory = $this->getFactory(['getFormatter']);
 
-		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();

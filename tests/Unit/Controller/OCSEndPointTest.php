@@ -33,37 +33,37 @@ use OCP\AppFramework\Http;
  * @package OCA\Activity\Tests\Controller
  */
 class OCSEndPointTest extends TestCase {
-	/** @var \OCP\IRequest|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IRequest|\PHPUnit\Framework\MockObject\MockObject */
 	protected $request;
 
-	/** @var \OCA\Activity\Data|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\Data|\PHPUnit\Framework\MockObject\MockObject */
 	protected $data;
 
-	/** @var \OCA\Activity\GroupHelper|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\GroupHelper|\PHPUnit\Framework\MockObject\MockObject */
 	protected $helper;
 
-	/** @var \OCA\Activity\UserSettings|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\UserSettings|\PHPUnit\Framework\MockObject\MockObject */
 	protected $userSettings;
 
-	/** @var \OCP\IPreview|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IPreview|\PHPUnit\Framework\MockObject\MockObject */
 	protected $preview;
 
-	/** @var \OCP\IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IURLGenerator|\PHPUnit\Framework\MockObject\MockObject */
 	protected $urlGenerator;
 
-	/** @var \OCP\IUserSession|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IUserSession|\PHPUnit\Framework\MockObject\MockObject */
 	protected $userSession;
 
-	/** @var \OCP\Files\IMimeTypeDetector|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\Files\IMimeTypeDetector|\PHPUnit\Framework\MockObject\MockObject */
 	protected $mimeTypeDetector;
 
-	/** @var \OC\Files\View|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OC\Files\View|\PHPUnit\Framework\MockObject\MockObject */
 	protected $view;
 
-	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCA\Activity\ViewInfoCache|\PHPUnit\Framework\MockObject\MockObject */
 	protected $infoCache;
 
-	/** @var \OCP\IAvatarManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IAvatarManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $avatarManager;
 
 	/** @var \OCP\IL10N */

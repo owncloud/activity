@@ -29,7 +29,7 @@ class UserSettingsTest extends TestCase {
 	/** @var UserSettings */
 	protected $userSettings;
 
-	/** @var \PHPUnit_Framework_MockObject_MockObject */
+	/** @var \PHPUnit\Framework\MockObject\MockObject */
 	protected $config;
 
 	protected function setUp() {

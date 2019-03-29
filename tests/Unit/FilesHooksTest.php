@@ -37,17 +37,17 @@ use OCP\Share;
 class FilesHooksTest extends TestCase {
 	/** @var \OCA\Activity\FilesHooks */
 	protected $filesHooks;
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCP\Activity\IManager */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\Activity\IManager */
 	protected $activityManager;
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCA\Activity\Data */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCA\Activity\Data */
 	protected $data;
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCA\Activity\UserSettings */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCA\Activity\UserSettings */
 	protected $settings;
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCP\IGroupManager */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\IGroupManager */
 	protected $groupManager;
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OC\Files\View */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OC\Files\View */
 	protected $view;
-	/** @var \PHPUnit_Framework_MockObject_MockObject|\OCP\IURLGenerator */
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\IURLGenerator */
 	protected $urlGenerator;
 
 	protected function setUp() {
@@ -81,7 +81,7 @@ class FilesHooksTest extends TestCase {
 	/**
 	 * @param array $mockedMethods
 	 * @param string $user
-	 * @return FilesHooks|\PHPUnit_Framework_MockObject_MockObject
+	 * @return FilesHooks|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	protected function getFilesHooks(array $mockedMethods = [], $user = 'user') {
 		if (!empty($mockedMethods)) {

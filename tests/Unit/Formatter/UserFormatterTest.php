@@ -27,10 +27,10 @@ use OCA\Activity\Tests\Unit\TestCase;
 
 class UserFormatterTest extends TestCase {
 
-	/** @var \OCP\IUserManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IUserManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $userManager;
 
-	/** @var \OCP\IL10N|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
 	protected function setUp() {
@@ -47,7 +47,7 @@ class UserFormatterTest extends TestCase {
 
 	/**
 	 * @param array $methods
-	 * @return IFormatter|\PHPUnit_Framework_MockObject_MockObject
+	 * @return IFormatter|\PHPUnit\Framework\MockObject\MockObject
 	 */
 	public function getFormatter(array $methods = []) {
 		if (empty($methods)) {
@@ -78,7 +78,7 @@ class UserFormatterTest extends TestCase {
 	 * @param string $expected
 	 */
 	public function testFormatRemoteUser($expected) {
-		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();
@@ -121,7 +121,7 @@ class UserFormatterTest extends TestCase {
 	 * @param string $expected
 	 */
 	public function testFormat($parameter, $user, $expected) {
-		/** @var \OCP\Activity\IEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();

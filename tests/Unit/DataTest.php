@@ -38,10 +38,10 @@ class DataTest extends TestCase {
 	/** @var \OCP\IL10N */
 	protected $activityLanguage;
 
-	/** @var \OC\Activity\Manager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OC\Activity\Manager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $activityManager;
 
-	/** @var \OCP\IUserSession|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var \OCP\IUserSession|\PHPUnit\Framework\MockObject\MockObject */
 	protected $session;
 
 	protected function setUp() {
@@ -245,7 +245,7 @@ class DataTest extends TestCase {
 		$activities[4] = $this->populateActivity(4, 'user1', 'user2', 'type2', $objectType, $objectId);
 		$activities[5] = $this->populateActivity(5, 'user2', 'user1', 'type2', $objectType, $objectId);
 
-		/** @var \OCA\Activity\GroupHelper|\PHPUnit_Framework_MockObject_MockObject $groupHelper */
+		/** @var \OCA\Activity\GroupHelper|\PHPUnit\Framework\MockObject\MockObject $groupHelper */
 		$groupHelper = $this->getMockBuilder('OCA\Activity\GroupHelper')
 			->disableOriginalConstructor()
 			->getMock();
@@ -253,7 +253,7 @@ class DataTest extends TestCase {
 			->method('setUser')
 			->with('user1');
 
-		/** @var \OCA\Activity\UserSettings|\PHPUnit_Framework_MockObject_MockObject $settings */
+		/** @var \OCA\Activity\UserSettings|\PHPUnit\Framework\MockObject\MockObject $settings */
 		$settings = $this->getMockBuilder('OCA\Activity\UserSettings')
 			->disableOriginalConstructor()
 			->getMock();
@@ -262,7 +262,7 @@ class DataTest extends TestCase {
 			->with('user1', 'stream')
 			->willReturn(['type1', 'type2']);
 
-		/** @var \OC\Activity\Manager|\PHPUnit_Framework_MockObject_MockObject $activityManager */
+		/** @var \OC\Activity\Manager|\PHPUnit\Framework\MockObject\MockObject $activityManager */
 		$activityManager = $this->getMockBuilder('OCP\Activity\IManager')
 			->disableOriginalConstructor()
 			->getMock();
@@ -275,7 +275,7 @@ class DataTest extends TestCase {
 			->with($filter)
 			->willReturn([null, null]);
 
-		/** @var \OCA\Activity\Data|\PHPUnit_Framework_MockObject_MockObject $data */
+		/** @var \OCA\Activity\Data|\PHPUnit\Framework\MockObject\MockObject $data */
 		$data = new \OCA\Activity\Data(
 			$activityManager,
 			\OC::$server->getDatabaseConnection(),
@@ -301,7 +301,7 @@ class DataTest extends TestCase {
 	 * @expectedExceptionCode 3
 	 */
 	public function testGetNoSettings() {
-		/** @var \OCA\Activity\GroupHelper|\PHPUnit_Framework_MockObject_MockObject $groupHelper */
+		/** @var \OCA\Activity\GroupHelper|\PHPUnit\Framework\MockObject\MockObject $groupHelper */
 		$groupHelper = $this->getMockBuilder('OCA\Activity\GroupHelper')
 			->disableOriginalConstructor()
 			->getMock();
@@ -309,7 +309,7 @@ class DataTest extends TestCase {
 			->method('setUser')
 			->with('user1');
 
-		/** @var \OCA\Activity\UserSettings|\PHPUnit_Framework_MockObject_MockObject $settings */
+		/** @var \OCA\Activity\UserSettings|\PHPUnit\Framework\MockObject\MockObject $settings */
 		$settings = $this->getMockBuilder('OCA\Activity\UserSettings')
 			->disableOriginalConstructor()
 			->getMock();
@@ -318,7 +318,7 @@ class DataTest extends TestCase {
 			->with('user1', 'stream')
 			->willReturn(['settings']);
 
-		/** @var \OC\Activity\Manager|\PHPUnit_Framework_MockObject_MockObject $activityManager */
+		/** @var \OC\Activity\Manager|\PHPUnit\Framework\MockObject\MockObject $activityManager */
 		$activityManager = $this->getMockBuilder('OCP\Activity\IManager')
 			->disableOriginalConstructor()
 			->getMock();
@@ -329,7 +329,7 @@ class DataTest extends TestCase {
 		$activityManager->expects($this->never())
 			->method('getQueryForFilter');
 
-		/** @var \OCA\Activity\Data|\PHPUnit_Framework_MockObject_MockObject $data */
+		/** @var \OCA\Activity\Data|\PHPUnit\Framework\MockObject\MockObject $data */
 		$data = new \OCA\Activity\Data(
 			$activityManager,
 			\OC::$server->getDatabaseConnection(),
@@ -345,12 +345,12 @@ class DataTest extends TestCase {
 	 * @expectedExceptionCode 1
 	 */
 	public function testGetNoUser() {
-		/** @var \OCA\Activity\GroupHelper|\PHPUnit_Framework_MockObject_MockObject $groupHelper */
+		/** @var \OCA\Activity\GroupHelper|\PHPUnit\Framework\MockObject\MockObject $groupHelper */
 		$groupHelper = $this->getMockBuilder('OCA\Activity\GroupHelper')
 			->disableOriginalConstructor()
 			->getMock();
 
-		/** @var \OCA\Activity\UserSettings|\PHPUnit_Framework_MockObject_MockObject $settings */
+		/** @var \OCA\Activity\UserSettings|\PHPUnit\Framework\MockObject\MockObject $settings */
 		$settings = $this->getMockBuilder('OCA\Activity\UserSettings')
 			->disableOriginalConstructor()
 			->getMock();
