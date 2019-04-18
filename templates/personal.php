@@ -37,7 +37,7 @@ style('activity', 'settings');
 				</td>
 				<?php endforeach; ?>
 				<td class="activity_select_group" data-select-group="<?php p($activity) ?>">
-					<?php p($data['desc']); ?>
+					<?php print_unescaped($data['desc']); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
