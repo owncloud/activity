@@ -233,7 +233,7 @@ Feature: List activity
       | subject          | /^shared_user_self$/ |
       | object_name      | /^\/two$/            |
       | object_type      | /^files$/            |
-      | typeicon         | /^icon-share$/       |
+      | typeicon         | /^icon-shared$/      |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/two\" id=\"\d+\">two<\/file> with <user display-name=\"User Two\">user2<\/user>$/|
     And the activity number 2 of user "user0" should match these properties:
       | type             | /^shared$/           |
@@ -243,7 +243,7 @@ Feature: List activity
       | subject          | /^shared_user_self$/ |
       | object_name      | /^\/one$/            |
       | object_type      | /^files$/            |
-      | typeicon         | /^icon-share$/       |
+      | typeicon         | /^icon-shared$/      |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/one\" id=\"\d+\">one<\/file> with <user display-name=\"User One\">user1<\/user>$/|
 
   Scenario: folder creation should be listed in the activity list
@@ -290,7 +290,7 @@ Feature: List activity
       | subject          | /^shared_user_self$/ |
       | object_name      | /^\/textfile0.txt$/  |
       | object_type      | /^files$/            |
-      | typeicon         | /^icon-share$/       |
+      | typeicon         | /^icon-shared$/      |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
     And the activity number 2 of user "user0" should match these properties:
@@ -301,7 +301,7 @@ Feature: List activity
       | subject          | /^shared_user_self$/     |
       | object_name      | /^\/PARENT\/parent.txt$/ |
       | object_type      | /^files$/                |
-      | typeicon         | /^icon-share$/           |
+      | typeicon         | /^icon-shared$/          |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT$/ |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT&scrollto=parent.txt" id=\"\d+\">PARENT\/parent.txt<\/file> with <user display-name=\"User Two\">user2<\/user>$/|
 
@@ -318,7 +318,7 @@ Feature: List activity
       | subject          | /^shared_user_self$/ |
       | object_name      | /^\/textfile0.txt$/  |
       | object_type      | /^files$/            |
-      | typeicon         | /^icon-share$/       |
+      | typeicon         | /^icon-shared$/      |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
     And the activity number 2 of user "user0" should match these properties:
@@ -329,7 +329,7 @@ Feature: List activity
       | subject          | /^shared_user_self$/     |
       | object_name      | /^\/PARENT\/parent.txt$/ |
       | object_type      | /^files$/                |
-      | typeicon         | /^icon-share$/           |
+      | typeicon         | /^icon-shared$/          |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT$/ |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT&scrollto=parent.txt" id=\"\d+\">PARENT\/parent.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
 
@@ -347,7 +347,7 @@ Feature: List activity
       | subject          | /^shared_with_by$/  |
       | object_name      | /^\/textfile0.txt$/ |
       | object_type      | /^files$/           |
-      | typeicon         | /^icon-share$/      |
+      | typeicon         | /^icon-shared$/     |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with you$/|
     And the activity number 1 of user "user1" should match these properties:
@@ -358,7 +358,7 @@ Feature: List activity
       | subject          | /^shared_with_by$/ |
       | object_name      | /^\/parent.txt$/   |
       | object_type      | /^files$/          |
-      | typeicon         | /^icon-share$/     |
+      | typeicon         | /^icon-shared$/    |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent.txt" id=\"\d+\">parent.txt<\/file> with you$/|
 
@@ -375,6 +375,6 @@ Feature: List activity
       | subject          | /^shared_with_by$/  |
       | object_name      | /^\/textfile0.txt$/ |
       | object_type      | /^files$/           |
-      | typeicon         | /^icon-share$/      |
+      | typeicon         | /^icon-shared$/     |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent.txt" id=\"\d+\">parent.txt<\/file><\/collection> with you$/|
