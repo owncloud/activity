@@ -2,7 +2,6 @@ workspace:
   base: /var/www/owncloud
   path: server/apps/activity
 
-branches: [ master, release* ]
 
 pipeline:
   install-core:
