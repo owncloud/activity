@@ -297,8 +297,8 @@ Feature: Sharing file/folders activities
     When the user browses directly to display the details of file "block-aligned.txt" in folder "/"
     Then the activity number 1 should have message saying that the file is shared with user "User One" in the activity tab
     And the activity number 2 should contain message "You created block-aligned.txt" in the activity tab
-    When the user opens the file action menu of folder "folder with space" in the webUI
-    And the user clicks the details file action in the webUI
+    When the user opens the file action menu of folder "folder with space" on the webui
+    And the user clicks the details file action on the webui
     Then the activity number 1 should have message saying that the folder is shared with user "User Two" in the activity tab
     And the activity number 2 should contain message "You created folder with space" in the activity tab
 
@@ -309,8 +309,8 @@ Feature: Sharing file/folders activities
     And user "user1" has logged in using the webUI
     When the user browses directly to display the details of file "block-aligned.txt" in folder "/"
     Then the activity number 1 should have message saying that the file is shared by user "User Zero" in the activity tab
-    When the user opens the file action menu of folder "folder with space" in the webUI
-    And the user clicks the details file action in the webUI
+    When the user opens the file action menu of folder "folder with space" on the webui
+    And the user clicks the details file action on the webui
     Then the activity number 1 should have message saying that the folder is shared by user "User Zero" in the activity tab
 
   @issue-695

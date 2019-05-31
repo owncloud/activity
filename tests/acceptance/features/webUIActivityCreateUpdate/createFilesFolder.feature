@@ -285,6 +285,6 @@ Feature: Created files/folders activities
   Scenario: Creating folders should be listed in the activity tab
     Given user "user0" has created folder "/Doc1"
     When the user browses to the files page
-    And the user opens the file action menu of folder "Doc1" in the webUI
-    And the user clicks the details file action in the webUI
+    And the user opens the file action menu of folder "Doc1" on the webui
+    And the user clicks the details file action on the webui
     Then the activity number 1 should contain message "You created Doc1" in the activity tab
