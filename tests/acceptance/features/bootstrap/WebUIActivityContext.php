@@ -255,7 +255,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		}
 		$avatarText = \strtoupper($user[0]);
 		//Need to add username initial at the beginning because if there is no avatar of the user then,
-		// the username initial is shown in the webUI
+		// the username initial is shown on the webui
 		$message = \sprintf($this->youSharedMsgFramework, $entry, $avatarText, $user);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
