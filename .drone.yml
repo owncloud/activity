@@ -201,7 +201,7 @@ services:
         USE_FEDERATED_SERVER: true
 
   selenium:
-    image: selenium/standalone-chrome-debug:latest
+    image: selenium/standalone-chrome-debug:3.141.59-oxygen
     pull: true
     when:
       matrix:
