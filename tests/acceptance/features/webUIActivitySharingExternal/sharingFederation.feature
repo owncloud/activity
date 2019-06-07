@@ -6,9 +6,9 @@ Feature: federation sharing file/folder activities
 
   Background:
     Given using server "REMOTE"
-    And user "user2" has been created with default attributes
+    And user "user2" has been created with default attributes and skeleton files
     And using server "LOCAL"
-    And user "user1" has been created with default attributes
+    And user "user1" has been created with default attributes and skeleton files
     And user "user1" has logged in using the webUI
 
   Scenario: Sharing a folder with a remote server should not be listed in the activity list of a sharer if the sharee has not accepted the share
