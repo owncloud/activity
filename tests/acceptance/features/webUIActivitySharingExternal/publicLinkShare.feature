@@ -5,7 +5,7 @@ Feature: public link sharing file/folders activities
   So that I know what happened in my cloud storage
 
   Background:
-    Given user "user1" has been created with default attributes
+    Given user "user1" has been created with default attributes and skeleton files
     And user "user1" has logged in using the webUI
 
   Scenario: Creating a public link of a folder and file should be listed in the activity list
