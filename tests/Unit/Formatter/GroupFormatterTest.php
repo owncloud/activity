@@ -51,8 +51,9 @@ class GroupFormatterTest extends TestCase {
 
 	public function dataFormat() {
 		return [
-			['para<m>eter1', '<parameter>para&lt;m&gt;eter1</parameter>'],
-			['para<m>eter2', '<parameter>para&lt;m&gt;eter2</parameter>'],
+			['para<m>eter1', '<parameter>display:para&lt;m&gt;eter1</parameter>'],
+			['para<m>eter2', '<parameter>display:para&lt;m&gt;eter2</parameter>'],
+			['unknown', '<parameter>unknown</parameter>', false],
 		];
 	}
 
@@ -62,20 +63,23 @@ class GroupFormatterTest extends TestCase {
 	 * @param string $parameter
 	 * @param string $expected
 	 */
-	public function testFormat($parameter, $expected) {
+	public function testFormat($parameter, $expected, $groupKnown = true) {
 		/** @var \OCP\Activity\IEvent|\PHPUnit\Framework\MockObject\MockObject $event */
 		$event = $this->getMockBuilder('OCP\Activity\IEvent')
 			->disableOriginalConstructor()
 			->getMock();
 
 		$formatter = $this->getFormatter();
-		$group = $this->createMock(IGroup::class);
+		$group = null;
+		if ($groupKnown) {
+			$group = $this->createMock(IGroup::class);
+			$group->expects($this->once())
+				->method('getDisplayName')
+				->willReturn("display:$parameter");
+		}
 		$this->groupManager->expects($this->once())
 			->method('get')
 			->willReturn($group);
-		$group->expects($this->once())
-			->method('getDisplayName')
-			->willReturn($parameter);
 
 		$this->assertSame($expected, $formatter->format($event, $parameter));
 	}

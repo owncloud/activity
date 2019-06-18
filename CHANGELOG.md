@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [2.4.2] - 2019-02-13
 
+- Handle no longer existing groups - [#738](https://github.com/owncloud/activity/pull/738)
+
 ### Fixed
 
 - Properly identify user from federation instance in activity entries, requires core 10.1.0 to work - [#672](https://github.com/owncloud/activity/pull/672)
