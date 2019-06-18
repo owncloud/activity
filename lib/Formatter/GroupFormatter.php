@@ -41,7 +41,10 @@ class GroupFormatter implements IFormatter {
 	 */
 	public function format(IEvent $event, $parameter) {
 		$group = $this->groupManager->get($parameter);
-		$displayName = $group->getDisplayName();
+		$displayName = $parameter;
+		if ($group !== null) {
+			$displayName = $group->getDisplayName();
+		}
 		return '<parameter>' . Util::sanitizeHTML($displayName) . '</parameter>';
 	}
 }
