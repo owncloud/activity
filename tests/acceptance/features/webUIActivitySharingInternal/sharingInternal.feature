@@ -324,3 +324,27 @@ Feature: Sharing file/folders activities
     Then the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "User Two"
     #remove the above step when issue is fixed
     #Then the activity number 1 should contain message "You shared textfile0.txt with User One and User Two" in the activity page
+
+  Scenario: users checks a group related activity after deleting the group
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user1    |
+    And group "grp1" has been created
+    And user "user0" has been added to group "grp1"
+    And user "user1" has been added to group "grp1"
+    And user "user0" has shared file "textfile0.txt" with group "grp1"
+    And group "grp1" has been deleted
+    And user "user0" has logged in using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should contain message "You shared textfile0.txt with group grp1" in the activity page
+
+
+  Scenario: users checks a user related activity after deleting the user
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user1    |
+    And user "user0" has shared file "textfile0.txt" with user "user1"
+    And user "user1" has been deleted
+    And user "user0" has logged in using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "user1"

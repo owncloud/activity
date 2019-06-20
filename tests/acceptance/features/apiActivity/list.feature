@@ -378,3 +378,44 @@ Feature: List activity
       | typeicon         | /^icon-shared$/     |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent.txt" id=\"\d+\">parent.txt<\/file><\/collection> with you$/|
+
+  Scenario: users checks a group related activity after deleting the group
+    Given these users have been created with default attributes and skeleton files:
+      | username |
+      | user0    |
+      | user1    |
+    And group "grp1" has been created
+    And user "user0" has been added to group "grp1"
+    And user "user1" has been added to group "grp1"
+    And user "user0" has shared file "textfile0.txt" with group "grp1"
+    When the administrator deletes group "grp1" using the provisioning API
+    Then the activity number 1 of user "user1" should match these properties:
+      | type             | /^shared$/          |
+      | user             | /^user0$/           |
+      | affecteduser     | /^user1$/           |
+      | app              | /^files_sharing$/   |
+      | subject          | /^shared_with_by$/  |
+      | object_name      | /^\/textfile0.txt$/ |
+      | object_type      | /^files$/           |
+      | typeicon         | /^icon-shared$/     |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with you$/|
+
+  Scenario: users checks a user related activity after deleting the user
+    Given these users have been created with default attributes and skeleton files:
+      | username |
+      | user0    |
+      | user1    |
+    And user "user0" has shared file "textfile0.txt" with user "user1"
+    When the administrator deletes user "user0" using the provisioning API
+    Then the activity number 1 of user "user1" should match these properties:
+      | type             | /^shared$/          |
+      | user             | /^user0$/           |
+      | affecteduser     | /^user1$/           |
+      | app              | /^files_sharing$/   |
+      | subject          | /^shared_with_by$/  |
+      | object_name      | /^\/textfile0.txt$/ |
+      | object_type      | /^files$/           |
+      | typeicon         | /^icon-shared$/     |
+      | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
+      | subject_prepared | /^<user display-name=\"user0\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with you$/|
