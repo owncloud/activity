@@ -26,6 +26,7 @@ use OCA\Activity\Formatter\GroupFormatter;
 use OCA\Activity\Formatter\IFormatter;
 use OCA\Activity\Formatter\CloudIDFormatter;
 use OCA\Activity\Formatter\FileFormatter;
+use OCA\Activity\Formatter\UrlFormatter;
 use OCA\Activity\Formatter\UserFormatter;
 use OCA\Activity\ViewInfoCache;
 use OCP\Activity\IEvent;
@@ -137,6 +138,8 @@ class Factory {
 			return new CloudIDFormatter($this->contactsManager);
 		} elseif ($formatter === 'group') {
 			return new GroupFormatter($this->groupManager);
+		} elseif ($formatter === 'url') {
+			return new UrlFormatter();
 		} else {
 			return new BaseFormatter();
 		}
