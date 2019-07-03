@@ -1,4 +1,4 @@
-@webUI @insulated @disablePreviews
+@webUI @insulated @disablePreviews @skipOnOcV10.2
 Feature: Restored files/folders activities
   As a user
   I want to be able to see history of the files and folders that I have restored

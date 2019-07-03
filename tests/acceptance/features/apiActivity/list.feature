@@ -17,6 +17,7 @@ Feature: List activity
       | typeicon         | /^icon-delete-color$/ |
       | subject_prepared | /^You deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0\.txt\.d\d+&view=trashbin\" id=\"\d+\">textfile0\.txt<\/file>$/ |
 
+  @skipOnOcV10.2
   Scenario: file restore should be listed in the activity list
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "textfile0.txt"
@@ -46,6 +47,7 @@ Feature: List activity
       | typeicon         | /^icon-delete-color$/ |
       | subject_prepared | /^You deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\.d\d+&view=trashbin\" id=\"\d+\">FOLDER<\/file>$/ |
 
+  @skipOnOcV10.2
   Scenario: folder restore should be listed in the activity list
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted folder "FOLDER"
@@ -75,6 +77,7 @@ Feature: List activity
       | typeicon         | /^icon-delete-color$/    |
       | subject_prepared | /^You deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent\.txt\.d\d+&view=trashbin\" id=\"\d+\">PARENT\/parent.txt<\/file>$/ |
 
+  @skipOnOcV10.2
   Scenario: file inside folder restore should be listed in the activity list
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "PARENT/parent.txt"
@@ -104,6 +107,7 @@ Feature: List activity
       | typeicon         | /^icon-delete-color$/ |
       | subject_prepared | /^You deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/CHILD.d\d+&view=trashbin\" id=\"\d+\">PARENT\/CHILD<\/file>$/ |
 
+  @skipOnOcV10.2
   Scenario: sub folder restore should be listed in the activity list
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted folder "PARENT/CHILD"
@@ -149,6 +153,7 @@ Feature: List activity
       | typeicon         | /^icon-delete-color$/ |
       | subject_prepared | /^You deleted <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\.d\d+&view=trashbin\" id=\"\d+\">FOLDER<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT\.d\d+&view=trashbin\" id=\"\d+\">PARENT<\/file><\/collection>$/ |
 
+  @skipOnOcV10.2
   Scenario: multiple file restore should be listed in activity list
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "textfile0.txt"
@@ -166,6 +171,7 @@ Feature: List activity
       | object_type      | /^files$/            |
       | subject_prepared | /^You restored <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile1\.txt\" id=\"\d+\">textfile1\.txt<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0\.txt\" id=\"\d+\">textfile0\.txt<\/file><\/collection>$/ |
 
+  @skipOnOcV10.2
   Scenario: multiple folder restore should be listed in activity list
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted folder "FOLDER"
@@ -198,6 +204,7 @@ Feature: List activity
       | typeicon         | /^icon-delete-color$/ |
       | subject_prepared | /^You deleted <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\.d\d+&view=trashbin\" id=\"\d+\">FOLDER<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0\.txt\.d\d+&view=trashbin\" id=\"\d+\">textfile0\.txt<\/file><\/collection>$/ |
 
+  @skipOnOcV10.2
   Scenario: mix of folder and file restore should be listed in activity list
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "textfile0.txt"
@@ -215,6 +222,7 @@ Feature: List activity
       | object_type      | /^files$/         |
       | subject_prepared | /^You restored <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\" id=\"\d+\">FOLDER<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0\.txt\" id=\"\d+\">textfile0\.txt<\/file><\/collection>$/ |
 
+  @skipOnOcV10.2
   Scenario: folder share should be listed in the activity list
     Given these users have been created with default attributes and skeleton files but not initialized:
       | username |
@@ -276,6 +284,7 @@ Feature: List activity
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^You created <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=text.txt" id=\"\d+\">text.txt<\/file>/|
 
+  @skipOnOcV10.2
   Scenario: different files share with different user should be listed in activity list of sharer
     Given user "user0" has been created with default attributes and skeleton files
     And user "user1" has been created with default attributes and without skeleton files
@@ -305,6 +314,7 @@ Feature: List activity
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT$/ |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT&scrollto=parent.txt" id=\"\d+\">PARENT\/parent.txt<\/file> with <user display-name=\"User Two\">user2<\/user>$/|
 
+  @skipOnOcV10.2
   Scenario: different files shared with same user should be listed in activity list of sharer
     Given user "user0" has been created with default attributes and skeleton files
     And user "user1" has been created with default attributes and without skeleton files
@@ -333,6 +343,7 @@ Feature: List activity
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT$/ |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT&scrollto=parent.txt" id=\"\d+\">PARENT\/parent.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
 
+  @skipOnOcV10.2
   Scenario: different files shared with different user should be listed in activity list of sharee
     Given user "user0" has been created with default attributes and skeleton files
     And user "user1" has been created with default attributes and without skeleton files
@@ -362,6 +373,7 @@ Feature: List activity
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent.txt" id=\"\d+\">parent.txt<\/file> with you$/|
 
+  @skipOnOcV10.2
   Scenario: different files shared with same user should be listed in activity list of sharee
     Given user "user0" has been created with default attributes and skeleton files
     And user "user1" has been created with default attributes and without skeleton files
@@ -379,6 +391,7 @@ Feature: List activity
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=parent.txt" id=\"\d+\">parent.txt<\/file><\/collection> with you$/|
 
+  @skipOnOcV10.2
   Scenario: users checks a group related activity after deleting the group
     Given these users have been created with default attributes and skeleton files:
       | username |
@@ -401,6 +414,7 @@ Feature: List activity
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with you$/|
 
+  @skipOnOcV10.2
   Scenario: users checks a user related activity after deleting the user
     Given these users have been created with default attributes and skeleton files:
       | username |
