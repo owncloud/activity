@@ -433,3 +433,160 @@ Feature: List activity
       | typeicon         | /^icon-shared$/     |
       | link             | /^%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/$/ |
       | subject_prepared | /^<user display-name=\"user0\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0.txt" id=\"\d+\">textfile0.txt<\/file> with you$/|
+
+  @skipOnOcV10.2
+  Scenario: Sharer and sharee check activity after sharer deletes shared file
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user0    |
+      | user1    |
+    And user "user0" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
+    And user "user0" has shared file "/lorem.txt" with user "user1"
+    When user "user0" deletes file "/lorem.txt" using the WebDAV API
+    Then the activity number 1 of user "user0" should match these properties:
+      | type             | /^file_deleted$/      |
+      | user             | /^user0$/             |
+      | affecteduser     | /^user0$/             |
+      | app              | /^files$/             |
+      | subject          | /^deleted_self$/      |
+      | object_name      | /^\/lorem.txt$/       |
+      | object_type      | /^files$/             |
+      | typeicon         | /^icon-delete-color$/ |
+      | subject_prepared | /^You deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\.d\d+&view=trashbin\" id=\"\d+\">lorem\.txt<\/file>$/ |
+    And the activity number 2 of user "user0" should match these properties:
+      | type             | /^shared$/               |
+      | user             | /^user0$/                |
+      | affecteduser     | /^user0$/                |
+      | app              | /^files_sharing$/        |
+      | subject          | /^shared_user_self$/     |
+      | object_name      | /^\/lorem.txt$/          |
+      | object_type      | /^files$/                |
+      | typeicon         | /^icon-shared$/          |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt\.d\d+&view=trashbin\" id=\"\d+\">lorem.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
+    And the activity number 1 of user "user1" should match these properties:
+      | type             | /^file_deleted$/         |
+      | user             | /^user0$/                |
+      | affecteduser     | /^user1$/                |
+      | app              | /^files$/                |
+      | subject          | /^deleted_by$/           |
+      | object_name      | /^\/lorem.txt$/          |
+      | object_type      | /^files$/                |
+      | typeicon         | /^icon-delete-color$/    |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file>$/|
+    And the activity number 2 of user "user1" should match these properties:
+      | type             | /^shared$/            |
+      | user             | /^user0$/             |
+      | affecteduser     | /^user1$/             |
+      | app              | /^files_sharing$/     |
+      | subject          | /^shared_with_by$/    |
+      | object_name      | /^\/lorem.txt$/       |
+      | object_type      | /^files$/             |
+      | typeicon         | /^icon-shared$/       |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file> with you$/|
+
+  @skipOnOcV10.2
+  Scenario: Sharer and sharee check activity after sharee deletes shared file
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user0    |
+      | user1    |
+    And user "user0" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
+    And user "user0" has shared file "/lorem.txt" with user "user1"
+    When user "user1" deletes file "/lorem.txt" using the WebDAV API
+    Then the activity number 1 of user "user0" should match these properties:
+      | type             | /^shared$/               |
+      | user             | /^user0$/                |
+      | affecteduser     | /^user0$/                |
+      | app              | /^files_sharing$/        |
+      | subject          | /^shared_user_self$/     |
+      | object_name      | /^\/lorem.txt$/          |
+      | object_type      | /^files$/                |
+      | typeicon         | /^icon-shared$/          |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt\" id=\"\d+\">lorem.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
+    And the activity number 1 of user "user1" should match these properties:
+      | type             | /^shared$/             |
+      | user             | /^user1$/              |
+      | affecteduser     | /^user1$/              |
+      | app              | /^files_sharing$/      |
+      | subject          | /^unshared_from_self$/ |
+      | typeicon         | /^icon-shared$/    |
+      | subject_prepared | /^You unshared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id="">lorem.txt<\/file> shared by <user display-name=\"User Zero\">user0<\/user> from self$/|
+    And the activity number 2 of user "user1" should match these properties:
+      | type             | /^shared$/            |
+      | user             | /^user0$/             |
+      | affecteduser     | /^user1$/             |
+      | app              | /^files_sharing$/     |
+      | subject          | /^shared_with_by$/    |
+      | object_name      | /^\/lorem.txt$/       |
+      | object_type      | /^files$/             |
+      | typeicon         | /^icon-shared$/       |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file> with you$/|
+
+  @skipOnOcV10.2
+  Scenario: Sharer and sharee check activity after sharer deletes shared file and then again restore it
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user0    |
+      | user1    |
+    And user "user0" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
+    And user "user0" has shared file "/lorem.txt" with user "user1"
+    When user "user0" deletes file "/lorem.txt" using the WebDAV API
+    And user "user0" restores the file with original path "lorem.txt" using the trashbin API
+    Then the activity number 1 of user "user0" should match these properties:
+      | type             | /^file_restored$/     |
+      | user             | /^user0$/             |
+      | affecteduser     | /^user0$/             |
+      | app              | /^files$/             |
+      | subject          | /^restored_self$/     |
+      | object_name      | /^\/lorem.txt$/       |
+      | object_type      | /^files$/             |
+      | subject_prepared | /^You restored <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file>$/ |
+    And the activity number 2 of user "user0" should match these properties:
+      | type             | /^file_deleted$/      |
+      | user             | /^user0$/             |
+      | affecteduser     | /^user0$/             |
+      | app              | /^files$/             |
+      | subject          | /^deleted_self$/      |
+      | object_name      | /^\/lorem.txt$/       |
+      | object_type      | /^files$/             |
+      | typeicon         | /^icon-delete-color$/ |
+      | subject_prepared | /^You deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file>$/ |
+    And the activity number 3 of user "user0" should match these properties:
+      | type             | /^shared$/               |
+      | user             | /^user0$/                |
+      | affecteduser     | /^user0$/                |
+      | app              | /^files_sharing$/        |
+      | subject          | /^shared_user_self$/     |
+      | object_name      | /^\/lorem.txt$/          |
+      | object_type      | /^files$/                |
+      | typeicon         | /^icon-shared$/          |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt\" id=\"\d+\">lorem.txt<\/file> with <user display-name=\"User One\">user1<\/user>$/|
+    And the activity number 1 of user "user1" should match these properties:
+      | type             | /^file_restored$/     |
+      | user             | /^user0$/             |
+      | affecteduser     | /^user1$/             |
+      | app              | /^files$/             |
+      | subject          | /^restored_by$/     |
+      | object_name      | /^\/lorem.txt$/       |
+      | object_type      | /^files$/             |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> restored <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file>$/|
+    And the activity number 2 of user "user1" should match these properties:
+      | type             | /^file_deleted$/         |
+      | user             | /^user0$/                |
+      | affecteduser     | /^user1$/                |
+      | app              | /^files$/                |
+      | subject          | /^deleted_by$/           |
+      | object_name      | /^\/lorem.txt$/          |
+      | object_type      | /^files$/                |
+      | typeicon         | /^icon-delete-color$/    |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file>$/|
+    And the activity number 3 of user "user1" should match these properties:
+      | type             | /^shared$/            |
+      | user             | /^user0$/             |
+      | affecteduser     | /^user1$/             |
+      | app              | /^files_sharing$/     |
+      | subject          | /^shared_with_by$/    |
+      | object_name      | /^\/lorem.txt$/       |
+      | object_type      | /^files$/             |
+      | typeicon         | /^icon-shared$/       |
+      | subject_prepared | /^<user display-name=\"User Zero\">user0<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file> with you$/|
