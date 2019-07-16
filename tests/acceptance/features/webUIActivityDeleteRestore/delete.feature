@@ -146,3 +146,34 @@ Feature: Deleted files/folders activities
     When the user disables activity log stream for "file_deleted" using the webUI
     And the user browses to the activity page
     Then the activity should not have any message with keyword "deleted"
+
+  Scenario: Sharer and sharee check activity after sharer deletes shared file
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user1    |
+    And user "user0" has shared file "textfile0.txt" with user "user1"
+    And the user has reloaded the current page of the webUI
+    When the user deletes file "textfile0.txt" using the webUI
+    And the user browses to the activity page
+    Then the activity number 1 should contain message "You deleted textfile0.txt" in the activity page
+    And the activity number 2 should have a message saying that you have shared file "textfile0.txt" with user "User One"
+    When the user re-logs in as "user1" using the webUI
+    And the user browses to the activity page
+    Then the activity number 1 should contain message "User Zero deleted textfile0.txt" in the activity page
+    And the activity number 2 should have a message saying that user "User Zero" has shared "textfile0.txt" with you
+
+  @skipOnOcV10.2
+  Scenario: Sharer and sharee check activity after sharee deletes shared file
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user1    |
+    And user "user0" has shared file "textfile0.txt" with user "user1"
+    And the user re-logs in as "user1" using the webUI
+    When the user deletes file "textfile0.txt" using the webUI
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that you have unshared file "textfile0.txt" shared by "User Zero" from self
+    And the activity number 2 should contain message "User Zero shared textfile0.txt with you" in the activity page
+    When the user re-logs in as "user0" using the webUI
+    And the user browses to the activity page
+    And the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "User One"
+

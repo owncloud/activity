@@ -78,6 +78,7 @@ default:
         - WebUILoginContext:
         - WebUIPersonalGeneralSettingsContext:
         - WebUISharingContext:
+        - TrashbinContext:
 
     webUIActivityTags:
       paths:

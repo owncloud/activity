@@ -70,6 +70,11 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	/**
 	 * @var string
 	 */
+	private $youUnSharedMsgFramework = "You unshared %s shared by %s%s from self";
+
+	/**
+	 * @var string
+	 */
 	private $sharedWithYouMsgFramework = "%s%s shared %s with you";
 
 	/**
@@ -257,6 +262,28 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		//Need to add username initial at the beginning because if there is no avatar of the user then,
 		// the username initial is shown on the webui
 		$message = \sprintf($this->youSharedMsgFramework, $entry, $avatarText, $user);
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
+		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @When the activity number :index should have a message saying that you have unshared file/folder :entry shared by :user from self
+	 *
+	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param string $entry
+	 * @param string $user
+	 *
+	 * @return void
+	 */
+	public function theActivityNumberShouldHaveAMessageSayingUnsharedFileFromSelf(
+		$index,
+		$entry,
+		$user
+	) {
+		$avatarText = \strtoupper($user[0]);
+		//Need to add username initial at the beginning because if there is no avatar of the user then,
+		// the username initial is shown on the webui
+		$message = \sprintf($this->youUnSharedMsgFramework, $entry, $avatarText, $user);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
 	}
