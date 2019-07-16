@@ -278,5 +278,5 @@ Feature: Restored files/folders activities
     Then the activity number 1 should have a message saying that you have unshared file "textfile0.txt" shared by "User Zero" from self
     And the activity number 2 should contain message "User Zero shared textfile0.txt with you" in the activity page
     When the user re-logs in as "user0" using the webUI
-    When the user browses to the activity page
-    And the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "User One"
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "User One"

@@ -267,7 +267,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	}
 
 	/**
-	 * @When the activity number :index should have a message saying that you have unshared file/folder :entry shared by :user from self
+	 * @Then the activity number :index should have a message saying that you have unshared file/folder :entry shared by :user from self
 	 *
 	 * @param integer $index (starting from 1, newest to the oldest)
 	 * @param string $entry
