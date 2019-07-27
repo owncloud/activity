@@ -33,14 +33,14 @@ Feature: public link sharing file/folders activities
   Scenario: Downloading a public shared file from a webUI should be listed in the activity list
     Given the user has created a new public link for file "textfile0.txt" using the webUI
     And the public accesses the last created public link using the webUI
-    When the public downloads the last created file using the webUI
+    When the public downloads all the shared data using the webUI
     And the user browses to the activity page
     Then the activity number 1 should contain message "Public shared file textfile0.txt was downloaded" in the activity page
 
   Scenario: Downloading a public shared folder from a webUI should be listed in the activity list
     Given the user has created a new public link for folder "simple-folder" using the webUI
     And the public accesses the last created public link using the webUI
-    When the public downloads the last created folder using the webUI
+    When the public downloads all the shared data using the webUI
     And the user browses to the activity page
     Then the activity number 1 should contain message "Public shared folder simple-folder was downloaded" in the activity page
 
@@ -68,7 +68,7 @@ Feature: public link sharing file/folders activities
     And the user has browsed to the personal general settings page
     When the user disables activity log stream for "public_links" using the webUI
     And the public accesses the last created public link using the webUI
-    And the public downloads the last created file using the webUI
+    And the public downloads all the shared data using the webUI
     And the user browses to the activity page
     Then the activity should not have any message with keyword "downloaded"
     And the activity number 1 should contain message "You shared textfile0.txt via link" in the activity page
@@ -78,7 +78,7 @@ Feature: public link sharing file/folders activities
     And the user has browsed to the personal general settings page
     When the user disables activity log stream for "public_links" using the webUI
     And the public accesses the last created public link using the webUI
-    And the public downloads the last created folder using the webUI
+    And the public downloads all the shared data using the webUI
     And the user browses to the activity page
     Then the activity should not have any message with keyword "downloaded"
     And the activity number 1 should contain message "You shared simple-folder via link" in the activity page
