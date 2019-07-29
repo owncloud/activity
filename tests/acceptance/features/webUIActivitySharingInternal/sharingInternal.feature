@@ -255,7 +255,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that user "User One" created "newFolder"
 
-  Scenario: Deleting a share by a sharer should be listed in the activity list of the sharer
+  Scenario: Deleting a share by a sharer should be listed in the activity list of the sharee
     Given user "user1" has been created with default attributes and without skeleton files
     And user "user0" has shared folder "simple-folder" with user "user1"
     And user "user1" has logged in using the webUI
@@ -286,6 +286,7 @@ Feature: Sharing file/folders activities
     And user "user1" has deleted the last share
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that "User One" removed the share of "User One" for "simple-folder"
+
   Scenario: Sharing a file/folder with a user should be listed in the activity tab of the sharer for the file
     Given these users have been created with default attributes and skeleton files but not initialized:
       | username |
@@ -337,7 +338,6 @@ Feature: Sharing file/folders activities
     And user "user0" has logged in using the webUI
     When the user browses to the activity page
     Then the activity number 1 should contain message "You shared textfile0.txt with group grp1" in the activity page
-
 
   Scenario: users checks a user related activity after deleting the user
     Given these users have been created with default attributes and without skeleton files:
