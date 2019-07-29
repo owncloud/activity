@@ -287,6 +287,20 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that "User One" removed the share of "User One" for "simple-folder"
 
+  Scenario: Sharer and sharee check activity after sharee unshares a shared file
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | user1    |
+    And user "user0" has shared file "textfile0.txt" with user "user1"
+    And user "user1" has logged in using the webUI
+    And user "user1" has unshared file "textfile0.txt"
+    When the user browses to the activity page
+    Then the activity number 1 should have a message saying that you have unshared file "textfile0.txt" shared by "User Zero" from self
+    And the activity number 2 should contain message "User Zero shared textfile0.txt with you" in the activity page
+    When the user re-logs in as "user0" using the webUI
+    And the user browses to the activity page
+    Then the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "User One"
+
   Scenario: Sharing a file/folder with a user should be listed in the activity tab of the sharer for the file
     Given these users have been created with default attributes and skeleton files but not initialized:
       | username |
