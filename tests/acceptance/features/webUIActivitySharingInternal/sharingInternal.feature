@@ -287,6 +287,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that "User One" removed the share of "User One" for "simple-folder"
 
+  @issue-752 @skipOnOcV10.2
   Scenario: Sharer and sharee check activity after sharee unshares a shared file
     Given these users have been created with default attributes and without skeleton files:
       | username |
