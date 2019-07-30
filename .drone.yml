@@ -2,7 +2,6 @@ workspace:
   base: /var/www/owncloud
   path: server/apps/activity
 
-
 pipeline:
   install-core:
     image: owncloudci/core
@@ -22,7 +21,7 @@ pipeline:
     image: owncloudci/php:${PHP_VERSION}
     pull: true
     commands:
-      - git clone -b stable10 --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+      - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
       - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
       - cd /var/www/owncloud/server/testrunner
       - make install-composer-deps
@@ -236,7 +235,7 @@ matrix:
 
     # Unit Tests
     - PHP_VERSION: 7.0
-      OC_VERSION: daily-stable10-qa
+      OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: sqlite
       DB_NAME: owncloud
@@ -245,7 +244,7 @@ matrix:
       COVERAGE: true
 
     - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
+      OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: sqlite
       DB_NAME: owncloud
@@ -254,7 +253,7 @@ matrix:
       COVERAGE: true
 
     - PHP_VERSION: 7.2
-      OC_VERSION: daily-stable10-qa
+      OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: sqlite
       DB_NAME: owncloud
@@ -263,7 +262,7 @@ matrix:
       COVERAGE: true
 
     - PHP_VERSION: 7.0
-      OC_VERSION: daily-stable10-qa
+      OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: oci
       DB_NAME: XE
@@ -271,7 +270,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.0
-      OC_VERSION: daily-stable10-qa
+      OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: mysql
       DB_NAME: owncloud
@@ -279,7 +278,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.0
-      OC_VERSION: daily-stable10-qa
+      OC_VERSION: daily-master-qa
       TEST_SUITE: phpunit
       DB_TYPE: pgsql
       DB_NAME: owncloud
@@ -324,27 +323,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityComments
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-
-    - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityCreateUpdate
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityCreateUpdate
       DB_TYPE: mysql
@@ -364,16 +343,6 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityDeleteRestore
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-
-    - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingExternal
@@ -383,19 +352,7 @@ matrix:
       NEED_SERVER: true
       NEED_INSTALL_APP: true
       USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-stable10-qa
-
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivitySharingExternal
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-      USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-stable10-qa
+      FEDERATION_OC_VERSION: daily-master-qa
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
@@ -407,19 +364,7 @@ matrix:
       NEED_SERVER: true
       NEED_INSTALL_APP: true
       USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-stable10-qa
-
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivitySharingInternal
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-      USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-stable10-qa
+      FEDERATION_OC_VERSION: daily-master-qa
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
@@ -432,27 +377,7 @@ matrix:
       NEED_INSTALL_APP: true
 
     - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityTags
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-
-    - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
-      TEST_SUITE: api-acceptance
-      BEHAT_SUITE: apiActivity
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-stable10-qa
       TEST_SUITE: api-acceptance
       BEHAT_SUITE: apiActivity
       DB_TYPE: mysql
@@ -505,7 +430,7 @@ matrix:
       NEED_SERVER: true
       NEED_INSTALL_APP: true
       USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-stable10-qa
+      FEDERATION_OC_VERSION: daily-master-qa
       USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
@@ -518,7 +443,7 @@ matrix:
       NEED_SERVER: true
       NEED_INSTALL_APP: true
       USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-stable10-qa
+      FEDERATION_OC_VERSION: daily-master-qa
       USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
