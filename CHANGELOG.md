@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.5.0] 2019-06-21
+
+### Fixed
+
+- Error handling when a group no longer exists [#738](https://github.com/owncloud/activity/pull/738)
+
+### Changed
+
+- Icons renamed to be adblock-friendly [#728](https://github.com/owncloud/activity/pull/728)
+
+### Removed
+
+- Dropped php 5.6 support [#718](https://github.com/owncloud/activity/pull/718)
+
 ## [2.4.2] - 2019-02-13
 
 - Handle no longer existing groups - [#738](https://github.com/owncloud/activity/pull/738)
@@ -55,7 +69,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.4.2...master
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/owncloud/activity/compare/v2.4.2...v2.5.0
 [2.4.2]: https://github.com/owncloud/activity/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/owncloud/activity/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/owncloud/activity/compare/v2.3.8...v2.4.0
