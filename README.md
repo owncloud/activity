@@ -20,3 +20,5 @@ With the activity manager extensions can be registered which allow any app to ex
 In order to implement an extension create a class which implements the interface `\OCP\Activity\IExtension`.
 
 The PHPDoc comments on each method should give enough information to the developer on how to implement them.
+
+Trigger CI
