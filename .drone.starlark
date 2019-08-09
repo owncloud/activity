@@ -1,0 +1,614 @@
+config = {
+	'app': 'activity',
+	'rocketchat': 'builds',
+
+	'branches': [
+		'master'
+	],
+
+	'phpunit': {
+		'7.0': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2',
+				'mysql:5.5',
+				'postgres:9.4',
+				'oracle',
+			],
+			'coverage': True
+		},
+		'7.1': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2'
+			],
+			'coverage': False
+		},
+		'7.2': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2'
+			],
+			'coverage': False
+		},
+		'7.3': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2'
+			],
+			'coverage': False
+		},
+	},
+
+	'acceptance': {
+		'webUIActivityComments': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'webUIActivityCreateUpdate': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'webUIActivityDeleteRestore': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'webUIActivitySharingExternal': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': True
+		},
+		'webUIActivitySharingInternal': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': True
+		},
+		'webUIActivityTags': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'apiActivity': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'headless'
+			],
+			'federate': False
+		}
+	}
+}
+
+def main(ctx):
+	before = beforePipelines()
+
+	stages = stagePipelines()
+	names(before, stages)
+
+	after = afterPipelines()
+	names(stages, after)
+
+	return before + stages + after
+
+def beforePipelines():
+	return [
+		codestyle(),
+		javascript()
+	]
+
+def stagePipelines():
+	return phpunit() + acceptance()
+
+def afterPipelines():
+	return [
+		notify()
+	]
+
+def codestyle():
+	result = {
+		'kind': 'pipeline',
+		'type': 'docker',
+		'name': 'coding-standard',
+		'workspace' : {
+			'base': '/var/www/owncloud',
+			'path': 'server/apps/%s' % config['app']
+		},
+		'steps': [
+			{
+				'name': 'coding-standard',
+				'image': 'owncloudci/php:7.0',
+				'pull': 'always',
+				'commands': [
+					'make test-php-style'
+				]
+			}
+		],
+		'depends_on': [],
+		'trigger': {
+			'ref': [
+				'refs/pull/**',
+				'refs/tags/**'
+			]
+		}
+	}
+
+	for branch in config['branches']:
+		result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+	return result
+
+def javascript():
+	result = {
+		'kind': 'pipeline',
+		'type': 'docker',
+		'name': 'javascript-tests',
+		'workspace' : {
+			'base': '/var/www/owncloud',
+			'path': 'server/apps/%s' % config['app']
+		},
+		'steps': [
+			core('daily-master-qa', 'sqlite'),
+			install('7.0'),
+			{
+				'name': 'javascript-tests',
+				'image': 'owncloudci/php:7.0',
+				'pull': 'always',
+				'commands': [
+					'make test-js'
+				]
+			}
+		],
+		'depends_on': [],
+		'trigger': {
+			'ref': [
+				'refs/pull/**',
+				'refs/tags/**'
+			]
+		}
+	}
+
+	for branch in config['branches']:
+		result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+	return result
+
+def phpunit():
+	pipelines = []
+
+	for php, matrix in config['phpunit'].items():
+		if matrix['coverage']:
+			command = 'make test-php-unit-dbg'
+		else:
+			command = 'make test-php-unit'
+
+		for db in matrix['db']:
+			result = {
+				'kind': 'pipeline',
+				'type': 'docker',
+				'name': 'phpunit-php%s-%s' % (php, db.replace(":", "")),
+				'workspace' : {
+					'base': '/var/www/owncloud',
+					'path': 'server/apps/%s' % config['app']
+				},
+				'steps': [
+					core('daily-master-qa', db),
+					install('7.0'),
+					{
+						'name': 'phpunit-tests',
+						'image': 'owncloudci/php:%s' % php,
+						'pull': 'always',
+						'commands': [
+							command
+						]
+					}
+				],
+				'services': database(db),
+				'depends_on': [],
+				'trigger': {
+					'ref': [
+						'refs/pull/**',
+						'refs/tags/**'
+					]
+				}
+			}
+
+			if matrix['coverage']:
+				result['steps'].append({
+					'name': 'codecov-upload',
+					'image': 'plugins/codecov:2',
+					'pull': 'always',
+					'settings': {
+						'paths': [
+							'tests/output/clover.xml',
+						],
+						'token': {
+							'from_secret': 'codecov_token'
+						}
+					}
+				})
+
+			for branch in config['branches']:
+				result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+			pipelines.append(result)
+
+	return pipelines
+
+def acceptance():
+	pipelines = []
+
+	for suite, matrix in config['acceptance'].items():
+		for server in matrix['server']:
+			for browse in matrix['browser']:
+				name = 'unknown'
+				php = '7.0'
+
+				if server.startswith('daily-'):
+					release = False
+				else:
+					release = True
+
+				if suite.startswith('webUI'):
+					name = 'webui-%s-%s-%s' % (suite.replace('webUI', ''), browse, server.replace('daily-', '').replace('-qa', ''))
+
+				if suite.startswith('api'):
+					name = 'api-%s-%s-%s' % (suite.replace('api', ''), browse, server.replace('daily-', '').replace('-qa', ''))
+
+				result = {
+					'kind': 'pipeline',
+					'type': 'docker',
+					'name': name,
+					'workspace' : {
+						'base': '/var/www/owncloud',
+						'path': 'server/apps/%s' % config['app']
+					},
+					'steps': [
+						core(server, 'mariadb:10.2')
+					] + ([
+						testrunner(php)
+					] if release else []) + ([
+						{
+							'name': 'install-federation',
+							'image': 'owncloudci/core',
+							'pull': 'always',
+							'settings': {
+								'version': server,
+								'core_path': '/var/www/owncloud/federated'
+							}
+						},
+						{
+							'name': 'configure-federation',
+							'image': 'owncloudci/php:%s' % php,
+							'pull': 'always',
+							'commands': [
+								'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
+								'cd /var/www/owncloud/federated',
+								'php occ a:l',
+								'php occ a:e testing',
+								'php occ a:l',
+								'php occ config:system:set trusted_domains 1 --value=federated',
+								'php occ log:manage --level 0',
+								'php occ config:list'
+							]
+						}
+					] if matrix['federate'] else []) + [
+						install(php),
+						perms(php, release),
+						({
+							'name': 'acceptance-tests',
+							'image': 'owncloudci/php:%s' % php,
+							'pull': 'always',
+							'environment': {
+								'TEST_SERVER': 'http://server',
+								'BEHAT_SUITE': suite,
+								'SELENIUM_HOST': 'selenium',
+								'SELENIUM_PORT': '4444',
+								'BROWSER': browse,
+								'PLATFORM': 'Linux',
+							},
+							'commands': [
+								'touch /var/www/owncloud/saved-settings.sh',
+								'. /var/www/owncloud/saved-settings.sh',
+							] + (['cd /var/www/owncloud/server/testrunner/apps/%s' % config['app']] if release else []) + [
+								'make test-acceptance-webui'
+							]
+						} if suite.startswith('webUI') else None),
+						({
+							'name': 'acceptance-tests',
+							'image': 'owncloudci/php:%s' % php,
+							'pull': 'always',
+							'environment': {
+								'TEST_SERVER': 'http://server',
+								'BEHAT_SUITE': suite
+							},
+							'commands': (['cd /var/www/owncloud/server/testrunner/apps/%s' % config['app']] if release else []) + [
+								'make test-acceptance-api'
+							]
+						} if suite.startswith('api') else None),
+					],
+					'services': database('mariadb:10.2')
+						+ browser(browse)
+						+ owncloud(server, php, 'server', '/var/www/owncloud/server', False)
+						+ (owncloud(server, php, 'federated', '/var/www/owncloud/federated', False) if matrix['federate'] else []),
+					'depends_on': [],
+					'trigger': {
+						'ref': [
+							'refs/pull/**',
+							'refs/tags/**'
+						]
+					}
+				}
+
+				for branch in config['branches']:
+					result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+				pipelines.append(result)
+
+	return pipelines
+
+def notify():
+	result = {
+		'kind': 'pipeline',
+		'type': 'docker',
+		'name': 'chat-notifications',
+		'clone': {
+			'disable': True
+		},
+		'steps': [
+			{
+				'name': 'notify-rocketchat',
+				'image': 'plugins/slack:1',
+				'pull': 'always',
+				'settings': {
+					'webhook': {
+						'from_secret': 'public_rocketchat'
+					},
+					'channel': config['rocketchat']
+				}
+			}
+		],
+		'depends_on': [],
+		'trigger': {
+			'ref': [
+				'refs/tags/**'
+			]
+		}
+	}
+
+	for branch in config['branches']:
+		result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+	return result
+
+def database(name):
+	if name.startswith('mariadb'):
+		return [{
+			'name': 'mariadb',
+			'image': name,
+			'pull': 'always',
+			'environment': {
+				'MYSQL_USER': 'owncloud',
+				'MYSQL_PASSWORD': 'owncloud',
+				'MYSQL_DATABASE': 'owncloud',
+				'MYSQL_ROOT_PASSWORD': 'owncloud'
+			}
+		}]
+
+	if name.startswith('mysql'):
+		return [{
+			'name': 'mysql',
+			'image': name,
+			'pull': 'always',
+			'environment': {
+				'MYSQL_USER': 'owncloud',
+				'MYSQL_PASSWORD': 'owncloud',
+				'MYSQL_DATABASE': 'owncloud',
+				'MYSQL_ROOT_PASSWORD': 'owncloud'
+			}
+		}]
+
+	if name.startswith('postgres'):
+		return [{
+			'name': 'postgres',
+			'image': name,
+			'pull': 'always',
+			'environment': {
+				'POSTGRES_USER': 'owncloud',
+				'POSTGRES_PASSWORD': 'owncloud',
+				'POSTGRES_DB': 'owncloud'
+			}
+		}]
+
+	if name.startswith('oracle'):
+		return [{
+			'name': 'oracle',
+			'image': 'deepdiver/docker-oracle-xe-11g:latest',
+			'pull': 'always',
+			'environment': {
+				'ORACLE_USER': 'system',
+				'ORACLE_PASSWORD': 'oracle',
+				'ORACLE_DB': 'XE',
+				'ORACLE_DISABLE_ASYNCH_IO': 'true',
+			}
+		}]
+
+	return []
+
+def browser(name):
+	if name == 'chrome':
+		return [{
+			'name': 'selenium',
+			'image': 'selenium/standalone-chrome-debug:3.8.1',
+			'pull': 'always',
+			'environment': {
+				'JAVA_OPTS': '-Dselenium.LOGGER.level=WARNING'
+			}
+		}]
+
+	if name == 'firefox':
+		return [{
+			'name': 'selenium',
+			'image': 'selenium/standalone-firefox-debug:3.8.1',
+			'pull': 'always',
+			'environment': {
+				'JAVA_OPTS': '-Dselenium.LOGGER.level=WARNING',
+				'SE_OPTS': '-enablePassThrough false'
+			}
+		}]
+
+	return []
+
+def owncloud(version, php, name = 'server', path = '/var/www/owncloud/server', ssl = True):
+	if ssl:
+		environment = {
+			'APACHE_WEBROOT': path,
+			'APACHE_CONFIG_TEMPLATE': 'ssl',
+			'APACHE_SSL_CERT_CN': 'server',
+			'APACHE_SSL_CERT': '/var/www/owncloud/%s.crt' % name,
+			'APACHE_SSL_KEY': '/var/www/owncloud/%s.key' % name
+		}
+	else:
+		environment = {
+			'APACHE_WEBROOT': path
+		}
+
+	return [{
+		'name': name,
+		'image': 'owncloudci/php:%s' % php,
+		'pull': 'always',
+		'environment': environment,
+		'command': [
+			'/usr/local/bin/apachectl',
+			'-e',
+			'debug',
+			'-D',
+			'FOREGROUND'
+		]
+	}]
+
+def core(version, db):
+	host = db.split(':')[0]
+	name = host
+
+	username = 'owncloud'
+	password = 'owncloud'
+	database = 'owncloud'
+
+	if name == 'mariadb':
+		name = 'mysql'
+
+	if name == 'postgres':
+		name = 'pgsql'
+
+	if name == 'oracle':
+		name = 'oci'
+
+		username = 'system'
+		password = 'oracle'
+		database = 'XE'
+
+	return {
+		'name': 'install-core',
+		'image': 'owncloudci/core',
+		'pull': 'always',
+		'settings': {
+			'version': version,
+			'core_path': '/var/www/owncloud/server',
+			'db_type': name,
+			'db_name': database,
+			'db_host': host,
+			'db_username': username,
+			'db_password': password
+		}
+	}
+
+def testrunner(php):
+	return {
+		'name': 'install-testrunner',
+		'image': 'owncloudci/php:%s' % php,
+		'pull': 'always',
+		'commands': [
+			'git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner',
+			'cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/',
+			'cd /var/www/owncloud/server/testrunner',
+			'make install-composer-deps vendor-bin-deps'
+		]
+	}
+
+def install(php):
+	return {
+		'name': 'install-%s' % config['app'],
+		'image': 'owncloudci/php:%s' % php,
+		'pull': 'always',
+		'commands': [
+			'cd /var/www/owncloud/server',
+			'php occ a:l',
+			'php occ a:e %s' % config['app'],
+			'php occ a:e testing',
+			'php occ a:l',
+			'php occ config:system:set trusted_domains 1 --value=server',
+			'php occ log:manage --level 0',
+		]
+	}
+
+def perms(php, release=False):
+	return {
+		'name': 'fix-permissions',
+		'image': 'owncloudci/php:%s' % php,
+		'pull': 'always',
+		'commands': [
+			'chown -R www-data /var/www/owncloud'
+		] + ([
+			'chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload',
+			'chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh'
+		] if release else [
+			'chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload',
+			'chmod +x /var/www/owncloud/server/tests/acceptance/run.sh'
+		])
+	}
+
+def names(source, into):
+	for stage in source:
+		for step in into:
+			step['depends_on'].append(stage['name'])

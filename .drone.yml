@@ -1,483 +1,3798 @@
+---
+kind: pipeline
+type: docker
+name: coding-standard
+
+platform:
+  os: linux
+  arch: amd64
+
 workspace:
   base: /var/www/owncloud
   path: server/apps/activity
 
-pipeline:
-  install-core:
-    image: owncloudci/core
-    version: ${OC_VERSION}
-    pull: true
+steps:
+- name: coding-standard
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-php-style
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+---
+kind: pipeline
+type: docker
+name: javascript-tests
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
     core_path: /var/www/owncloud/server
-    db_type: ${DB_TYPE}
-    db_name: ${DB_NAME}
-    db_host: ${DB_TYPE}
-    db_username: autotest
+    db_host: sqlite
+    db_name: owncloud
     db_password: owncloud
-    when:
-      matrix:
-        NEED_CORE: true
+    db_type: sqlite
+    db_username: owncloud
+    version: daily-master-qa
 
-  install-testrunner:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    commands:
-      - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-      - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-      - cd /var/www/owncloud/server/testrunner
-      - make install-composer-deps
-      - make vendor-bin-deps
-    when:
-      matrix:
-        TEST_SUITE_TYPE: acceptance
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
 
-  install-fed-server:
-    image: owncloudci/core
-    pull: true
-    version: ${FEDERATION_OC_VERSION}
-    core_path: /var/www/owncloud/fed-server
-    when:
-      matrix:
-        USE_FEDERATED_SERVER: true
+- name: javascript-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-js
 
-  configure-federation-server:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    commands:
-      - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
-      - cd /var/www/owncloud/fed-server
-      - php occ a:l
-      - php occ a:e testing
-      - php occ a:l
-      - php occ config:system:set trusted_domains 1 --value=federated
-      - php occ log:manage --level 0
-      - php occ config:list
-    when:
-      matrix:
-        USE_FEDERATED_SERVER: true
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
 
-  install-app:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    commands:
-      - cd /var/www/owncloud/server
-      - php occ a:l
-      - php occ a:e activity
-      - php occ a:e testing
-      - php occ a:l
-      - php occ config:system:set trusted_domains 1 --value=server
-      - php occ log:manage --level 0
-    when:
-      matrix:
-        NEED_INSTALL_APP: true
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.0-sqlite
 
-  fix-permissions:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    commands:
-      - chown www-data /var/www/owncloud -R
-      - chmod 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload -R;
-      - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh;
-    when:
-      matrix:
-        NEED_SERVER: true
+platform:
+  os: linux
+  arch: amd64
 
-  owncloud-coding-standard:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    commands:
-      - make test-php-style
-    when:
-      matrix:
-        TEST_SUITE: owncloud-coding-standard
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
 
-  phpunit-tests:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    environment:
-      - COVERAGE=${COVERAGE}
-    commands:
-      - if [ -z "${COVERAGE}" ]; then make test-php-unit; fi
-      - if [ "${COVERAGE}" = "true" ]; then make test-php-unit-dbg; fi
-    when:
-      matrix:
-        TEST_SUITE: phpunit
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: sqlite
+    db_name: owncloud
+    db_password: owncloud
+    db_type: sqlite
+    db_username: owncloud
+    version: daily-master-qa
 
-  js-tests:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    commands:
-      - make test-js
-    when:
-      matrix:
-        TEST_SUITE: javascript
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
 
-  api-acceptance-tests:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    environment:
-      - TEST_SERVER_URL=http://server
-      - BEHAT_SUITE=${BEHAT_SUITE}
-    commands:
-      - cd /var/www/owncloud/server/testrunner/apps/activity
-      - make test-acceptance-api
-    when:
-      matrix:
-        TEST_SUITE: api-acceptance
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-php-unit-dbg
 
-  webui-acceptance-tests:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    environment:
-      - BROWSER=chrome #chrome or firefox
-      - SELENIUM_HOST=selenium
-      - SELENIUM_PORT=4444
-      - TEST_SERVER_URL=http://server
-      - PLATFORM=Linux
-      - BEHAT_SUITE=${BEHAT_SUITE}
-    commands:
-      - touch /var/www/owncloud/saved-settings.sh
-      - . /var/www/owncloud/saved-settings.sh
-      - cd /var/www/owncloud/server/testrunner/apps/activity
-      - make test-acceptance-webui
-    when:
-      matrix:
-        TEST_SUITE: web-acceptance
-
-  codecov:
-    image: plugins/codecov:2
-    secrets: [codecov_token]
-    pull: true
+- name: codecov-upload
+  pull: always
+  image: plugins/codecov:2
+  settings:
     paths:
-      - tests/output/clover.xml
-    when:
-      matrix:
-        COVERAGE: true
+    - tests/output/clover.xml
+    token:
+      from_secret: codecov_token
 
-  notify:
-    image: plugins/slack:1
-    pull: true
-    secrets: [ slack_webhook ]
-    channel: builds
-    when:
-      status: [ failure, changed ]
-      event: [ push, tag ]
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.0-mariadb10.2
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-php-unit-dbg
+
+- name: codecov-upload
+  pull: always
+  image: plugins/codecov:2
+  settings:
+    paths:
+    - tests/output/clover.xml
+    token:
+      from_secret: codecov_token
 
 services:
-  mysql:
-    image: mysql:5.5
-    environment:
-      - MYSQL_USER=autotest
-      - MYSQL_PASSWORD=owncloud
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_ROOT_PASSWORD=owncloud
-    when:
-      matrix:
-        DB_TYPE: mysql
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
 
-  pgsql:
-    image: postgres:9.4
-    environment:
-      - POSTGRES_USER=autotest
-      - POSTGRES_PASSWORD=owncloud
-      - POSTGRES_DB=${DB_NAME}
-    when:
-      matrix:
-        DB_TYPE: pgsql
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
 
-  oci:
-    image: deepdiver/docker-oracle-xe-11g
-    environment:
-       - ORACLE_USER=system
-       - ORACLE_PASSWORD=oracle
-       - ORACLE_DB=${DB_NAME}
-    when:
-      matrix:
-        DB_TYPE: oci
+depends_on:
+- coding-standard
+- javascript-tests
 
-  server:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    environment:
-      - APACHE_WEBROOT=/var/www/owncloud/server/
-    command: ["/usr/local/bin/apachectl", "-e", "debug", "-D", "FOREGROUND"]
-    when:
-      matrix:
-        NEED_SERVER: true
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.0-mysql5.5
 
-  federated:
-    image: owncloudci/php:${PHP_VERSION}
-    pull: true
-    environment:
-      - APACHE_WEBROOT=/var/www/owncloud/fed-server/
-    command: [ "/usr/local/bin/apachectl", "-e", "debug" , "-D" , "FOREGROUND" ]
-    when:
-      matrix:
-        USE_FEDERATED_SERVER: true
+platform:
+  os: linux
+  arch: amd64
 
-  selenium:
-    image: selenium/standalone-chrome-debug:3.141.59-oxygen
-    pull: true
-    when:
-      matrix:
-        TEST_SUITE: web-acceptance
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
 
-matrix:
-  include:
-    # owncloud-coding-standard
-    - PHP_VERSION: 7.0
-      TEST_SUITE: owncloud-coding-standard
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mysql
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
 
-    # Unit Tests
-    - PHP_VERSION: 7.0
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: sqlite
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
-      COVERAGE: true
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: sqlite
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
-      COVERAGE: true
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-php-unit-dbg
 
-    - PHP_VERSION: 7.2
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: sqlite
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
-      COVERAGE: true
+- name: codecov-upload
+  pull: always
+  image: plugins/codecov:2
+  settings:
+    paths:
+    - tests/output/clover.xml
+    token:
+      from_secret: codecov_token
 
-    - PHP_VERSION: 7.3
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: sqlite
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
-      COVERAGE: true
+services:
+- name: mysql
+  pull: always
+  image: mysql:5.5
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
 
-    - PHP_VERSION: 7.0
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: oci
-      DB_NAME: XE
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
 
-    - PHP_VERSION: 7.0
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
+depends_on:
+- coding-standard
+- javascript-tests
 
-    - PHP_VERSION: 7.0
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: pgsql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.0-postgres9.4
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: pgsql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
-      COVERAGE: true
+platform:
+  os: linux
+  arch: amd64
 
-    - PHP_VERSION: 7.2
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: pgsql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
 
-    - PHP_VERSION: 7.3
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: phpunit
-      DB_TYPE: pgsql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: postgres
+    db_name: owncloud
+    db_password: owncloud
+    db_type: pgsql
+    db_username: owncloud
+    version: daily-master-qa
 
-    - PHP_VERSION: 7.2
-      OC_VERSION: daily-master-qa
-      TEST_SUITE: javascript
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_INSTALL_APP: true
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
 
-    # acceptance tests
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-php-unit-dbg
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityComments
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+- name: codecov-upload
+  pull: always
+  image: plugins/codecov:2
+  settings:
+    paths:
+    - tests/output/clover.xml
+    token:
+      from_secret: codecov_token
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityCreateUpdate
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+services:
+- name: postgres
+  pull: always
+  image: postgres:9.4
+  environment:
+    POSTGRES_DB: owncloud
+    POSTGRES_PASSWORD: owncloud
+    POSTGRES_USER: owncloud
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityDeleteRestore
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivitySharingExternal
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-      USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-master-qa
+depends_on:
+- coding-standard
+- javascript-tests
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivitySharingInternal
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.0-oracle
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityTags
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+platform:
+  os: linux
+  arch: amd64
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: daily-master-qa
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: api-acceptance
-      BEHAT_SUITE: apiActivity
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
 
-    # Acceptance tests against latest stable release tarball.
-    - PHP_VERSION: 7.1
-      OC_VERSION: 10.2.1
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityComments
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: oracle
+    db_name: XE
+    db_password: oracle
+    db_type: oci
+    db_username: system
+    version: daily-master-qa
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: 10.2.1
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityCreateUpdate
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: 10.2.1
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityDeleteRestore
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-php-unit-dbg
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: 10.2.1
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivitySharingExternal
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
-      USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-master-qa
+- name: codecov-upload
+  pull: always
+  image: plugins/codecov:2
+  settings:
+    paths:
+    - tests/output/clover.xml
+    token:
+      from_secret: codecov_token
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: 10.2.1
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivitySharingInternal
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+services:
+- name: oracle
+  pull: always
+  image: deepdiver/docker-oracle-xe-11g:latest
+  environment:
+    ORACLE_DB: XE
+    ORACLE_DISABLE_ASYNCH_IO: true
+    ORACLE_PASSWORD: oracle
+    ORACLE_USER: system
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: 10.2.1
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: web-acceptance
-      BEHAT_SUITE: webUIActivityTags
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
 
-    - PHP_VERSION: 7.1
-      OC_VERSION: 10.2.1
-      TEST_SUITE_TYPE: acceptance
-      TEST_SUITE: api-acceptance
-      BEHAT_SUITE: apiActivity
-      DB_TYPE: mysql
-      DB_NAME: owncloud
-      NEED_CORE: true
-      NEED_SERVER: true
-      NEED_INSTALL_APP: true
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.1-sqlite
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: sqlite
+    db_name: owncloud
+    db_password: owncloud
+    db_type: sqlite
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - make test-php-unit
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.1-mariadb10.2
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - make test-php-unit
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.2-sqlite
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: sqlite
+    db_name: owncloud
+    db_password: owncloud
+    db_type: sqlite
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - make test-php-unit
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.2-mariadb10.2
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - make test-php-unit
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.3-sqlite
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: sqlite
+    db_name: owncloud
+    db_password: owncloud
+    db_type: sqlite
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.3
+  commands:
+  - make test-php-unit
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: phpunit-php7.3-mariadb10.2
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: phpunit-tests
+  pull: always
+  image: owncloudci/php:7.3
+  commands:
+  - make test-php-unit
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityComments-chrome-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityComments
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityComments-firefox-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityComments
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityComments-chrome-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityComments
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityComments-firefox-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityComments
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityCreateUpdate-chrome-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityCreateUpdate
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityCreateUpdate-firefox-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityCreateUpdate
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityCreateUpdate-chrome-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityCreateUpdate
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityCreateUpdate-firefox-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityCreateUpdate
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityDeleteRestore-chrome-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityDeleteRestore
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityDeleteRestore-firefox-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityDeleteRestore
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityDeleteRestore-chrome-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityDeleteRestore
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityDeleteRestore-firefox-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityDeleteRestore
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingExternal-chrome-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: daily-master-qa
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingExternal
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingExternal-firefox-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: daily-master-qa
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingExternal
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingExternal-chrome-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: 10.2.1
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingExternal
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingExternal-firefox-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: 10.2.1
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingExternal
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingInternal-chrome-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: daily-master-qa
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingInternal
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingInternal-firefox-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: daily-master-qa
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingInternal
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingInternal-chrome-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: 10.2.1
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingInternal
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivitySharingInternal-firefox-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-federation
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/federated
+    version: 10.2.1
+
+- name: configure-federation
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/federated
+  - php occ a:l
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=federated
+  - php occ log:manage --level 0
+  - php occ config:list
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingInternal
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+- name: federated
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/federated
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityTags-chrome-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityTags
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityTags-firefox-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityTags
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityTags-chrome-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityTags
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webui-ActivityTags-firefox-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivityTags
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: api-Activity-headless-master
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: daily-master-qa
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - make test-acceptance-api
+  environment:
+    BEHAT_SUITE: apiActivity
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: api-Activity-headless-10.2.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
+  - cd /var/www/owncloud/server/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: install-activity
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.0
+  commands:
+  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - make test-acceptance-api
+  environment:
+    BEHAT_SUITE: apiActivity
+    TEST_SERVER: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.0
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: chat-notifications
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  disable: true
+
+steps:
+- name: notify-rocketchat
+  pull: always
+  image: plugins/slack:1
+  settings:
+    channel: builds
+    webhook:
+      from_secret: public_rocketchat
+
+trigger:
+  ref:
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- phpunit-php7.0-sqlite
+- phpunit-php7.0-mariadb10.2
+- phpunit-php7.0-mysql5.5
+- phpunit-php7.0-postgres9.4
+- phpunit-php7.0-oracle
+- phpunit-php7.1-sqlite
+- phpunit-php7.1-mariadb10.2
+- phpunit-php7.2-sqlite
+- phpunit-php7.2-mariadb10.2
+- phpunit-php7.3-sqlite
+- phpunit-php7.3-mariadb10.2
+- webui-ActivityComments-chrome-master
+- webui-ActivityComments-firefox-master
+- webui-ActivityComments-chrome-10.2.1
+- webui-ActivityComments-firefox-10.2.1
+- webui-ActivityCreateUpdate-chrome-master
+- webui-ActivityCreateUpdate-firefox-master
+- webui-ActivityCreateUpdate-chrome-10.2.1
+- webui-ActivityCreateUpdate-firefox-10.2.1
+- webui-ActivityDeleteRestore-chrome-master
+- webui-ActivityDeleteRestore-firefox-master
+- webui-ActivityDeleteRestore-chrome-10.2.1
+- webui-ActivityDeleteRestore-firefox-10.2.1
+- webui-ActivitySharingExternal-chrome-master
+- webui-ActivitySharingExternal-firefox-master
+- webui-ActivitySharingExternal-chrome-10.2.1
+- webui-ActivitySharingExternal-firefox-10.2.1
+- webui-ActivitySharingInternal-chrome-master
+- webui-ActivitySharingInternal-firefox-master
+- webui-ActivitySharingInternal-chrome-10.2.1
+- webui-ActivitySharingInternal-firefox-10.2.1
+- webui-ActivityTags-chrome-master
+- webui-ActivityTags-firefox-master
+- webui-ActivityTags-chrome-10.2.1
+- webui-ActivityTags-firefox-10.2.1
+- api-Activity-headless-master
+- api-Activity-headless-10.2.1
+
+...
