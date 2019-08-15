@@ -841,7 +841,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -940,7 +940,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1050,7 +1050,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1159,7 +1159,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1259,7 +1259,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1358,7 +1358,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1468,7 +1468,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1577,7 +1577,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1677,7 +1677,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1776,7 +1776,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1886,7 +1886,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -1995,7 +1995,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -2115,7 +2115,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -2246,7 +2246,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -2388,7 +2388,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -2529,7 +2529,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -2661,7 +2661,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -2792,7 +2792,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -2934,7 +2934,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -3075,7 +3075,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -3187,7 +3187,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -3286,7 +3286,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -3396,7 +3396,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -3505,7 +3505,7 @@ steps:
     PLATFORM: Linux
     SELENIUM_HOST: selenium
     SELENIUM_PORT: 4444
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -3599,7 +3599,7 @@ steps:
   - make test-acceptance-api
   environment:
     BEHAT_SUITE: apiActivity
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
@@ -3696,7 +3696,7 @@ steps:
   - make test-acceptance-api
   environment:
     BEHAT_SUITE: apiActivity
-    TEST_SERVER: http://server
+    TEST_SERVER_URL: http://server
 
 services:
 - name: mariadb
