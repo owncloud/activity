@@ -855,7 +855,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -1064,7 +1064,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -1273,7 +1273,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -1482,7 +1482,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -1691,7 +1691,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -1900,7 +1900,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -2129,7 +2129,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -2402,7 +2402,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -2675,7 +2675,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -2948,7 +2948,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -3201,7 +3201,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
@@ -3410,7 +3410,7 @@ services:
 
 - name: selenium
   pull: always
-  image: selenium/standalone-chrome-debug:3.8.1
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
   environment:
     JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
 
