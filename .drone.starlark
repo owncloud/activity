@@ -479,7 +479,7 @@ def browser(name):
 	if name == 'chrome':
 		return [{
 			'name': 'selenium',
-			'image': 'selenium/standalone-chrome-debug:3.8.1',
+			'image': 'selenium/standalone-chrome-debug:3.141.59-oxygen',
 			'pull': 'always',
 			'environment': {
 				'JAVA_OPTS': '-Dselenium.LOGGER.level=WARNING'
