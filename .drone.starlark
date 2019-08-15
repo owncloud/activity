@@ -340,7 +340,7 @@ def acceptance():
 							'image': 'owncloudci/php:%s' % php,
 							'pull': 'always',
 							'environment': {
-								'TEST_SERVER': 'http://server',
+								'TEST_SERVER_URL': 'http://server',
 								'BEHAT_SUITE': suite,
 								'SELENIUM_HOST': 'selenium',
 								'SELENIUM_PORT': '4444',
@@ -359,7 +359,7 @@ def acceptance():
 							'image': 'owncloudci/php:%s' % php,
 							'pull': 'always',
 							'environment': {
-								'TEST_SERVER': 'http://server',
+								'TEST_SERVER_URL': 'http://server',
 								'BEHAT_SUITE': suite
 							},
 							'commands': (['cd /var/www/owncloud/server/testrunner/apps/%s' % config['app']] if release else []) + [
