@@ -6,117 +6,59 @@ config = {
 		'master'
 	],
 
+	'codestyle': True,
+
+	'javascript': True,
+
 	'phpunit': {
-		'7.0': {
-			'db': [
+		'allDatabases' : {
+			'phpVersions': [
+				'7.0',
+			]
+		},
+		'reducedDatabases' : {
+			'phpVersions': [
+				'7.1',
+				'7.2',
+				'7.3',
+			],
+			'databases': [
 				'sqlite',
 				'mariadb:10.2',
-				'mysql:5.5',
-				'postgres:9.4',
-				'oracle',
-			],
-			'coverage': True
-		},
-		'7.1': {
-			'db': [
-				'sqlite',
-				'mariadb:10.2'
-			],
-			'coverage': False
-		},
-		'7.2': {
-			'db': [
-				'sqlite',
-				'mariadb:10.2'
-			],
-			'coverage': False
-		},
-		'7.3': {
-			'db': [
-				'sqlite',
-				'mariadb:10.2'
 			],
 			'coverage': False
 		},
 	},
 
 	'acceptance': {
-		'webUIActivityComments': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
+		'webUI': {
+			'suites': {
+				'webUIActivityComments': 'webUIComments',
+				'webUIActivityCreateUpdate': 'webUICreateUpdat',
+				'webUIActivityDeleteRestore': 'webUIDelRestore',
+				'webUIActivitySharingInternal': 'webUISharingInt',
+				'webUIActivityTags': 'webUITags'
+			},
+			'browsers': [
 				'chrome',
 				'firefox'
 			],
-			'federate': False
 		},
-		'webUIActivityCreateUpdate': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
+		'federatedSuites': {
+			'suites': {
+				'webUIActivitySharingExternal': 'webUISharingExt'
+			},
+			'browsers': [
 				'chrome',
 				'firefox'
 			],
-			'federate': False
+			'federatedServerNeeded': True
 		},
-		'webUIActivityDeleteRestore': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
+		'api': {
+			'suites': [
+				'apiActivity'
 			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': False
 		},
-		'webUIActivitySharingExternal': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': True
-		},
-		'webUIActivitySharingInternal': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': True
-		},
-		'webUIActivityTags': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': False
-		},
-		'apiActivity': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'headless'
-			],
-			'federate': False
-		}
 	}
 }
 
@@ -124,21 +66,27 @@ def main(ctx):
 	before = beforePipelines()
 
 	stages = stagePipelines()
-	names(before, stages)
+	if (stages == False):
+		print('Errors detected. Review messages above.')
+		return []
+
+	dependsOn(before, stages)
 
 	after = afterPipelines()
-	names(stages, after)
+	dependsOn(stages, after)
 
 	return before + stages + after
 
 def beforePipelines():
-	return [
-		codestyle(),
-		javascript()
-	]
+	return codestyle() + javascript() + phpstan() + phan()
 
 def stagePipelines():
-	return phpunit() + acceptance()
+	phpunitPipelines = phpunit()
+	acceptancePipelines = acceptance()
+	if (phpunitPipelines == False) or (acceptancePipelines == False):
+		return False
+
+	return phpunitPipelines + acceptancePipelines
 
 def afterPipelines():
 	return [
@@ -146,39 +94,221 @@ def afterPipelines():
 	]
 
 def codestyle():
-	result = {
-		'kind': 'pipeline',
-		'type': 'docker',
-		'name': 'coding-standard',
-		'workspace' : {
-			'base': '/var/www/owncloud',
-			'path': 'server/apps/%s' % config['app']
-		},
-		'steps': [
-			{
-				'name': 'coding-standard',
-				'image': 'owncloudci/php:7.0',
-				'pull': 'always',
-				'commands': [
-					'make test-php-style'
-				]
-			}
-		],
-		'depends_on': [],
-		'trigger': {
-			'ref': [
-				'refs/pull/**',
-				'refs/tags/**'
-			]
-		}
+	pipelines = []
+
+	if 'codestyle' not in config:
+		return pipelines
+
+	default = {
+		'phpVersions': ['7.0'],
 	}
 
-	for branch in config['branches']:
-		result['trigger']['ref'].append('refs/heads/%s' % branch)
+	if 'defaults' in config:
+		if 'codestyle' in config['defaults']:
+			if 'phpVersions' in config['defaults']['codestyle']:
+				default['phpVersions'] = config['defaults']['codestyle']['phpVersions']
 
-	return result
+	codestyleConfig = config['codestyle']
+
+	if type(codestyleConfig) == "bool":
+		if codestyleConfig:
+			# the config has 'codestyle' true, so specify an empty dict that will get the defaults
+			codestyleConfig = {}
+		else:
+			return pipelines
+
+	if len(codestyleConfig) == 0:
+		# 'codestyle' is an empty dict, so specify a single section that will get the defaults
+		codestyleConfig = {'doDefault': {}}
+
+	for category, matrix in codestyleConfig.items():
+		phpVersions = matrix['phpVersions'] if 'phpVersions' in matrix else default['phpVersions']
+
+		for phpVersion in phpVersions:
+			name = 'coding-standard-php%s' % phpVersion
+
+			result = {
+				'kind': 'pipeline',
+				'type': 'docker',
+				'name': name,
+				'workspace' : {
+					'base': '/var/www/owncloud',
+					'path': 'server/apps/%s' % config['app']
+				},
+				'steps': [
+					{
+						'name': 'coding-standard',
+						'image': 'owncloudci/php:%s' % phpVersion,
+						'pull': 'always',
+						'commands': [
+							'make test-php-style'
+						]
+					}
+				],
+				'depends_on': [],
+				'trigger': {
+					'ref': [
+						'refs/pull/**',
+						'refs/tags/**'
+					]
+				}
+			}
+
+			for branch in config['branches']:
+				result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+			pipelines.append(result)
+
+	return pipelines
+
+def phpstan():
+	pipelines = []
+
+	if 'phpstan' not in config:
+		return pipelines
+
+	default = {
+		'phpVersions': ['7.2'],
+	}
+
+	if 'defaults' in config:
+		if 'phpstan' in config['defaults']:
+			if 'phpVersions' in config['defaults']['phpstan']:
+				default['phpVersions'] = config['defaults']['phpstan']['phpVersions']
+
+	phpstanConfig = config['phpstan']
+
+	if type(phpstanConfig) == "bool":
+		if phpstanConfig:
+			# the config has 'phpstan' true, so specify an empty dict that will get the defaults
+			phpstanConfig = {}
+		else:
+			return pipelines
+
+	if len(phpstanConfig) == 0:
+		# 'phpstan' is an empty dict, so specify a single section that will get the defaults
+		phpstanConfig = {'doDefault': {}}
+
+	for category, matrix in phpstanConfig.items():
+		phpVersions = matrix['phpVersions'] if 'phpVersions' in matrix else default['phpVersions']
+
+		for phpVersion in phpVersions:
+			name = 'phpstan-php%s' % phpVersion
+
+			result = {
+				'kind': 'pipeline',
+				'type': 'docker',
+				'name': name,
+				'workspace' : {
+					'base': '/var/www/owncloud',
+					'path': 'server/apps/%s' % config['app']
+				},
+				'steps': [
+					installCore('daily-master-qa', 'sqlite'),
+					setupServerAndApp(phpVersion),
+					{
+						'name': 'phpstan',
+						'image': 'owncloudci/php:%s' % phpVersion,
+						'pull': 'always',
+						'commands': [
+							'make test-php-phpstan'
+						]
+					}
+				],
+				'depends_on': [],
+				'trigger': {
+					'ref': [
+						'refs/pull/**',
+						'refs/tags/**'
+					]
+				}
+			}
+
+			for branch in config['branches']:
+				result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+			pipelines.append(result)
+
+	return pipelines
+
+def phan():
+	pipelines = []
+
+	if 'phan' not in config:
+		return pipelines
+
+	default = {
+		'phpVersions': ['7.0', '7.1', '7.2', '7.3'],
+	}
+
+	if 'defaults' in config:
+		if 'phan' in config['defaults']:
+			if 'phpVersions' in config['defaults']['phan']:
+				default['phpVersions'] = config['defaults']['phan']['phpVersions']
+
+	phanConfig = config['phan']
+
+	if type(phanConfig) == "bool":
+		if phanConfig:
+			# the config has 'phan' true, so specify an empty dict that will get the defaults
+			phanConfig = {}
+		else:
+			return pipelines
+
+	if len(phanConfig) == 0:
+		# 'phan' is an empty dict, so specify a single section that will get the defaults
+		phanConfig = {'doDefault': {}}
+
+	for category, matrix in phanConfig.items():
+		phpVersions = matrix['phpVersions'] if 'phpVersions' in matrix else default['phpVersions']
+
+		for phpVersion in phpVersions:
+			name = 'phan-php%s' % phpVersion
+
+			result = {
+				'kind': 'pipeline',
+				'type': 'docker',
+				'name': name,
+				'workspace' : {
+					'base': '/var/www/owncloud',
+					'path': 'server/apps/%s' % config['app']
+				},
+				'steps': [
+					installCore('daily-master-qa', 'sqlite'),
+					{
+						'name': 'phan',
+						'image': 'owncloudci/php:%s' % phpVersion,
+						'pull': 'always',
+						'commands': [
+							'make test-php-phan'
+						]
+					}
+				],
+				'depends_on': [],
+				'trigger': {
+					'ref': [
+						'refs/pull/**',
+						'refs/tags/**'
+					]
+				}
+			}
+
+			for branch in config['branches']:
+				result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+			pipelines.append(result)
+
+	return pipelines
 
 def javascript():
+	if 'javascript' in config:
+		doJavascript = config['javascript']
+	else:
+		doJavascript = False
+
+	if doJavascript == False:
+		return []
+
 	result = {
 		'kind': 'pipeline',
 		'type': 'docker',
@@ -188,8 +318,8 @@ def javascript():
 			'path': 'server/apps/%s' % config['app']
 		},
 		'steps': [
-			core('daily-master-qa', 'sqlite'),
-			install('7.0'),
+			installCore('daily-master-qa', 'sqlite'),
+			setupServerAndApp('7.0'),
 			{
 				'name': 'javascript-tests',
 				'image': 'owncloudci/php:7.0',
@@ -211,166 +341,76 @@ def javascript():
 	for branch in config['branches']:
 		result['trigger']['ref'].append('refs/heads/%s' % branch)
 
-	return result
+	return [result]
 
 def phpunit():
 	pipelines = []
 
-	for php, matrix in config['phpunit'].items():
-		if matrix['coverage']:
-			command = 'make test-php-unit-dbg'
+	if 'phpunit' not in config:
+		return pipelines
+
+	default = {
+		'phpVersions': ['7.0', '7.1', '7.2', '7.3'],
+		'databases': [
+			'sqlite', 'mariadb:10.2', 'mysql:5.5', 'mysql:5.7', 'postgres:9.4', 'oracle'
+		],
+		'coverage': True,
+	}
+
+	if 'defaults' in config:
+		if 'phpunit' in config['defaults']:
+			if 'databases' in config['defaults']['phpunit']:
+				default['databases'] = config['defaults']['phpunit']['databases']
+			if 'coverage' in config['defaults']['phpunit']:
+				default['databases'] = config['defaults']['phpunit']['coverage']
+
+	phpunitConfig = config['phpunit']
+
+	if type(phpunitConfig) == "bool":
+		if phpunitConfig:
+			# the config has 'phpunit' true, so specify an empty dict that will get the defaults
+			phpunitConfig = {}
 		else:
-			command = 'make test-php-unit'
+			return pipelines
 
-		for db in matrix['db']:
-			result = {
-				'kind': 'pipeline',
-				'type': 'docker',
-				'name': 'phpunit-php%s-%s' % (php, db.replace(":", "")),
-				'workspace' : {
-					'base': '/var/www/owncloud',
-					'path': 'server/apps/%s' % config['app']
-				},
-				'steps': [
-					core('daily-master-qa', db),
-					install('7.0'),
-					{
-						'name': 'phpunit-tests',
-						'image': 'owncloudci/php:%s' % php,
-						'pull': 'always',
-						'commands': [
-							command
-						]
-					}
-				],
-				'services': database(db),
-				'depends_on': [],
-				'trigger': {
-					'ref': [
-						'refs/pull/**',
-						'refs/tags/**'
-					]
-				}
-			}
+	if len(phpunitConfig) == 0:
+		# 'phpunit' is an empty dict, so specify a single section that will get the defaults
+		phpunitConfig = {'doDefault': {}}
 
-			if matrix['coverage']:
-				result['steps'].append({
-					'name': 'codecov-upload',
-					'image': 'plugins/codecov:2',
-					'pull': 'always',
-					'settings': {
-						'paths': [
-							'tests/output/clover.xml',
-						],
-						'token': {
-							'from_secret': 'codecov_token'
-						}
-					}
-				})
+	for category, matrix in phpunitConfig.items():
+		databases = matrix['databases'] if 'databases' in matrix else default['databases']
+		coverage = matrix['coverage'] if 'coverage' in matrix else default['coverage']
+		phpVersions = matrix['phpVersions'] if 'phpVersions' in matrix else default['phpVersions']
 
-			for branch in config['branches']:
-				result['trigger']['ref'].append('refs/heads/%s' % branch)
+		for phpVersion in phpVersions:
 
-			pipelines.append(result)
+			if coverage:
+				command = 'make test-php-unit-dbg'
+			else:
+				command = 'make test-php-unit'
 
-	return pipelines
-
-def acceptance():
-	pipelines = []
-
-	for suite, matrix in config['acceptance'].items():
-		for server in matrix['server']:
-			for browse in matrix['browser']:
-				name = 'unknown'
-				php = '7.0'
-
-				if server.startswith('daily-'):
-					release = False
-				else:
-					release = True
-
-				if suite.startswith('webUI'):
-					name = 'webui-%s-%s-%s' % (suite.replace('webUI', ''), browse, server.replace('daily-', '').replace('-qa', ''))
-
-				if suite.startswith('api'):
-					name = 'api-%s-%s-%s' % (suite.replace('api', ''), browse, server.replace('daily-', '').replace('-qa', ''))
-
+			for db in databases:
 				result = {
 					'kind': 'pipeline',
 					'type': 'docker',
-					'name': name,
+					'name': 'phpunit-php%s-%s' % (phpVersion, db.replace(":", "")),
 					'workspace' : {
 						'base': '/var/www/owncloud',
 						'path': 'server/apps/%s' % config['app']
 					},
 					'steps': [
-						core(server, 'mariadb:10.2')
-					] + ([
-						testrunner(php)
-					] if release else []) + ([
+						installCore('daily-master-qa', db),
+						setupServerAndApp(phpVersion),
 						{
-							'name': 'install-federation',
-							'image': 'owncloudci/core',
-							'pull': 'always',
-							'settings': {
-								'version': server,
-								'core_path': '/var/www/owncloud/federated'
-							}
-						},
-						{
-							'name': 'configure-federation',
-							'image': 'owncloudci/php:%s' % php,
+							'name': 'phpunit-tests',
+							'image': 'owncloudci/php:%s' % phpVersion,
 							'pull': 'always',
 							'commands': [
-								'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
-								'cd /var/www/owncloud/federated',
-								'php occ a:l',
-								'php occ a:e testing',
-								'php occ a:l',
-								'php occ config:system:set trusted_domains 1 --value=federated',
-								'php occ log:manage --level 0',
-								'php occ config:list'
+								command
 							]
 						}
-					] if matrix['federate'] else []) + [
-						install(php),
-						perms(php, release),
-						({
-							'name': 'acceptance-tests',
-							'image': 'owncloudci/php:%s' % php,
-							'pull': 'always',
-							'environment': {
-								'TEST_SERVER': 'http://server',
-								'BEHAT_SUITE': suite,
-								'SELENIUM_HOST': 'selenium',
-								'SELENIUM_PORT': '4444',
-								'BROWSER': browse,
-								'PLATFORM': 'Linux',
-							},
-							'commands': [
-								'touch /var/www/owncloud/saved-settings.sh',
-								'. /var/www/owncloud/saved-settings.sh',
-							] + (['cd /var/www/owncloud/server/testrunner/apps/%s' % config['app']] if release else []) + [
-								'make test-acceptance-webui'
-							]
-						} if suite.startswith('webUI') else None),
-						({
-							'name': 'acceptance-tests',
-							'image': 'owncloudci/php:%s' % php,
-							'pull': 'always',
-							'environment': {
-								'TEST_SERVER': 'http://server',
-								'BEHAT_SUITE': suite
-							},
-							'commands': (['cd /var/www/owncloud/server/testrunner/apps/%s' % config['app']] if release else []) + [
-								'make test-acceptance-api'
-							]
-						} if suite.startswith('api') else None),
 					],
-					'services': database('mariadb:10.2')
-						+ browser(browse)
-						+ owncloud(server, php, 'server', '/var/www/owncloud/server', False)
-						+ (owncloud(server, php, 'federated', '/var/www/owncloud/federated', False) if matrix['federate'] else []),
+					'services': databaseService(db),
 					'depends_on': [],
 					'trigger': {
 						'ref': [
@@ -380,10 +420,231 @@ def acceptance():
 					}
 				}
 
+				if coverage:
+					result['steps'].append({
+						'name': 'codecov-upload',
+						'image': 'plugins/codecov:2',
+						'pull': 'always',
+						'settings': {
+							'paths': [
+								'tests/output/clover.xml',
+							],
+							'token': {
+								'from_secret': 'codecov_token'
+							}
+						}
+					})
+
 				for branch in config['branches']:
 					result['trigger']['ref'].append('refs/heads/%s' % branch)
 
 				pipelines.append(result)
+
+	return pipelines
+
+def acceptance():
+	pipelines = []
+
+	if 'acceptance' not in config:
+		return pipelines
+
+	errorFound = False
+
+	default = {
+		'servers': ['daily-master-qa', '10.2.1'],
+		'browsers': ['chrome'],
+		'phpVersions': ['7.0'],
+		'databases': ['mariadb:10.2'],
+		'federatedServerNeeded': False,
+		'filterTags': '',
+		'emailNeeded': False,
+		'extraSetup': None,
+		'extraServices': [],
+		'extraApps': [],
+	}
+
+	if 'defaults' in config:
+		if 'acceptance' in config['defaults']:
+			if 'servers' in config['defaults']['acceptance']:
+				default['databases'] = config['defaults']['acceptance']['servers']
+			if 'browsers' in config['defaults']['acceptance']:
+				default['databases'] = config['defaults']['acceptance']['browsers']
+			if 'phpVersions' in config['defaults']['acceptance']:
+				default['databases'] = config['defaults']['acceptance']['phpVersions']
+			if 'databases' in config['defaults']['acceptance']:
+				default['databases'] = config['defaults']['acceptance']['databases']
+			if 'federatedServerNeeded' in config['defaults']['acceptance']:
+				default['databases'] = config['defaults']['acceptance']['federatedServerNeeded']
+			if 'filterTags' in config['defaults']['acceptance']:
+				default['databases'] = config['defaults']['acceptance']['filterTags']
+			if 'emailNeeded' in config['defaults']['acceptance']:
+				default['emailNeeded'] = config['defaults']['acceptance']['emailNeeded']
+			if 'extraSetup' in config['defaults']['acceptance']:
+				default['extraSetup'] = config['defaults']['acceptance']['extraSetup']
+			if 'extraServices' in config['defaults']['acceptance']:
+				default['extraServices'] = config['defaults']['acceptance']['extraServices']
+			if 'extraApps' in config['defaults']['acceptance']:
+				default['extraApps'] = config['defaults']['acceptance']['extraApps']
+
+	for category, matrix in config['acceptance'].items():
+		if type(matrix['suites']) == "list":
+			suites = {}
+			for suite in matrix['suites']:
+				suites[suite] = suite
+		else:
+			suites = matrix['suites']
+
+		for suite, shortSuiteName in suites.items():
+			isWebUI = suite.startswith('webUI')
+			isAPI = suite.startswith('api')
+			isCLI = suite.startswith('cli')
+
+			if isAPI or isCLI:
+				default['browsers'] = ['']
+
+			servers = matrix['servers'] if 'servers' in matrix else default['servers']
+			browsers = matrix['browsers'] if 'browsers' in matrix else default['browsers']
+			phpVersions = matrix['phpVersions'] if 'phpVersions' in matrix else default['phpVersions']
+			databases = matrix['databases'] if 'databases' in matrix else default['databases']
+			federatedServerNeeded = matrix['federatedServerNeeded'] if 'federatedServerNeeded' in matrix else default['federatedServerNeeded']
+			filterTags = matrix['filterTags'] if 'filterTags' in matrix else default['filterTags']
+			emailNeeded = matrix['emailNeeded'] if 'emailNeeded' in matrix else default['emailNeeded']
+			extraSetup = matrix['extraSetup'] if 'extraSetup' in matrix else default['extraSetup']
+			extraServices = matrix['extraServices'] if 'extraServices' in matrix else default['extraServices']
+			extraApps = matrix['extraApps'] if 'extraApps' in matrix else default['extraApps']
+
+			for server in servers:
+				for browser in browsers:
+					for phpVersion in phpVersions:
+						for db in databases:
+							name = 'unknown'
+
+							if isWebUI or isAPI or isCLI:
+								browserString = '' if browser == '' else '-' + browser
+								name = '%s-%s%s-%s-php%s' % (shortSuiteName, server.replace('daily-', '').replace('-qa', ''), browserString, db.replace(':', ''), phpVersion)
+								maxLength = 50
+								nameLength = len(name)
+								if nameLength > maxLength:
+									print("Error: generated stage name of length", nameLength, "is not supported. The maximum length is " + str(maxLength) + ".", name)
+									errorFound = True
+
+							if isWebUI:
+								environment = {
+									'TEST_SERVER_URL': 'http://server',
+									'BEHAT_FILTER_TAGS': filterTags,
+									'BEHAT_SUITE': suite,
+									'SELENIUM_HOST': 'selenium',
+									'SELENIUM_PORT': '4444',
+									'BROWSER': browser,
+									'PLATFORM': 'Linux',
+								}
+
+							if isAPI or isCLI:
+								environment = {
+									'TEST_SERVER_URL': 'http://server',
+									'BEHAT_FILTER_TAGS': filterTags,
+									'BEHAT_SUITE': suite,
+								}
+
+							if emailNeeded:
+								environment['MAILHOG_HOST'] = 'email'
+
+							result = {
+								'kind': 'pipeline',
+								'type': 'docker',
+								'name': name,
+								'workspace' : {
+									'base': '/var/www/owncloud',
+									'path': 'server/apps/%s' % config['app']
+								},
+								'steps': [
+									installCore(server, db),
+									installTestrunner(phpVersion)
+								] + ([
+									{
+										'name': 'install-federation',
+										'image': 'owncloudci/core',
+										'pull': 'always',
+										'settings': {
+											'version': server,
+											'core_path': '/var/www/owncloud/federated'
+										}
+									},
+									{
+										'name': 'configure-federation',
+										'image': 'owncloudci/php:%s' % phpVersion,
+										'pull': 'always',
+										'commands': [
+											'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
+											'cd /var/www/owncloud/federated',
+											'php occ a:l',
+											'php occ a:e testing',
+											'php occ a:l',
+											'php occ config:system:set trusted_domains 1 --value=federated',
+											'php occ log:manage --level 0',
+											'php occ config:list'
+										]
+									}
+								] if federatedServerNeeded else []) + [
+									setupServerAndApp(phpVersion),
+									installExtraApps(phpVersion, extraApps),
+									extraSetup,
+									fixPermissions(phpVersion),
+									({
+										'name': 'acceptance-tests',
+										'image': 'owncloudci/php:%s' % phpVersion,
+										'pull': 'always',
+										'environment': environment,
+										'commands': [
+											'touch /var/www/owncloud/saved-settings.sh',
+											'. /var/www/owncloud/saved-settings.sh',
+											'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
+											'make test-acceptance-webui'
+										]
+									} if isWebUI else None),
+									({
+										'name': 'acceptance-tests',
+										'image': 'owncloudci/php:%s' % phpVersion,
+										'pull': 'always',
+										'environment': environment,
+										'commands': [
+											'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
+											'make test-acceptance-api'
+										]
+									} if isAPI else None),
+									({
+										'name': 'acceptance-tests',
+										'image': 'owncloudci/php:%s' % phpVersion,
+										'pull': 'always',
+										'environment': environment,
+										'commands': [
+											'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
+											'make test-acceptance-cli'
+										]
+									} if isCLI else None),
+								],
+								'services': databaseService(db)
+									+ browserService(browser)
+									+ emailService(emailNeeded)
+									+ extraServices
+									+ owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', False)
+									+ (owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', False) if federatedServerNeeded else []),
+								'depends_on': [],
+								'trigger': {
+									'ref': [
+										'refs/pull/**',
+										'refs/tags/**'
+									]
+								}
+							}
+
+							for branch in config['branches']:
+								result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+							pipelines.append(result)
+
+	if errorFound:
+		return False
 
 	return pipelines
 
@@ -421,7 +682,7 @@ def notify():
 
 	return result
 
-def database(name):
+def databaseService(name):
 	if name.startswith('mariadb'):
 		return [{
 			'name': 'mariadb',
@@ -475,11 +736,11 @@ def database(name):
 
 	return []
 
-def browser(name):
+def browserService(name):
 	if name == 'chrome':
 		return [{
 			'name': 'selenium',
-			'image': 'selenium/standalone-chrome-debug:3.8.1',
+			'image': 'selenium/standalone-chrome-debug:3.141.59-oxygen',
 			'pull': 'always',
 			'environment': {
 				'JAVA_OPTS': '-Dselenium.LOGGER.level=WARNING'
@@ -499,7 +760,17 @@ def browser(name):
 
 	return []
 
-def owncloud(version, php, name = 'server', path = '/var/www/owncloud/server', ssl = True):
+def emailService(emailNeeded):
+	if emailNeeded:
+		return [{
+			'name': 'email',
+			'image': 'mailhog/mailhog',
+			'pull': 'always',
+		}]
+
+	return []
+
+def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncloud/server', ssl = True):
 	if ssl:
 		environment = {
 			'APACHE_WEBROOT': path,
@@ -515,7 +786,7 @@ def owncloud(version, php, name = 'server', path = '/var/www/owncloud/server', s
 
 	return [{
 		'name': name,
-		'image': 'owncloudci/php:%s' % php,
+		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'environment': environment,
 		'command': [
@@ -527,7 +798,7 @@ def owncloud(version, php, name = 'server', path = '/var/www/owncloud/server', s
 		]
 	}]
 
-def core(version, db):
+def installCore(version, db):
 	host = db.split(':')[0]
 	name = host
 
@@ -543,7 +814,6 @@ def core(version, db):
 
 	if name == 'oracle':
 		name = 'oci'
-
 		username = 'system'
 		password = 'oracle'
 		database = 'XE'
@@ -563,25 +833,46 @@ def core(version, db):
 		}
 	}
 
-def testrunner(php):
+def installTestrunner(phpVersion):
 	return {
 		'name': 'install-testrunner',
-		'image': 'owncloudci/php:%s' % php,
+		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'commands': [
-			'git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner',
-			'cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/',
-			'cd /var/www/owncloud/server/testrunner',
+			'git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner',
+			'cp -r /var/www/owncloud/server/apps/%s /var/www/owncloud/testrunner/apps/' % config['app'],
+			'cd /var/www/owncloud/testrunner',
 			'make install-composer-deps vendor-bin-deps'
 		]
 	}
 
-def install(php):
+def installExtraApps(phpVersion, extraApps):
+	if extraApps == []:
+		return None
+
+	commandArray = []
+	for app in extraApps:
+		commandArray.append('git clone https://github.com/owncloud/%s.git /var/www/owncloud/server/apps/%s' % (app, app))
+		commandArray.append('cp -r /var/www/owncloud/server/apps/%s /var/www/owncloud/testrunner/apps/' % app)
+		commandArray.append('cd /var/www/owncloud/server')
+		commandArray.append('php occ a:l')
+		commandArray.append('php occ a:e %s' % app)
+		commandArray.append('php occ a:l')
+
 	return {
-		'name': 'install-%s' % config['app'],
-		'image': 'owncloudci/php:%s' % php,
+		'name': 'install-extra-apps',
+		'image': 'owncloudci/php:%s' % phpVersion,
+		'pull': 'always',
+		'commands': commandArray
+	}
+
+def setupServerAndApp(phpVersion):
+	return {
+		'name': 'setup-server-%s' % config['app'],
+		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'commands': [
+			config['appInstallCommand'] if 'appInstallCommand' in config else ':',
 			'cd /var/www/owncloud/server',
 			'php occ a:l',
 			'php occ a:e %s' % config['app'],
@@ -592,23 +883,19 @@ def install(php):
 		]
 	}
 
-def perms(php, release=False):
+def fixPermissions(phpVersion):
 	return {
 		'name': 'fix-permissions',
-		'image': 'owncloudci/php:%s' % php,
+		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'commands': [
-			'chown -R www-data /var/www/owncloud'
-		] + ([
-			'chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload',
-			'chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh'
-		] if release else [
-			'chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload',
-			'chmod +x /var/www/owncloud/server/tests/acceptance/run.sh'
-		])
+			'chown -R www-data /var/www/owncloud',
+			'chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload',
+			'chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh'
+		]
 	}
 
-def names(source, into):
-	for stage in source:
-		for step in into:
-			step['depends_on'].append(stage['name'])
+def dependsOn(earlierStages, nextStages):
+	for earlierStage in earlierStages:
+		for nextStage in nextStages:
+			nextStage['depends_on'].append(earlierStage['name'])
