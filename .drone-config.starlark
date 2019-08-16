@@ -1,0 +1,121 @@
+config = {
+	'app': 'activity',
+	'rocketchat': 'builds',
+
+	'branches': [
+		'master'
+	],
+
+	'phpunit': {
+		'7.0': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2',
+				'mysql:5.5',
+				'postgres:9.4',
+				'oracle',
+			],
+			'coverage': True
+		},
+		'7.1': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2'
+			],
+			'coverage': False
+		},
+		'7.2': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2'
+			],
+			'coverage': False
+		},
+		'7.3': {
+			'db': [
+				'sqlite',
+				'mariadb:10.2'
+			],
+			'coverage': False
+		},
+	},
+
+	'acceptance': {
+		'webUIActivityComments': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'webUIActivityCreateUpdate': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'webUIActivityDeleteRestore': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'webUIActivitySharingExternal': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': True
+		},
+		'webUIActivitySharingInternal': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': True
+		},
+		'webUIActivityTags': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'chrome',
+				'firefox'
+			],
+			'federate': False
+		},
+		'apiActivity': {
+			'server': [
+				'daily-master-qa',
+				'10.2.1'
+			],
+			'browser': [
+				'headless'
+			],
+			'federate': False
+		}
+	}
+}
