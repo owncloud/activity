@@ -146,6 +146,8 @@ Feature: Tag files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted system tag StaticTagName (static)" in the activity page
 
+  @skipOnFIREFOX
+  # Firefox does not auto-scroll to click the checkbox for 'disables activity log stream for "systemtags"'
   Scenario Outline: Adding a tag on a file/folder should not be listed in the activity list stream when system tags activity has been disabled
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has logged in using the webUI
