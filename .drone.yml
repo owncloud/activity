@@ -28,7 +28,7 @@ pipeline:
       - make vendor-bin-deps
     when:
       matrix:
-        USE_RELEASE_TARBALL: true
+        TEST_SUITE_TYPE: acceptance
 
   install-fed-server:
     image: owncloudci/core
@@ -75,14 +75,8 @@ pipeline:
     pull: true
     commands:
       - chown www-data /var/www/owncloud -R
-      - if [ "${USE_RELEASE_TARBALL}" = "true" ];
-        then
-        chmod 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload -R;
-        chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh;
-        else
-        chmod 777 /var/www/owncloud/server/tests/acceptance/filesForUpload -R;
-        chmod +x /var/www/owncloud/server/tests/acceptance/run.sh;
-        fi
+      - chmod 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload -R;
+      - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh;
     when:
       matrix:
         NEED_SERVER: true
@@ -124,7 +118,7 @@ pipeline:
       - TEST_SERVER_URL=http://server
       - BEHAT_SUITE=${BEHAT_SUITE}
     commands:
-      - if [ "${USE_RELEASE_TARBALL}" = "true" ]; then cd /var/www/owncloud/server/testrunner/apps/activity; fi
+      - cd /var/www/owncloud/server/testrunner/apps/activity
       - make test-acceptance-api
     when:
       matrix:
@@ -143,7 +137,7 @@ pipeline:
     commands:
       - touch /var/www/owncloud/saved-settings.sh
       - . /var/www/owncloud/saved-settings.sh
-      - if [ "${USE_RELEASE_TARBALL}" = "true" ]; then cd /var/www/owncloud/server/testrunner/apps/activity; fi
+      - cd /var/www/owncloud/server/testrunner/apps/activity
       - make test-acceptance-webui
     when:
       matrix:
@@ -314,6 +308,7 @@ matrix:
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityComments
       DB_TYPE: mysql
@@ -324,6 +319,7 @@ matrix:
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityCreateUpdate
       DB_TYPE: mysql
@@ -334,6 +330,7 @@ matrix:
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityDeleteRestore
       DB_TYPE: mysql
@@ -344,6 +341,7 @@ matrix:
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingExternal
       DB_TYPE: mysql
@@ -356,6 +354,7 @@ matrix:
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingInternal
       DB_TYPE: mysql
@@ -368,6 +367,7 @@ matrix:
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityTags
       DB_TYPE: mysql
@@ -378,6 +378,7 @@ matrix:
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: api-acceptance
       BEHAT_SUITE: apiActivity
       DB_TYPE: mysql
@@ -389,6 +390,7 @@ matrix:
     # Acceptance tests against latest stable release tarball.
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityComments
       DB_TYPE: mysql
@@ -396,10 +398,10 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
-      USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityCreateUpdate
       DB_TYPE: mysql
@@ -407,10 +409,10 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
-      USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityDeleteRestore
       DB_TYPE: mysql
@@ -418,10 +420,10 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
-      USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingExternal
       DB_TYPE: mysql
@@ -431,10 +433,10 @@ matrix:
       NEED_INSTALL_APP: true
       USE_FEDERATED_SERVER: true
       FEDERATION_OC_VERSION: daily-master-qa
-      USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivitySharingInternal
       DB_TYPE: mysql
@@ -444,10 +446,10 @@ matrix:
       NEED_INSTALL_APP: true
       USE_FEDERATED_SERVER: true
       FEDERATION_OC_VERSION: daily-master-qa
-      USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: web-acceptance
       BEHAT_SUITE: webUIActivityTags
       DB_TYPE: mysql
@@ -455,10 +457,10 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
-      USE_RELEASE_TARBALL: true
 
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
+      TEST_SUITE_TYPE: acceptance
       TEST_SUITE: api-acceptance
       BEHAT_SUITE: apiActivity
       DB_TYPE: mysql
@@ -466,4 +468,3 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
-      USE_RELEASE_TARBALL: true
