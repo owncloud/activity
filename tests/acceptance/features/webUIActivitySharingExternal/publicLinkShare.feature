@@ -63,6 +63,8 @@ Feature: public link sharing file/folders activities
     Then the activity should not have any message with keyword "created"
     And the activity number 1 should contain message "You shared simple-folder via link" in the activity page
 
+  @skipOnFIREFOX
+  # Firefox does not auto-scroll to click the checkbox for 'disables activity log stream for "public_links"'
   Scenario: Downloading a public shared file from a webUI should not be listed in the activity list stream when public link download activity has been disabled
     Given the user has created a new public link for file "textfile0.txt" using the webUI
     And the user has browsed to the personal general settings page
@@ -73,6 +75,8 @@ Feature: public link sharing file/folders activities
     Then the activity should not have any message with keyword "downloaded"
     And the activity number 1 should contain message "You shared textfile0.txt via link" in the activity page
 
+  @skipOnFIREFOX
+  # Firefox does not auto-scroll to click the checkbox for 'disables activity log stream for "public_links"'
   Scenario: Downloading a public shared folder from a webUI should not be listed in the activity list stream when public link download activity has been disabled
     Given the user has created a new public link for folder "simple-folder" using the webUI
     And the user has browsed to the personal general settings page
