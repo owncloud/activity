@@ -284,11 +284,6 @@ def acceptance():
 				name = 'unknown'
 				php = '7.0'
 
-				if server.startswith('daily-'):
-					release = False
-				else:
-					release = True
-
 				if suite.startswith('webUI'):
 					name = 'webui-%s-%s-%s' % (suite.replace('webUI', ''), browse, server.replace('daily-', '').replace('-qa', ''))
 
@@ -305,9 +300,9 @@ def acceptance():
 					},
 					'steps': [
 						core(server, 'mariadb:10.2')
-					] + ([
+					] + [
 						testrunner(php)
-					] if release else []) + ([
+					] + ([
 						{
 							'name': 'install-federation',
 							'image': 'owncloudci/core',
@@ -334,7 +329,7 @@ def acceptance():
 						}
 					] if matrix['federate'] else []) + [
 						install(php),
-						perms(php, release),
+						perms(php),
 						({
 							'name': 'acceptance-tests',
 							'image': 'owncloudci/php:%s' % php,
@@ -350,7 +345,7 @@ def acceptance():
 							'commands': [
 								'touch /var/www/owncloud/saved-settings.sh',
 								'. /var/www/owncloud/saved-settings.sh',
-							] + (['cd /var/www/owncloud/server/testrunner/apps/%s' % config['app']] if release else []) + [
+								'cd /var/www/owncloud/server/testrunner/apps/%s' % config['app'],
 								'make test-acceptance-webui'
 							]
 						} if suite.startswith('webUI') else None),
@@ -362,7 +357,8 @@ def acceptance():
 								'TEST_SERVER_URL': 'http://server',
 								'BEHAT_SUITE': suite
 							},
-							'commands': (['cd /var/www/owncloud/server/testrunner/apps/%s' % config['app']] if release else []) + [
+							'commands': [
+								'cd /var/www/owncloud/server/testrunner/apps/%s' % config['app'],
 								'make test-acceptance-api'
 							]
 						} if suite.startswith('api') else None),
@@ -592,20 +588,16 @@ def install(php):
 		]
 	}
 
-def perms(php, release=False):
+def perms(php):
 	return {
 		'name': 'fix-permissions',
 		'image': 'owncloudci/php:%s' % php,
 		'pull': 'always',
 		'commands': [
-			'chown -R www-data /var/www/owncloud'
-		] + ([
+			'chown -R www-data /var/www/owncloud',
 			'chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload',
 			'chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh'
-		] if release else [
-			'chmod -R 777 /var/www/owncloud/server/tests/acceptance/filesForUpload',
-			'chmod +x /var/www/owncloud/server/tests/acceptance/run.sh'
-		])
+		]
 	}
 
 def names(source, into):
