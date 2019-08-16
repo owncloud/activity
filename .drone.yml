@@ -23,9 +23,6 @@ pipeline:
     commands:
       - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
       - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-      - cd /var/www/owncloud/server/testrunner
-      - make install-composer-deps
-      - make vendor-bin-deps
     when:
       matrix:
         TEST_SUITE_TYPE: acceptance
