@@ -345,7 +345,7 @@ def acceptance():
 							'commands': [
 								'touch /var/www/owncloud/saved-settings.sh',
 								'. /var/www/owncloud/saved-settings.sh',
-								'cd /var/www/owncloud/server/testrunner/apps/%s' % config['app'],
+								'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
 								'make test-acceptance-webui'
 							]
 						} if suite.startswith('webUI') else None),
@@ -358,7 +358,7 @@ def acceptance():
 								'BEHAT_SUITE': suite
 							},
 							'commands': [
-								'cd /var/www/owncloud/server/testrunner/apps/%s' % config['app'],
+								'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
 								'make test-acceptance-api'
 							]
 						} if suite.startswith('api') else None),
@@ -565,9 +565,9 @@ def testrunner(php):
 		'image': 'owncloudci/php:%s' % php,
 		'pull': 'always',
 		'commands': [
-			'git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner',
-			'cp -r /var/www/owncloud/server/apps/%s /var/www/owncloud/server/testrunner/apps/' % config['app'],
-			'cd /var/www/owncloud/server/testrunner',
+			'git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner',
+			'cp -r /var/www/owncloud/server/apps/%s /var/www/owncloud/testrunner/apps/' % config['app'],
+			'cd /var/www/owncloud/testrunner',
 			'make install-composer-deps vendor-bin-deps'
 		]
 	}
@@ -595,8 +595,8 @@ def perms(php):
 		'pull': 'always',
 		'commands': [
 			'chown -R www-data /var/www/owncloud',
-			'chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload',
-			'chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh'
+			'chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload',
+			'chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh'
 		]
 	}
 

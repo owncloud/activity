@@ -812,9 +812,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -834,8 +834,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -843,7 +843,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -921,9 +921,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -943,8 +943,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -952,7 +952,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -1031,9 +1031,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1053,8 +1053,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1062,7 +1062,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -1140,9 +1140,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1162,8 +1162,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1171,7 +1171,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -1250,9 +1250,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1272,8 +1272,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1281,7 +1281,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1359,9 +1359,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1381,8 +1381,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1390,7 +1390,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1469,9 +1469,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1491,8 +1491,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1500,7 +1500,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1578,9 +1578,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1600,8 +1600,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1609,7 +1609,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1688,9 +1688,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1710,8 +1710,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1719,7 +1719,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -1797,9 +1797,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1819,8 +1819,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1828,7 +1828,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -1907,9 +1907,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -1929,8 +1929,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -1938,7 +1938,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -2016,9 +2016,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -2038,8 +2038,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -2047,7 +2047,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -2126,9 +2126,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -2168,8 +2168,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -2177,7 +2177,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -2267,9 +2267,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -2309,8 +2309,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -2318,7 +2318,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -2409,9 +2409,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -2451,8 +2451,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -2460,7 +2460,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -2550,9 +2550,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -2592,8 +2592,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -2601,7 +2601,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -2692,9 +2692,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -2734,8 +2734,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -2743,7 +2743,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -2833,9 +2833,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -2875,8 +2875,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -2884,7 +2884,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -2975,9 +2975,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -3017,8 +3017,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -3026,7 +3026,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -3116,9 +3116,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-federation
@@ -3158,8 +3158,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -3167,7 +3167,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -3258,9 +3258,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -3280,8 +3280,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -3289,7 +3289,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -3367,9 +3367,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -3389,8 +3389,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -3398,7 +3398,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -3477,9 +3477,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -3499,8 +3499,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -3508,7 +3508,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -3586,9 +3586,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -3608,8 +3608,8 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
@@ -3617,7 +3617,7 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -3696,9 +3696,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -3718,14 +3718,14 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
   environment:
     BEHAT_SUITE: apiActivity
@@ -3793,9 +3793,9 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/server/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/server/testrunner/apps/
-  - cd /var/www/owncloud/server/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
 - name: install-activity
@@ -3815,14 +3815,14 @@ steps:
   image: owncloudci/php:7.0
   commands:
   - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/server/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/server/testrunner/tests/acceptance/run.sh
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
 
 - name: acceptance-tests
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - cd /var/www/owncloud/server/testrunner/apps/activity
+  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
   environment:
     BEHAT_SUITE: apiActivity
