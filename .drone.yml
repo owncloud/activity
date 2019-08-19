@@ -785,7 +785,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityComments-chrome-master
+name: webUIActivityComments-chrome-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -894,7 +894,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityComments-firefox-master
+name: webUIActivityComments-firefox-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1004,7 +1004,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityComments-chrome-10.2.1
+name: webUIActivityComments-chrome-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1113,7 +1113,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityComments-firefox-10.2.1
+name: webUIActivityComments-firefox-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1223,7 +1223,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityCreateUpdate-chrome-master
+name: webUIActivityCreateUpdate-chrome-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1332,7 +1332,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityCreateUpdate-firefox-master
+name: webUIActivityCreateUpdate-firefox-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1442,7 +1442,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityCreateUpdate-chrome-10.2.1
+name: webUIActivityCreateUpdate-chrome-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1551,7 +1551,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityCreateUpdate-firefox-10.2.1
+name: webUIActivityCreateUpdate-firefox-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1661,7 +1661,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityDeleteRestore-chrome-master
+name: webUIActivityDeleteRestore-chrome-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1770,7 +1770,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityDeleteRestore-firefox-master
+name: webUIActivityDeleteRestore-firefox-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1880,7 +1880,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityDeleteRestore-chrome-10.2.1
+name: webUIActivityDeleteRestore-chrome-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -1989,7 +1989,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityDeleteRestore-firefox-10.2.1
+name: webUIActivityDeleteRestore-firefox-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -2099,7 +2099,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivitySharingExternal-chrome-master
+name: webUIActivitySharingExternal-chrome-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -2240,7 +2240,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivitySharingExternal-firefox-master
+name: webUIActivitySharingExternal-firefox-master-qa-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -2382,7 +2382,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivitySharingExternal-chrome-10.2.1
+name: webUIActivitySharingExternal-chrome-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -2523,7 +2523,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivitySharingExternal-firefox-10.2.1
+name: webUIActivitySharingExternal-firefox-10.2.1-mariadb:10.2-php:7.0
 
 platform:
   os: linux
@@ -2665,7 +2665,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivitySharingInternal-chrome-master
+name: webUIActivitySharingInternal-chrome-master-qa-mariadb:10.2-php:7.1
 
 platform:
   os: linux
@@ -2690,7 +2690,7 @@ steps:
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -2699,7 +2699,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -2711,7 +2711,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -2719,7 +2719,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
@@ -2751,7 +2751,7 @@ services:
 
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -2774,7 +2774,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivitySharingInternal-firefox-master
+name: webUIActivitySharingInternal-firefox-master-qa-mariadb:10.2-php:7.1
 
 platform:
   os: linux
@@ -2799,7 +2799,7 @@ steps:
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -2808,7 +2808,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -2820,7 +2820,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -2828,226 +2828,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - touch /var/www/owncloud/saved-settings.sh
-  - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
-  - make test-acceptance-webui
-  environment:
-    BEHAT_SUITE: webUIActivitySharingInternal
-    BROWSER: firefox
-    PLATFORM: Linux
-    SELENIUM_HOST: selenium
-    SELENIUM_PORT: 4444
-    TEST_SERVER_URL: http://server
-
-services:
-- name: mariadb
-  pull: always
-  image: mariadb:10.2
-  environment:
-    MYSQL_DATABASE: owncloud
-    MYSQL_PASSWORD: owncloud
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: owncloud
-
-- name: selenium
-  pull: always
-  image: selenium/standalone-firefox-debug:3.8.1
-  environment:
-    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
-    SE_OPTS: -enablePassThrough false
-
-- name: server
-  pull: always
-  image: owncloudci/php:7.0
-  command:
-  - /usr/local/bin/apachectl
-  - -e
-  - debug
-  - -D
-  - FOREGROUND
-  environment:
-    APACHE_WEBROOT: /var/www/owncloud/server
-
-trigger:
-  ref:
-  - refs/pull/**
-  - refs/tags/**
-  - refs/heads/master
-
-depends_on:
-- coding-standard
-- javascript-tests
-
----
-kind: pipeline
-type: docker
-name: webui-ActivitySharingInternal-chrome-10.2.1
-
-platform:
-  os: linux
-  arch: amd64
-
-workspace:
-  base: /var/www/owncloud
-  path: server/apps/activity
-
-steps:
-- name: install-core
-  pull: always
-  image: owncloudci/core
-  settings:
-    core_path: /var/www/owncloud/server
-    db_host: mariadb
-    db_name: owncloud
-    db_password: owncloud
-    db_type: mysql
-    db_username: owncloud
-    version: 10.2.1
-
-- name: install-testrunner
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
-  - cd /var/www/owncloud/testrunner
-  - make install-composer-deps vendor-bin-deps
-
-- name: setup-server-activity
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - cd /var/www/owncloud/server
-  - php occ a:l
-  - php occ a:e activity
-  - php occ a:e testing
-  - php occ a:l
-  - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
-
-- name: fix-permissions
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
-
-- name: acceptance-tests
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - touch /var/www/owncloud/saved-settings.sh
-  - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
-  - make test-acceptance-webui
-  environment:
-    BEHAT_SUITE: webUIActivitySharingInternal
-    BROWSER: chrome
-    PLATFORM: Linux
-    SELENIUM_HOST: selenium
-    SELENIUM_PORT: 4444
-    TEST_SERVER_URL: http://server
-
-services:
-- name: mariadb
-  pull: always
-  image: mariadb:10.2
-  environment:
-    MYSQL_DATABASE: owncloud
-    MYSQL_PASSWORD: owncloud
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: owncloud
-
-- name: selenium
-  pull: always
-  image: selenium/standalone-chrome-debug:3.141.59-oxygen
-  environment:
-    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
-
-- name: server
-  pull: always
-  image: owncloudci/php:7.0
-  command:
-  - /usr/local/bin/apachectl
-  - -e
-  - debug
-  - -D
-  - FOREGROUND
-  environment:
-    APACHE_WEBROOT: /var/www/owncloud/server
-
-trigger:
-  ref:
-  - refs/pull/**
-  - refs/tags/**
-  - refs/heads/master
-
-depends_on:
-- coding-standard
-- javascript-tests
-
----
-kind: pipeline
-type: docker
-name: webui-ActivitySharingInternal-firefox-10.2.1
-
-platform:
-  os: linux
-  arch: amd64
-
-workspace:
-  base: /var/www/owncloud
-  path: server/apps/activity
-
-steps:
-- name: install-core
-  pull: always
-  image: owncloudci/core
-  settings:
-    core_path: /var/www/owncloud/server
-    db_host: mariadb
-    db_name: owncloud
-    db_password: owncloud
-    db_type: mysql
-    db_username: owncloud
-    version: 10.2.1
-
-- name: install-testrunner
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
-  - cd /var/www/owncloud/testrunner
-  - make install-composer-deps vendor-bin-deps
-
-- name: setup-server-activity
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - cd /var/www/owncloud/server
-  - php occ a:l
-  - php occ a:e activity
-  - php occ a:e testing
-  - php occ a:l
-  - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
-
-- name: fix-permissions
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
-
-- name: acceptance-tests
-  pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
@@ -3080,7 +2861,7 @@ services:
 
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.1
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -3103,7 +2884,226 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityTags-chrome-master
+name: webUIActivitySharingInternal-chrome-10.2.1-mariadb:10.2-php:7.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: setup-server-activity
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingInternal
+    BROWSER: chrome
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER_URL: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-chrome-debug:3.141.59-oxygen
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.1
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webUIActivitySharingInternal-firefox-10.2.1-mariadb:10.2-php:7.1
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: mariadb
+    db_name: owncloud
+    db_password: owncloud
+    db_type: mysql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: setup-server-activity
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.1
+  commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
+  - cd /var/www/owncloud/testrunner/apps/activity
+  - make test-acceptance-webui
+  environment:
+    BEHAT_SUITE: webUIActivitySharingInternal
+    BROWSER: firefox
+    PLATFORM: Linux
+    SELENIUM_HOST: selenium
+    SELENIUM_PORT: 4444
+    TEST_SERVER_URL: http://server
+
+services:
+- name: mariadb
+  pull: always
+  image: mariadb:10.2
+  environment:
+    MYSQL_DATABASE: owncloud
+    MYSQL_PASSWORD: owncloud
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: owncloud
+
+- name: selenium
+  pull: always
+  image: selenium/standalone-firefox-debug:3.8.1
+  environment:
+    JAVA_OPTS: -Dselenium.LOGGER.level=WARNING
+    SE_OPTS: -enablePassThrough false
+
+- name: server
+  pull: always
+  image: owncloudci/php:7.1
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: webUIActivityTags-chrome-master-qa-mariadb:10.2-php:7.2
 
 platform:
   os: linux
@@ -3128,7 +3128,7 @@ steps:
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -3137,7 +3137,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -3149,7 +3149,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -3157,7 +3157,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
@@ -3189,7 +3189,7 @@ services:
 
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -3212,7 +3212,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityTags-firefox-master
+name: webUIActivityTags-firefox-master-qa-mariadb:10.2-php:7.2
 
 platform:
   os: linux
@@ -3237,7 +3237,7 @@ steps:
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -3246,7 +3246,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -3258,7 +3258,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -3266,7 +3266,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
@@ -3299,7 +3299,7 @@ services:
 
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -3322,7 +3322,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityTags-chrome-10.2.1
+name: webUIActivityTags-chrome-10.2.1-mariadb:10.2-php:7.2
 
 platform:
   os: linux
@@ -3347,7 +3347,7 @@ steps:
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -3356,7 +3356,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -3368,7 +3368,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -3376,7 +3376,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
@@ -3408,7 +3408,7 @@ services:
 
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -3431,7 +3431,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webui-ActivityTags-firefox-10.2.1
+name: webUIActivityTags-firefox-10.2.1-mariadb:10.2-php:7.2
 
 platform:
   os: linux
@@ -3456,7 +3456,7 @@ steps:
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -3465,7 +3465,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -3477,7 +3477,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -3485,7 +3485,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
@@ -3518,7 +3518,7 @@ services:
 
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -3541,7 +3541,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: api-Activity-master
+name: apiActivity-master-qa-sqlite-php:7.2
 
 platform:
   os: linux
@@ -3557,16 +3557,16 @@ steps:
   image: owncloudci/core
   settings:
     core_path: /var/www/owncloud/server
-    db_host: mariadb
+    db_host: sqlite
     db_name: owncloud
     db_password: owncloud
-    db_type: mysql
+    db_type: sqlite
     db_username: owncloud
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -3575,7 +3575,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -3587,7 +3587,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -3595,7 +3595,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
@@ -3604,18 +3604,9 @@ steps:
     TEST_SERVER_URL: http://server
 
 services:
-- name: mariadb
-  pull: always
-  image: mariadb:10.2
-  environment:
-    MYSQL_DATABASE: owncloud
-    MYSQL_PASSWORD: owncloud
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: owncloud
-
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -3638,7 +3629,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: api-Activity-10.2.1
+name: apiActivity-master-qa-pgsql-php:7.2
 
 platform:
   os: linux
@@ -3654,16 +3645,16 @@ steps:
   image: owncloudci/core
   settings:
     core_path: /var/www/owncloud/server
-    db_host: mariadb
+    db_host: pgsql
     db_name: owncloud
     db_password: owncloud
-    db_type: mysql
+    db_type: pgsql
     db_username: owncloud
-    version: 10.2.1
+    version: daily-master-qa
 
 - name: install-testrunner
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
@@ -3672,7 +3663,7 @@ steps:
 
 - name: setup-server-activity
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/server
   - php occ a:l
@@ -3684,7 +3675,7 @@ steps:
 
 - name: fix-permissions
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - chown -R www-data /var/www/owncloud
   - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
@@ -3692,7 +3683,7 @@ steps:
 
 - name: acceptance-tests
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
   commands:
   - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
@@ -3701,18 +3692,185 @@ steps:
     TEST_SERVER_URL: http://server
 
 services:
-- name: mariadb
-  pull: always
-  image: mariadb:10.2
-  environment:
-    MYSQL_DATABASE: owncloud
-    MYSQL_PASSWORD: owncloud
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: owncloud
-
 - name: server
   pull: always
-  image: owncloudci/php:7.0
+  image: owncloudci/php:7.2
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: apiActivity-10.2.1-sqlite-php:7.2
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: sqlite
+    db_name: owncloud
+    db_password: owncloud
+    db_type: sqlite
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: setup-server-activity
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - cd /var/www/owncloud/testrunner/apps/activity
+  - make test-acceptance-api
+  environment:
+    BEHAT_SUITE: apiActivity
+    TEST_SERVER_URL: http://server
+
+services:
+- name: server
+  pull: always
+  image: owncloudci/php:7.2
+  command:
+  - /usr/local/bin/apachectl
+  - -e
+  - debug
+  - -D
+  - FOREGROUND
+  environment:
+    APACHE_WEBROOT: /var/www/owncloud/server
+
+trigger:
+  ref:
+  - refs/pull/**
+  - refs/tags/**
+  - refs/heads/master
+
+depends_on:
+- coding-standard
+- javascript-tests
+
+---
+kind: pipeline
+type: docker
+name: apiActivity-10.2.1-pgsql-php:7.2
+
+platform:
+  os: linux
+  arch: amd64
+
+workspace:
+  base: /var/www/owncloud
+  path: server/apps/activity
+
+steps:
+- name: install-core
+  pull: always
+  image: owncloudci/core
+  settings:
+    core_path: /var/www/owncloud/server
+    db_host: pgsql
+    db_name: owncloud
+    db_password: owncloud
+    db_type: pgsql
+    db_username: owncloud
+    version: 10.2.1
+
+- name: install-testrunner
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
+  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - cd /var/www/owncloud/testrunner
+  - make install-composer-deps vendor-bin-deps
+
+- name: setup-server-activity
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - cd /var/www/owncloud/server
+  - php occ a:l
+  - php occ a:e activity
+  - php occ a:e testing
+  - php occ a:l
+  - php occ config:system:set trusted_domains 1 --value=server
+  - php occ log:manage --level 0
+
+- name: fix-permissions
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - chown -R www-data /var/www/owncloud
+  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
+  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+
+- name: acceptance-tests
+  pull: always
+  image: owncloudci/php:7.2
+  commands:
+  - cd /var/www/owncloud/testrunner/apps/activity
+  - make test-acceptance-api
+  environment:
+    BEHAT_SUITE: apiActivity
+    TEST_SERVER_URL: http://server
+
+services:
+- name: server
+  pull: always
+  image: owncloudci/php:7.2
   command:
   - /usr/local/bin/apachectl
   - -e
@@ -3770,31 +3928,33 @@ depends_on:
 - phpunit-php7.2-mariadb10.2
 - phpunit-php7.3-sqlite
 - phpunit-php7.3-mariadb10.2
-- webui-ActivityComments-chrome-master
-- webui-ActivityComments-firefox-master
-- webui-ActivityComments-chrome-10.2.1
-- webui-ActivityComments-firefox-10.2.1
-- webui-ActivityCreateUpdate-chrome-master
-- webui-ActivityCreateUpdate-firefox-master
-- webui-ActivityCreateUpdate-chrome-10.2.1
-- webui-ActivityCreateUpdate-firefox-10.2.1
-- webui-ActivityDeleteRestore-chrome-master
-- webui-ActivityDeleteRestore-firefox-master
-- webui-ActivityDeleteRestore-chrome-10.2.1
-- webui-ActivityDeleteRestore-firefox-10.2.1
-- webui-ActivitySharingExternal-chrome-master
-- webui-ActivitySharingExternal-firefox-master
-- webui-ActivitySharingExternal-chrome-10.2.1
-- webui-ActivitySharingExternal-firefox-10.2.1
-- webui-ActivitySharingInternal-chrome-master
-- webui-ActivitySharingInternal-firefox-master
-- webui-ActivitySharingInternal-chrome-10.2.1
-- webui-ActivitySharingInternal-firefox-10.2.1
-- webui-ActivityTags-chrome-master
-- webui-ActivityTags-firefox-master
-- webui-ActivityTags-chrome-10.2.1
-- webui-ActivityTags-firefox-10.2.1
-- api-Activity-master
-- api-Activity-10.2.1
+- webUIActivityComments-chrome-master-qa-mariadb:10.2-php:7.0
+- webUIActivityComments-firefox-master-qa-mariadb:10.2-php:7.0
+- webUIActivityComments-chrome-10.2.1-mariadb:10.2-php:7.0
+- webUIActivityComments-firefox-10.2.1-mariadb:10.2-php:7.0
+- webUIActivityCreateUpdate-chrome-master-qa-mariadb:10.2-php:7.0
+- webUIActivityCreateUpdate-firefox-master-qa-mariadb:10.2-php:7.0
+- webUIActivityCreateUpdate-chrome-10.2.1-mariadb:10.2-php:7.0
+- webUIActivityCreateUpdate-firefox-10.2.1-mariadb:10.2-php:7.0
+- webUIActivityDeleteRestore-chrome-master-qa-mariadb:10.2-php:7.0
+- webUIActivityDeleteRestore-firefox-master-qa-mariadb:10.2-php:7.0
+- webUIActivityDeleteRestore-chrome-10.2.1-mariadb:10.2-php:7.0
+- webUIActivityDeleteRestore-firefox-10.2.1-mariadb:10.2-php:7.0
+- webUIActivitySharingExternal-chrome-master-qa-mariadb:10.2-php:7.0
+- webUIActivitySharingExternal-firefox-master-qa-mariadb:10.2-php:7.0
+- webUIActivitySharingExternal-chrome-10.2.1-mariadb:10.2-php:7.0
+- webUIActivitySharingExternal-firefox-10.2.1-mariadb:10.2-php:7.0
+- webUIActivitySharingInternal-chrome-master-qa-mariadb:10.2-php:7.1
+- webUIActivitySharingInternal-firefox-master-qa-mariadb:10.2-php:7.1
+- webUIActivitySharingInternal-chrome-10.2.1-mariadb:10.2-php:7.1
+- webUIActivitySharingInternal-firefox-10.2.1-mariadb:10.2-php:7.1
+- webUIActivityTags-chrome-master-qa-mariadb:10.2-php:7.2
+- webUIActivityTags-firefox-master-qa-mariadb:10.2-php:7.2
+- webUIActivityTags-chrome-10.2.1-mariadb:10.2-php:7.2
+- webUIActivityTags-firefox-10.2.1-mariadb:10.2-php:7.2
+- apiActivity-master-qa-sqlite-php:7.2
+- apiActivity-master-qa-pgsql-php:7.2
+- apiActivity-10.2.1-sqlite-php:7.2
+- apiActivity-10.2.1-pgsql-php:7.2
 
 ...
