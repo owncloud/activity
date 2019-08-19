@@ -3669,7 +3669,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: api-Activity-headless-master
+name: api-Activity-master
 
 platform:
   os: linux
@@ -3766,7 +3766,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: api-Activity-headless-10.2.1
+name: api-Activity-10.2.1
 
 platform:
   os: linux
@@ -3922,7 +3922,7 @@ depends_on:
 - webui-ActivityTags-firefox-master
 - webui-ActivityTags-chrome-10.2.1
 - webui-ActivityTags-firefox-10.2.1
-- api-Activity-headless-master
-- api-Activity-headless-10.2.1
+- api-Activity-master
+- api-Activity-10.2.1
 
 ...
