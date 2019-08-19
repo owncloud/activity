@@ -2697,26 +2697,6 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-federation
-  pull: always
-  image: owncloudci/core
-  settings:
-    core_path: /var/www/owncloud/federated
-    version: daily-master-qa
-
-- name: configure-federation
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/federated
-  - php occ a:l
-  - php occ a:e testing
-  - php occ a:l
-  - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
-  - php occ config:list
-
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
@@ -2780,18 +2760,6 @@ services:
   - FOREGROUND
   environment:
     APACHE_WEBROOT: /var/www/owncloud/server
-
-- name: federated
-  pull: always
-  image: owncloudci/php:7.0
-  command:
-  - /usr/local/bin/apachectl
-  - -e
-  - debug
-  - -D
-  - FOREGROUND
-  environment:
-    APACHE_WEBROOT: /var/www/owncloud/federated
 
 trigger:
   ref:
@@ -2838,26 +2806,6 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-federation
-  pull: always
-  image: owncloudci/core
-  settings:
-    core_path: /var/www/owncloud/federated
-    version: daily-master-qa
-
-- name: configure-federation
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/federated
-  - php occ a:l
-  - php occ a:e testing
-  - php occ a:l
-  - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
-  - php occ config:list
-
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
@@ -2923,18 +2871,6 @@ services:
   environment:
     APACHE_WEBROOT: /var/www/owncloud/server
 
-- name: federated
-  pull: always
-  image: owncloudci/php:7.0
-  command:
-  - /usr/local/bin/apachectl
-  - -e
-  - debug
-  - -D
-  - FOREGROUND
-  environment:
-    APACHE_WEBROOT: /var/www/owncloud/federated
-
 trigger:
   ref:
   - refs/pull/**
@@ -2979,26 +2915,6 @@ steps:
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
-
-- name: install-federation
-  pull: always
-  image: owncloudci/core
-  settings:
-    core_path: /var/www/owncloud/federated
-    version: 10.2.1
-
-- name: configure-federation
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/federated
-  - php occ a:l
-  - php occ a:e testing
-  - php occ a:l
-  - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
-  - php occ config:list
 
 - name: setup-server-activity
   pull: always
@@ -3064,18 +2980,6 @@ services:
   environment:
     APACHE_WEBROOT: /var/www/owncloud/server
 
-- name: federated
-  pull: always
-  image: owncloudci/php:7.0
-  command:
-  - /usr/local/bin/apachectl
-  - -e
-  - debug
-  - -D
-  - FOREGROUND
-  environment:
-    APACHE_WEBROOT: /var/www/owncloud/federated
-
 trigger:
   ref:
   - refs/pull/**
@@ -3120,26 +3024,6 @@ steps:
   - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
-
-- name: install-federation
-  pull: always
-  image: owncloudci/core
-  settings:
-    core_path: /var/www/owncloud/federated
-    version: 10.2.1
-
-- name: configure-federation
-  pull: always
-  image: owncloudci/php:7.0
-  commands:
-  - echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/federated
-  - php occ a:l
-  - php occ a:e testing
-  - php occ a:l
-  - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
-  - php occ config:list
 
 - name: setup-server-activity
   pull: always
@@ -3205,18 +3089,6 @@ services:
   - FOREGROUND
   environment:
     APACHE_WEBROOT: /var/www/owncloud/server
-
-- name: federated
-  pull: always
-  image: owncloudci/php:7.0
-  command:
-  - /usr/local/bin/apachectl
-  - -e
-  - debug
-  - -D
-  - FOREGROUND
-  environment:
-    APACHE_WEBROOT: /var/www/owncloud/federated
 
 trigger:
   ref:
