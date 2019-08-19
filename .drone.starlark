@@ -273,7 +273,7 @@ def acceptance():
 
 							if isWebUI or isAPI:
 								browserString = '' if browser == '' else '-' + browser
-								name = '%s%s-%s-%s-php:%s' % (suite, browserString, server.replace('daily-', ''), db, php)
+								name = '%s%s-%s-%s-php%s' % (suite, browserString, server.replace('daily-', ''), db.replace(':',''), php)
 
 							result = {
 								'kind': 'pipeline',
