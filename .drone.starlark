@@ -42,80 +42,20 @@ config = {
 
 	'acceptance': {
 		'webUIActivityComments': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': False
 		},
 		'webUIActivityCreateUpdate': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': False
 		},
 		'webUIActivityDeleteRestore': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': False
 		},
 		'webUIActivitySharingExternal': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
 			'federate': True
 		},
 		'webUIActivitySharingInternal': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
 			'federate': True
 		},
 		'webUIActivityTags': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'chrome',
-				'firefox'
-			],
-			'federate': False
 		},
 		'apiActivity': {
-			'server': [
-				'daily-master-qa',
-				'10.2.1'
-			],
-			'browser': [
-				'none'
-			],
-			'federate': False
 		}
 	}
 }
@@ -278,107 +218,130 @@ def phpunit():
 def acceptance():
 	pipelines = []
 
+	default = {
+		'server': ['daily-master-qa', '10.2.1'],
+		'browser': ['chrome', 'firefox'],
+		'php': ['7.0'],
+		'db': ['mariadb:10.2'],
+		'federate': False,
+	}
+
 	for suite, matrix in config['acceptance'].items():
-		for server in matrix['server']:
-			for browser in matrix['browser']:
-				name = 'unknown'
-				php = '7.0'
+		isWebUI = suite.startswith('webUI')
+		isAPI = suite.startswith('api')
 
-				if suite.startswith('webUI'):
-					name = 'webui-%s-%s-%s' % (suite.replace('webUI', ''), browser, server.replace('daily-', '').replace('-qa', ''))
+		if isWebUI:
+			nameStart = 'webui-%s' % (suite.replace('webUI', ''))
 
-				if suite.startswith('api'):
-					name = 'api-%s-%s' % (suite.replace('api', ''), server.replace('daily-', '').replace('-qa', ''))
+		if isAPI:
+			nameStart = 'api-%s' % (suite.replace('api', ''))
+			default['browser'] = ['']
 
-				result = {
-					'kind': 'pipeline',
-					'type': 'docker',
-					'name': name,
-					'workspace' : {
-						'base': '/var/www/owncloud',
-						'path': 'server/apps/%s' % config['app']
-					},
-					'steps': [
-						installCore(server, 'mariadb:10.2'),
-						installTestrunner(php)
-					] + ([
-						{
-							'name': 'install-federation',
-							'image': 'owncloudci/core',
-							'pull': 'always',
-							'settings': {
-								'version': server,
-								'core_path': '/var/www/owncloud/federated'
+		servers = matrix['server'] if 'server' in matrix else default['server']
+		browsers = matrix['browser'] if 'browser' in matrix else default['browser']
+		phps = matrix['php'] if 'php' in matrix else default['php']
+		dbs = matrix['db'] if 'db' in matrix else default['db']
+		federate = matrix['federate'] if 'federate' in matrix else default['federate']
+
+		for server in servers:
+			for browser in browsers:
+				for php in phps:
+					for db in dbs:
+						name = 'unknown'
+
+						if isWebUI or isAPI:
+							browserString = '' if browser == '' else '-' + browser
+							name = '%s%s-%s' % (nameStart, browserString, server.replace('daily-', '').replace('-qa', ''))
+
+						result = {
+							'kind': 'pipeline',
+							'type': 'docker',
+							'name': name,
+							'workspace' : {
+								'base': '/var/www/owncloud',
+								'path': 'server/apps/%s' % config['app']
+							},
+							'steps': [
+								installCore(server, db),
+								installTestrunner(php)
+							] + ([
+								{
+									'name': 'install-federation',
+									'image': 'owncloudci/core',
+									'pull': 'always',
+									'settings': {
+										'version': server,
+										'core_path': '/var/www/owncloud/federated'
+									}
+								},
+								{
+									'name': 'configure-federation',
+									'image': 'owncloudci/php:%s' % php,
+									'pull': 'always',
+									'commands': [
+										'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
+										'cd /var/www/owncloud/federated',
+										'php occ a:l',
+										'php occ a:e testing',
+										'php occ a:l',
+										'php occ config:system:set trusted_domains 1 --value=federated',
+										'php occ log:manage --level 0',
+										'php occ config:list'
+									]
+								}
+							] if federate else []) + [
+								setupServerAndApp(php),
+								fixPermissions(php),
+								({
+									'name': 'acceptance-tests',
+									'image': 'owncloudci/php:%s' % php,
+									'pull': 'always',
+									'environment': {
+										'TEST_SERVER_URL': 'http://server',
+										'BEHAT_SUITE': suite,
+										'SELENIUM_HOST': 'selenium',
+										'SELENIUM_PORT': '4444',
+										'BROWSER': browser,
+										'PLATFORM': 'Linux',
+									},
+									'commands': [
+										'touch /var/www/owncloud/saved-settings.sh',
+										'. /var/www/owncloud/saved-settings.sh',
+										'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
+										'make test-acceptance-webui'
+									]
+								} if isWebUI else None),
+								({
+									'name': 'acceptance-tests',
+									'image': 'owncloudci/php:%s' % php,
+									'pull': 'always',
+									'environment': {
+										'TEST_SERVER_URL': 'http://server',
+										'BEHAT_SUITE': suite
+									},
+									'commands': [
+										'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
+										'make test-acceptance-api'
+									]
+								} if isAPI else None),
+							],
+							'services': databaseService(db)
+								+ browserService(browser)
+								+ owncloudService(server, php, 'server', '/var/www/owncloud/server', False)
+								+ (owncloudService(server, php, 'federated', '/var/www/owncloud/federated', False) if federate else []),
+							'depends_on': [],
+							'trigger': {
+								'ref': [
+									'refs/pull/**',
+									'refs/tags/**'
+								]
 							}
-						},
-						{
-							'name': 'configure-federation',
-							'image': 'owncloudci/php:%s' % php,
-							'pull': 'always',
-							'commands': [
-								'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
-								'cd /var/www/owncloud/federated',
-								'php occ a:l',
-								'php occ a:e testing',
-								'php occ a:l',
-								'php occ config:system:set trusted_domains 1 --value=federated',
-								'php occ log:manage --level 0',
-								'php occ config:list'
-							]
 						}
-					] if matrix['federate'] else []) + [
-						setupServerAndApp(php),
-						fixPermissions(php),
-						({
-							'name': 'acceptance-tests',
-							'image': 'owncloudci/php:%s' % php,
-							'pull': 'always',
-							'environment': {
-								'TEST_SERVER_URL': 'http://server',
-								'BEHAT_SUITE': suite,
-								'SELENIUM_HOST': 'selenium',
-								'SELENIUM_PORT': '4444',
-								'BROWSER': browser,
-								'PLATFORM': 'Linux',
-							},
-							'commands': [
-								'touch /var/www/owncloud/saved-settings.sh',
-								'. /var/www/owncloud/saved-settings.sh',
-								'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
-								'make test-acceptance-webui'
-							]
-						} if suite.startswith('webUI') else None),
-						({
-							'name': 'acceptance-tests',
-							'image': 'owncloudci/php:%s' % php,
-							'pull': 'always',
-							'environment': {
-								'TEST_SERVER_URL': 'http://server',
-								'BEHAT_SUITE': suite
-							},
-							'commands': [
-								'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
-								'make test-acceptance-api'
-							]
-						} if suite.startswith('api') else None),
-					],
-					'services': databaseService('mariadb:10.2')
-						+ browserService(browser)
-						+ owncloudService(server, php, 'server', '/var/www/owncloud/server', False)
-						+ (owncloudService(server, php, 'federated', '/var/www/owncloud/federated', False) if matrix['federate'] else []),
-					'depends_on': [],
-					'trigger': {
-						'ref': [
-							'refs/pull/**',
-							'refs/tags/**'
-						]
-					}
-				}
 
-				for branch in config['branches']:
-					result['trigger']['ref'].append('refs/heads/%s' % branch)
+						for branch in config['branches']:
+							result['trigger']['ref'].append('refs/heads/%s' % branch)
 
-				pipelines.append(result)
+						pipelines.append(result)
 
 	return pipelines
 
