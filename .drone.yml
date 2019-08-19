@@ -362,8 +362,6 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
-      USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-master-qa
 
     - PHP_VERSION: 7.1
       OC_VERSION: daily-master-qa
@@ -444,8 +442,6 @@ matrix:
       NEED_CORE: true
       NEED_SERVER: true
       NEED_INSTALL_APP: true
-      USE_FEDERATED_SERVER: true
-      FEDERATION_OC_VERSION: daily-master-qa
 
     - PHP_VERSION: 7.1
       OC_VERSION: 10.2.1
