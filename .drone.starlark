@@ -51,7 +51,6 @@ config = {
 			'federate': True
 		},
 		'webUIActivitySharingInternal': {
-			'federate': True
 		},
 		'webUIActivityTags': {
 		},
