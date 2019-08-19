@@ -785,7 +785,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycomments-chrome-m
+name: webuiactivitycomments-chrome-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -894,7 +894,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycomments-firefox-
+name: webuiactivitycomments-firefox-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1004,7 +1004,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycomments-chrome-1
+name: webuiactivitycomments-chrome-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1113,7 +1113,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycomments-firefox-
+name: webuiactivitycomments-firefox-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1223,7 +1223,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycreateupdate-chro
+name: webuiactivitycreateupdate-chrome-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1332,7 +1332,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycreateupdate-fire
+name: webuiactivitycreateupdate-firefox-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1442,7 +1442,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycreateupdate-chro
+name: webuiactivitycreateupdate-chrome-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1551,7 +1551,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitycreateupdate-fire
+name: webuiactivitycreateupdate-firefox-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1661,7 +1661,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitydeleterestore-chr
+name: webuiactivitydeleterestore-chrome-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1770,7 +1770,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitydeleterestore-fir
+name: webuiactivitydeleterestore-firefox-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1880,7 +1880,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitydeleterestore-chr
+name: webuiactivitydeleterestore-chrome-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1989,7 +1989,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitydeleterestore-fir
+name: webuiactivitydeleterestore-firefox-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2099,7 +2099,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharingexternal-c
+name: webuiactivitysharingexternal-chrome-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2240,7 +2240,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharingexternal-f
+name: webuiactivitysharingexternal-firefox-master-qa-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2382,7 +2382,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharingexternal-c
+name: webuiactivitysharingexternal-chrome-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2523,7 +2523,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharingexternal-f
+name: webuiactivitysharingexternal-firefox-10.2.1-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2665,7 +2665,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharinginternal-c
+name: webuiactivitysharinginternal-chrome-master-qa-mariadb10.2-php7.1
 
 platform:
   os: linux
@@ -2774,7 +2774,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharinginternal-f
+name: webuiactivitysharinginternal-firefox-master-qa-mariadb10.2-php7.1
 
 platform:
   os: linux
@@ -2884,7 +2884,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharinginternal-c
+name: webuiactivitysharinginternal-chrome-10.2.1-mariadb10.2-php7.1
 
 platform:
   os: linux
@@ -2993,7 +2993,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitysharinginternal-f
+name: webuiactivitysharinginternal-firefox-10.2.1-mariadb10.2-php7.1
 
 platform:
   os: linux
@@ -3103,7 +3103,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitytags-chrome-maste
+name: webuiactivitytags-chrome-master-qa-mariadb10.2-php7.2
 
 platform:
   os: linux
@@ -3212,7 +3212,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitytags-firefox-mast
+name: webuiactivitytags-firefox-master-qa-mariadb10.2-php7.2
 
 platform:
   os: linux
@@ -3322,7 +3322,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitytags-chrome-10.2.
+name: webuiactivitytags-chrome-10.2.1-mariadb10.2-php7.2
 
 platform:
   os: linux
@@ -3431,7 +3431,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webuiactivitytags-firefox-10.2
+name: webuiactivitytags-firefox-10.2.1-mariadb10.2-php7.2
 
 platform:
   os: linux
@@ -3541,7 +3541,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiactivity-master-qa-sqlite-p
+name: apiactivity-master-qa-sqlite-php7.2
 
 platform:
   os: linux
@@ -3629,7 +3629,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiactivity-master-qa-postgres
+name: apiactivity-master-qa-postgres-php7.2
 
 platform:
   os: linux
@@ -3725,7 +3725,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiactivity-10.2.1-sqlite-php7
+name: apiactivity-10.2.1-sqlite-php7.2
 
 platform:
   os: linux
@@ -3813,7 +3813,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiactivity-10.2.1-postgres-ph
+name: apiactivity-10.2.1-postgres-php7.2
 
 platform:
   os: linux
@@ -3944,33 +3944,33 @@ depends_on:
 - phpunit-php7.2-mariadb10.2
 - phpunit-php7.3-sqlite
 - phpunit-php7.3-mariadb10.2
-- webuiactivitycomments-chrome-m
-- webuiactivitycomments-firefox-
-- webuiactivitycomments-chrome-1
-- webuiactivitycomments-firefox-
-- webuiactivitycreateupdate-chro
-- webuiactivitycreateupdate-fire
-- webuiactivitycreateupdate-chro
-- webuiactivitycreateupdate-fire
-- webuiactivitydeleterestore-chr
-- webuiactivitydeleterestore-fir
-- webuiactivitydeleterestore-chr
-- webuiactivitydeleterestore-fir
-- webuiactivitysharingexternal-c
-- webuiactivitysharingexternal-f
-- webuiactivitysharingexternal-c
-- webuiactivitysharingexternal-f
-- webuiactivitysharinginternal-c
-- webuiactivitysharinginternal-f
-- webuiactivitysharinginternal-c
-- webuiactivitysharinginternal-f
-- webuiactivitytags-chrome-maste
-- webuiactivitytags-firefox-mast
-- webuiactivitytags-chrome-10.2.
-- webuiactivitytags-firefox-10.2
-- apiactivity-master-qa-sqlite-p
-- apiactivity-master-qa-postgres
-- apiactivity-10.2.1-sqlite-php7
-- apiactivity-10.2.1-postgres-ph
+- webuiactivitycomments-chrome-master-qa-mariadb10.2-php7.0
+- webuiactivitycomments-firefox-master-qa-mariadb10.2-php7.0
+- webuiactivitycomments-chrome-10.2.1-mariadb10.2-php7.0
+- webuiactivitycomments-firefox-10.2.1-mariadb10.2-php7.0
+- webuiactivitycreateupdate-chrome-master-qa-mariadb10.2-php7.0
+- webuiactivitycreateupdate-firefox-master-qa-mariadb10.2-php7.0
+- webuiactivitycreateupdate-chrome-10.2.1-mariadb10.2-php7.0
+- webuiactivitycreateupdate-firefox-10.2.1-mariadb10.2-php7.0
+- webuiactivitydeleterestore-chrome-master-qa-mariadb10.2-php7.0
+- webuiactivitydeleterestore-firefox-master-qa-mariadb10.2-php7.0
+- webuiactivitydeleterestore-chrome-10.2.1-mariadb10.2-php7.0
+- webuiactivitydeleterestore-firefox-10.2.1-mariadb10.2-php7.0
+- webuiactivitysharingexternal-chrome-master-qa-mariadb10.2-php7.0
+- webuiactivitysharingexternal-firefox-master-qa-mariadb10.2-php7.0
+- webuiactivitysharingexternal-chrome-10.2.1-mariadb10.2-php7.0
+- webuiactivitysharingexternal-firefox-10.2.1-mariadb10.2-php7.0
+- webuiactivitysharinginternal-chrome-master-qa-mariadb10.2-php7.1
+- webuiactivitysharinginternal-firefox-master-qa-mariadb10.2-php7.1
+- webuiactivitysharinginternal-chrome-10.2.1-mariadb10.2-php7.1
+- webuiactivitysharinginternal-firefox-10.2.1-mariadb10.2-php7.1
+- webuiactivitytags-chrome-master-qa-mariadb10.2-php7.2
+- webuiactivitytags-firefox-master-qa-mariadb10.2-php7.2
+- webuiactivitytags-chrome-10.2.1-mariadb10.2-php7.2
+- webuiactivitytags-firefox-10.2.1-mariadb10.2-php7.2
+- apiactivity-master-qa-sqlite-php7.2
+- apiactivity-master-qa-postgres-php7.2
+- apiactivity-10.2.1-sqlite-php7.2
+- apiactivity-10.2.1-postgres-php7.2
 
 ...
