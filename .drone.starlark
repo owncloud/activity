@@ -79,7 +79,7 @@ config = {
 			],
 			'db': [
 				'sqlite',
-				'pgsql',
+				'postgres',
 			]
 		},
 	}

@@ -3629,7 +3629,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiActivity-master-qa-pgsql-php7.2
+name: apiActivity-master-qa-postgres-php7.2
 
 platform:
   os: linux
@@ -3645,7 +3645,7 @@ steps:
   image: owncloudci/core
   settings:
     core_path: /var/www/owncloud/server
-    db_host: pgsql
+    db_host: postgres
     db_name: owncloud
     db_password: owncloud
     db_type: pgsql
@@ -3692,6 +3692,14 @@ steps:
     TEST_SERVER_URL: http://server
 
 services:
+- name: postgres
+  pull: always
+  image: postgres
+  environment:
+    POSTGRES_DB: owncloud
+    POSTGRES_PASSWORD: owncloud
+    POSTGRES_USER: owncloud
+
 - name: server
   pull: always
   image: owncloudci/php:7.2
@@ -3805,7 +3813,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiActivity-10.2.1-pgsql-php7.2
+name: apiActivity-10.2.1-postgres-php7.2
 
 platform:
   os: linux
@@ -3821,7 +3829,7 @@ steps:
   image: owncloudci/core
   settings:
     core_path: /var/www/owncloud/server
-    db_host: pgsql
+    db_host: postgres
     db_name: owncloud
     db_password: owncloud
     db_type: pgsql
@@ -3868,6 +3876,14 @@ steps:
     TEST_SERVER_URL: http://server
 
 services:
+- name: postgres
+  pull: always
+  image: postgres
+  environment:
+    POSTGRES_DB: owncloud
+    POSTGRES_PASSWORD: owncloud
+    POSTGRES_USER: owncloud
+
 - name: server
   pull: always
   image: owncloudci/php:7.2
@@ -3953,8 +3969,8 @@ depends_on:
 - webUIActivityTags-chrome-10.2.1-mariadb10.2-php7.2
 - webUIActivityTags-firefox-10.2.1-mariadb10.2-php7.2
 - apiActivity-master-qa-sqlite-php7.2
-- apiActivity-master-qa-pgsql-php7.2
+- apiActivity-master-qa-postgres-php7.2
 - apiActivity-10.2.1-sqlite-php7.2
-- apiActivity-10.2.1-pgsql-php7.2
+- apiActivity-10.2.1-postgres-php7.2
 
 ...
