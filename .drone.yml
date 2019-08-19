@@ -50,7 +50,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -100,7 +100,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -163,7 +163,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -236,7 +236,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -309,7 +309,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -381,7 +381,7 @@ steps:
     db_username: system
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -454,7 +454,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -508,7 +508,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -572,7 +572,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -626,7 +626,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -690,7 +690,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -744,7 +744,7 @@ steps:
     db_username: owncloud
     version: daily-master-qa
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -817,7 +817,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -926,7 +926,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1036,7 +1036,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1145,7 +1145,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1255,7 +1255,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1364,7 +1364,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1474,7 +1474,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1583,7 +1583,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1693,7 +1693,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1802,7 +1802,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -1912,7 +1912,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -2021,7 +2021,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -2151,7 +2151,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -2292,7 +2292,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -2434,7 +2434,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -2575,7 +2575,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -2717,7 +2717,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -2858,7 +2858,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3000,7 +3000,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3141,7 +3141,7 @@ steps:
   - php occ log:manage --level 0
   - php occ config:list
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3263,7 +3263,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3372,7 +3372,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3482,7 +3482,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3591,7 +3591,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3701,7 +3701,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -3798,7 +3798,7 @@ steps:
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
-- name: install-activity
+- name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:

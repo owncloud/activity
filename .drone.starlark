@@ -124,10 +124,10 @@ def main(ctx):
 	before = beforePipelines()
 
 	stages = stagePipelines()
-	names(before, stages)
+	dependsOn(before, stages)
 
 	after = afterPipelines()
-	names(stages, after)
+	dependsOn(stages, after)
 
 	return before + stages + after
 
@@ -188,8 +188,8 @@ def javascript():
 			'path': 'server/apps/%s' % config['app']
 		},
 		'steps': [
-			core('daily-master-qa', 'sqlite'),
-			install('7.0'),
+			installCore('daily-master-qa', 'sqlite'),
+			setupServerAndApp('7.0'),
 			{
 				'name': 'javascript-tests',
 				'image': 'owncloudci/php:7.0',
@@ -232,8 +232,8 @@ def phpunit():
 					'path': 'server/apps/%s' % config['app']
 				},
 				'steps': [
-					core('daily-master-qa', db),
-					install('7.0'),
+					installCore('daily-master-qa', db),
+					setupServerAndApp('7.0'),
 					{
 						'name': 'phpunit-tests',
 						'image': 'owncloudci/php:%s' % php,
@@ -243,7 +243,7 @@ def phpunit():
 						]
 					}
 				],
-				'services': database(db),
+				'services': databaseService(db),
 				'depends_on': [],
 				'trigger': {
 					'ref': [
@@ -280,12 +280,12 @@ def acceptance():
 
 	for suite, matrix in config['acceptance'].items():
 		for server in matrix['server']:
-			for browse in matrix['browser']:
+			for browser in matrix['browser']:
 				name = 'unknown'
 				php = '7.0'
 
 				if suite.startswith('webUI'):
-					name = 'webui-%s-%s-%s' % (suite.replace('webUI', ''), browse, server.replace('daily-', '').replace('-qa', ''))
+					name = 'webui-%s-%s-%s' % (suite.replace('webUI', ''), browser, server.replace('daily-', '').replace('-qa', ''))
 
 				if suite.startswith('api'):
 					name = 'api-%s-%s' % (suite.replace('api', ''), server.replace('daily-', '').replace('-qa', ''))
@@ -299,9 +299,8 @@ def acceptance():
 						'path': 'server/apps/%s' % config['app']
 					},
 					'steps': [
-						core(server, 'mariadb:10.2')
-					] + [
-						testrunner(php)
+						installCore(server, 'mariadb:10.2'),
+						installTestrunner(php)
 					] + ([
 						{
 							'name': 'install-federation',
@@ -328,8 +327,8 @@ def acceptance():
 							]
 						}
 					] if matrix['federate'] else []) + [
-						install(php),
-						perms(php),
+						setupServerAndApp(php),
+						fixPermissions(php),
 						({
 							'name': 'acceptance-tests',
 							'image': 'owncloudci/php:%s' % php,
@@ -339,7 +338,7 @@ def acceptance():
 								'BEHAT_SUITE': suite,
 								'SELENIUM_HOST': 'selenium',
 								'SELENIUM_PORT': '4444',
-								'BROWSER': browse,
+								'BROWSER': browser,
 								'PLATFORM': 'Linux',
 							},
 							'commands': [
@@ -363,10 +362,10 @@ def acceptance():
 							]
 						} if suite.startswith('api') else None),
 					],
-					'services': database('mariadb:10.2')
-						+ browser(browse)
-						+ owncloud(server, php, 'server', '/var/www/owncloud/server', False)
-						+ (owncloud(server, php, 'federated', '/var/www/owncloud/federated', False) if matrix['federate'] else []),
+					'services': databaseService('mariadb:10.2')
+						+ browserService(browser)
+						+ owncloudService(server, php, 'server', '/var/www/owncloud/server', False)
+						+ (owncloudService(server, php, 'federated', '/var/www/owncloud/federated', False) if matrix['federate'] else []),
 					'depends_on': [],
 					'trigger': {
 						'ref': [
@@ -417,7 +416,7 @@ def notify():
 
 	return result
 
-def database(name):
+def databaseService(name):
 	if name.startswith('mariadb'):
 		return [{
 			'name': 'mariadb',
@@ -471,7 +470,7 @@ def database(name):
 
 	return []
 
-def browser(name):
+def browserService(name):
 	if name == 'chrome':
 		return [{
 			'name': 'selenium',
@@ -495,7 +494,7 @@ def browser(name):
 
 	return []
 
-def owncloud(version, php, name = 'server', path = '/var/www/owncloud/server', ssl = True):
+def owncloudService(version, php, name = 'server', path = '/var/www/owncloud/server', ssl = True):
 	if ssl:
 		environment = {
 			'APACHE_WEBROOT': path,
@@ -523,7 +522,7 @@ def owncloud(version, php, name = 'server', path = '/var/www/owncloud/server', s
 		]
 	}]
 
-def core(version, db):
+def installCore(version, db):
 	host = db.split(':')[0]
 	name = host
 
@@ -559,7 +558,7 @@ def core(version, db):
 		}
 	}
 
-def testrunner(php):
+def installTestrunner(php):
 	return {
 		'name': 'install-testrunner',
 		'image': 'owncloudci/php:%s' % php,
@@ -572,9 +571,9 @@ def testrunner(php):
 		]
 	}
 
-def install(php):
+def setupServerAndApp(php):
 	return {
-		'name': 'install-%s' % config['app'],
+		'name': 'setup-server-%s' % config['app'],
 		'image': 'owncloudci/php:%s' % php,
 		'pull': 'always',
 		'commands': [
@@ -588,7 +587,7 @@ def install(php):
 		]
 	}
 
-def perms(php):
+def fixPermissions(php):
 	return {
 		'name': 'fix-permissions',
 		'image': 'owncloudci/php:%s' % php,
@@ -600,7 +599,7 @@ def perms(php):
 		]
 	}
 
-def names(source, into):
-	for stage in source:
-		for step in into:
-			step['depends_on'].append(stage['name'])
+def dependsOn(earlierStages, nextStages):
+	for earlierStage in earlierStages:
+		for nextStage in nextStages:
+			nextStage['depends_on'].append(earlierStage['name'])
