@@ -113,7 +113,7 @@ config = {
 				'10.2.1'
 			],
 			'browser': [
-				'headless'
+				'none'
 			],
 			'federate': False
 		}
@@ -288,7 +288,7 @@ def acceptance():
 					name = 'webui-%s-%s-%s' % (suite.replace('webUI', ''), browse, server.replace('daily-', '').replace('-qa', ''))
 
 				if suite.startswith('api'):
-					name = 'api-%s-%s-%s' % (suite.replace('api', ''), browse, server.replace('daily-', '').replace('-qa', ''))
+					name = 'api-%s-%s' % (suite.replace('api', ''), server.replace('daily-', '').replace('-qa', ''))
 
 				result = {
 					'kind': 'pipeline',
