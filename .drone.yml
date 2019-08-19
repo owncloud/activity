@@ -785,7 +785,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityComments-chrome-m
+name: webuiactivitycomments-chrome-m
 
 platform:
   os: linux
@@ -894,7 +894,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityComments-firefox-
+name: webuiactivitycomments-firefox-
 
 platform:
   os: linux
@@ -1004,7 +1004,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityComments-chrome-1
+name: webuiactivitycomments-chrome-1
 
 platform:
   os: linux
@@ -1113,7 +1113,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityComments-firefox-
+name: webuiactivitycomments-firefox-
 
 platform:
   os: linux
@@ -1223,7 +1223,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityCreateUpdate-chro
+name: webuiactivitycreateupdate-chro
 
 platform:
   os: linux
@@ -1332,7 +1332,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityCreateUpdate-fire
+name: webuiactivitycreateupdate-fire
 
 platform:
   os: linux
@@ -1442,7 +1442,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityCreateUpdate-chro
+name: webuiactivitycreateupdate-chro
 
 platform:
   os: linux
@@ -1551,7 +1551,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityCreateUpdate-fire
+name: webuiactivitycreateupdate-fire
 
 platform:
   os: linux
@@ -1661,7 +1661,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityDeleteRestore-chr
+name: webuiactivitydeleterestore-chr
 
 platform:
   os: linux
@@ -1770,7 +1770,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityDeleteRestore-fir
+name: webuiactivitydeleterestore-fir
 
 platform:
   os: linux
@@ -1880,7 +1880,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityDeleteRestore-chr
+name: webuiactivitydeleterestore-chr
 
 platform:
   os: linux
@@ -1989,7 +1989,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityDeleteRestore-fir
+name: webuiactivitydeleterestore-fir
 
 platform:
   os: linux
@@ -2099,7 +2099,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingExternal-c
+name: webuiactivitysharingexternal-c
 
 platform:
   os: linux
@@ -2240,7 +2240,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingExternal-f
+name: webuiactivitysharingexternal-f
 
 platform:
   os: linux
@@ -2382,7 +2382,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingExternal-c
+name: webuiactivitysharingexternal-c
 
 platform:
   os: linux
@@ -2523,7 +2523,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingExternal-f
+name: webuiactivitysharingexternal-f
 
 platform:
   os: linux
@@ -2665,7 +2665,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingInternal-c
+name: webuiactivitysharinginternal-c
 
 platform:
   os: linux
@@ -2774,7 +2774,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingInternal-f
+name: webuiactivitysharinginternal-f
 
 platform:
   os: linux
@@ -2884,7 +2884,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingInternal-c
+name: webuiactivitysharinginternal-c
 
 platform:
   os: linux
@@ -2993,7 +2993,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivitySharingInternal-f
+name: webuiactivitysharinginternal-f
 
 platform:
   os: linux
@@ -3103,7 +3103,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityTags-chrome-maste
+name: webuiactivitytags-chrome-maste
 
 platform:
   os: linux
@@ -3212,7 +3212,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityTags-firefox-mast
+name: webuiactivitytags-firefox-mast
 
 platform:
   os: linux
@@ -3322,7 +3322,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityTags-chrome-10.2.
+name: webuiactivitytags-chrome-10.2.
 
 platform:
   os: linux
@@ -3431,7 +3431,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIActivityTags-firefox-10.2
+name: webuiactivitytags-firefox-10.2
 
 platform:
   os: linux
@@ -3541,7 +3541,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiActivity-master-qa-sqlite-p
+name: apiactivity-master-qa-sqlite-p
 
 platform:
   os: linux
@@ -3629,7 +3629,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiActivity-master-qa-postgres
+name: apiactivity-master-qa-postgres
 
 platform:
   os: linux
@@ -3725,7 +3725,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiActivity-10.2.1-sqlite-php7
+name: apiactivity-10.2.1-sqlite-php7
 
 platform:
   os: linux
@@ -3813,7 +3813,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiActivity-10.2.1-postgres-ph
+name: apiactivity-10.2.1-postgres-ph
 
 platform:
   os: linux
@@ -3944,33 +3944,33 @@ depends_on:
 - phpunit-php7.2-mariadb10.2
 - phpunit-php7.3-sqlite
 - phpunit-php7.3-mariadb10.2
-- webUIActivityComments-chrome-m
-- webUIActivityComments-firefox-
-- webUIActivityComments-chrome-1
-- webUIActivityComments-firefox-
-- webUIActivityCreateUpdate-chro
-- webUIActivityCreateUpdate-fire
-- webUIActivityCreateUpdate-chro
-- webUIActivityCreateUpdate-fire
-- webUIActivityDeleteRestore-chr
-- webUIActivityDeleteRestore-fir
-- webUIActivityDeleteRestore-chr
-- webUIActivityDeleteRestore-fir
-- webUIActivitySharingExternal-c
-- webUIActivitySharingExternal-f
-- webUIActivitySharingExternal-c
-- webUIActivitySharingExternal-f
-- webUIActivitySharingInternal-c
-- webUIActivitySharingInternal-f
-- webUIActivitySharingInternal-c
-- webUIActivitySharingInternal-f
-- webUIActivityTags-chrome-maste
-- webUIActivityTags-firefox-mast
-- webUIActivityTags-chrome-10.2.
-- webUIActivityTags-firefox-10.2
-- apiActivity-master-qa-sqlite-p
-- apiActivity-master-qa-postgres
-- apiActivity-10.2.1-sqlite-php7
-- apiActivity-10.2.1-postgres-ph
+- webuiactivitycomments-chrome-m
+- webuiactivitycomments-firefox-
+- webuiactivitycomments-chrome-1
+- webuiactivitycomments-firefox-
+- webuiactivitycreateupdate-chro
+- webuiactivitycreateupdate-fire
+- webuiactivitycreateupdate-chro
+- webuiactivitycreateupdate-fire
+- webuiactivitydeleterestore-chr
+- webuiactivitydeleterestore-fir
+- webuiactivitydeleterestore-chr
+- webuiactivitydeleterestore-fir
+- webuiactivitysharingexternal-c
+- webuiactivitysharingexternal-f
+- webuiactivitysharingexternal-c
+- webuiactivitysharingexternal-f
+- webuiactivitysharinginternal-c
+- webuiactivitysharinginternal-f
+- webuiactivitysharinginternal-c
+- webuiactivitysharinginternal-f
+- webuiactivitytags-chrome-maste
+- webuiactivitytags-firefox-mast
+- webuiactivitytags-chrome-10.2.
+- webuiactivitytags-firefox-10.2
+- apiactivity-master-qa-sqlite-p
+- apiactivity-master-qa-postgres
+- apiactivity-10.2.1-sqlite-php7
+- apiactivity-10.2.1-postgres-ph
 
 ...

@@ -274,7 +274,8 @@ def acceptance():
 							if isWebUI or isAPI:
 								browserString = '' if browser == '' else '-' + browser
 								fullname = '%s%s-%s-%s-php%s' % (suite, browserString, server.replace('daily-', ''), db.replace(':',''), php)
-								name = fullname[0:30]
+								lowername = fullname.lower()
+								name = lowername[0:30]
 
 							result = {
 								'kind': 'pipeline',
