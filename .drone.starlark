@@ -169,12 +169,15 @@ def phpstan():
 
 	default = {
 		'phpVersions': ['7.2'],
+		'logLevel': '2',
 	}
 
 	if 'defaults' in config:
 		if 'phpstan' in config['defaults']:
 			if 'phpVersions' in config['defaults']['phpstan']:
 				default['phpVersions'] = config['defaults']['phpstan']['phpVersions']
+			if 'logLevel' in config['defaults']['phpstan']:
+				default['logLevel'] = config['defaults']['phpstan']['logLevel']
 
 	phpstanConfig = config['phpstan']
 
@@ -191,6 +194,7 @@ def phpstan():
 
 	for category, matrix in phpstanConfig.items():
 		phpVersions = matrix['phpVersions'] if 'phpVersions' in matrix else default['phpVersions']
+		logLevel = matrix['logLevel'] if 'logLevel' in matrix else default['logLevel']
 
 		for phpVersion in phpVersions:
 			name = 'phpstan-php%s' % phpVersion
@@ -205,7 +209,7 @@ def phpstan():
 				},
 				'steps': [
 					installCore('daily-master-qa', 'sqlite'),
-					setupServerAndApp(phpVersion),
+					setupServerAndApp(phpVersion, logLevel),
 					{
 						'name': 'phpstan',
 						'image': 'owncloudci/php:%s' % phpVersion,
@@ -301,13 +305,30 @@ def phan():
 	return pipelines
 
 def javascript():
-	if 'javascript' in config:
-		doJavascript = config['javascript']
-	else:
-		doJavascript = False
+	pipelines = []
 
-	if doJavascript == False:
-		return []
+	if 'javascript' not in config:
+		return pipelines
+
+	default = {
+		'logLevel': '2',
+	}
+
+	if 'defaults' in config:
+		if 'javascript' in config['defaults']:
+			if 'logLevel' in config['defaults']['javascript']:
+				default['logLevel'] = config['defaults']['javascript']['logLevel']
+
+	javascriptConfig = config['javascript']
+
+	if type(javascriptConfig) == "bool":
+		if javascriptConfig:
+			# the config has 'javascript' true, so specify an empty dict that will get the defaults
+			javascriptConfig = {}
+		else:
+			return pipelines
+
+	logLevel = javascriptConfig['logLevel'] if 'logLevel' in javascriptConfig else default['logLevel']
 
 	result = {
 		'kind': 'pipeline',
@@ -319,7 +340,7 @@ def javascript():
 		},
 		'steps': [
 			installCore('daily-master-qa', 'sqlite'),
-			setupServerAndApp('7.0'),
+			setupServerAndApp('7.0', logLevel),
 			{
 				'name': 'javascript-tests',
 				'image': 'owncloudci/php:7.0',
@@ -355,6 +376,7 @@ def phpunit():
 			'sqlite', 'mariadb:10.2', 'mysql:5.5', 'mysql:5.7', 'postgres:9.4', 'oracle'
 		],
 		'coverage': True,
+		'logLevel': '2',
 	}
 
 	if 'defaults' in config:
@@ -363,6 +385,8 @@ def phpunit():
 				default['databases'] = config['defaults']['phpunit']['databases']
 			if 'coverage' in config['defaults']['phpunit']:
 				default['databases'] = config['defaults']['phpunit']['coverage']
+			if 'logLevel' in config['defaults']['phpunit']:
+				default['logLevel'] = config['defaults']['phpunit']['logLevel']
 
 	phpunitConfig = config['phpunit']
 
@@ -380,6 +404,7 @@ def phpunit():
 	for category, matrix in phpunitConfig.items():
 		databases = matrix['databases'] if 'databases' in matrix else default['databases']
 		coverage = matrix['coverage'] if 'coverage' in matrix else default['coverage']
+		logLevel = matrix['logLevel'] if 'logLevel' in matrix else default['logLevel']
 		phpVersions = matrix['phpVersions'] if 'phpVersions' in matrix else default['phpVersions']
 
 		for phpVersion in phpVersions:
@@ -400,7 +425,7 @@ def phpunit():
 					},
 					'steps': [
 						installCore('daily-master-qa', db),
-						setupServerAndApp(phpVersion),
+						setupServerAndApp(phpVersion, logLevel),
 						{
 							'name': 'phpunit-tests',
 							'image': 'owncloudci/php:%s' % phpVersion,
@@ -457,6 +482,7 @@ def acceptance():
 		'databases': ['mariadb:10.2'],
 		'federatedServerNeeded': False,
 		'filterTags': '',
+		'logLevel': '2',
 		'emailNeeded': False,
 		'extraSetup': None,
 		'extraServices': [],
@@ -466,17 +492,19 @@ def acceptance():
 	if 'defaults' in config:
 		if 'acceptance' in config['defaults']:
 			if 'servers' in config['defaults']['acceptance']:
-				default['databases'] = config['defaults']['acceptance']['servers']
+				default['servers'] = config['defaults']['acceptance']['servers']
 			if 'browsers' in config['defaults']['acceptance']:
-				default['databases'] = config['defaults']['acceptance']['browsers']
+				default['browsers'] = config['defaults']['acceptance']['browsers']
 			if 'phpVersions' in config['defaults']['acceptance']:
-				default['databases'] = config['defaults']['acceptance']['phpVersions']
+				default['phpVersions'] = config['defaults']['acceptance']['phpVersions']
 			if 'databases' in config['defaults']['acceptance']:
 				default['databases'] = config['defaults']['acceptance']['databases']
 			if 'federatedServerNeeded' in config['defaults']['acceptance']:
-				default['databases'] = config['defaults']['acceptance']['federatedServerNeeded']
+				default['federatedServerNeeded'] = config['defaults']['acceptance']['federatedServerNeeded']
 			if 'filterTags' in config['defaults']['acceptance']:
-				default['databases'] = config['defaults']['acceptance']['filterTags']
+				default['filterTags'] = config['defaults']['acceptance']['filterTags']
+			if 'logLevel' in config['defaults']['acceptance']:
+				default['logLevel'] = config['defaults']['acceptance']['logLevel']
 			if 'emailNeeded' in config['defaults']['acceptance']:
 				default['emailNeeded'] = config['defaults']['acceptance']['emailNeeded']
 			if 'extraSetup' in config['defaults']['acceptance']:
@@ -508,6 +536,7 @@ def acceptance():
 			databases = matrix['databases'] if 'databases' in matrix else default['databases']
 			federatedServerNeeded = matrix['federatedServerNeeded'] if 'federatedServerNeeded' in matrix else default['federatedServerNeeded']
 			filterTags = matrix['filterTags'] if 'filterTags' in matrix else default['filterTags']
+			logLevel = matrix['logLevel'] if 'logLevel' in matrix else default['logLevel']
 			emailNeeded = matrix['emailNeeded'] if 'emailNeeded' in matrix else default['emailNeeded']
 			extraSetup = matrix['extraSetup'] if 'extraSetup' in matrix else default['extraSetup']
 			extraServices = matrix['extraServices'] if 'extraServices' in matrix else default['extraServices']
@@ -528,23 +557,24 @@ def acceptance():
 									print("Error: generated stage name of length", nameLength, "is not supported. The maximum length is " + str(maxLength) + ".", name)
 									errorFound = True
 
-							if isWebUI:
-								environment = {
-									'TEST_SERVER_URL': 'http://server',
-									'BEHAT_FILTER_TAGS': filterTags,
-									'BEHAT_SUITE': suite,
-									'SELENIUM_HOST': 'selenium',
-									'SELENIUM_PORT': '4444',
-									'BROWSER': browser,
-									'PLATFORM': 'Linux',
-								}
+							environment = {
+								'TEST_SERVER_URL': 'http://server',
+								'BEHAT_FILTER_TAGS': filterTags,
+								'BEHAT_SUITE': suite,
+							}
 
-							if isAPI or isCLI:
-								environment = {
-									'TEST_SERVER_URL': 'http://server',
-									'BEHAT_FILTER_TAGS': filterTags,
-									'BEHAT_SUITE': suite,
-								}
+							if isWebUI:
+								environment['SELENIUM_HOST'] = 'selenium'
+								environment['SELENIUM_PORT'] = '4444'
+								environment['BROWSER'] = browser
+								environment['PLATFORM'] = 'Linux'
+								makeParameter = 'test-acceptance-webui'
+
+							if isAPI:
+								makeParameter = 'test-acceptance-api'
+
+							if isCLI:
+								makeParameter = 'test-acceptance-cli'
 
 							if emailNeeded:
 								environment['MAILHOG_HOST'] = 'email'
@@ -586,7 +616,7 @@ def acceptance():
 										]
 									}
 								] if federatedServerNeeded else []) + [
-									setupServerAndApp(phpVersion),
+									setupServerAndApp(phpVersion, logLevel),
 									installExtraApps(phpVersion, extraApps),
 									extraSetup,
 									fixPermissions(phpVersion),
@@ -599,29 +629,9 @@ def acceptance():
 											'touch /var/www/owncloud/saved-settings.sh',
 											'. /var/www/owncloud/saved-settings.sh',
 											'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
-											'make test-acceptance-webui'
+											'make %s' % makeParameter
 										]
-									} if isWebUI else None),
-									({
-										'name': 'acceptance-tests',
-										'image': 'owncloudci/php:%s' % phpVersion,
-										'pull': 'always',
-										'environment': environment,
-										'commands': [
-											'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
-											'make test-acceptance-api'
-										]
-									} if isAPI else None),
-									({
-										'name': 'acceptance-tests',
-										'image': 'owncloudci/php:%s' % phpVersion,
-										'pull': 'always',
-										'environment': environment,
-										'commands': [
-											'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
-											'make test-acceptance-cli'
-										]
-									} if isCLI else None),
+									}),
 								],
 								'services': databaseService(db)
 									+ browserService(browser)
@@ -682,54 +692,42 @@ def notify():
 
 	return result
 
-def databaseService(name):
-	if name.startswith('mariadb'):
+def databaseService(db):
+	dbName = getDbName(db)
+	if (dbName == 'mariadb') or (dbName == 'mysql'):
 		return [{
-			'name': 'mariadb',
-			'image': name,
+			'name': dbName,
+			'image': db,
 			'pull': 'always',
 			'environment': {
-				'MYSQL_USER': 'owncloud',
-				'MYSQL_PASSWORD': 'owncloud',
-				'MYSQL_DATABASE': 'owncloud',
-				'MYSQL_ROOT_PASSWORD': 'owncloud'
+				'MYSQL_USER': getDbUsername(db),
+				'MYSQL_PASSWORD': getDbPassword(db),
+				'MYSQL_DATABASE': getDbDatabase(db),
+				'MYSQL_ROOT_PASSWORD': getDbRootPassword()
 			}
 		}]
 
-	if name.startswith('mysql'):
+	if dbName == 'postgres':
 		return [{
-			'name': 'mysql',
-			'image': name,
+			'name': dbName,
+			'image': db,
 			'pull': 'always',
 			'environment': {
-				'MYSQL_USER': 'owncloud',
-				'MYSQL_PASSWORD': 'owncloud',
-				'MYSQL_DATABASE': 'owncloud',
-				'MYSQL_ROOT_PASSWORD': 'owncloud'
+				'POSTGRES_USER': getDbUsername(db),
+				'POSTGRES_PASSWORD': getDbPassword(db),
+				'POSTGRES_DB': getDbDatabase(db)
 			}
 		}]
 
-	if name.startswith('postgres'):
+	if dbName == 'oracle':
 		return [{
-			'name': 'postgres',
-			'image': name,
-			'pull': 'always',
-			'environment': {
-				'POSTGRES_USER': 'owncloud',
-				'POSTGRES_PASSWORD': 'owncloud',
-				'POSTGRES_DB': 'owncloud'
-			}
-		}]
-
-	if name.startswith('oracle'):
-		return [{
-			'name': 'oracle',
+			'name': dbName,
 			'image': 'deepdiver/docker-oracle-xe-11g:latest',
 			'pull': 'always',
 			'environment': {
-				'ORACLE_USER': 'system',
-				'ORACLE_PASSWORD': 'oracle',
-				'ORACLE_DB': 'XE',
+				'ORACLE_USER': getDbUsername(db),
+				'ORACLE_PASSWORD': getDbPassword(db),
+				'ORACLE_DB': getDbDatabase(db),
 				'ORACLE_DISABLE_ASYNCH_IO': 'true',
 			}
 		}]
@@ -798,25 +796,52 @@ def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncl
 		]
 	}]
 
-def installCore(version, db):
-	host = db.split(':')[0]
-	name = host
+def getDbName(db):
+	return db.split(':')[0]
 
-	username = 'owncloud'
-	password = 'owncloud'
-	database = 'owncloud'
-
-	if name == 'mariadb':
-		name = 'mysql'
-
-	if name == 'postgres':
-		name = 'pgsql'
+def getDbUsername(db):
+	name = getDbName(db)
 
 	if name == 'oracle':
-		name = 'oci'
-		username = 'system'
-		password = 'oracle'
-		database = 'XE'
+		return 'system'
+
+	return 'owncloud'
+
+def getDbPassword(db):
+	name = getDbName(db)
+
+	if name == 'oracle':
+		return 'oracle'
+
+	return 'owncloud'
+
+def getDbRootPassword():
+	return 'owncloud'
+
+def getDbDatabase(db):
+	name = getDbName(db)
+
+	if name == 'oracle':
+		return 'XE'
+
+	return 'owncloud'
+
+def installCore(version, db):
+	host = getDbName(db)
+	dbType = host
+
+	username = getDbUsername(db)
+	password = getDbPassword(db)
+	database = getDbDatabase(db)
+
+	if host == 'mariadb':
+		dbType = 'mysql'
+
+	if host == 'postgres':
+		dbType = 'pgsql'
+
+	if host == 'oracle':
+		dbType = 'oci'
 
 	return {
 		'name': 'install-core',
@@ -825,7 +850,7 @@ def installCore(version, db):
 		'settings': {
 			'version': version,
 			'core_path': '/var/www/owncloud/server',
-			'db_type': name,
+			'db_type': dbType,
 			'db_name': database,
 			'db_host': host,
 			'db_username': username,
@@ -866,7 +891,7 @@ def installExtraApps(phpVersion, extraApps):
 		'commands': commandArray
 	}
 
-def setupServerAndApp(phpVersion):
+def setupServerAndApp(phpVersion, logLevel):
 	return {
 		'name': 'setup-server-%s' % config['app'],
 		'image': 'owncloudci/php:%s' % phpVersion,
@@ -879,7 +904,7 @@ def setupServerAndApp(phpVersion):
 			'php occ a:e testing',
 			'php occ a:l',
 			'php occ config:system:set trusted_domains 1 --value=server',
-			'php occ log:manage --level 0',
+			'php occ log:manage --level %s' % logLevel,
 		]
 	}
 

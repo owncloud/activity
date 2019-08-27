@@ -61,7 +61,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: javascript-tests
   pull: always
@@ -112,7 +112,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -176,7 +176,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -250,7 +250,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -324,7 +324,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -398,7 +398,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -471,7 +471,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -545,7 +545,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -600,7 +600,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -665,7 +665,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -720,7 +720,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -785,7 +785,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -840,7 +840,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: phpunit-tests
   pull: always
@@ -914,7 +914,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1024,7 +1024,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1135,7 +1135,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1245,7 +1245,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1356,7 +1356,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1466,7 +1466,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1577,7 +1577,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1687,7 +1687,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1798,7 +1798,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -1908,7 +1908,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2019,7 +2019,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2129,7 +2129,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2240,7 +2240,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2350,7 +2350,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2461,7 +2461,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2571,7 +2571,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2682,7 +2682,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2792,7 +2792,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -2903,7 +2903,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3013,7 +3013,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3144,7 +3144,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3286,7 +3286,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3429,7 +3429,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3571,7 +3571,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3694,7 +3694,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3708,6 +3708,8 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
   - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
   environment:
@@ -3792,7 +3794,7 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=server
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
 
 - name: fix-permissions
   pull: always
@@ -3806,6 +3808,8 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
+  - touch /var/www/owncloud/saved-settings.sh
+  - . /var/www/owncloud/saved-settings.sh
   - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
   environment:
