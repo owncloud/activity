@@ -48,13 +48,13 @@ steps:
     db_password: owncloud
     db_type: sqlite
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -63,7 +63,7 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
-- name: javascript-tests
+- name: js-tests
   pull: always
   image: owncloudci/php:7.0
   commands:
@@ -74,6 +74,9 @@ trigger:
   - refs/pull/**
   - refs/tags/**
   - refs/heads/master
+
+depends_on:
+- coding-standard-php7.0
 
 ---
 kind: pipeline
@@ -99,13 +102,13 @@ steps:
     db_password: owncloud
     db_type: sqlite
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -137,7 +140,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -163,13 +165,13 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -211,7 +213,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -237,13 +238,13 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -285,7 +286,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -311,13 +311,13 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -359,7 +359,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -385,13 +384,13 @@ steps:
     db_password: owncloud
     db_type: pgsql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -432,7 +431,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -458,13 +456,13 @@ steps:
     db_password: oracle
     db_type: oci
     db_username: system
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -506,7 +504,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -532,13 +529,13 @@ steps:
     db_password: owncloud
     db_type: sqlite
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.1
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -561,7 +558,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -587,13 +583,13 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.1
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -626,7 +622,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -652,13 +647,13 @@ steps:
     db_password: owncloud
     db_type: sqlite
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.2
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -681,7 +676,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -707,13 +701,13 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.2
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -746,7 +740,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -772,13 +765,13 @@ steps:
     db_password: owncloud
     db_type: sqlite
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.3
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -801,7 +794,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -827,13 +819,13 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.3
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -866,7 +858,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -879,7 +870,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -892,14 +883,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -907,7 +901,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -916,13 +909,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -930,7 +928,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -976,7 +973,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -989,7 +985,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1002,14 +998,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1017,7 +1016,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1026,13 +1024,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1040,7 +1043,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -1087,7 +1089,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1100,7 +1101,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1113,14 +1114,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1128,7 +1132,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1137,13 +1140,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1151,7 +1159,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -1197,7 +1204,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1210,7 +1216,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1223,14 +1229,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1238,7 +1247,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1247,13 +1255,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1261,7 +1274,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityComments
@@ -1308,7 +1320,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1321,7 +1332,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1334,14 +1345,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1349,7 +1363,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1358,13 +1371,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1372,7 +1390,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1418,7 +1435,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1431,7 +1447,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1444,14 +1460,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1459,7 +1478,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1468,13 +1486,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1482,7 +1505,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1529,7 +1551,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1542,7 +1563,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1555,14 +1576,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1570,7 +1594,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1579,13 +1602,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1593,7 +1621,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1639,7 +1666,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1652,7 +1678,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1665,14 +1691,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1680,7 +1709,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1689,13 +1717,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1703,7 +1736,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityCreateUpdate
@@ -1750,7 +1782,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1763,7 +1794,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1776,14 +1807,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1791,7 +1825,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1800,13 +1833,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1814,7 +1852,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -1860,7 +1897,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1873,7 +1909,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1886,14 +1922,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -1901,7 +1940,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -1910,13 +1948,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -1924,7 +1967,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -1971,7 +2013,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -1984,7 +2025,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -1997,14 +2038,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2012,7 +2056,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2021,13 +2064,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2035,7 +2083,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -2081,7 +2128,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2094,7 +2140,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2107,14 +2153,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2122,7 +2171,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2131,13 +2179,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2145,7 +2198,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityDeleteRestore
@@ -2192,7 +2244,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2205,7 +2256,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2218,14 +2269,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2233,7 +2287,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2242,13 +2295,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2256,7 +2314,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -2302,7 +2359,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2315,7 +2371,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2328,14 +2384,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2343,7 +2402,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2352,13 +2410,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2366,7 +2429,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -2413,7 +2475,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2426,7 +2487,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2439,14 +2500,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2454,7 +2518,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2463,13 +2526,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2477,7 +2545,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -2523,7 +2590,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2536,7 +2602,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2549,14 +2615,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2564,7 +2633,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2573,13 +2641,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2587,7 +2660,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingInternal
@@ -2634,7 +2706,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2647,7 +2718,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2660,14 +2731,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2675,7 +2749,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2684,13 +2757,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2698,7 +2776,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -2744,7 +2821,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2757,7 +2833,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2770,14 +2846,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2785,7 +2864,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2794,13 +2872,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2808,7 +2891,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -2855,7 +2937,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2868,7 +2949,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2881,14 +2962,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -2896,7 +2980,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -2905,13 +2988,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -2919,7 +3007,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -2965,7 +3052,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -2978,7 +3064,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -2991,14 +3077,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -3006,7 +3095,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -3015,13 +3103,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -3029,7 +3122,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivityTags
@@ -3076,7 +3168,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -3089,7 +3180,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -3102,14 +3193,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -3130,14 +3224,20 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
   - php occ config:list
+
+- name: owncloud-log-federated
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/federated/data/owncloud.log
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -3146,13 +3246,19 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
+  - chown -R www-data /var/www/owncloud/federated
 
 - name: acceptance-tests
   pull: always
@@ -3160,7 +3266,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -3218,7 +3323,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -3231,7 +3335,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -3244,14 +3348,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -3272,14 +3379,20 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
   - php occ config:list
+
+- name: owncloud-log-federated
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/federated/data/owncloud.log
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -3288,13 +3401,19 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
+  - chown -R www-data /var/www/owncloud/federated
 
 - name: acceptance-tests
   pull: always
@@ -3302,7 +3421,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -3361,7 +3479,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -3374,7 +3491,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -3387,14 +3504,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -3415,14 +3535,20 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
   - php occ config:list
+
+- name: owncloud-log-federated
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/federated/data/owncloud.log
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -3431,13 +3557,19 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
+  - chown -R www-data /var/www/owncloud/federated
 
 - name: acceptance-tests
   pull: always
@@ -3445,7 +3577,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -3503,7 +3634,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -3516,7 +3646,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -3529,14 +3659,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -3557,14 +3690,20 @@ steps:
   - php occ a:e testing
   - php occ a:l
   - php occ config:system:set trusted_domains 1 --value=federated
-  - php occ log:manage --level 0
+  - php occ log:manage --level 2
   - php occ config:list
+
+- name: owncloud-log-federated
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/federated/data/owncloud.log
 
 - name: setup-server-activity
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -3573,13 +3712,19 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
+  - chown -R www-data /var/www/owncloud/federated
 
 - name: acceptance-tests
   pull: always
@@ -3587,7 +3732,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-webui
   environment:
     BEHAT_SUITE: webUIActivitySharingExternal
@@ -3646,7 +3790,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -3659,7 +3802,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -3672,14 +3815,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: daily-master-qa
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -3687,7 +3833,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -3696,13 +3841,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -3710,7 +3860,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
   environment:
     BEHAT_SUITE: apiActivity
@@ -3746,7 +3895,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -3759,7 +3907,7 @@ platform:
 
 workspace:
   base: /var/www/owncloud
-  path: server/apps/activity
+  path: testrunner/apps/activity
 
 steps:
 - name: install-core
@@ -3772,14 +3920,17 @@ steps:
     db_password: owncloud
     db_type: mysql
     db_username: owncloud
+    exclude: apps/activity
     version: 10.2.1
 
 - name: install-testrunner
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner
-  - cp -r /var/www/owncloud/server/apps/activity /var/www/owncloud/testrunner/apps/
+  - mkdir /tmp/testrunner
+  - git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner
+  - rsync -aIX /tmp/testrunner /var/www/owncloud
+  - cp -r /var/www/owncloud/testrunner/apps/activity /var/www/owncloud/server/apps/
   - cd /var/www/owncloud/testrunner
   - make install-composer-deps vendor-bin-deps
 
@@ -3787,7 +3938,6 @@ steps:
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - ":"
   - cd /var/www/owncloud/server
   - php occ a:l
   - php occ a:e activity
@@ -3796,13 +3946,18 @@ steps:
   - php occ config:system:set trusted_domains 1 --value=server
   - php occ log:manage --level 2
 
+- name: owncloud-log-server
+  pull: always
+  image: owncloud/ubuntu:18.04
+  detach: true
+  commands:
+  - tail -f /var/www/owncloud/server/data/owncloud.log
+
 - name: fix-permissions
   pull: always
   image: owncloudci/php:7.0
   commands:
-  - chown -R www-data /var/www/owncloud
-  - chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload
-  - chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh
+  - chown -R www-data /var/www/owncloud/server
 
 - name: acceptance-tests
   pull: always
@@ -3810,7 +3965,6 @@ steps:
   commands:
   - touch /var/www/owncloud/saved-settings.sh
   - . /var/www/owncloud/saved-settings.sh
-  - cd /var/www/owncloud/testrunner/apps/activity
   - make test-acceptance-api
   environment:
     BEHAT_SUITE: apiActivity
@@ -3846,7 +4000,6 @@ trigger:
 
 depends_on:
 - coding-standard-php7.0
-- javascript-tests
 
 ---
 kind: pipeline
@@ -3875,6 +4028,7 @@ trigger:
   - refs/heads/master
 
 depends_on:
+- javascript-tests
 - phpunit-php7.0-sqlite
 - phpunit-php7.0-mariadb10.2
 - phpunit-php7.0-mysql5.5
