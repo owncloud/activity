@@ -78,15 +78,17 @@ def main(ctx):
 	return before + stages + after
 
 def beforePipelines():
-	return codestyle() + javascript() + phpstan() + phan()
+	return codestyle() + phpstan() + phan()
 
 def stagePipelines():
-	phpunitPipelines = phpunit()
+	jsPipelines = javascript()
+	phpunitPipelines = phptests('phpunit')
+	phpintegrationPipelines = phptests('phpintegration')
 	acceptancePipelines = acceptance()
-	if (phpunitPipelines == False) or (acceptancePipelines == False):
+	if (jsPipelines == False) or (phpunitPipelines == False) or (phpintegrationPipelines == False) or (acceptancePipelines == False):
 		return False
 
-	return phpunitPipelines + acceptancePipelines
+	return jsPipelines + phpunitPipelines + phpintegrationPipelines + acceptancePipelines
 
 def afterPipelines():
 	return [
@@ -208,7 +210,7 @@ def phpstan():
 					'path': 'server/apps/%s' % config['app']
 				},
 				'steps': [
-					installCore('daily-master-qa', 'sqlite'),
+					installCore('daily-master-qa', 'sqlite', False),
 					setupServerAndApp(phpVersion, logLevel),
 					{
 						'name': 'phpstan',
@@ -278,7 +280,7 @@ def phan():
 					'path': 'server/apps/%s' % config['app']
 				},
 				'steps': [
-					installCore('daily-master-qa', 'sqlite'),
+					installCore('daily-master-qa', 'sqlite', False),
 					{
 						'name': 'phan',
 						'image': 'owncloudci/php:%s' % phpVersion,
@@ -311,13 +313,19 @@ def javascript():
 		return pipelines
 
 	default = {
+		'coverage': False,
 		'logLevel': '2',
+		'extraServices': [],
 	}
 
 	if 'defaults' in config:
 		if 'javascript' in config['defaults']:
+			if 'coverage' in config['defaults']['javascript']:
+				default['coverage'] = config['defaults']['javascript']['coverage']
 			if 'logLevel' in config['defaults']['javascript']:
 				default['logLevel'] = config['defaults']['javascript']['logLevel']
+			if 'extraServices' in config['defaults']['javascript']:
+				default['extraServices'] = config['defaults']['javascript']['extraServices']
 
 	javascriptConfig = config['javascript']
 
@@ -328,7 +336,9 @@ def javascript():
 		else:
 			return pipelines
 
+	coverage = javascriptConfig['coverage'] if 'coverage' in javascriptConfig else default['coverage']
 	logLevel = javascriptConfig['logLevel'] if 'logLevel' in javascriptConfig else default['logLevel']
+	extraServices = javascriptConfig['extraServices'] if 'extraServices' in javascriptConfig else default['extraServices']
 
 	result = {
 		'kind': 'pipeline',
@@ -339,10 +349,10 @@ def javascript():
 			'path': 'server/apps/%s' % config['app']
 		},
 		'steps': [
-			installCore('daily-master-qa', 'sqlite'),
+			installCore('daily-master-qa', 'sqlite', False),
 			setupServerAndApp('7.0', logLevel),
 			{
-				'name': 'javascript-tests',
+				'name': 'js-tests',
 				'image': 'owncloudci/php:7.0',
 				'pull': 'always',
 				'commands': [
@@ -350,6 +360,7 @@ def javascript():
 				]
 			}
 		],
+		'services': extraServices,
 		'depends_on': [],
 		'trigger': {
 			'ref': [
@@ -359,15 +370,30 @@ def javascript():
 		}
 	}
 
+	if coverage:
+		result['steps'].append({
+			'name': 'codecov-js',
+			'image': 'plugins/codecov:2',
+			'pull': 'always',
+			'settings': {
+				'paths': [
+					'coverage/*.info',
+				],
+				'token': {
+					'from_secret': 'codecov_token'
+				}
+			}
+		})
+
 	for branch in config['branches']:
 		result['trigger']['ref'].append('refs/heads/%s' % branch)
 
 	return [result]
 
-def phpunit():
+def phptests(testType):
 	pipelines = []
 
-	if 'phpunit' not in config:
+	if testType not in config:
 		return pipelines
 
 	default = {
@@ -380,28 +406,28 @@ def phpunit():
 	}
 
 	if 'defaults' in config:
-		if 'phpunit' in config['defaults']:
-			if 'databases' in config['defaults']['phpunit']:
-				default['databases'] = config['defaults']['phpunit']['databases']
-			if 'coverage' in config['defaults']['phpunit']:
-				default['databases'] = config['defaults']['phpunit']['coverage']
-			if 'logLevel' in config['defaults']['phpunit']:
-				default['logLevel'] = config['defaults']['phpunit']['logLevel']
+		if testType in config['defaults']:
+			if 'databases' in config['defaults'][testType]:
+				default['databases'] = config['defaults'][testType]['databases']
+			if 'coverage' in config['defaults'][testType]:
+				default['coverage'] = config['defaults'][testType]['coverage']
+			if 'logLevel' in config['defaults'][testType]:
+				default['logLevel'] = config['defaults'][testType]['logLevel']
 
-	phpunitConfig = config['phpunit']
+	phptestConfig = config[testType]
 
-	if type(phpunitConfig) == "bool":
-		if phpunitConfig:
-			# the config has 'phpunit' true, so specify an empty dict that will get the defaults
-			phpunitConfig = {}
+	if type(phptestConfig) == "bool":
+		if phptestConfig:
+			# the config has just True, so specify an empty dict that will get the defaults
+			phptestConfig = {}
 		else:
 			return pipelines
 
-	if len(phpunitConfig) == 0:
-		# 'phpunit' is an empty dict, so specify a single section that will get the defaults
-		phpunitConfig = {'doDefault': {}}
+	if len(phptestConfig) == 0:
+		# the PHP test config is an empty dict, so specify a single section that will get the defaults
+		phptestConfig = {'doDefault': {}}
 
-	for category, matrix in phpunitConfig.items():
+	for category, matrix in phptestConfig.items():
 		databases = matrix['databases'] if 'databases' in matrix else default['databases']
 		coverage = matrix['coverage'] if 'coverage' in matrix else default['coverage']
 		logLevel = matrix['logLevel'] if 'logLevel' in matrix else default['logLevel']
@@ -409,25 +435,31 @@ def phpunit():
 
 		for phpVersion in phpVersions:
 
-			if coverage:
-				command = 'make test-php-unit-dbg'
+			if testType == 'phpunit':
+				if coverage:
+					command = 'make test-php-unit-dbg'
+				else:
+					command = 'make test-php-unit'
 			else:
-				command = 'make test-php-unit'
+				if coverage:
+					command = 'make test-php-integration-dbg'
+				else:
+					command = 'make test-php-integration'
 
 			for db in databases:
 				result = {
 					'kind': 'pipeline',
 					'type': 'docker',
-					'name': 'phpunit-php%s-%s' % (phpVersion, db.replace(":", "")),
+					'name': '%s-php%s-%s' % (testType, phpVersion, db.replace(":", "")),
 					'workspace' : {
 						'base': '/var/www/owncloud',
 						'path': 'server/apps/%s' % config['app']
 					},
 					'steps': [
-						installCore('daily-master-qa', db),
+						installCore('daily-master-qa', db, False),
 						setupServerAndApp(phpVersion, logLevel),
 						{
-							'name': 'phpunit-tests',
+							'name': '%s-tests' % testType,
 							'image': 'owncloudci/php:%s' % phpVersion,
 							'pull': 'always',
 							'commands': [
@@ -487,6 +519,7 @@ def acceptance():
 		'extraSetup': None,
 		'extraServices': [],
 		'extraApps': [],
+		'useBundledApp': False,
 	}
 
 	if 'defaults' in config:
@@ -513,6 +546,8 @@ def acceptance():
 				default['extraServices'] = config['defaults']['acceptance']['extraServices']
 			if 'extraApps' in config['defaults']['acceptance']:
 				default['extraApps'] = config['defaults']['acceptance']['extraApps']
+			if 'useBundledApp' in config['defaults']['acceptance']:
+				default['useBundledApp'] = config['defaults']['acceptance']['useBundledApp']
 
 	for category, matrix in config['acceptance'].items():
 		if type(matrix['suites']) == "list":
@@ -541,6 +576,7 @@ def acceptance():
 			extraSetup = matrix['extraSetup'] if 'extraSetup' in matrix else default['extraSetup']
 			extraServices = matrix['extraServices'] if 'extraServices' in matrix else default['extraServices']
 			extraApps = matrix['extraApps'] if 'extraApps' in matrix else default['extraApps']
+			useBundledApp = matrix['useBundledApp'] if 'useBundledApp' in matrix else default['useBundledApp']
 
 			for server in servers:
 				for browser in browsers:
@@ -585,11 +621,11 @@ def acceptance():
 								'name': name,
 								'workspace' : {
 									'base': '/var/www/owncloud',
-									'path': 'server/apps/%s' % config['app']
+									'path': 'testrunner/apps/%s' % config['app']
 								},
 								'steps': [
-									installCore(server, db),
-									installTestrunner(phpVersion)
+									installCore(server, db, useBundledApp),
+									installTestrunner(phpVersion, useBundledApp)
 								] + ([
 									{
 										'name': 'install-federation',
@@ -611,15 +647,17 @@ def acceptance():
 											'php occ a:e testing',
 											'php occ a:l',
 											'php occ config:system:set trusted_domains 1 --value=federated',
-											'php occ log:manage --level 0',
+											'php occ log:manage --level %s' % logLevel,
 											'php occ config:list'
 										]
-									}
+									},
+									owncloudLog('federated')
 								] if federatedServerNeeded else []) + [
 									setupServerAndApp(phpVersion, logLevel),
+									owncloudLog('server'),
 									installExtraApps(phpVersion, extraApps),
 									extraSetup,
-									fixPermissions(phpVersion),
+									fixPermissions(phpVersion, federatedServerNeeded),
 									({
 										'name': 'acceptance-tests',
 										'image': 'owncloudci/php:%s' % phpVersion,
@@ -628,7 +666,6 @@ def acceptance():
 										'commands': [
 											'touch /var/www/owncloud/saved-settings.sh',
 											'. /var/www/owncloud/saved-settings.sh',
-											'cd /var/www/owncloud/testrunner/apps/%s' % config['app'],
 											'make %s' % makeParameter
 										]
 									}),
@@ -826,7 +863,7 @@ def getDbDatabase(db):
 
 	return 'owncloud'
 
-def installCore(version, db):
+def installCore(version, db, useBundledApp):
 	host = getDbName(db)
 	dbType = host
 
@@ -843,7 +880,7 @@ def installCore(version, db):
 	if host == 'oracle':
 		dbType = 'oci'
 
-	return {
+	stepDefinition = {
 		'name': 'install-core',
 		'image': 'owncloudci/core',
 		'pull': 'always',
@@ -858,14 +895,23 @@ def installCore(version, db):
 		}
 	}
 
-def installTestrunner(phpVersion):
+	if not useBundledApp:
+		stepDefinition['settings']['exclude'] = 'apps/%s' % config['app']
+
+	return stepDefinition
+
+def installTestrunner(phpVersion, useBundledApp):
 	return {
 		'name': 'install-testrunner',
 		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'commands': [
-			'git clone -b master --depth=1 https://github.com/owncloud/core.git /var/www/owncloud/testrunner',
-			'cp -r /var/www/owncloud/server/apps/%s /var/www/owncloud/testrunner/apps/' % config['app'],
+			'mkdir /tmp/testrunner',
+			'git clone -b master --depth=1 https://github.com/owncloud/core.git /tmp/testrunner',
+			'rsync -aIX /tmp/testrunner /var/www/owncloud',
+		] + ([
+			'cp -r /var/www/owncloud/testrunner/apps/%s /var/www/owncloud/server/apps/' % config['app']
+		] if not useBundledApp else []) + [
 			'cd /var/www/owncloud/testrunner',
 			'make install-composer-deps vendor-bin-deps'
 		]
@@ -877,8 +923,8 @@ def installExtraApps(phpVersion, extraApps):
 
 	commandArray = []
 	for app in extraApps:
-		commandArray.append('git clone https://github.com/owncloud/%s.git /var/www/owncloud/server/apps/%s' % (app, app))
-		commandArray.append('cp -r /var/www/owncloud/server/apps/%s /var/www/owncloud/testrunner/apps/' % app)
+		commandArray.append('git clone https://github.com/owncloud/%s.git /var/www/owncloud/testrunner/apps/%s' % (app, app))
+		commandArray.append('cp -r /var/www/owncloud/testrunner/apps/%s /var/www/owncloud/server/apps/' % app)
 		commandArray.append('cd /var/www/owncloud/server')
 		commandArray.append('php occ a:l')
 		commandArray.append('php occ a:e %s' % app)
@@ -896,8 +942,10 @@ def setupServerAndApp(phpVersion, logLevel):
 		'name': 'setup-server-%s' % config['app'],
 		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
-		'commands': [
-			config['appInstallCommand'] if 'appInstallCommand' in config else ':',
+		'commands': ([
+			'cd /var/www/owncloud/server/apps/%s' % config['app'],
+			config['appInstallCommand']
+		] if 'appInstallCommand' in config else []) + [
 			'cd /var/www/owncloud/server',
 			'php occ a:l',
 			'php occ a:e %s' % config['app'],
@@ -908,15 +956,26 @@ def setupServerAndApp(phpVersion, logLevel):
 		]
 	}
 
-def fixPermissions(phpVersion):
+def fixPermissions(phpVersion, federatedServerNeeded):
 	return {
 		'name': 'fix-permissions',
 		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'commands': [
-			'chown -R www-data /var/www/owncloud',
-			'chmod -R 777 /var/www/owncloud/testrunner/tests/acceptance/filesForUpload',
-			'chmod +x /var/www/owncloud/testrunner/tests/acceptance/run.sh'
+			'chown -R www-data /var/www/owncloud/server'
+		] + ([
+			'chown -R www-data /var/www/owncloud/federated'
+		] if federatedServerNeeded else [])
+	}
+
+def owncloudLog(server):
+	return {
+		'name': 'owncloud-log-%s' % server,
+		'image': 'owncloud/ubuntu:18.04',
+		'pull': 'always',
+		'detach': True,
+		'commands': [
+			'tail -f /var/www/owncloud/%s/data/owncloud.log' % server
 		]
 	}
 
