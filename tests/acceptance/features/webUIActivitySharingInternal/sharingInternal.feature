@@ -271,22 +271,6 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that you removed the share of "User One" for "simple-folder"
 
-  Scenario: Deleting a share by a sharee should be listed in the activity list of the sharee
-    Given user "user1" has been created with default attributes and without skeleton files
-    And user "user0" has shared folder "simple-folder" with user "user1"
-    And user "user1" has logged in using the webUI
-    And user "user1" has deleted the last share
-    And the user browses to the activity page
-    Then the activity number 1 should have a message saying that "User One" removed the share for "simple-folder"
-
-  Scenario: Deleting a share by a sharee should be listed in the activity list of the sharer
-    Given user "user1" has been created with default attributes and without skeleton files
-    And user "user0" has shared folder "simple-folder" with user "user1"
-    And user "user0" has logged in using the webUI
-    And user "user1" has deleted the last share
-    And the user browses to the activity page
-    Then the activity number 1 should have a message saying that "User One" removed the share of "User One" for "simple-folder"
-
   @issue-752 @skipOnOcV10.2
   Scenario: Sharer and sharee check activity after sharee unshares a shared file
     Given these users have been created with default attributes and without skeleton files:
