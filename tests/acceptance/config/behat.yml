@@ -45,6 +45,7 @@ default:
         - WebUIActivityContext:
         - FeatureContext: *common_feature_context_params
         - ActivityContext:
+        - OccContext:
         - TrashbinContext:
         - WebUIFilesContext:
         - WebUIGeneralContext:
@@ -59,6 +60,7 @@ default:
         - FeatureContext: *common_feature_context_params
         - ActivityContext:
         - FederationContext:
+        - OccContext:
         - PublicWebDavContext:
         - WebUIFilesContext:
         - WebUIGeneralContext:
@@ -78,6 +80,7 @@ default:
         - WebUILoginContext:
         - WebUIPersonalGeneralSettingsContext:
         - WebUISharingContext:
+        - OccContext:
         - TrashbinContext:
 
     webUIActivityTags:
@@ -98,5 +101,6 @@ default:
         - '%paths.base%/../features/apiActivity'
       contexts:
         - ActivityContext:
+        - OccContext:
         - TrashbinContext:
         - FeatureContext: *common_feature_context_params
