@@ -19,7 +19,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: file restore should be listed in the activity list
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "textfile0.txt"
     And user "user0" has logged in to a web-style session
     When user "user0" restores the file with original path "textfile0.txt" using the trashbin API
@@ -49,7 +50,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: folder restore should be listed in the activity list
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted folder "FOLDER"
     And user "user0" has logged in to a web-style session
     When user "user0" restores the folder with original path "FOLDER" using the trashbin API
@@ -79,7 +81,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: file inside folder restore should be listed in the activity list
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "PARENT/parent.txt"
     And user "user0" has logged in to a web-style session
     When user "user0" restores the file with original path "PARENT/parent.txt" using the trashbin API
@@ -109,7 +112,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: sub folder restore should be listed in the activity list
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted folder "PARENT/CHILD"
     And user "user0" has logged in to a web-style session
     When user "user0" restores the folder with original path "PARENT/CHILD" using the trashbin API
@@ -155,7 +159,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: multiple file restore should be listed in activity list
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "textfile0.txt"
     And user "user0" has deleted file "textfile1.txt"
     And user "user0" has logged in to a web-style session
@@ -173,7 +178,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: multiple folder restore should be listed in activity list
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted folder "FOLDER"
     And user "user0" has deleted folder "PARENT"
     And user "user0" has logged in to a web-style session
@@ -206,7 +212,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: mix of folder and file restore should be listed in activity list
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has deleted file "textfile0.txt"
     And user "user0" has deleted folder "FOLDER"
     And user "user0" has logged in to a web-style session
@@ -524,7 +531,8 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: Sharer and sharee check activity after sharer deletes shared file and then again restore it
-    Given these users have been created with default attributes and without skeleton files:
+    Given the administrator has enabled DAV tech_preview
+    And these users have been created with default attributes and without skeleton files:
       | username |
       | user0    |
       | user1    |
