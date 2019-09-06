@@ -5,7 +5,8 @@ Feature: Restored files/folders activities
   So that I know what happened in my cloud storage
 
   Background:
-    Given user "user0" has been created with default attributes and skeleton files
+    Given the administrator has enabled DAV tech_preview
+    And user "user0" has been created with default attributes and skeleton files
     And user "user0" has logged in using the webUI
 
   @issue-622
