@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.5.1] 2019-09-11
+
+### Added
+
+- Url Formatter [#744](https://github.com/owncloud/activity/pull/744)
+
 ## [2.5.0] 2019-06-21
 
 ### Fixed
@@ -69,7 +75,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.1...HEAD
+[2.5.1]: https://github.com/owncloud/activity/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/owncloud/activity/compare/v2.4.2...v2.5.0
 [2.4.2]: https://github.com/owncloud/activity/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/owncloud/activity/compare/v2.4.0...v2.4.1
