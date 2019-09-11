@@ -29,6 +29,7 @@ use Behat\MinkExtension\Context\RawMinkContext;
 use Page\ActivityPage;
 use Page\ActivitySettingForm;
 use Page\LoginPage;
+use Behat\Gherkin\Node\TableNode;
 
 require_once 'bootstrap.php';
 
@@ -324,6 +325,38 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 		$message = \sprintf($this->sharedWithYouMsgFramework, $avatarText, $user, $entry);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
+	}
+
+	/**
+	 * @Then the activity number :index should have a message saying that you restored the following files in the activity page:
+	 *
+	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param TableNode $resource
+	 *
+	 * @return void
+	 */
+	public function theActivityNumberShouldHaveAMessageAboutBatchRestoreInTheActivityPage($index, TableNode $resource) {
+		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
+		$resource_array = [];
+		foreach ($resource->getHash() as $row) {
+			// checks if the file/folder name is present in the latest activity message log
+			$entryCount = \substr_count($latestActivityMessage, $row['entry']);
+			if ($entryCount === 1) {
+				\array_push($resource_array, $row['entry']);
+			} elseif ($entryCount < 1) {
+				throw new Exception(\sprintf("%s entry not present in the log", $row['entry']));
+			} else {
+				throw new Exception(\sprintf("% entry present %d times in the log", $row['entry'], $entryCount));
+			}
+		}
+		$join = "(" . \implode('|', $resource_array) . ")";
+		if (\sizeof($resource->getHash()) === 1) {
+			$message = "/You restored $join/";
+		} else {
+			$message = "/You restored [$join, *]* and $join/";
+		}
+		$matchRegex = \preg_match($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertEquals(1, $matchRegex);
 	}
 
 	/**
