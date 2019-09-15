@@ -447,12 +447,15 @@ def phptests(testType):
 	if testType not in config:
 		return pipelines
 
+	errorFound = False
+
 	default = {
 		'phpVersions': ['7.0', '7.1', '7.2', '7.3'],
 		'databases': [
 			'sqlite', 'mariadb:10.2', 'mysql:5.5', 'mysql:5.7', 'postgres:9.4', 'oracle'
 		],
 		'coverage': True,
+		'includeKeyInMatrixName': False,
 		'logLevel': '2',
 		'extraSetup': None,
 		'extraServices': [],
@@ -497,10 +500,18 @@ def phptests(testType):
 					command = 'make test-php-integration'
 
 			for db in params['databases']:
+				keyString = '-' + category if params['includeKeyInMatrixName'] else ''
+				name = '%s%s-php%s-%s' % (testType, keyString, phpVersion, db.replace(":", ""))
+				maxLength = 50
+				nameLength = len(name)
+				if nameLength > maxLength:
+					print("Error: generated phpunit stage name of length", nameLength, "is not supported. The maximum length is " + str(maxLength) + ".", name)
+					errorFound = True
+
 				result = {
 					'kind': 'pipeline',
 					'type': 'docker',
-					'name': '%s-php%s-%s' % (testType, phpVersion, db.replace(":", "")),
+					'name': name,
 					'workspace' : {
 						'base': '/var/www/owncloud',
 						'path': 'server/apps/%s' % config['app']
@@ -549,6 +560,9 @@ def phptests(testType):
 
 				pipelines.append(result)
 
+	if errorFound:
+		return False
+
 	return pipelines
 
 def acceptance():
@@ -556,6 +570,10 @@ def acceptance():
 
 	if 'acceptance' not in config:
 		return pipelines
+
+	if type(config['acceptance']) == "bool":
+		if not config['acceptance']:
+			return pipelines
 
 	errorFound = False
 
@@ -574,6 +592,7 @@ def acceptance():
 		'extraCommandsBeforeTestRun': [],
 		'extraApps': [],
 		'useBundledApp': False,
+		'includeKeyInMatrixName': False,
 	}
 
 	if 'defaults' in config:
@@ -609,7 +628,8 @@ def acceptance():
 
 							if isWebUI or isAPI or isCLI:
 								browserString = '' if browser == '' else '-' + browser
-								name = '%s-%s%s-%s-php%s' % (shortSuiteName, server.replace('daily-', '').replace('-qa', ''), browserString, db.replace(':', ''), phpVersion)
+								keyString = '-' + category if params['includeKeyInMatrixName'] else ''
+								name = '%s%s-%s%s-%s-php%s' % (shortSuiteName, keyString, server.replace('daily-', '').replace('-qa', ''), browserString, db.replace(':', ''), phpVersion)
 								maxLength = 50
 								nameLength = len(name)
 								if nameLength > maxLength:
