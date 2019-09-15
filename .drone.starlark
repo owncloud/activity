@@ -81,7 +81,7 @@ def main(ctx):
 	return before + stages + after
 
 def beforePipelines():
-	return codestyle() + phpstan() + phan()
+	return codestyle() + jscodestyle() + phpstan() + phan()
 
 def stagePipelines():
 	jsPipelines = javascript()
@@ -165,6 +165,50 @@ def codestyle():
 				result['trigger']['ref'].append('refs/heads/%s' % branch)
 
 			pipelines.append(result)
+
+	return pipelines
+
+def jscodestyle():
+	pipelines = []
+
+	if 'jscodestyle' not in config:
+		return pipelines
+
+	if type(config['jscodestyle']) == "bool":
+		if not config['jscodestyle']:
+			return pipelines
+
+	result = {
+		'kind': 'pipeline',
+		'type': 'docker',
+		'name': 'coding-standard-js',
+		'workspace' : {
+			'base': '/var/www/owncloud',
+			'path': 'server/apps/%s' % config['app']
+		},
+		'steps': [
+			{
+				'name': 'coding-standard-js',
+				'image': 'owncloudci/php:7.2',
+				'pull': 'always',
+				'commands': [
+					'make test-js-style'
+				]
+			}
+		],
+		'depends_on': [],
+		'trigger': {
+			'ref': [
+				'refs/pull/**',
+				'refs/tags/**'
+			]
+		}
+	}
+
+	for branch in config['branches']:
+		result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+	pipelines.append(result)
 
 	return pipelines
 
