@@ -1093,7 +1093,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIComments-10.2.1-chrome-mariadb10.2-php7.0
+name: webUIComments-latest-chrome-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1115,7 +1115,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -1208,7 +1208,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIComments-10.2.1-firefox-mariadb10.2-php7.0
+name: webUIComments-latest-firefox-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1230,7 +1230,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -1555,7 +1555,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUICreateUpdat-10.2.1-chrome-mariadb10.2-php7.0
+name: webUICreateUpdat-latest-chrome-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1577,7 +1577,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -1670,7 +1670,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUICreateUpdat-10.2.1-firefox-mariadb10.2-php7.0
+name: webUICreateUpdat-latest-firefox-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -1692,7 +1692,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -2017,7 +2017,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIDelRestore-10.2.1-chrome-mariadb10.2-php7.0
+name: webUIDelRestore-latest-chrome-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2039,7 +2039,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -2132,7 +2132,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUIDelRestore-10.2.1-firefox-mariadb10.2-php7.0
+name: webUIDelRestore-latest-firefox-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2154,7 +2154,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -2479,7 +2479,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUISharingInt-10.2.1-chrome-mariadb10.2-php7.0
+name: webUISharingInt-latest-chrome-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2501,7 +2501,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -2594,7 +2594,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUISharingInt-10.2.1-firefox-mariadb10.2-php7.0
+name: webUISharingInt-latest-firefox-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2616,7 +2616,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -2941,7 +2941,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUITags-10.2.1-chrome-mariadb10.2-php7.0
+name: webUITags-latest-chrome-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -2963,7 +2963,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -3056,7 +3056,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUITags-10.2.1-firefox-mariadb10.2-php7.0
+name: webUITags-latest-firefox-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -3078,7 +3078,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -3483,7 +3483,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUISharingExt-10.2.1-chrome-mariadb10.2-php7.0
+name: webUISharingExt-latest-chrome-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -3505,7 +3505,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -3523,7 +3523,7 @@ steps:
   image: owncloudci/core
   settings:
     core_path: /var/www/owncloud/federated
-    version: 10.2.1
+    version: latest
 
 - name: configure-federation
   pull: always
@@ -3638,7 +3638,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: webUISharingExt-10.2.1-firefox-mariadb10.2-php7.0
+name: webUISharingExt-latest-firefox-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -3660,7 +3660,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -3678,7 +3678,7 @@ steps:
   image: owncloudci/core
   settings:
     core_path: /var/www/owncloud/federated
-    version: 10.2.1
+    version: latest
 
 - name: configure-federation
   pull: always
@@ -3899,7 +3899,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: apiActivity-10.2.1-mariadb10.2-php7.0
+name: apiActivity-latest-mariadb10.2-php7.0
 
 platform:
   os: linux
@@ -3921,7 +3921,7 @@ steps:
     db_type: mysql
     db_username: owncloud
     exclude: apps/activity
-    version: 10.2.1
+    version: latest
 
 - name: install-testrunner
   pull: always
@@ -4043,29 +4043,29 @@ depends_on:
 - phpunit-php7.3-mariadb10.2
 - webUIComments-master-chrome-mariadb10.2-php7.0
 - webUIComments-master-firefox-mariadb10.2-php7.0
-- webUIComments-10.2.1-chrome-mariadb10.2-php7.0
-- webUIComments-10.2.1-firefox-mariadb10.2-php7.0
+- webUIComments-latest-chrome-mariadb10.2-php7.0
+- webUIComments-latest-firefox-mariadb10.2-php7.0
 - webUICreateUpdat-master-chrome-mariadb10.2-php7.0
 - webUICreateUpdat-master-firefox-mariadb10.2-php7.0
-- webUICreateUpdat-10.2.1-chrome-mariadb10.2-php7.0
-- webUICreateUpdat-10.2.1-firefox-mariadb10.2-php7.0
+- webUICreateUpdat-latest-chrome-mariadb10.2-php7.0
+- webUICreateUpdat-latest-firefox-mariadb10.2-php7.0
 - webUIDelRestore-master-chrome-mariadb10.2-php7.0
 - webUIDelRestore-master-firefox-mariadb10.2-php7.0
-- webUIDelRestore-10.2.1-chrome-mariadb10.2-php7.0
-- webUIDelRestore-10.2.1-firefox-mariadb10.2-php7.0
+- webUIDelRestore-latest-chrome-mariadb10.2-php7.0
+- webUIDelRestore-latest-firefox-mariadb10.2-php7.0
 - webUISharingInt-master-chrome-mariadb10.2-php7.0
 - webUISharingInt-master-firefox-mariadb10.2-php7.0
-- webUISharingInt-10.2.1-chrome-mariadb10.2-php7.0
-- webUISharingInt-10.2.1-firefox-mariadb10.2-php7.0
+- webUISharingInt-latest-chrome-mariadb10.2-php7.0
+- webUISharingInt-latest-firefox-mariadb10.2-php7.0
 - webUITags-master-chrome-mariadb10.2-php7.0
 - webUITags-master-firefox-mariadb10.2-php7.0
-- webUITags-10.2.1-chrome-mariadb10.2-php7.0
-- webUITags-10.2.1-firefox-mariadb10.2-php7.0
+- webUITags-latest-chrome-mariadb10.2-php7.0
+- webUITags-latest-firefox-mariadb10.2-php7.0
 - webUISharingExt-master-chrome-mariadb10.2-php7.0
 - webUISharingExt-master-firefox-mariadb10.2-php7.0
-- webUISharingExt-10.2.1-chrome-mariadb10.2-php7.0
-- webUISharingExt-10.2.1-firefox-mariadb10.2-php7.0
+- webUISharingExt-latest-chrome-mariadb10.2-php7.0
+- webUISharingExt-latest-firefox-mariadb10.2-php7.0
 - apiActivity-master-mariadb10.2-php7.0
-- apiActivity-10.2.1-mariadb10.2-php7.0
+- apiActivity-latest-mariadb10.2-php7.0
 
 ...

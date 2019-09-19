@@ -580,7 +580,7 @@ def acceptance():
 	errorFound = False
 
 	default = {
-		'servers': ['daily-master-qa', '10.2.1'],
+		'servers': ['daily-master-qa', 'latest'],
 		'browsers': ['chrome'],
 		'phpVersions': ['7.0'],
 		'databases': ['mariadb:10.2'],
