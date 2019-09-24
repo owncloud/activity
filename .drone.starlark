@@ -259,6 +259,7 @@ def phpstan():
 				},
 				'steps': [
 					installCore('daily-master-qa', 'sqlite', False),
+					installApp(phpVersion),
 					setupServerAndApp(phpVersion, params['logLevel']),
 					{
 						'name': 'phpstan',
@@ -399,6 +400,7 @@ def javascript():
 		},
 		'steps': [
 			installCore('daily-master-qa', 'sqlite', False),
+			installApp('7.0'),
 			setupServerAndApp('7.0', params['logLevel']),
 			params['extraSetup'],
 			{
@@ -519,6 +521,7 @@ def phptests(testType):
 					},
 					'steps': [
 						installCore('daily-master-qa', db, False),
+						installApp(phpVersion),
 						installExtraApps(phpVersion, params['extraApps']),
 						setupServerAndApp(phpVersion, params['logLevel']),
 						params['extraSetup'],
@@ -700,6 +703,7 @@ def acceptance():
 									},
 									owncloudLog('federated')
 								] if params['federatedServerNeeded'] else []) + [
+									installApp(phpVersion),
 									installExtraApps(phpVersion, params['extraApps']),
 									setupServerAndApp(phpVersion, params['logLevel']),
 									owncloudLog('server'),
@@ -995,15 +999,26 @@ def installExtraApps(phpVersion, extraApps):
 		'commands': commandArray
 	}
 
+def installApp(phpVersion):
+	if 'appInstallCommand' not in config:
+		return None
+
+	return {
+		'name': 'install-app-%s' % config['app'],
+		'image': 'owncloudci/php:%s' % phpVersion,
+		'pull': 'always',
+		'commands': [
+			'cd /var/www/owncloud/server/apps/%s' % config['app'],
+			config['appInstallCommand']
+		]
+	}
+
 def setupServerAndApp(phpVersion, logLevel):
 	return {
 		'name': 'setup-server-%s' % config['app'],
 		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
-		'commands': ([
-			'cd /var/www/owncloud/server/apps/%s' % config['app'],
-			config['appInstallCommand']
-		] if 'appInstallCommand' in config else []) + [
+		'commands': [
 			'cd /var/www/owncloud/server',
 			'php occ a:l',
 			'php occ a:e %s' % config['app'],
