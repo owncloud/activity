@@ -984,7 +984,7 @@ def installExtraApps(phpVersion, extraApps):
 	for app, command in apps.items():
 		commandArray.append('git clone https://github.com/owncloud/%s.git /var/www/owncloud/testrunner/apps/%s' % (app, app))
 		commandArray.append('cp -r /var/www/owncloud/testrunner/apps/%s /var/www/owncloud/server/apps/' % app)
-		if (command != None):
+		if ((command != None) and (command != '')):
 			commandArray.append('cd /var/www/owncloud/server/apps/%s' % app)
 			commandArray.append(command)
 		commandArray.append('cd /var/www/owncloud/server')
