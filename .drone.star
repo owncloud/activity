@@ -84,14 +84,15 @@ def beforePipelines():
 	return codestyle() + jscodestyle() + phpstan() + phan()
 
 def stagePipelines():
+	buildPipelines = build()
 	jsPipelines = javascript()
 	phpunitPipelines = phptests('phpunit')
 	phpintegrationPipelines = phptests('phpintegration')
 	acceptancePipelines = acceptance()
-	if (jsPipelines == False) or (phpunitPipelines == False) or (phpintegrationPipelines == False) or (acceptancePipelines == False):
+	if (buildPipelines == False) or (jsPipelines == False) or (phpunitPipelines == False) or (phpintegrationPipelines == False) or (acceptancePipelines == False):
 		return False
 
-	return jsPipelines + phpunitPipelines + phpintegrationPipelines + acceptancePipelines
+	return buildPipelines + jsPipelines + phpunitPipelines + phpintegrationPipelines + acceptancePipelines
 
 def afterPipelines():
 	return [
@@ -356,6 +357,72 @@ def phan():
 				result['trigger']['ref'].append('refs/heads/%s' % branch)
 
 			pipelines.append(result)
+
+	return pipelines
+
+def build():
+	pipelines = []
+
+	if 'build' not in config:
+		return pipelines
+
+	default = {
+		'phpVersions': ['7.0'],
+		'commands': [
+			'make dist'
+		],
+		'extraEnvironment': {},
+	}
+
+	if 'defaults' in config:
+		if 'build' in config['defaults']:
+			for item in config['defaults']['build']:
+				default[item] = config['defaults']['build'][item]
+
+	matrix = config['build']
+
+	if type(matrix) == "bool":
+		if matrix:
+			# the config has 'build' true, so specify an empty dict that will get the defaults
+			matrix = {}
+		else:
+			return pipelines
+
+	params = {}
+	for item in default:
+		params[item] = matrix[item] if item in matrix else default[item]
+
+	for phpVersion in params['phpVersions']:
+		result = {
+			'kind': 'pipeline',
+			'type': 'docker',
+			'name': 'build',
+			'workspace' : {
+				'base': '/var/www/owncloud',
+				'path': 'server/apps/%s' % config['app']
+			},
+			'steps': [
+				{
+					'name': 'build',
+					'image': 'owncloudci/php:%s' % phpVersion,
+					'pull': 'always',
+					'environment': params['extraEnvironment'],
+					'commands': params['commands']
+				}
+			],
+			'depends_on': [],
+			'trigger': {
+				'ref': [
+					'refs/pull/**',
+					'refs/tags/**'
+				]
+			}
+		}
+
+		for branch in config['branches']:
+			result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+		pipelines.append(result)
 
 	return pipelines
 
