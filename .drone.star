@@ -689,12 +689,12 @@ def acceptance():
 			isAPI = suite.startswith('api')
 			isCLI = suite.startswith('cli')
 
-			if isAPI or isCLI:
-				default['browsers'] = ['']
-
 			params = {}
 			for item in default:
 				params[item] = matrix[item] if item in matrix else default[item]
+
+			if isAPI or isCLI:
+				params['browsers'] = ['']
 
 			for server in params['servers']:
 				for browser in params['browsers']:
