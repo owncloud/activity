@@ -372,6 +372,7 @@ def build():
 			'make dist'
 		],
 		'extraEnvironment': {},
+		'configureTarOnTag': False,
 	}
 
 	if 'defaults' in config:
@@ -409,7 +410,29 @@ def build():
 					'environment': params['extraEnvironment'],
 					'commands': params['commands']
 				}
-			],
+			] + ([
+				{
+					'name': 'github_release',
+					'image': 'plugins/github-release',
+					'pull': 'always',
+					'settings': {
+						'checksum': 'sha256',
+						'file_exists': 'overwrite',
+						'files': 'build/dist/%s.tar.gz' % config['app'],
+						'prerelease': True,
+					},
+					'environment': {
+						'GITHUB_TOKEN': {
+							'from_secret': 'github_token'
+						},
+					},
+					'when': {
+						'event': [
+							'tag'
+						]
+					},
+				}
+			] if params['configureTarOnTag'] else []),
 			'depends_on': [],
 			'trigger': {
 				'ref': [
