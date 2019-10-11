@@ -552,11 +552,13 @@ def phptests(testType):
 		'coverage': True,
 		'includeKeyInMatrixName': False,
 		'logLevel': '2',
+		'cephS3': False,
+		'scalityS3': False,
 		'extraSetup': [],
 		'extraServices': [],
 		'extraEnvironment': {},
 		'extraCommandsBeforeTestRun': [],
-		'extraApps': [],
+		'extraApps': {},
 	}
 
 	if 'defaults' in config:
@@ -581,6 +583,15 @@ def phptests(testType):
 		params = {}
 		for item in default:
 			params[item] = matrix[item] if item in matrix else default[item]
+
+		if ((config['app'] != 'files_primary_s3') and ((params['cephS3'] != False) or (params['scalityS3'] != False))):
+			# If we are not already 'files_primary_s3' and we need S3 storage, then install the 'files_primary_s3' app
+			extraAppsDict  = {
+				'files_primary_s3': 'composer install'
+			}
+			for app, command in params['extraApps'].items():
+				extraAppsDict[app] = command
+			params['extraApps'] = extraAppsDict
 
 		for phpVersion in params['phpVersions']:
 
@@ -617,6 +628,8 @@ def phptests(testType):
 						installApp(phpVersion) +
 						installExtraApps(phpVersion, params['extraApps']) +
 						setupServerAndApp(phpVersion, params['logLevel']) +
+						setupCeph(params['cephS3']) +
+						setupScality(params['scalityS3']) +
 						params['extraSetup'] +
 					[
 						{
@@ -629,7 +642,11 @@ def phptests(testType):
 							]
 						}
 					],
-					'services': databaseService(db) + params['extraServices'],
+					'services':
+						databaseService(db) +
+						cephService(params['cephS3']) +
+						scalityService(params['scalityS3']) +
+						params['extraServices'],
 					'depends_on': [],
 					'trigger': {
 						'ref': [
@@ -685,13 +702,19 @@ def acceptance():
 		'filterTags': '',
 		'logLevel': '2',
 		'emailNeeded': False,
+		'ldapNeeded': False,
+		'cephS3': False,
+		'scalityS3': False,
 		'extraSetup': [],
 		'extraServices': [],
 		'extraEnvironment': {},
 		'extraCommandsBeforeTestRun': [],
-		'extraApps': [],
+		'extraApps': {},
 		'useBundledApp': False,
 		'includeKeyInMatrixName': False,
+		'runAllSuites': False,
+		'runCoreTests': False,
+		'numberOfParts': 1,
 	}
 
 	if 'defaults' in config:
@@ -707,7 +730,7 @@ def acceptance():
 		else:
 			suites = matrix['suites']
 
-		for suite, shortSuiteName in suites.items():
+		for suite, alternateSuiteName in suites.items():
 			isWebUI = suite.startswith('webUI')
 			isAPI = suite.startswith('api')
 			isCLI = suite.startswith('cli')
@@ -719,121 +742,164 @@ def acceptance():
 			if isAPI or isCLI:
 				params['browsers'] = ['']
 
+			needObjectStore = (params['cephS3'] != False) or (params['scalityS3'] != False)
+
+			if ((config['app'] != 'files_primary_s3') and (needObjectStore)):
+				# If we are not already 'files_primary_s3' and we need S3 object storage, then install the 'files_primary_s3' app
+				extraAppsDict  = {
+					'files_primary_s3': 'composer install'
+				}
+				for app, command in params['extraApps'].items():
+					extraAppsDict[app] = command
+				params['extraApps'] = extraAppsDict
+
 			for server in params['servers']:
 				for browser in params['browsers']:
 					for phpVersion in params['phpVersions']:
 						for db in params['databases']:
-							name = 'unknown'
+							for runPart in range(1, params['numberOfParts'] + 1):
+								name = 'unknown'
 
-							if isWebUI or isAPI or isCLI:
-								browserString = '' if browser == '' else '-' + browser
-								keyString = '-' + category if params['includeKeyInMatrixName'] else ''
-								name = '%s%s-%s%s-%s-php%s' % (shortSuiteName, keyString, server.replace('daily-', '').replace('-qa', ''), browserString, db.replace(':', ''), phpVersion)
-								maxLength = 50
-								nameLength = len(name)
-								if nameLength > maxLength:
-									print("Error: generated stage name of length", nameLength, "is not supported. The maximum length is " + str(maxLength) + ".", name)
-									errorFound = True
+								if isWebUI or isAPI or isCLI:
+									browserString = '' if browser == '' else '-' + browser
+									keyString = '-' + category if params['includeKeyInMatrixName'] else ''
+									partString = '' if params['numberOfParts'] == 1 else '-%d-%d' % (params['numberOfParts'], runPart)
+									name = '%s%s%s-%s%s-%s-php%s' % (alternateSuiteName, keyString, partString, server.replace('daily-', '').replace('-qa', ''), browserString, db.replace(':', ''), phpVersion)
+									maxLength = 50
+									nameLength = len(name)
+									if nameLength > maxLength:
+										print("Error: generated stage name of length", nameLength, "is not supported. The maximum length is " + str(maxLength) + ".", name)
+										errorFound = True
 
-							environment = {}
-							for env in params['extraEnvironment']:
-								environment[env] = params['extraEnvironment'][env]
+								environment = {}
+								for env in params['extraEnvironment']:
+									environment[env] = params['extraEnvironment'][env]
 
-							environment['TEST_SERVER_URL'] = 'http://server'
-							environment['BEHAT_FILTER_TAGS'] = params['filterTags']
-							environment['BEHAT_SUITE'] = suite
+								environment['TEST_SERVER_URL'] = 'http://server'
+								environment['BEHAT_FILTER_TAGS'] = params['filterTags']
 
-							if isWebUI:
-								environment['SELENIUM_HOST'] = 'selenium'
-								environment['SELENIUM_PORT'] = '4444'
-								environment['BROWSER'] = browser
-								environment['PLATFORM'] = 'Linux'
-								makeParameter = 'test-acceptance-webui'
+								if (params['runAllSuites'] == False):
+									environment['BEHAT_SUITE'] = suite
+								else:
+									environment['DIVIDE_INTO_NUM_PARTS'] = params['numberOfParts']
+									environment['RUN_PART'] = runPart
 
-							if isAPI:
-								makeParameter = 'test-acceptance-api'
+								if isWebUI:
+									environment['SELENIUM_HOST'] = 'selenium'
+									environment['SELENIUM_PORT'] = '4444'
+									environment['BROWSER'] = browser
+									environment['PLATFORM'] = 'Linux'
+									if (params['runCoreTests']):
+										makeParameter = 'test-acceptance-core-webui'
+									else:
+										makeParameter = 'test-acceptance-webui'
 
-							if isCLI:
-								makeParameter = 'test-acceptance-cli'
+								if isAPI:
+									if (params['runCoreTests']):
+										makeParameter = 'test-acceptance-core-api'
+									else:
+										makeParameter = 'test-acceptance-api'
 
-							if params['emailNeeded']:
-								environment['MAILHOG_HOST'] = 'email'
+								if isCLI:
+									if (params['runCoreTests']):
+										makeParameter = 'test-acceptance-core-cli'
+									else:
+										makeParameter = 'test-acceptance-cli'
 
-							result = {
-								'kind': 'pipeline',
-								'type': 'docker',
-								'name': name,
-								'workspace' : {
-									'base': '/var/www/owncloud',
-									'path': 'testrunner/apps/%s' % config['app']
-								},
-								'steps':
-									installCore(server, db, params['useBundledApp']) +
-									installTestrunner(phpVersion, params['useBundledApp']) +
-								([
-									{
-										'name': 'install-federation',
-										'image': 'owncloudci/core',
-										'pull': 'always',
-										'settings': {
-											'version': server,
-											'core_path': '/var/www/owncloud/federated'
-										}
+								if params['emailNeeded']:
+									environment['MAILHOG_HOST'] = 'email'
+
+								if params['ldapNeeded']:
+									environment['TEST_EXTERNAL_USER_BACKENDS'] = True
+
+								if (needObjectStore):
+									environment['OC_TEST_ON_OBJECTSTORE'] = '1'
+									if (params['cephS3'] != False):
+										environment['S3_TYPE'] = 'ceph'
+									if (params['scalityS3'] != False):
+										environment['S3_TYPE'] = 'scality'
+
+								result = {
+									'kind': 'pipeline',
+									'type': 'docker',
+									'name': name,
+									'workspace' : {
+										'base': '/var/www/owncloud',
+										'path': 'testrunner/apps/%s' % config['app']
 									},
-									{
-										'name': 'configure-federation',
-										'image': 'owncloudci/php:%s' % phpVersion,
-										'pull': 'always',
-										'commands': [
-											'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
-											'cd /var/www/owncloud/federated',
-											'php occ a:l',
-											'php occ a:e testing',
-											'php occ a:l',
-											'php occ config:system:set trusted_domains 1 --value=federated',
-											'php occ log:manage --level %s' % params['logLevel'],
-											'php occ config:list'
+									'steps':
+										installCore(server, db, params['useBundledApp']) +
+										installTestrunner(phpVersion, params['useBundledApp']) +
+									([
+										{
+											'name': 'install-federation',
+											'image': 'owncloudci/core',
+											'pull': 'always',
+											'settings': {
+												'version': server,
+												'core_path': '/var/www/owncloud/federated'
+											}
+										},
+										{
+											'name': 'configure-federation',
+											'image': 'owncloudci/php:%s' % phpVersion,
+											'pull': 'always',
+											'commands': [
+												'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
+												'cd /var/www/owncloud/federated',
+												'php occ a:l',
+												'php occ a:e testing',
+												'php occ a:l',
+												'php occ config:system:set trusted_domains 1 --value=federated',
+												'php occ log:manage --level %s' % params['logLevel'],
+												'php occ config:list'
+											]
+										}
+									] + owncloudLog('federated') if params['federatedServerNeeded'] else []) +
+										installApp(phpVersion) +
+										installExtraApps(phpVersion, params['extraApps']) +
+										setupServerAndApp(phpVersion, params['logLevel']) +
+										owncloudLog('server') +
+										setupCeph(params['cephS3']) +
+										setupScality(params['scalityS3']) +
+										params['extraSetup'] +
+										fixPermissions(phpVersion, params['federatedServerNeeded']) +
+									[
+										({
+											'name': 'acceptance-tests',
+											'image': 'owncloudci/php:%s' % phpVersion,
+											'pull': 'always',
+											'environment': environment,
+											'commands': params['extraCommandsBeforeTestRun'] + [
+												'touch /var/www/owncloud/saved-settings.sh',
+												'. /var/www/owncloud/saved-settings.sh',
+												'make %s' % makeParameter
+											]
+										}),
+									],
+									'services':
+										databaseService(db) +
+										browserService(browser) +
+										emailService(params['emailNeeded']) +
+										ldapService(params['ldapNeeded']) +
+										cephService(params['cephS3']) +
+										scalityService(params['scalityS3']) +
+										params['extraServices'] +
+										owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', False) +
+										(owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', False) if params['federatedServerNeeded'] else []),
+									'depends_on': [],
+									'trigger': {
+										'ref': [
+											'refs/pull/**',
+											'refs/tags/**'
 										]
 									}
-								] + owncloudLog('federated') if params['federatedServerNeeded'] else []) +
-									installApp(phpVersion) +
-									installExtraApps(phpVersion, params['extraApps']) +
-									setupServerAndApp(phpVersion, params['logLevel']) +
-									owncloudLog('server') +
-									params['extraSetup'] +
-									fixPermissions(phpVersion, params['federatedServerNeeded']) +
-								[
-									({
-										'name': 'acceptance-tests',
-										'image': 'owncloudci/php:%s' % phpVersion,
-										'pull': 'always',
-										'environment': environment,
-										'commands': params['extraCommandsBeforeTestRun'] + [
-											'touch /var/www/owncloud/saved-settings.sh',
-											'. /var/www/owncloud/saved-settings.sh',
-											'make %s' % makeParameter
-										]
-									}),
-								],
-								'services': databaseService(db)
-									+ browserService(browser)
-									+ emailService(params['emailNeeded'])
-									+ params['extraServices']
-									+ owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', False)
-									+ (owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', False) if params['federatedServerNeeded'] else []),
-								'depends_on': [],
-								'trigger': {
-									'ref': [
-										'refs/pull/**',
-										'refs/tags/**'
-									]
 								}
-							}
 
-							for branch in config['branches']:
-								result['trigger']['ref'].append('refs/heads/%s' % branch)
+								for branch in config['branches']:
+									result['trigger']['ref'].append('refs/heads/%s' % branch)
 
-							pipelines.append(result)
+								pipelines.append(result)
 
 	if errorFound:
 		return False
@@ -916,8 +982,8 @@ def databaseService(db):
 
 	return []
 
-def browserService(name):
-	if name == 'chrome':
+def browserService(browser):
+	if browser == 'chrome':
 		return [{
 			'name': 'selenium',
 			'image': 'selenium/standalone-chrome-debug:3.141.59-oxygen',
@@ -927,7 +993,7 @@ def browserService(name):
 			}
 		}]
 
-	if name == 'firefox':
+	if browser == 'firefox':
 		return [{
 			'name': 'selenium',
 			'image': 'selenium/standalone-firefox-debug:3.8.1',
@@ -949,6 +1015,55 @@ def emailService(emailNeeded):
 		}]
 
 	return []
+
+def ldapService(ldapNeeded):
+	if ldapNeeded:
+		return [{
+			'name': 'ldap',
+			'image': 'osixia/openldap',
+			'pull': 'always',
+			'environment': {
+				'LDAP_DOMAIN': 'owncloud.com',
+				'LDAP_ORGANISATION': 'owncloud',
+				'LDAP_ADMIN_PASSWORD': 'admin',
+				'LDAP_TLS_VERIFY_CLIENT': 'never',
+				'HOSTNAME': 'ldap',
+			}
+		}]
+
+	return []
+
+def scalityService(scalityS3):
+	if not scalityS3:
+		return []
+
+	return [{
+		'name': 'scality',
+		'image': 'owncloudci/scality-s3server',
+		'pull': 'always',
+		'environment': {
+			'HOST_NAME': 'scality'
+		}
+	}]
+
+
+def cephService(cephS3):
+	if not cephS3:
+		return []
+
+	return [{
+		'name': 'ceph',
+		'image': 'owncloudci/ceph:tag-build-master-jewel-ubuntu-16.04',
+		'pull': 'always',
+		'environment': {
+			'NETWORK_AUTO_DETECT': '4',
+			'RGW_NAME': 'ceph',
+			'CEPH_DEMO_UID': 'owncloud',
+			'CEPH_DEMO_ACCESS_KEY': 'owncloud123456',
+			'CEPH_DEMO_SECRET_KEY': 'secret123456',
+		}
+	}]
+
 
 def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncloud/server', ssl = True):
 	if ssl:
@@ -1063,19 +1178,8 @@ def installTestrunner(phpVersion, useBundledApp):
 	}]
 
 def installExtraApps(phpVersion, extraApps):
-	if type(extraApps) == "list":
-		if extraApps == []:
-			return []
-		apps = {}
-		for app in extraApps:
-			apps[app] = ''
-	else:
-		apps = {}
-		for app, command in extraApps.items():
-			apps[app] = command
-
 	commandArray = []
-	for app, command in apps.items():
+	for app, command in extraApps.items():
 		commandArray.append('git clone https://github.com/owncloud/%s.git /var/www/owncloud/testrunner/apps/%s' % (app, app))
 		commandArray.append('cp -r /var/www/owncloud/testrunner/apps/%s /var/www/owncloud/server/apps/' % app)
 		if (command != ''):
@@ -1085,6 +1189,9 @@ def installExtraApps(phpVersion, extraApps):
 		commandArray.append('php occ a:l')
 		commandArray.append('php occ a:e %s' % app)
 		commandArray.append('php occ a:l')
+
+	if (commandArray == []):
+		return []
 
 	return [{
 		'name': 'install-extra-apps',
@@ -1121,6 +1228,50 @@ def setupServerAndApp(phpVersion, logLevel):
 			'php occ config:system:set trusted_domains 1 --value=server',
 			'php occ log:manage --level %s' % logLevel,
 		]
+	}]
+
+def setupCeph(cephS3):
+	if not cephS3:
+		return []
+
+	return [{
+		'name': 'setup-ceph',
+		'image': 'owncloudci/php:7.0',
+		'pull': 'always',
+		'commands': [
+			'wait-for-it -t 60 ceph:80',
+			'cd /var/www/owncloud/server/apps/files_primary_s3',
+			'cp tests/drone/ceph.config.php /var/www/owncloud/server/config',
+			'cd /var/www/owncloud/server',
+			'./apps/files_primary_s3/tests/drone/create-bucket.sh',
+		]
+	}]
+
+def setupScality(scalityS3):
+	if type(scalityS3) == "bool":
+		if scalityS3:
+			# specify an empty dict that will get the defaults
+			scalityS3 = {}
+		else:
+			return []
+
+	specialConfig = '.' + scalityS3['config'] if 'config' in scalityS3 else ''
+	configFile = 'scality%s.config.php' % specialConfig
+	createExtraBuckets = scalityS3['createExtraBuckets'] if 'createExtraBuckets' in scalityS3 else False
+
+	return [{
+		'name': 'setup-scality',
+		'image': 'owncloudci/php:7.0',
+		'pull': 'always',
+		'commands': [
+			'wait-for-it -t 60 scality:8000',
+			'cd /var/www/owncloud/server/apps/files_primary_s3',
+			'cp tests/drone/%s /var/www/owncloud/server/config' % configFile,
+			'cd /var/www/owncloud/server',
+			'php occ s3:create-bucket owncloud --accept-warning'
+		] + ([
+			'for I in $(seq 1 9); do php ./occ s3:create-bucket  owncloud$I --accept-warning; done',
+		] if createExtraBuckets else [])
 	}]
 
 def fixPermissions(phpVersion, federatedServerNeeded):
