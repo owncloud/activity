@@ -931,6 +931,10 @@ def notify():
 		'trigger': {
 			'ref': [
 				'refs/tags/**'
+			],
+			'status': [
+				'success',
+				'failure'
 			]
 		}
 	}
