@@ -37,7 +37,7 @@ OC.L10N.register(
     "Daily" : "Günlük",
     "Weekly" : "Həftəlik",
     "Activity feed" : "Fəaliyyətin ötürülməsi",
-    "Enable RSS feed" : "RSS ötürməsinin işə salinmaslı",
+    "Enable RSS feed" : "RSS ötürməsinin işə salınması",
     "No activity yet" : "Hələ ki, heç bir fəaliyyət yoxdur",
     "No more events to load" : "Yüklənə biləcək digər səbəb yoxdur",
     "Files" : "Fayllar"
