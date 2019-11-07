@@ -64,7 +64,7 @@ class FilesHooks {
 	/** @var IURLGenerator */
 	protected $urlGenerator;
 
-	/** @var string|false */
+	/** @var string */
 	protected $currentUser;
 
 	/**
@@ -77,9 +77,9 @@ class FilesHooks {
 	 * @param View $view
 	 * @param IDBConnection $connection
 	 * @param IURLGenerator $urlGenerator
-	 * @param string|false $currentUser
+	 * @param string $currentUser
 	 */
-	public function __construct(IManager $manager, Data $activityData, UserSettings $userSettings, IGroupManager $groupManager, View $view, IDBConnection $connection, IURLGenerator $urlGenerator, $currentUser) {
+	public function __construct(IManager $manager, Data $activityData, UserSettings $userSettings, IGroupManager $groupManager, View $view, IDBConnection $connection, IURLGenerator $urlGenerator, string $currentUser) {
 		$this->manager = $manager;
 		$this->activityData = $activityData;
 		$this->userSettings = $userSettings;
@@ -91,7 +91,7 @@ class FilesHooks {
 	}
 
 	/**
-	 * @return string|false Current UserID if logged in, false otherwise
+	 * @return string Current UserID if logged in, empty string otherwise
 	 */
 	protected function getCurrentUser() {
 		return $this->currentUser;
@@ -102,7 +102,7 @@ class FilesHooks {
 	 * @param string $path Path of the file that has been created
 	 */
 	public function fileCreate($path) {
-		if ($this->getCurrentUser() !== false) {
+		if ($this->getCurrentUser() !== "") {
 			$this->addNotificationsForFileAction($path, Files::TYPE_SHARE_CREATED, 'created_self', 'created_by');
 		} else {
 			$this->addNotificationsForFileAction($path, Files::TYPE_SHARE_CREATED, '', 'created_public');

@@ -125,7 +125,7 @@ class FilesHooksTest extends TestCase {
 	public function dataGetCurrentUser() {
 		return [
 			['user'],
-			[false],
+			[''],
 		];
 	}
 
@@ -142,7 +142,7 @@ class FilesHooksTest extends TestCase {
 	public function dataFileCreate() {
 		return [
 			['user', 'created_self', 'created_by'],
-			[false, '', 'created_public'],
+			['', '', 'created_public'],
 		];
 	}
 
