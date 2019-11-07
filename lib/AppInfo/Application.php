@@ -129,7 +129,7 @@ class Application extends App {
 				new View(''),
 				$server->getDatabaseConnection(),
 				$server->getURLGenerator(),
-				$currentUser
+				(string)$currentUser
 			);
 		});
 

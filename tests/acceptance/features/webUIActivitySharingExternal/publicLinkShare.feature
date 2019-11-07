@@ -20,7 +20,7 @@ Feature: public link sharing file/folders activities
       | permissions | create        |
     And the public has uploaded file "test.txt" with content "This is a test"
     When the user browses to the activity page
-    Then the activity number 1 should contain message "created test.txt" in the activity page
+    Then the activity number 1 should contain message "test.txt was created in a public folder" in the activity page
 
   @issue-690
   Scenario: Downloading a file from a public shared folder using API should be listed in the activity list
