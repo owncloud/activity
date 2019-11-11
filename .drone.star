@@ -1037,37 +1037,49 @@ def ldapService(ldapNeeded):
 
 	return []
 
-def scalityService(scalityS3):
-	if not scalityS3:
-		return []
+def scalityService(serviceParams):
+	serviceEnvironment = {
+		'HOST_NAME': 'scality'
+	}
+
+	if type(serviceParams) == "bool":
+		if not serviceParams:
+			return []
+	else:
+		if 'extraEnvironment' in serviceParams:
+			for env in serviceParams['extraEnvironment']:
+				serviceEnvironment[env] = serviceParams['extraEnvironment'][env]
 
 	return [{
 		'name': 'scality',
 		'image': 'owncloudci/scality-s3server',
 		'pull': 'always',
-		'environment': {
-			'HOST_NAME': 'scality'
-		}
+		'environment': serviceEnvironment
 	}]
 
+def cephService(serviceParams):
+	serviceEnvironment = {
+		'NETWORK_AUTO_DETECT': '4',
+		'RGW_NAME': 'ceph',
+		'CEPH_DEMO_UID': 'owncloud',
+		'CEPH_DEMO_ACCESS_KEY': 'owncloud123456',
+		'CEPH_DEMO_SECRET_KEY': 'secret123456',
+	}
 
-def cephService(cephS3):
-	if not cephS3:
-		return []
+	if type(serviceParams) == "bool":
+		if not serviceParams:
+			return []
+	else:
+		if 'extraEnvironment' in serviceParams:
+			for env in serviceParams['extraEnvironment']:
+				serviceEnvironment[env] = serviceParams['extraEnvironment'][env]
 
 	return [{
 		'name': 'ceph',
 		'image': 'owncloudci/ceph:tag-build-master-jewel-ubuntu-16.04',
 		'pull': 'always',
-		'environment': {
-			'NETWORK_AUTO_DETECT': '4',
-			'RGW_NAME': 'ceph',
-			'CEPH_DEMO_UID': 'owncloud',
-			'CEPH_DEMO_ACCESS_KEY': 'owncloud123456',
-			'CEPH_DEMO_SECRET_KEY': 'secret123456',
-		}
+		'environment': serviceEnvironment
 	}]
-
 
 def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncloud/server', ssl = True):
 	if ssl:
@@ -1234,9 +1246,15 @@ def setupServerAndApp(phpVersion, logLevel):
 		]
 	}]
 
-def setupCeph(cephS3):
-	if not cephS3:
-		return []
+def setupCeph(serviceParams):
+	if type(serviceParams) == "bool":
+		if serviceParams:
+			# specify an empty dict that will get the defaults
+			serviceParams = {}
+		else:
+			return []
+
+	createFirstBucket = serviceParams['createFirstBucket'] if 'createFirstBucket' in serviceParams else True
 
 	return [{
 		'name': 'setup-ceph',
@@ -1247,21 +1265,23 @@ def setupCeph(cephS3):
 			'cd /var/www/owncloud/server/apps/files_primary_s3',
 			'cp tests/drone/ceph.config.php /var/www/owncloud/server/config',
 			'cd /var/www/owncloud/server',
+		] + ([
 			'./apps/files_primary_s3/tests/drone/create-bucket.sh',
-		]
+		] if createFirstBucket else [])
 	}]
 
-def setupScality(scalityS3):
-	if type(scalityS3) == "bool":
-		if scalityS3:
+def setupScality(serviceParams):
+	if type(serviceParams) == "bool":
+		if serviceParams:
 			# specify an empty dict that will get the defaults
-			scalityS3 = {}
+			serviceParams = {}
 		else:
 			return []
 
-	specialConfig = '.' + scalityS3['config'] if 'config' in scalityS3 else ''
+	specialConfig = '.' + serviceParams['config'] if 'config' in serviceParams else ''
 	configFile = 'scality%s.config.php' % specialConfig
-	createExtraBuckets = scalityS3['createExtraBuckets'] if 'createExtraBuckets' in scalityS3 else False
+	createFirstBucket = serviceParams['createFirstBucket'] if 'createFirstBucket' in serviceParams else True
+	createExtraBuckets = serviceParams['createExtraBuckets'] if 'createExtraBuckets' in serviceParams else False
 
 	return [{
 		'name': 'setup-scality',
@@ -1271,9 +1291,10 @@ def setupScality(scalityS3):
 			'wait-for-it -t 60 scality:8000',
 			'cd /var/www/owncloud/server/apps/files_primary_s3',
 			'cp tests/drone/%s /var/www/owncloud/server/config' % configFile,
-			'cd /var/www/owncloud/server',
-			'php occ s3:create-bucket owncloud --accept-warning'
+			'cd /var/www/owncloud/server'
 		] + ([
+			'php occ s3:create-bucket owncloud --accept-warning'
+		] if createFirstBucket else []) + ([
 			'for I in $(seq 1 9); do php ./occ s3:create-bucket  owncloud$I --accept-warning; done',
 		] if createExtraBuckets else [])
 	}]
