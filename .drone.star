@@ -715,6 +715,7 @@ def acceptance():
 		'runAllSuites': False,
 		'runCoreTests': False,
 		'numberOfParts': 1,
+		'cron': '',
 	}
 
 	if 'defaults' in config:
@@ -888,16 +889,18 @@ def acceptance():
 										owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', False) +
 										(owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', False) if params['federatedServerNeeded'] else []),
 									'depends_on': [],
-									'trigger': {
-										'ref': [
-											'refs/pull/**',
-											'refs/tags/**'
-										]
-									}
+									'trigger': {}
 								}
 
-								for branch in config['branches']:
-									result['trigger']['ref'].append('refs/heads/%s' % branch)
+								if (params['cron'] == ''):
+									result['trigger']['ref'] = [
+										'refs/pull/**',
+										'refs/tags/**'
+									]
+									for branch in config['branches']:
+										result['trigger']['ref'].append('refs/heads/%s' % branch)
+								else:
+									result['trigger']['cron'] = params['cron']
 
 								pipelines.append(result)
 
