@@ -584,7 +584,23 @@ def phptests(testType):
 		for item in default:
 			params[item] = matrix[item] if item in matrix else default[item]
 
-		if ((config['app'] != 'files_primary_s3') and ((params['cephS3'] != False) or (params['scalityS3'] != False))):
+		cephS3Params = params['cephS3']
+		if type(cephS3Params) == "bool":
+			cephS3Needed = cephS3Params
+			filesPrimaryS3NeededForCeph = cephS3Params
+		else:
+			cephS3Needed = True
+			filesPrimaryS3NeededForCeph = cephS3Params['filesPrimaryS3Needed'] if 'filesPrimaryS3Needed' in cephS3Params else True
+
+		scalityS3Params = params['scalityS3']
+		if type(scalityS3Params) == "bool":
+			scalityS3Needed = scalityS3Params
+			filesPrimaryS3NeededForScality = scalityS3Params
+		else:
+			scalityS3Needed = True
+			filesPrimaryS3NeededForScality = scalityS3Params['filesPrimaryS3Needed'] if 'filesPrimaryS3Needed' in scalityS3Params else True
+
+		if ((config['app'] != 'files_primary_s3') and (filesPrimaryS3NeededForCeph or filesPrimaryS3NeededForScality)):
 			# If we are not already 'files_primary_s3' and we need S3 storage, then install the 'files_primary_s3' app
 			extraAppsDict  = {
 				'files_primary_s3': 'composer install'
@@ -743,9 +759,23 @@ def acceptance():
 			if isAPI or isCLI:
 				params['browsers'] = ['']
 
-			needObjectStore = (params['cephS3'] != False) or (params['scalityS3'] != False)
+			cephS3Params = params['cephS3']
+			if type(cephS3Params) == "bool":
+				cephS3Needed = cephS3Params
+				filesPrimaryS3NeededForCeph = cephS3Params
+			else:
+				cephS3Needed = True
+				filesPrimaryS3NeededForCeph = cephS3Params['filesPrimaryS3Needed'] if 'filesPrimaryS3Needed' in cephS3Params else True
 
-			if ((config['app'] != 'files_primary_s3') and (needObjectStore)):
+			scalityS3Params = params['scalityS3']
+			if type(scalityS3Params) == "bool":
+				scalityS3Needed = scalityS3Params
+				filesPrimaryS3NeededForScality = scalityS3Params
+			else:
+				scalityS3Needed = True
+				filesPrimaryS3NeededForScality = scalityS3Params['filesPrimaryS3Needed'] if 'filesPrimaryS3Needed' in scalityS3Params else True
+
+			if ((config['app'] != 'files_primary_s3') and (filesPrimaryS3NeededForCeph or filesPrimaryS3NeededForScality)):
 				# If we are not already 'files_primary_s3' and we need S3 object storage, then install the 'files_primary_s3' app
 				extraAppsDict  = {
 					'files_primary_s3': 'composer install'
@@ -813,7 +843,7 @@ def acceptance():
 								if params['ldapNeeded']:
 									environment['TEST_EXTERNAL_USER_BACKENDS'] = True
 
-								if (needObjectStore):
+								if (cephS3Needed or scalityS3Needed):
 									environment['OC_TEST_ON_OBJECTSTORE'] = '1'
 									if (params['cephS3'] != False):
 										environment['S3_TYPE'] = 'ceph'
@@ -1258,17 +1288,18 @@ def setupCeph(serviceParams):
 			return []
 
 	createFirstBucket = serviceParams['createFirstBucket'] if 'createFirstBucket' in serviceParams else True
+	setupCommands = serviceParams['setupCommands'] if 'setupCommands' in serviceParams else [
+		'wait-for-it -t 60 ceph:80',
+		'cd /var/www/owncloud/server/apps/files_primary_s3',
+		'cp tests/drone/ceph.config.php /var/www/owncloud/server/config',
+		'cd /var/www/owncloud/server',
+	]
 
 	return [{
 		'name': 'setup-ceph',
 		'image': 'owncloudci/php:7.0',
 		'pull': 'always',
-		'commands': [
-			'wait-for-it -t 60 ceph:80',
-			'cd /var/www/owncloud/server/apps/files_primary_s3',
-			'cp tests/drone/ceph.config.php /var/www/owncloud/server/config',
-			'cd /var/www/owncloud/server',
-		] + ([
+		'commands': setupCommands + ([
 			'./apps/files_primary_s3/tests/drone/create-bucket.sh',
 		] if createFirstBucket else [])
 	}]
@@ -1285,17 +1316,18 @@ def setupScality(serviceParams):
 	configFile = 'scality%s.config.php' % specialConfig
 	createFirstBucket = serviceParams['createFirstBucket'] if 'createFirstBucket' in serviceParams else True
 	createExtraBuckets = serviceParams['createExtraBuckets'] if 'createExtraBuckets' in serviceParams else False
+	setupCommands = serviceParams['setupCommands'] if 'setupCommands' in serviceParams else [
+		'wait-for-it -t 60 scality:8000',
+		'cd /var/www/owncloud/server/apps/files_primary_s3',
+		'cp tests/drone/%s /var/www/owncloud/server/config' % configFile,
+		'cd /var/www/owncloud/server'
+	]
 
 	return [{
 		'name': 'setup-scality',
 		'image': 'owncloudci/php:7.0',
 		'pull': 'always',
-		'commands': [
-			'wait-for-it -t 60 scality:8000',
-			'cd /var/www/owncloud/server/apps/files_primary_s3',
-			'cp tests/drone/%s /var/www/owncloud/server/config' % configFile,
-			'cd /var/www/owncloud/server'
-		] + ([
+		'commands': setupCommands + ([
 			'php occ s3:create-bucket owncloud --accept-warning'
 		] if createFirstBucket else []) + ([
 			'for I in $(seq 1 9); do php ./occ s3:create-bucket  owncloud$I --accept-warning; done',
