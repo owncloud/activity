@@ -3,14 +3,16 @@
 		 verbose="true"
 		 failOnRisky="true"
 		 failOnWarning="true"
-		 strict="true"
+		 beStrictAboutOutputDuringTests="true"
 		 timeoutForSmallTests="900"
 		 timeoutForMediumTests="900"
 		 timeoutForLargeTests="900"
 >
-	<testsuite name='unit'>
-		<directory suffix='Test.php'>./tests/Unit</directory>
-	</testsuite>
+	<testsuites>
+		<testsuite name='unit'>
+			<directory suffix='Test.php'>./tests/Unit</directory>
+		</testsuite>
+	</testsuites>
 	<!-- filters for code coverage -->
 	<filter>
 		<whitelist>
