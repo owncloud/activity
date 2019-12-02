@@ -30,7 +30,7 @@ OC.L10N.register(
     "_* and %n more _::_* and %n more _" : ["* ve %n daha fazla","* ve %n daha fazla"],
     "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Bu e-postayı alıyorsunuz çünkü<a href=\"%s\">%s</a>adresinde şunlar meydana geldi",
     "%1$s - %2$s" : "%1$s - %2$s",
-    "_and %n more _::_and %n more _" : ["ve%ndaha","ve%ndaha"],
+    "_and %n more _::_and %n more _" : ["ve%ndaha","ve %n daha"],
     "Activity" : "Etkinlik",
     "List your own file actions in the stream" : "Akışta kendi dosya eylemlerinizi listeleyin",
     "Notify about your own actions via email" : "Kendi eylemlerinizi e-posta ile alın",
