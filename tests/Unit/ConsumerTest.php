@@ -43,7 +43,7 @@ class ConsumerTest extends TestCase {
 	/** @var \OCA\Activity\UserSettings */
 	protected $userSettings;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->deleteTestActivities();
 
@@ -85,7 +85,7 @@ class ConsumerTest extends TestCase {
 			]));
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->deleteTestActivities();
 		parent::tearDown();
 	}

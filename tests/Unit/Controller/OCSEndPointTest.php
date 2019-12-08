@@ -72,7 +72,7 @@ class OCSEndPointTest extends TestCase {
 	/** @var OCSEndPoint */
 	protected $controller;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->data = $this->getMockBuilder('OCA\Activity\Data')
@@ -113,7 +113,7 @@ class OCSEndPointTest extends TestCase {
 		$this->overwriteService('AvatarManager', $this->avatarManager);
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->restoreService('AvatarManager');
 		parent::tearDown();
 	}

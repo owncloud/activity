@@ -33,7 +33,7 @@ use OCP\Activity\IExtension;
  * @package OCA\Activity\Tests
  */
 class HooksDeleteUserTest extends TestCase {
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$activities = [
@@ -72,7 +72,7 @@ class HooksDeleteUserTest extends TestCase {
 		}
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$data = new Data(
 			$this->createMock('\OCP\Activity\IManager'),
 			\OC::$server->getDatabaseConnection(),

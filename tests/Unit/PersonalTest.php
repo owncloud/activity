@@ -34,7 +34,7 @@ class PersonalTest extends TestCase {
 	protected $panel;
 	protected $app;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->app = $this->getMockBuilder(Application::class)
 			->disableOriginalConstructor()

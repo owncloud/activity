@@ -28,7 +28,7 @@ class CollectionTest extends TestCase {
 	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->l = $this->getMockBuilder('OCP\IL10N')

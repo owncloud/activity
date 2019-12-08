@@ -50,7 +50,7 @@ class FactoryTest extends TestCase {
 	/** @var  \OCP\IGroupManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $groupManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->activityManager = $this->getMockBuilder('OCP\Activity\IManager')

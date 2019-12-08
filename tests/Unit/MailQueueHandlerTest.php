@@ -60,7 +60,7 @@ class MailQueueHandlerTest extends TestCase {
 	/** @var IUser */
 	protected $user3;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$user1Id = $this->getUniqueId('mailqueueuser1_');
@@ -142,7 +142,7 @@ class MailQueueHandlerTest extends TestCase {
 		);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$query = \OC::$server->getDatabaseConnection()->prepare('DELETE FROM `*PREFIX*activity_mq` WHERE `amq_timestamp` < 500');
 		$query->execute();
 

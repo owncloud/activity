@@ -50,7 +50,7 @@ class FilesHooksTest extends TestCase {
 	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\IURLGenerator */
 	protected $urlGenerator;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->activityManager = $this->getMockBuilder('OCP\Activity\IManager')

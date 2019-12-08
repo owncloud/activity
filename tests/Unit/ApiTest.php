@@ -34,7 +34,7 @@ use OCP\Activity\IExtension;
 class ApiTest extends TestCase {
 	protected $originalWEBROOT;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->originalWEBROOT = \OC::$WEBROOT;
@@ -78,7 +78,7 @@ class ApiTest extends TestCase {
 		}
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$data = new Data(
 			$this->createMock('OCP\Activity\IManager'),
 			\OC::$server->getDatabaseConnection(),
