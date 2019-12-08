@@ -50,7 +50,7 @@ class ActivitiesTest extends TestCase {
 	/** @var Activities */
 	protected $controller;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->getMockBuilder('OCP\IConfig')
@@ -73,7 +73,7 @@ class ActivitiesTest extends TestCase {
 		$this->overwriteService('AvatarManager', $this->avatarManager);
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->restoreService('AvatarManager');
 		parent::tearDown();
 	}

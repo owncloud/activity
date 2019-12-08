@@ -30,7 +30,7 @@ class GroupHelperTest extends TestCase {
 	/** @var \OCA\Activity\DataHelper|\PHPUnit\Framework\MockObject\MockObject */
 	protected $dataHelper;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->activityManager = $this->getMockBuilder('OCP\Activity\IManager')

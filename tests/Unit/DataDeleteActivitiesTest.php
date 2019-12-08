@@ -37,7 +37,7 @@ class DataDeleteActivitiesTest extends TestCase {
 	/** @var \OCA\Activity\Data */
 	protected $data;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$activities = [
@@ -71,7 +71,7 @@ class DataDeleteActivitiesTest extends TestCase {
 		);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->data->deleteActivities([
 			'type' => 'test',
 		]);

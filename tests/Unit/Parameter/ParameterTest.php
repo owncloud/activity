@@ -30,7 +30,7 @@ class ParameterTest extends TestCase {
 	/** @var \OCA\Activity\Formatter\IFormatter|\PHPUnit\Framework\MockObject\MockObject */
 	protected $formatter;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->event = $this->getMockBuilder('OCP\Activity\IEvent')

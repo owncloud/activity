@@ -25,7 +25,7 @@ use OCA\Activity\Tests\Unit\TestCase;
 use OCP\AppFramework\Http\TemplateResponse;
 
 class RssTest extends TestCase {
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 	}
 

@@ -35,7 +35,7 @@ class FileFormatterTest extends TestCase {
 	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->urlGenerator = $this->getMockBuilder('OCP\IURLGenerator')

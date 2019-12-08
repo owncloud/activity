@@ -34,7 +34,7 @@ class DataHelperTest extends TestCase {
 	/** @var \OCP\IL10N|\PHPUnit\Framework\MockObject\MockObject */
 	protected $l;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->originalWEBROOT = \OC::$WEBROOT;
@@ -57,7 +57,7 @@ class DataHelperTest extends TestCase {
 			->getMock();
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		\OC::$WEBROOT = $this->originalWEBROOT;
 		parent::tearDown();
 	}

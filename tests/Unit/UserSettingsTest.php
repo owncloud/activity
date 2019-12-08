@@ -32,7 +32,7 @@ class UserSettingsTest extends TestCase {
 	/** @var \PHPUnit\Framework\MockObject\MockObject */
 	protected $config;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$activityLanguage = \OCP\Util::getL10N('activity', 'en');
@@ -52,7 +52,7 @@ class UserSettingsTest extends TestCase {
 		));
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		parent::tearDown();
 	}
 

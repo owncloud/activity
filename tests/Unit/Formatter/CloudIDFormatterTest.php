@@ -29,7 +29,7 @@ class CloudIDFormatterTest extends TestCase {
 	/** @var \OCP\Contacts\IManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $contactsManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->contactsManager = $this->getMockBuilder('OCP\Contacts\IManager')
