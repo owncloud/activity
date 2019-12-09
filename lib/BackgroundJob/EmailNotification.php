@@ -81,11 +81,20 @@ class EmailNotification extends TimedJob {
 		$this->isCLI = \OC::$CLI;
 	}
 
+	public function sendAll() {
+		$this->run(['sendAll' => true]);
+	}
+
 	protected function run($argument) {
-		// We don't use time() but "time() - 1" here, so we don't run into
-		// runtime issues later and delete emails, which were created in the
-		// same second, but were not collected for the emails.
-		$sendTime = \time() - 1;
+		if (isset($argument['sendAll']) && $argument['sendAll'] === true) {
+			// Flush all queue
+			$sendTime = PHP_INT_MAX;
+		} else {
+			// We don't use time() but "time() - 1" here, so we don't run into
+			// runtime issues later and delete emails, which were created in the
+			// same second, but were not collected for the emails.
+			$sendTime = \time() - 1;
+		}
 
 		if ($this->isCLI) {
 			do {
