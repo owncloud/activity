@@ -47,6 +47,8 @@ class SendEmails extends Command {
 	 * @return int|void
 	 */
 	public function execute(InputInterface $input, OutputInterface $output) {
-		$this->emailNotification->sendAll();
+		do {
+			$usersNotified = $this->emailNotification->sendAll();
+		} while ($usersNotified > 0);
 	}
 }

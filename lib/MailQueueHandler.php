@@ -221,12 +221,23 @@ class MailQueueHandler {
 		}
 
 		list($mailData, $skippedCount) = $this->getItemsForUser($userName, $maxTime);
+		$this->sendMail($user, $email, $lang, $timezone, $mailData, $skippedCount);
+	}
 
+	/**
+	 * @param IUser $user
+	 * @param string $email
+	 * @param string $lang
+	 * @param string $timezone
+	 * @param array $mailData
+	 * @param int $skippedCount
+	 */
+	protected function sendMail($user, $email, $lang, $timezone, $mailData, $skippedCount) {
 		$l = $this->getLanguage($lang);
 		$parser = new PlainTextParser($l);
-		$this->dataHelper->setUser($userName);
+		$this->dataHelper->setUser($user->getUid());
 		$this->dataHelper->setL10n($l);
-		$this->activityManager->setCurrentUserId($userName);
+		$this->activityManager->setCurrentUserId($user->getUid());
 
 		$activityList = [];
 		foreach ($mailData as $activity) {
@@ -298,6 +309,94 @@ class MailQueueHandler {
 			'DELETE FROM `*PREFIX*activity_mq` '
 			. ' WHERE `amq_timestamp` <= ? '
 			. ' AND `amq_affecteduser` IN (' . $placeholders . ')');
+		$query->execute($queryParams);
+	}
+
+	/**
+	 * Get all unique users from mail queue
+	 * Instant messaging use case
+	 *
+	 * @param int $limit
+	 * @return array
+	 */
+	public function getAllUsers($limit) {
+		$limit = (!$limit) ? null : (int) $limit;
+
+		$query = $this->connection->prepare(
+			'SELECT `amq_affecteduser`, `email`, MAX(`mail_id`) AS `max_mail_id` '
+			. ' FROM `*PREFIX*activity_mq` '
+			. ' LEFT JOIN `*PREFIX*accounts` ON `user_id` = `amq_affecteduser` '
+			. ' GROUP BY `amq_affecteduser`, `email` '
+			. ' ORDER BY `amq_trigger_time` ASC',
+			$limit);
+		$query->execute();
+
+		$allUsers = [];
+		while ($row = $query->fetch()) {
+			$allUsers[] = [
+				'uid' => $row['amq_affecteduser'],
+				'email' => $row['email'],
+				'max_mail_id' => $row['max_mail_id'],
+			];
+		}
+
+		return $allUsers;
+	}
+
+	/**
+	 * Send a notification containing all queue items to one user
+	 * Instant messaging use case
+	 *
+	 * @param string $userName Username of the recipient
+	 * @param string $email Email address of the recipient
+	 * @param string $lang Selected language of the recipient
+	 * @param string $timezone Selected timezone of the recipient
+	 * @param int $maxMailId Maximal notification id
+	 */
+	public function sendAllEmailsToUser($userName, $email, $lang, $timezone, $maxMailId) {
+		$user = $this->userManager->get($userName);
+		if (!$user instanceof IUser) {
+			return;
+		}
+
+		// Get All Notifications for this user
+		list($mailData, $skippedCount) = $this->getItemsForUser($userName, PHP_INT_MAX);
+		// Sort out any entries that are greater than $maxMailId
+		$mailData = \array_filter(
+			$mailData,
+			function ($item) use ($maxMailId) {
+				return $item['mail_id'] <= $maxMailId;
+			}
+		);
+
+		$this->sendMail($user, $email, $lang, $timezone, $mailData, $skippedCount);
+	}
+
+	/**
+	 * Delete all entries we dealt with
+	 * Instant messaging use case
+	 *
+	 * @param array $affectedUsers uid => maximal mail_id of all processed for this user notifications
+	 */
+	public function deleteAllSentItems(array $affectedUsers) {
+		$userCount = \count($affectedUsers);
+		// Don't try to delete if we are not considering any users
+		if ($userCount === 0) {
+			return;
+		}
+		$queryPartsArray = [];
+		$queryParams = [];
+		foreach ($affectedUsers as $uid => $maxMailId) {
+			$queryParams[] = $uid;
+			$queryParams[] = $maxMailId;
+			$queryPartsArray[] = '(`amq_affecteduser` = ? AND `mail_id` <= ?)';
+		}
+
+		$queryParts = \implode(' OR ', $queryPartsArray);
+
+		$query = $this->connection->prepare(
+			'DELETE FROM `*PREFIX*activity_mq` WHERE ' . $queryParts
+		);
 		$query->execute($queryParams);
 	}
 }
