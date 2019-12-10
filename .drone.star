@@ -1219,10 +1219,7 @@ def installTestrunner(phpVersion, useBundledApp):
 			'rsync -aIX /tmp/testrunner /var/www/owncloud',
 		] + ([
 			'cp -r /var/www/owncloud/testrunner/apps/%s /var/www/owncloud/server/apps/' % config['app']
-		] if not useBundledApp else []) + [
-			'cd /var/www/owncloud/testrunner',
-			'make install-composer-deps'
-		]
+		] if not useBundledApp else [])
 	}]
 
 def installExtraApps(phpVersion, extraApps):
