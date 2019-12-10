@@ -49,14 +49,6 @@ class EmailNotification extends TimedJob {
 	/** @var bool */
 	protected $isCLI;
 
-	protected $userLanguages;
-
-	protected $userTimezones;
-
-	protected $defaultLang;
-
-	protected $defaultTimeZone;
-
 	/**
 	 * @param MailQueueHandler $mailQueueHandler
 	 * @param IConfig $config
@@ -87,49 +79,6 @@ class EmailNotification extends TimedJob {
 		$this->config = \OC::$server->getConfig();
 		$this->logger = \OC::$server->getLogger();
 		$this->isCLI = \OC::$CLI;
-	}
-
-	public function sendAll() {
-		$allUsers = $this->mqHandler->getAllUsers(self::CLI_EMAIL_BATCH_SIZE);
-		if (empty($allUsers)) {
-			// No users found to notify, mission abort
-			return 0;
-		}
-
-		$this->prepareLocaleData($allUsers);
-
-		$sentMailForUsers = [];
-		foreach ($allUsers as $user) {
-			$uid = $user['uid'];
-			if (empty($user['email'])) {
-				// The user did not setup an email address
-				// So we will not send an email but still discard the queue entries
-				$this->logger->debug("Couldn't send notification email to user '$uid' (email address isn't set for that user)", ['app' => 'activity']);
-				$sentMailForUsers[] = $uid;
-				continue;
-			}
-
-			$language = (!empty($this->userLanguages[$uid])) ? $this->userLanguages[$uid] : $this->defaultLang;
-			$timezone = (!empty($this->userTimezones[$uid])) ? $this->userTimezones[$uid] : $this->defaultTimeZone;
-
-			try {
-				$this->mqHandler->sendAllEmailsToUser($uid, $user['email'], $language, $timezone, $user['max_mail_id']);
-				$sentMailForUsers[] = [
-					'uid' => $uid,
-					'maxMailId' => $user['max_mail_id']
-				];
-			} catch (\Exception $e) {
-				// Run cleanup before we die
-				$this->mqHandler->deleteAllSentItems($sentMailForUsers);
-				// Throw the exception again - which gets logged by core and the job is handled appropriately
-				throw $e;
-			}
-		}
-
-		// Delete all entries we dealt with
-		$this->mqHandler->deleteAllSentItems($sentMailForUsers);
-
-		return \count($allUsers);
 	}
 
 	protected function run($argument) {
@@ -165,9 +114,19 @@ class EmailNotification extends TimedJob {
 			// No users found to notify, mission abort
 			return 0;
 		}
+		$affectedUIDs = \array_map(function ($u) {
+			return $u['uid'];
+		}, $affectedUsers);
 
-		$this->prepareLocaleData($affectedUsers);
+		$userLanguages = $this->config->getUserValueForUsers('core', 'lang', $affectedUIDs);
+		$userTimezones = $this->config->getUserValueForUsers('core', 'timezone', $affectedUIDs);
+
+		// Send Email
+		$default_lang = $this->config->getSystemValue('default_language', 'en');
+		$defaultTimeZone = \date_default_timezone_get();
+
 		$sentMailForUsers = [];
+
 		foreach ($affectedUsers as $user) {
 			$uid = $user['uid'];
 			if (empty($user['email'])) {
@@ -178,8 +137,8 @@ class EmailNotification extends TimedJob {
 				continue;
 			}
 
-			$language = (!empty($this->userLanguages[$uid])) ? $this->userLanguages[$uid] : $this->defaultLang;
-			$timezone = (!empty($this->userTimezones[$uid])) ? $this->userTimezones[$uid] : $this->defaultTimeZone;
+			$language = (!empty($userLanguages[$uid])) ? $userLanguages[$uid] : $default_lang;
+			$timezone = (!empty($userTimezones[$uid])) ? $userTimezones[$uid] : $defaultTimeZone;
 
 			try {
 				$this->mqHandler->sendEmailToUser($uid, $user['email'], $language, $timezone, $sendTime);
@@ -196,16 +155,5 @@ class EmailNotification extends TimedJob {
 		$this->mqHandler->deleteSentItems($sentMailForUsers, $sendTime);
 
 		return \sizeof($affectedUsers);
-	}
-
-	protected function prepareLocaleData($userArray) {
-		$affectedUIDs = \array_map(function ($u) {
-			return $u['uid'];
-		}, $userArray);
-
-		$this->userLanguages = $this->config->getUserValueForUsers('core', 'lang', $affectedUIDs);
-		$this->userTimezones = $this->config->getUserValueForUsers('core', 'timezone', $affectedUIDs);
-		$this->defaultLang = $this->config->getSystemValue('default_language', 'en');
-		$this->defaultTimeZone = \date_default_timezone_get();
 	}
 }

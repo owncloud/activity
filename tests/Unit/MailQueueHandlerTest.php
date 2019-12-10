@@ -299,4 +299,96 @@ class MailQueueHandlerTest extends TestCase {
 			}
 		}
 	}
+
+	public function getAllUsersData() {
+		return [
+			[null, ['user2', 'user1', 'user3'], []],
+			[5, ['user2', 'user1', 'user3'], []],
+			[3, ['user2', 'user1', 'user3'], []],
+			[2, ['user2', 'user1'], ['user3']],
+			[1, ['user2'], ['user1', 'user3']],
+		];
+	}
+
+	/**
+	 * @dataProvider getAllUsersData
+	 *
+	 * @param int $limit
+	 * @param array $affected
+	 * @param array $untouched
+	 */
+	public function testGetAllUsers($limit, $affected, $untouched) {
+		$affected = \array_map(function ($userVar) {
+			return [
+				'uid' => $this->$userVar->getUID(),
+				'email' => $this->$userVar->getEMailAddress()
+			];
+		}, $affected);
+		$untouched = \array_map(function ($userVar) {
+			return [
+				'uid' => $this->$userVar->getUID(),
+				'email' => $this->$userVar->getEMailAddress()
+			];
+		}, $untouched);
+
+		$users = $this->mailQueueHandler->getAllUsers($limit);
+
+		$uids = \array_map(function ($u) {
+			return [
+				'uid' => $u['uid'],
+				'maxMailId' => $u['max_mail_id']
+			];
+		}, $users);
+
+		foreach ($uids as $user) {
+			list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$user['uid'], MailQueueHandler::POSTGRE_MAX_INT]);
+			$this->assertNotEmpty($data, 'Failed asserting that each user has a mail entry');
+			$this->assertSame(0, $skipped);
+		}
+
+		$this->mailQueueHandler->deleteAllSentItems($uids);
+
+		foreach ($uids as $user) {
+			list($data, $skipped) = $this->invokePrivate($this->mailQueueHandler, 'getItemsForUser', [$user['uid'], MailQueueHandler::POSTGRE_MAX_INT]);
+			$this->assertEmpty($data, 'Failed to assert that all entries for the affected users have been deleted');
+			$this->assertSame(0, $skipped);
+		}
+	}
+	public function testSendAllEmailsToUser() {
+		$maxTime = 200;
+		$user = $this->user2->getUID();
+		$userDisplayName = 'user two';
+		$this->user2->setDisplayName($userDisplayName);
+		$email = 'usertwo@localhost';
+		$this->user2->setEMailAddress($email);
+
+		$this->mailer->expects($this->once())
+			->method('send')
+			->with($this->message);
+
+		$this->message->expects($this->once())
+			->method('setTo')
+			->with([$email => $userDisplayName]);
+		$this->message->expects($this->once())
+			->method('setSubject');
+		$this->message->expects($this->once())
+			->method('setPlainBody');
+		$this->message->expects($this->once())
+			->method('setHtmlBody');
+		$this->message->expects($this->once())
+			->method('setFrom');
+
+		$this->activityManager->expects($this->exactly(2))
+			->method('setCurrentUserId')
+			->withConsecutive(
+				[$user],
+				[null]
+			);
+
+		$users = $this->mailQueueHandler->getAllUsers(1);
+		$this->mailQueueHandler->sendAllEmailsToUser($user, $email, 'en', 'UTC', $maxTime);
+
+		// Invalid user, no object no email
+		$this->mailQueueHandler->sendAllEmailsToUser($user . $user, $email, 'en', 'UTC', $maxTime);
+	}
 }

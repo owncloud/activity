@@ -42,6 +42,8 @@ class MailQueueHandler {
 	/** Number of entries we want to list in the email */
 	const ENTRY_LIMIT = 200;
 
+	const POSTGRE_MAX_INT = 2147483647;
+
 	/** @var array */
 	protected $languages;
 
@@ -323,7 +325,7 @@ class MailQueueHandler {
 		$limit = (!$limit) ? null : (int) $limit;
 
 		$query = $this->connection->prepare(
-			'SELECT `amq_affecteduser`, `email`, MAX(`mail_id`) AS `max_mail_id` '
+			'SELECT `amq_affecteduser`, `email`, MAX(`mail_id`) AS `max_mail_id`, MIN(`amq_latest_send`) AS `amq_trigger_time` '
 			. ' FROM `*PREFIX*activity_mq` '
 			. ' LEFT JOIN `*PREFIX*accounts` ON `user_id` = `amq_affecteduser` '
 			. ' GROUP BY `amq_affecteduser`, `email` '
@@ -360,7 +362,7 @@ class MailQueueHandler {
 		}
 
 		// Get All Notifications for this user
-		list($mailData, $skippedCount) = $this->getItemsForUser($userName, PHP_INT_MAX);
+		list($mailData, $skippedCount) = $this->getItemsForUser($userName, self::POSTGRE_MAX_INT);
 		// Sort out any entries that are greater than $maxMailId
 		$mailData = \array_filter(
 			$mailData,
@@ -386,9 +388,9 @@ class MailQueueHandler {
 		}
 		$queryPartsArray = [];
 		$queryParams = [];
-		foreach ($affectedUsers as $uid => $maxMailId) {
-			$queryParams[] = $uid;
-			$queryParams[] = $maxMailId;
+		foreach ($affectedUsers as $userData) {
+			$queryParams[] = $userData['uid'];
+			$queryParams[] = $userData['maxMailId'];
 			$queryPartsArray[] = '(`amq_affecteduser` = ? AND `mail_id` <= ?)';
 		}
 
