@@ -100,9 +100,10 @@ class EmailNotificationTest extends TestCase {
 
 	/**
 	 * Test run where all emails fail to send - cleanup should error
-	 * @expectedException \Exception
 	 */
 	public function testRunStepWhereEmailThrowsException() {
+		$this->expectException(\Exception::class);
+
 		$mailQueueHandler = $this->getMockBuilder('OCA\Activity\MailQueueHandler')
 			->disableOriginalConstructor()
 			->getMock();

@@ -189,9 +189,10 @@ class OCSEndPointTest extends TestCase {
 	 *
 	 * @param array $params
 	 * @param string $filter
-	 * @expectedException \OCA\Activity\Exception\InvalidFilterException
 	 */
 	public function testReadParameterFilterInvalid(array $params, $filter) {
+		$this->expectException(\OCA\Activity\Exception\InvalidFilterException::class);
+
 		$this->data->expects($this->once())
 			->method('validateFilter')
 			->with($filter)
@@ -310,9 +311,10 @@ class OCSEndPointTest extends TestCase {
 	}
 
 	/**
-	 * @expectedException \OutOfBoundsException
 	 */
 	public function testReadParameterUserInvalid() {
+		$this->expectException(\OutOfBoundsException::class);
+
 		$this->data->expects($this->once())
 			->method('validateFilter')
 			->willReturnArgument(0);
