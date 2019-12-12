@@ -296,11 +296,12 @@ class DataTest extends TestCase {
 	}
 
 	/**
-	 * @expectedException \BadMethodCallException
-	 * @expectedExceptionMessage No settings enabled
-	 * @expectedExceptionCode 3
 	 */
 	public function testGetNoSettings() {
+		$this->expectException(\BadMethodCallException::class);
+		$this->expectExceptionMessage('No settings enabled');
+		$this->expectExceptionCode(3);
+
 		/** @var \OCA\Activity\GroupHelper|\PHPUnit\Framework\MockObject\MockObject $groupHelper */
 		$groupHelper = $this->getMockBuilder('OCA\Activity\GroupHelper')
 			->disableOriginalConstructor()
@@ -340,11 +341,12 @@ class DataTest extends TestCase {
 	}
 
 	/**
-	 * @expectedException \OutOfBoundsException
-	 * @expectedExceptionMessage Invalid user
-	 * @expectedExceptionCode 1
 	 */
 	public function testGetNoUser() {
+		$this->expectException(\OutOfBoundsException::class);
+		$this->expectExceptionMessage('Invalid user');
+		$this->expectExceptionCode(1);
+
 		/** @var \OCA\Activity\GroupHelper|\PHPUnit\Framework\MockObject\MockObject $groupHelper */
 		$groupHelper = $this->getMockBuilder('OCA\Activity\GroupHelper')
 			->disableOriginalConstructor()
