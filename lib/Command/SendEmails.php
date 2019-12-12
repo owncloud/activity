@@ -25,6 +25,7 @@ use OCA\Activity\MailQueueHandler;
 use OCP\IConfig;
 use OCP\ILogger;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -68,28 +69,46 @@ class SendEmails extends Command {
 	 * @return int|void
 	 */
 	public function execute(InputInterface $input, OutputInterface $output) {
+		$verbocity = $output->getVerbosity();
+		if ($verbocity >= OutputInterface::VERBOSITY_VERBOSE) {
+			$progress = new ProgressBar($output);
+			$progress->start();
+		}
 		do {
-			$usersNotified = $this->sendBatch();
-		} while ($usersNotified > 0);
+			$users = $this->mqHandler->getAllUsers(self::BATCH_SIZE);
+			$batchCount = \count($users);
+			if ($batchCount === 0) {
+				// queue is empty
+				break;
+			}
+
+			$this->sendBatch($users, $output);
+			if ($verbocity >= OutputInterface::VERBOSITY_VERBOSE) {
+				$progress->advance($batchCount);
+			}
+		} while ($batchCount > 0);
+
+		if ($verbocity >= OutputInterface::VERBOSITY_VERBOSE) {
+			$progress->finish();
+		}
 	}
 
-	protected function sendBatch() {
-		$allUsers = $this->mqHandler->getAllUsers(self::BATCH_SIZE);
-		if (empty($allUsers)) {
-			// No users found to notify, mission abort
-			return 0;
-		}
-
+	/**
+	 * @param array $users - should have at least uid and maxMailId for each entry
+	 * @param OutputInterface $output
+	 * @return int
+	 */
+	protected function sendBatch($users, $output) {
 		$affectedUIDs = \array_map(function ($u) {
 			return $u['uid'];
-		}, $allUsers);
+		}, $users);
 		$userLanguages = $this->config->getUserValueForUsers('core', 'lang', $affectedUIDs);
 		$userTimezones = $this->config->getUserValueForUsers('core', 'timezone', $affectedUIDs);
 		$defaultLang = $this->config->getSystemValue('default_language', 'en');
 		$defaultTimeZone = \date_default_timezone_get();
 
 		$sentMailForUsers = [];
-		foreach ($allUsers as $user) {
+		foreach ($users as $user) {
 			$uid = $user['uid'];
 			if (empty($user['email'])) {
 				// The user did not setup an email address
@@ -111,17 +130,20 @@ class SendEmails extends Command {
 					'maxMailId' => $user['max_mail_id']
 				];
 			} catch (\Exception $e) {
-				// Delete all entries we dealt with
-				$this->mqHandler->deleteAllSentItems($sentMailForUsers);
-
-				// Throw the exception again - which gets logged by core and the job is handled appropriately
-				throw $e;
+				$this->logger->error(
+					'Got an error while flushing emails for user "{user}"',
+					['app' => 'activity', 'user' => $uid]
+				);
+				$this->logger->logException($e);
+				if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+					$output->writeln("\nNotification to user '{$uid}' has been not sent: " . $e->getMessage());
+				}
 			}
 		}
 
 		// Delete all entries we dealt with
 		$this->mqHandler->deleteAllSentItems($sentMailForUsers);
 
-		return \count($allUsers);
+		return \count($sentMailForUsers);
 	}
 }

@@ -28,6 +28,7 @@ use OCP\IConfig;
 use OCP\ILogger;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Class SendEmailsTest
@@ -85,5 +86,36 @@ class SendEmailsTest extends TestCase {
 			$this->createMock(InputInterface::class),
 			$this->createMock(OutputInterface::class)
 		);
+	}
+
+	public function testSendVerbose() {
+		$exceptionMessage = 'broken intentionally';
+		$this->mqHandler->method('getAllUsers')
+			->willReturnOnConsecutiveCalls(
+				[
+					[
+						'uid' => 'anon',
+						'email' => 'anon@im.org',
+						'max_mail_id' => 50,
+					]
+				],
+				[]
+			);
+		$this->mqHandler->expects($this->once())
+			->method('sendAllEmailsToUser')
+			->willThrowException(new \Exception($exceptionMessage));
+		$this->mqHandler->expects($this->once())
+			->method('deleteAllSentItems')
+			->with([]);
+
+		$this->config->method('getUserValueForUsers')->willReturnOnConsecutiveCalls(
+			['anon' => 'en'],
+			['anon' => 'UTC']
+		);
+
+		$tester = new CommandTester($this->sendEmails);
+		$tester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE]);
+		$output = $tester->getDisplay();
+		$this->assertContains("Notification to user 'anon' has been not sent: {$exceptionMessage}", $output);
 	}
 }

@@ -354,6 +354,7 @@ class MailQueueHandlerTest extends TestCase {
 			$this->assertSame(0, $skipped);
 		}
 	}
+
 	public function testSendAllEmailsToUser() {
 		$maxTime = 200;
 		$user = $this->user2->getUID();
