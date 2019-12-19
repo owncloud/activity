@@ -78,7 +78,7 @@ class Factory {
 								ViewInfoCache $infoCache,
 								IL10N $l,
 								IGroupManager $groupManager,
-								$user) {
+								$user = null) {
 		$this->activityManager = $activityManager;
 		$this->userManager = $userManager;
 		$this->urlGenerator = $urlGenerator;
