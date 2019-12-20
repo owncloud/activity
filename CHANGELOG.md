@@ -4,7 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [2.5.2] - 2019-12-20
+
+### Added
+
+- occ command to send all pending notifications - [#811](https://github.com/owncloud/activity/issues/811)
+
+### Removed
+
+- Drop Support for PHP 7.0 - [#806](https://github.com/owncloud/activity/issues/806)
+
+### Fixed
+
+- Avatars in activity stream for public link uploads - [#801](https://github.com/owncloud/activity/issues/801)
 
 ## [2.5.1] 2019-09-11
 
@@ -75,7 +87,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.1...HEAD
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.2...HEAD
+[2.5.2]: https://github.com/owncloud/activity/compare/v2.5.1...v2.5.2
 [2.5.1]: https://github.com/owncloud/activity/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/owncloud/activity/compare/v2.4.2...v2.5.0
 [2.4.2]: https://github.com/owncloud/activity/compare/v2.4.1...v2.4.2
