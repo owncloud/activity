@@ -136,9 +136,10 @@ Feature: Created files/folders activities
     Given the administrator has enabled async operations
     And using new DAV path
     And user "user0" has uploaded the following chunks asynchronously to "/text.txt" with new chunking
-      | 1 | AAAAA |
-      | 2 | BBBBB |
-      | 3 | CCCCC |
+      | number | content |
+      | 1      | AAAAA   |
+      | 2      | BBBBB   |
+      | 3      | CCCCC   |
     When the user browses to the activity page
     Then the activity number 1 should contain message "You created text.txt" in the activity page
 
@@ -229,9 +230,10 @@ Feature: Created files/folders activities
     Given the administrator has enabled async operations
     And using new DAV path
     And user "user0" has uploaded the following chunks asynchronously to "/text.txt" with new chunking
-      | 1 | AAAAA |
-      | 2 | BBBBB |
-      | 3 | CCCCC |
+      | number | content |
+      | 1      | AAAAA   |
+      | 2      | BBBBB   |
+      | 3      | CCCCC   |
     And the user has browsed to the personal general settings page
     When the user disables activity log stream for "file_created" using the webUI
     And the user browses to the activity page
