@@ -128,9 +128,9 @@ Feature: Tag files/folders activities
   Scenario: Activity for deleting a normal system tag by a user should be listed in activity list of an admin
     Given user "user0" has been created with default attributes and skeleton files
     And user "user0" has created a "normal" tag with name "lorem"
-    And user "user0" has deleted the tag with name "lorem"
-    And the administrator has logged in using the webUI
-    When the user browses to the activity page
+    When user "user0" deletes the tag with name "lorem" using the WebDAV API
+    And the administrator logs in using the webUI
+    And the user browses to the activity page
     Then the activity number 1 should have a message saying that user "User Zero" deleted system tag "lorem"
 
   Scenario: Activity for creating a static system tag by a administrator should be listed in activity list of an admin
@@ -141,9 +141,9 @@ Feature: Tag files/folders activities
 
   Scenario: Activity for deleting a static system tag by a administrator should be listed in activity list of an admin
     Given the administrator has created a "static" tag with name "StaticTagName"
-    And the administrator has deleted the tag with name "StaticTagName"
-    And the administrator has logged in using the webUI
-    When the user browses to the activity page
+    When the administrator deletes the tag with name "StaticTagName" using the WebDAV API
+    And the administrator logs in using the webUI
+    And the user browses to the activity page
     Then the activity number 1 should have message "You deleted system tag StaticTagName (static)" in the activity page
 
   @skipOnFIREFOX
