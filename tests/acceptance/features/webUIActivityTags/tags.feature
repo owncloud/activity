@@ -175,3 +175,12 @@ Feature: Tag files/folders activities
     When the user browses directly to display the details of file "lorem.txt" in folder "/"
     Then the activity number 1 should contain message "You assigned system tag lorem" in the activity tab
     And the activity number 2 should contain message "You created lorem.txt" in the activity tab
+
+  Scenario: Administrator checks the activity of user after deleting the user
+    Given user "user0" has been created with default attributes and skeleton files
+    And user "user0" has created a "normal" tag with name "StaticTagName"
+    And user "user0" has been deleted
+    And the administrator logs in using the webUI
+    And the user browses to the activity page
+    # DisplayName is not available when the user is deleted.
+    Then the activity number 1 should have message "Uuser0 created system tag StaticTagName" in the activity page
