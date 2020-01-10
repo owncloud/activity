@@ -848,6 +848,7 @@ def acceptance():
 										environment['S3_TYPE'] = 'ceph'
 									if (params['scalityS3'] != False):
 										environment['S3_TYPE'] = 'scality'
+								federationDbSuffix = '-federated'
 
 								result = {
 									'kind': 'pipeline',
@@ -860,32 +861,7 @@ def acceptance():
 									'steps':
 										installCore(server, db, params['useBundledApp']) +
 										installTestrunner(phpVersion, params['useBundledApp']) +
-									([
-										{
-											'name': 'install-federation',
-											'image': 'owncloudci/core',
-											'pull': 'always',
-											'settings': {
-												'version': server,
-												'core_path': '/var/www/owncloud/federated'
-											}
-										},
-										{
-											'name': 'configure-federation',
-											'image': 'owncloudci/php:%s' % phpVersion,
-											'pull': 'always',
-											'commands': [
-												'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
-												'cd /var/www/owncloud/federated',
-												'php occ a:l',
-												'php occ a:e testing',
-												'php occ a:l',
-												'php occ config:system:set trusted_domains 1 --value=federated',
-												'php occ log:manage --level %s' % params['logLevel'],
-												'php occ config:list'
-											]
-										}
-									] + owncloudLog('federated') if params['federatedServerNeeded'] else []) +
+										(installFederated(server, phpVersion, params['logLevel'], db, federationDbSuffix) + owncloudLog('federated') if params['federatedServerNeeded'] else []) +
 										installApp(phpVersion) +
 										installExtraApps(phpVersion, params['extraApps']) +
 										setupServerAndApp(phpVersion, params['logLevel']) +
@@ -916,7 +892,10 @@ def acceptance():
 										scalityService(params['scalityS3']) +
 										params['extraServices'] +
 										owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', False) +
-										(owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', False) if params['federatedServerNeeded'] else []),
+										((
+											owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', False) +
+											databaseServiceForFederation(db, federationDbSuffix)
+										) if params['federatedServerNeeded'] else [] ),
 									'depends_on': [],
 									'trigger': {}
 								}
@@ -1357,3 +1336,69 @@ def dependsOn(earlierStages, nextStages):
 	for earlierStage in earlierStages:
 		for nextStage in nextStages:
 			nextStage['depends_on'].append(earlierStage['name'])
+
+def installFederated(federatedServerVersion, phpVersion, logLevel, db, dbSuffix = '-federated'):
+	host = getDbName(db)
+	dbType = host
+
+	username = getDbUsername(db)
+	password = getDbPassword(db)
+	database = getDbDatabase(db) + dbSuffix
+
+	if host == 'mariadb':
+		dbType = 'mysql'
+	elif host == 'postgres':
+		dbType = 'pgsql'
+	elif host == 'oracle':
+		dbType = 'oci'
+	return [
+		{
+			'name': 'install-federated',
+			'image': 'owncloudci/core',
+			'pull': 'always',
+			'settings': {
+				'version': federatedServerVersion,
+				'core_path': '/var/www/owncloud/federated',
+				'db_type': 'mysql',
+				'db_name': database,
+				'db_host': host + dbSuffix,
+				'db_username': username,
+				'db_password': password
+			},
+		},
+		{
+			'name': 'configure-federation',
+			'image': 'owncloudci/php:%s' % phpVersion,
+			'pull': 'always',
+			'commands': [
+				'echo "export TEST_SERVER_FED_URL=http://federated" > /var/www/owncloud/saved-settings.sh',
+				'cd /var/www/owncloud/federated',
+				'php occ a:l',
+				'php occ a:e testing',
+				'php occ a:l',
+				'php occ config:system:set trusted_domains 1 --value=federated',
+				'php occ log:manage --level %s' % logLevel,
+				'php occ config:list'
+			]
+		}
+	]
+
+def databaseServiceForFederation(db, suffix):
+	dbName = getDbName(db)
+
+	if dbName not in ['mariadb', 'mysql']:
+		print('Not implemented federated database for ', dbName)
+		return []
+
+	return [{
+		'name': dbName + suffix,
+		'image': db,
+		'pull': 'always',
+		'environment': {
+			'MYSQL_USER': getDbUsername(db),
+			'MYSQL_PASSWORD': getDbPassword(db),
+			'MYSQL_DATABASE': getDbDatabase(db) + suffix,
+			'MYSQL_ROOT_PASSWORD': getDbRootPassword()
+		}
+	}]
+	
