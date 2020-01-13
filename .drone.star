@@ -1315,9 +1315,11 @@ def fixPermissions(phpVersion, federatedServerNeeded):
 		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'commands': [
-			'chown -R www-data /var/www/owncloud/server'
+			'chown -R www-data /var/www/owncloud/server',
+			'wait-for-it -t 600 server:80'
 		] + ([
-			'chown -R www-data /var/www/owncloud/federated'
+			'chown -R www-data /var/www/owncloud/federated',
+			'wait-for-it -t 600 federated:80'
 		] if federatedServerNeeded else [])
 	}]
 
@@ -1401,4 +1403,3 @@ def databaseServiceForFederation(db, suffix):
 			'MYSQL_ROOT_PASSWORD': getDbRootPassword()
 		}
 	}]
-	
