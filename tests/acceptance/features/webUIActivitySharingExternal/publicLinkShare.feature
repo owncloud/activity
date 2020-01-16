@@ -31,14 +31,14 @@ Feature: public link sharing file/folders activities
     #Then the activity number 1 should contain message "Public shared file lorem.txt was downloaded" in the activity page
 
   Scenario: Downloading a public shared file from a webUI should be listed in the activity list
-    Given the user has created a new public link for file "textfile0.txt" using the webUI
+    Given the user has created a public link share of file "textfile0.txt"
     And the public accesses the last created public link using the webUI
     When the public downloads all the shared data using the webUI
     And the user browses to the activity page
     Then the activity number 1 should contain message "Public shared file textfile0.txt was downloaded" in the activity page
 
   Scenario: Downloading a public shared folder from a webUI should be listed in the activity list
-    Given the user has created a new public link for folder "simple-folder" using the webUI
+    Given the user has created a public link share of folder "simple-folder"
     And the public accesses the last created public link using the webUI
     When the public downloads all the shared data using the webUI
     And the user browses to the activity page
@@ -66,7 +66,7 @@ Feature: public link sharing file/folders activities
   @skipOnFIREFOX
   # Firefox does not auto-scroll to click the checkbox for 'disables activity log stream for "public_links"'
   Scenario: Downloading a public shared file from a webUI should not be listed in the activity list stream when public link download activity has been disabled
-    Given the user has created a new public link for file "textfile0.txt" using the webUI
+    Given the user has created a public link share of file "textfile0.txt"
     And the user has browsed to the personal general settings page
     When the user disables activity log stream for "public_links" using the webUI
     And the public accesses the last created public link using the webUI
@@ -78,7 +78,7 @@ Feature: public link sharing file/folders activities
   @skipOnFIREFOX
   # Firefox does not auto-scroll to click the checkbox for 'disables activity log stream for "public_links"'
   Scenario: Downloading a public shared folder from a webUI should not be listed in the activity list stream when public link download activity has been disabled
-    Given the user has created a new public link for folder "simple-folder" using the webUI
+    Given the user has created a public link share of folder "simple-folder"
     And the user has browsed to the personal general settings page
     When the user disables activity log stream for "public_links" using the webUI
     And the public accesses the last created public link using the webUI
