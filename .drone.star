@@ -720,6 +720,8 @@ def acceptance():
 		'ldapNeeded': False,
 		'cephS3': False,
 		'scalityS3': False,
+		'ssl': False,
+		'xForwardedFor': False,
 		'extraSetup': [],
 		'extraServices': [],
 		'extraEnvironment': {},
@@ -891,9 +893,9 @@ def acceptance():
 										cephService(params['cephS3']) +
 										scalityService(params['scalityS3']) +
 										params['extraServices'] +
-										owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', False) +
+										owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', params['ssl'], params['xForwardedFor']) +
 										((
-											owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', False) +
+											owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', params['ssl'], params['xForwardedFor']) +
 											databaseServiceForFederation(db, federationDbSuffix)
 										) if params['federatedServerNeeded'] else [] ),
 									'depends_on': [],
@@ -985,7 +987,7 @@ def databaseService(db):
 	if dbName == 'oracle':
 		return [{
 			'name': dbName,
-			'image': 'deepdiver/docker-oracle-xe-11g:latest',
+			'image': 'owncloudci/oracle-xe:latest',
 			'pull': 'always',
 			'environment': {
 				'ORACLE_USER': getDbUsername(db),
@@ -1092,7 +1094,7 @@ def cephService(serviceParams):
 		'environment': serviceEnvironment
 	}]
 
-def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncloud/server', ssl = True):
+def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncloud/server', ssl = True, xForwardedFor = False):
 	if ssl:
 		environment = {
 			'APACHE_WEBROOT': path,
@@ -1111,12 +1113,16 @@ def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncl
 		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'environment': environment,
-		'command': [
-			'/usr/local/bin/apachectl',
-			'-e',
-			'debug',
-			'-D',
-			'FOREGROUND'
+		'commands': ([
+			'a2enmod remoteip',
+			'cd /etc/apache2',
+			'echo "RemoteIPHeader X-Forwarded-For" >> apache2.conf',
+			# This replaces the first occurrence of "%h with "%a in apache2.conf file telling Apache to log the client
+			# IP as recorded by mod_remoteip (%a) rather than hostname (%h). For more info check this out:
+			# https://www.digitalocean.com/community/questions/get-client-public-ip-on-apache-server-used-behind-load-balancer
+			'sed -i \'0,/"%h/s//"%a/\' apache2.conf',
+		] if xForwardedFor else []) + [
+			'/usr/local/bin/apachectl -e debug -D FOREGROUND',
 		]
 	}]
 
