@@ -99,6 +99,7 @@ class SettingsTest extends TestCase {
 			[3600, false, false, 0, false, false],
 			[3600 * 24, true, false, 1, true, false],
 			[3600 * 24 * 7, false, true, 2, false, true],
+			[1, false, true, 255, false, true],
 		];
 	}
 
@@ -279,6 +280,7 @@ class SettingsTest extends TestCase {
 	public function displayPanelEmailSendBatchSettingData() {
 		return [
 			[0, 0, 'Hourly'],
+			[1, 255, 'As soon as possible'],
 			['foobar', 0, 'Hourly'],
 			[3600, 0, 'Hourly'],
 			[3600 * 24, 1, 'Daily'],
