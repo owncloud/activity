@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "แจ้งเตือนเกี่ยวกับสิ่งที่คุณทำผ่านทางอีเมล",
     "You need to set up your email address before you can receive notification emails." : "คุณจะได้รับอีเมลแจ้งเตือนหลังจากที่คุณตั้งค่าที่อยู่อีเมลของคุณ",
     "Send emails:" : "ส่งอีเมล:",
+    "As soon as possible" : "โดยเร็วที่สุด",
     "Hourly" : "รายชั่วโมง",
     "Daily" : "รายวัน",
     "Weekly" : "รายสัปดาห์",
