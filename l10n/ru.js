@@ -35,6 +35,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Уведомлять о моих действиях по email",
     "You need to set up your email address before you can receive notification emails." : "Для получения уведомлений укажите свой e-mail в настройках.",
     "Send emails:" : "Отправлять электронные сообщения:",
+    "As soon as possible" : "Незамедлительно",
     "Hourly" : "Ежечасно",
     "Daily" : "Ежедневно",
     "Weekly" : "Еженедельно",
