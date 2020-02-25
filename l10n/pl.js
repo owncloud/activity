@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Powiadamiaj mnie o moich aktywnościach przez email",
     "You need to set up your email address before you can receive notification emails." : "Musisz najpierw ustawić adres email zanim będziesz mógł otrzymywać powiadomienia.",
     "Send emails:" : "Wyślij maile:",
+    "As soon as possible" : "Najszybciej jak to możliwe",
     "Hourly" : "Co godzinę",
     "Daily" : "Codziennie",
     "Weekly" : "Cotygodniowo",
