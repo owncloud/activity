@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "דיווח על האירועים שלך על בסיס דואר אלקטרוני",
     "You need to set up your email address before you can receive notification emails." : "יש להגדיר כתובת דואר אלקטרוני לפני שניתן יהיה לקבל דיווחים.",
     "Send emails:" : "שליחת הודעות דואר אלקטרוני:",
+    "As soon as possible" : "בהקדם האפשרי",
     "Hourly" : "שעתי",
     "Daily" : "יומי",
     "Weekly" : "שבועי",
