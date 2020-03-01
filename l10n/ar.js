@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "التنبيه عن أنشطتي عبر البريد الإلكتروني",
     "You need to set up your email address before you can receive notification emails." : "عليك إعداد عنوان البريد الإلكتروني الخاص بك قبل البدء باستقبال رسائل إلكترونية تنبيهية ",
     "Send emails:" : "إرسال بريد إلكتروني ",
+    "As soon as possible" : "في أسرع وقت ممكن",
     "Hourly" : "كل ساعة",
     "Daily" : "يومي",
     "Weekly" : "أسبوعي",
