@@ -520,6 +520,7 @@ def javascript():
 		'extraServices': [],
 		'extraEnvironment': {},
 		'extraCommandsBeforeTestRun': [],
+		'extraTeardown': [],
 	}
 
 	if 'defaults' in config:
@@ -563,7 +564,7 @@ def javascript():
 					'make test-js'
 				]
 			}
-		],
+		] + params['extraTeardown'],
 		'services': params['extraServices'],
 		'depends_on': [],
 		'trigger': {
@@ -617,6 +618,7 @@ def phptests(testType):
 		'extraEnvironment': {},
 		'extraCommandsBeforeTestRun': [],
 		'extraApps': {},
+		'extraTeardown': [],
 	}
 
 	if 'defaults' in config:
@@ -715,7 +717,7 @@ def phptests(testType):
 								command
 							]
 						}
-					],
+					] + params['extraTeardown'],
 					'services':
 						databaseService(db) +
 						cephService(params['cephS3']) +
@@ -783,6 +785,7 @@ def acceptance():
 		'xForwardedFor': False,
 		'extraSetup': [],
 		'extraServices': [],
+		'extraTeardown': [],
 		'extraEnvironment': {},
 		'extraCommandsBeforeTestRun': [],
 		'extraApps': {},
@@ -943,7 +946,7 @@ def acceptance():
 												'make %s' % makeParameter
 											]
 										}),
-									],
+									] + params['extraTeardown'],
 									'services':
 										databaseService(db) +
 										browserService(browser) +
