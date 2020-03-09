@@ -58,6 +58,20 @@ class EmailNotificationTest extends TestCase {
 		$this->logger = $this->createMock(ILogger::class);
 	}
 
+	/**
+	 * @param bool $isCLI
+	 * @return EmailNotification
+	 */
+	protected function getEmailNotification($isCLI) {
+		return new EmailNotification(
+			$this->mqHandler,
+			$this->userManager,
+			$this->config,
+			$this->logger,
+			$isCLI
+		);
+	}
+
 	public function constructAndRunData() {
 		return [
 			[true],
@@ -71,14 +85,7 @@ class EmailNotificationTest extends TestCase {
 	 * @param bool $isCLI
 	 */
 	public function testConstructAndRun($isCLI) {
-		$backgroundJob = new EmailNotification(
-			$this->mqHandler,
-			$this->userManager,
-			$this->config,
-			$this->logger,
-			$isCLI
-		);
-
+		$backgroundJob = $this->getEmailNotification($isCLI);
 		$jobList = $this->createMock(IJobList::class);
 
 		/** @var JobList $jobList */
@@ -87,14 +94,6 @@ class EmailNotificationTest extends TestCase {
 	}
 
 	public function testRunStep() {
-		$backgroundJob = new EmailNotification(
-			$this->mqHandler,
-			$this->userManager,
-			$this->config,
-			$this->logger,
-			true
-		);
-
 		$this->mqHandler->expects($this->any())
 			->method('getAffectedUsers')
 			->with(2, 200)
@@ -121,6 +120,7 @@ class EmailNotificationTest extends TestCase {
 			->willReturn(true);
 		$this->userManager->method('get')->willReturn($fakeUser);
 
+		$backgroundJob = $this->getEmailNotification(true);
 		$this->assertEquals(2, $this->invokePrivate($backgroundJob, 'runStep', [2, 200]));
 	}
 
@@ -129,14 +129,6 @@ class EmailNotificationTest extends TestCase {
 	 */
 	public function testRunStepWhereEmailThrowsException() {
 		$this->expectException(\Exception::class);
-
-		$backgroundJob = new EmailNotification(
-			$this->mqHandler,
-			$this->userManager,
-			$this->config,
-			$this->logger,
-			true
-		);
 
 		$this->mqHandler->expects($this->any())
 			->method('getAffectedUsers')
@@ -167,7 +159,7 @@ class EmailNotificationTest extends TestCase {
 		// Cleanup will be performed, but should now handle having no users supplied to it
 		// This deals with the case that the first email in the queue throws
 		// an exception that we cannot handle.
-
+		$backgroundJob = $this->getEmailNotification(true);
 		$this->assertEquals(1, $this->invokePrivate($backgroundJob, 'runStep', [2, 200]));
 	}
 }
