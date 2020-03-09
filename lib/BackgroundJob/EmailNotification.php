@@ -27,6 +27,8 @@ use OCA\Activity\AppInfo\Application;
 use OCA\Activity\MailQueueHandler;
 use OCP\IConfig;
 use OCP\ILogger;
+use OCP\IUser;
+use OCP\IUserManager;
 
 /**
  * Class EmailNotification
@@ -39,6 +41,9 @@ class EmailNotification extends TimedJob {
 
 	/** @var MailQueueHandler */
 	protected $mqHandler;
+
+	/** @var IUserManager */
+	protected $userManager;
 
 	/** @var IConfig */
 	protected $config;
@@ -56,6 +61,7 @@ class EmailNotification extends TimedJob {
 	 * @param bool|null $isCLI
 	 */
 	public function __construct(MailQueueHandler $mailQueueHandler = null,
+								IUserManager $userManager,
 								IConfig $config = null,
 								ILogger $logger = null,
 								$isCLI = null) {
@@ -66,6 +72,7 @@ class EmailNotification extends TimedJob {
 			$this->fixDIForJobs();
 		} else {
 			$this->mqHandler = $mailQueueHandler;
+			$this->userManager = $userManager;
 			$this->config = $config;
 			$this->logger = $logger;
 			$this->isCLI = $isCLI;
@@ -76,6 +83,7 @@ class EmailNotification extends TimedJob {
 		$application = new Application();
 
 		$this->mqHandler = $application->getContainer()->query('MailQueueHandler');
+		$this->userManager = \OC::$server->getUserManager();
 		$this->config = \OC::$server->getConfig();
 		$this->logger = \OC::$server->getLogger();
 		$this->isCLI = \OC::$CLI;
@@ -129,7 +137,11 @@ class EmailNotification extends TimedJob {
 
 		foreach ($affectedUsers as $user) {
 			$uid = $user['uid'];
-			if (empty($user['email'])) {
+			$userObject = $this->userManager->get($uid);
+			if (empty($user['email'])
+				|| !$userObject instanceof IUser
+				|| $userObject->isEnabled() === false
+			) {
 				// The user did not setup an email address
 				// So we will not send an email but still discard the queue entries
 				$this->logger->debug("Couldn't send notification email to user '$uid' (email address isn't set for that user)", ['app' => 'activity']);
