@@ -61,8 +61,7 @@ class EmailNotificationTest extends TestCase {
 	public function constructAndRunData() {
 		return [
 			[true],
-			[false],
-			[null],
+			[false]
 		];
 	}
 
