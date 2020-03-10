@@ -128,8 +128,6 @@ class EmailNotificationTest extends TestCase {
 	 * Test run where all emails fail to send - cleanup should error
 	 */
 	public function testRunStepWhereEmailThrowsException() {
-		$this->expectException(\Exception::class);
-
 		$this->mqHandler->expects($this->any())
 			->method('getAffectedUsers')
 			->with(2, 200)
@@ -155,6 +153,8 @@ class EmailNotificationTest extends TestCase {
 		$fakeUser->expects($this->once())->method('isEnabled')
 			->willReturn(true);
 		$this->userManager->method('get')->willReturn($fakeUser);
+		$this->logger->expects($this->once())
+			->method('warning');
 
 		// Cleanup will be performed, but should now handle having no users supplied to it
 		// This deals with the case that the first email in the queue throws

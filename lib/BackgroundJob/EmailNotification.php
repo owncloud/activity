@@ -142,10 +142,14 @@ class EmailNotification extends TimedJob {
 				$this->mqHandler->sendEmailToUser($uid, $user['email'], $language, $timezone, $sendTime);
 				$sentMailForUsers[] = $uid;
 			} catch (\Exception $e) {
-				// Run cleanup before we die
-				$this->mqHandler->deleteSentItems($sentMailForUsers, $sendTime);
-				// Throw the exception again - which gets logged by core and the job is handled appropriately
-				throw $e;
+				$this->logger->warning(
+					"Couldn't send notification email to user {user} ({reason}})",
+					[
+						'app' => 'activity',
+						'user' => $uid,
+						'reason' => $e->getMessage()
+					]
+				);
 			}
 		}
 
