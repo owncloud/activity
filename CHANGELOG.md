@@ -4,11 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## [2.5.3] - 2020-03-03
+## [2.5.3] - 2020-03-10
 
 ### Added
 
 - Add a config option to send notifications ASAP - [#833](https://github.com/owncloud/activity/issues/833)
+
+### Fixed
+
+- Skip disabled users and do not break the cronjob on the first unsent email - [#842](https://github.com/owncloud/activity/issues/842)
 
 ## [2.5.2] - 2019-12-23
 
