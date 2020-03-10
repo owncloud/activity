@@ -22,7 +22,14 @@
 namespace OCA\Activity\Tests\BackgroundJob;
 
 use OCA\Activity\BackgroundJob\EmailNotification;
+use OCA\Activity\MailQueueHandler;
 use OCA\Activity\Tests\Unit\TestCase;
+use OCP\BackgroundJob\IJobList;
+use OCP\IConfig;
+use OCP\ILogger;
+use OCP\IUser;
+use OCP\IUserManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Class EmailNotificationTest
@@ -31,11 +38,44 @@ use OCA\Activity\Tests\Unit\TestCase;
  * @package OCA\Activity\Tests\BackgroundJob
  */
 class EmailNotificationTest extends TestCase {
+	/** @var MailQueueHandler | MockObject */
+	private $mqHandler;
+
+	/** @var IUserManager | MockObject */
+	private $userManager;
+
+	/** @var IConfig | MockObject */
+	private $config;
+
+	/** @var ILogger | MockObject */
+	private $logger;
+
+	protected function setUp(): void {
+		parent::setUp();
+		$this->mqHandler = $this->createMock(MailQueueHandler::class);
+		$this->userManager = $this->createMock(IUserManager::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->logger = $this->createMock(ILogger::class);
+	}
+
+	/**
+	 * @param bool $isCLI
+	 * @return EmailNotification
+	 */
+	protected function getEmailNotification($isCLI) {
+		return new EmailNotification(
+			$this->mqHandler,
+			$this->userManager,
+			$this->config,
+			$this->logger,
+			$isCLI
+		);
+	}
+
 	public function constructAndRunData() {
 		return [
 			[true],
-			[false],
-			[null],
+			[false]
 		];
 	}
 
@@ -45,45 +85,26 @@ class EmailNotificationTest extends TestCase {
 	 * @param bool $isCLI
 	 */
 	public function testConstructAndRun($isCLI) {
-		$backgroundJob = new EmailNotification(
-			$this->getMockBuilder('OCA\Activity\MailQueueHandler')->disableOriginalConstructor()->getMock(),
-			$this->createMock('OCP\IConfig'),
-			$this->createMock('OCP\ILogger'),
-			$isCLI
-		);
+		$backgroundJob = $this->getEmailNotification($isCLI);
+		$jobList = $this->createMock(IJobList::class);
 
-		$jobList = $this->createMock('\OCP\BackgroundJob\IJobList');
-
-		/** @var \OC\BackgroundJob\JobList $jobList */
+		/** @var JobList $jobList */
 		$backgroundJob->execute($jobList);
 		$this->assertTrue(true);
 	}
 
 	public function testRunStep() {
-		$mailQueueHandler = $this->getMockBuilder('OCA\Activity\MailQueueHandler')
-			->disableOriginalConstructor()
-			->getMock();
-		$config = $this->getMockBuilder('OCP\IConfig')
-			->disableOriginalConstructor()
-			->getMock();
-		$backgroundJob = new EmailNotification(
-			$mailQueueHandler,
-			$config,
-			$this->createMock('OCP\ILogger'),
-			true
-		);
-
-		$mailQueueHandler->expects($this->any())
+		$this->mqHandler->expects($this->any())
 			->method('getAffectedUsers')
 			->with(2, 200)
 			->willReturn([
 				['uid' => 'test1', 'email' => 'test1@localhost'],
 				['uid' => 'test2', 'email' => ''],
 			]);
-		$mailQueueHandler->expects($this->once())
+		$this->mqHandler->expects($this->once())
 			->method('sendEmailToUser')
 			->with('test1', 'test1@localhost', 'de', \date_default_timezone_get(), $this->anything());
-		$config->expects($this->any())
+		$this->config->expects($this->any())
 			->method('getUserValueForUsers')
 			->willReturnMap([
 				['core', 'lang', [
@@ -94,7 +115,12 @@ class EmailNotificationTest extends TestCase {
 					'test2' => 'en',
 				]]
 			]);
+		$fakeUser = $this->createMock(IUser::class);
+		$fakeUser->expects($this->once())->method('isEnabled')
+			->willReturn(true);
+		$this->userManager->method('get')->willReturn($fakeUser);
 
+		$backgroundJob = $this->getEmailNotification(true);
 		$this->assertEquals(2, $this->invokePrivate($backgroundJob, 'runStep', [2, 200]));
 	}
 
@@ -102,22 +128,7 @@ class EmailNotificationTest extends TestCase {
 	 * Test run where all emails fail to send - cleanup should error
 	 */
 	public function testRunStepWhereEmailThrowsException() {
-		$this->expectException(\Exception::class);
-
-		$mailQueueHandler = $this->getMockBuilder('OCA\Activity\MailQueueHandler')
-			->disableOriginalConstructor()
-			->getMock();
-		$config = $this->getMockBuilder('OCP\IConfig')
-			->disableOriginalConstructor()
-			->getMock();
-		$backgroundJob = new EmailNotification(
-			$mailQueueHandler,
-			$config,
-			$this->createMock('OCP\ILogger'),
-			true
-		);
-
-		$mailQueueHandler->expects($this->any())
+		$this->mqHandler->expects($this->any())
 			->method('getAffectedUsers')
 			->with(2, 200)
 			->willReturn([
@@ -125,11 +136,11 @@ class EmailNotificationTest extends TestCase {
 			]);
 		$e = new \Exception();
 		// Sending the email will throw an exception
-		$mailQueueHandler->expects($this->once())
+		$this->mqHandler->expects($this->once())
 			->method('sendEmailToUser')
 			->with('test1', 'test1@localhost', 'de', \date_default_timezone_get(), $this->anything())
 			->willThrowException($e);
-		$config->expects($this->any())
+		$this->config->expects($this->any())
 			->method('getUserValueForUsers')
 			->willReturnMap([
 				['core', 'lang', [
@@ -138,11 +149,17 @@ class EmailNotificationTest extends TestCase {
 					'test1' => 'de'
 				]]
 			]);
+		$fakeUser = $this->createMock(IUser::class);
+		$fakeUser->expects($this->once())->method('isEnabled')
+			->willReturn(true);
+		$this->userManager->method('get')->willReturn($fakeUser);
+		$this->logger->expects($this->once())
+			->method('warning');
 
 		// Cleanup will be performed, but should now handle having no users supplied to it
 		// This deals with the case that the first email in the queue throws
 		// an exception that we cannot handle.
-
+		$backgroundJob = $this->getEmailNotification(true);
 		$this->assertEquals(1, $this->invokePrivate($backgroundJob, 'runStep', [2, 200]));
 	}
 }
