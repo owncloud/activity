@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Jakinarazi zeure jarduerak posta bidez",
     "You need to set up your email address before you can receive notification emails." : "Zure eposta  ezarri behar duzu jakinarazpen mezuak jaso aurretik.",
     "Send emails:" : "Mezu elektronikoak bidali:",
+    "As soon as possible" : "Ahal bezain laster",
     "Hourly" : "Orduro",
     "Daily" : "Egunero",
     "Weekly" : "Astero",
