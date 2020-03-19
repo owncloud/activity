@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.5.3] - 2020-03-10
+
+### Added
+
+- Add a config option to send notifications ASAP - [#833](https://github.com/owncloud/activity/issues/833)
+
+### Fixed
+
+- Skip disabled users and do not break the cronjob on the first unsent email - [#842](https://github.com/owncloud/activity/issues/842)
+
 ## [2.5.2] - 2019-12-23
 
 ### Added
@@ -89,7 +99,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.2...HEAD
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.3...master
+[2.5.3]: https://github.com/owncloud/activity/compare/v2.5.2...v2.5.3
 [2.5.2]: https://github.com/owncloud/activity/compare/v2.5.1...v2.5.2
 [2.5.1]: https://github.com/owncloud/activity/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/owncloud/activity/compare/v2.4.2...v2.5.0
@@ -99,4 +110,3 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 [2.3.8]: https://github.com/owncloud/activity/compare/v2.3.7...v2.3.8
 [2.3.7]: https://github.com/owncloud/activity/compare/v2.3.6...v2.3.7
 [2.3.6]: https://github.com/owncloud/activity/compare/v10.0.2...v2.3.6
-
