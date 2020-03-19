@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Pošalji emailom obavijest o Vašim radnjama",
     "You need to set up your email address before you can receive notification emails." : "Da biste mogli primiti notifikaciju, morate najprije navesti svoju adresu e-pošte.",
     "Send emails:" : "Šaljite poruke e-pošte:",
+    "As soon as possible" : "Što je brže moguče",
     "Hourly" : "Svaki sat",
     "Daily" : "Svakodnevno",
     "Weekly" : "Svaki tjedan",
