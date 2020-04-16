@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Повідомляти про ваші особисті дії за допомогою електронної пошти",
     "You need to set up your email address before you can receive notification emails." : "Ви повинні налаштувати свою адресу електронної пошти, перш ніж ви зможете отримувати електронні листи з повідомленнями.",
     "Send emails:" : "Відправляти повідомлення електронної пошти:",
+    "As soon as possible" : "Якнайшвидше",
     "Hourly" : "Щогодини",
     "Daily" : "Щоденно",
     "Weekly" : "Щотижня",
