@@ -44,6 +44,9 @@ config = {
 				'chrome',
 				'firefox'
 			],
+			'phpVersions': [
+				'7.4',
+			],
 		},
 		'federatedSuites': {
 			'suites': {
@@ -53,11 +56,17 @@ config = {
 				'chrome',
 				'firefox'
 			],
-			'federatedServerNeeded': True
+			'federatedServerNeeded': True,
+			'phpVersions': [
+				'7.4',
+			],
 		},
 		'api': {
 			'suites': [
 				'apiActivity'
+			],
+			'phpVersions': [
+				'7.4',
 			],
 		},
 		'core-api-acceptance': {
@@ -71,7 +80,7 @@ config = {
 				'daily-master-qa',
 			],
 			'phpVersions': [
-				'7.2',
+				'7.4',
 			],
 			'runCoreTests': True,
 			'federatedServerNeeded': True,
@@ -90,7 +99,7 @@ config = {
 				'daily-master-qa',
 			],
 			'phpVersions': [
-				'7.2',
+				'7.4',
 			],
 			'runCoreTests': True,
 			'cron': 'nightly',
@@ -109,7 +118,7 @@ config = {
 				'daily-master-qa',
 			],
 			'phpVersions': [
-				'7.2',
+				'7.4',
 			],
 			'emailNeeded': True,
 			'runCoreTests': True,
@@ -1242,7 +1251,7 @@ def installCore(version, db, useBundledApp):
 		'image': 'owncloudci/core',
 		'pull': 'always',
 		'settings': {
-			'version': version,
+			'git_reference': 'php7.4-20200310',
 			'core_path': '/var/www/owncloud/server',
 			'db_type': dbType,
 			'db_name': database,
@@ -1429,7 +1438,7 @@ def installFederated(federatedServerVersion, phpVersion, logLevel, db, dbSuffix 
 			'image': 'owncloudci/core',
 			'pull': 'always',
 			'settings': {
-				'version': federatedServerVersion,
+				'git_reference': 'php7.4-20200310',
 				'core_path': '/var/www/owncloud/federated',
 				'db_type': 'mysql',
 				'db_name': database,
