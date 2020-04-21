@@ -23,6 +23,7 @@ namespace OCA\Activity\Tests\Unit;
 
 use OCA\Activity\Consumer;
 use OCP\DB;
+use OCP\Activity\IExtension;
 
 /**
  * Class ConsumerTest
@@ -124,6 +125,15 @@ class ConsumerTest extends TestCase {
 	 * @param array|false $expected
 	 */
 	public function testReceiveStream($type, $author, $affectedUser, $subject, $expected) {
+		$this->data->method('getNotificationTypes')
+			->willReturn([
+				'type' => 'a translated description',
+				'type2' => [
+					'desc' => 'translated string description for the setting',
+					'methods' => [IExtension::METHOD_STREAM, IExtension::METHOD_MAIL],
+				]
+			]);
+
 		$consumer = new Consumer($this->data, $this->userSettings, $this->l10nFactory);
 		$event = \OC::$server->getActivityManager()->generateEvent();
 		$event->setApp('test')
@@ -158,6 +168,15 @@ class ConsumerTest extends TestCase {
 	 * @param array|false $expected
 	 */
 	public function testReceiveEmail($type, $author, $affectedUser, $subject, $expected) {
+		$this->data->method('getNotificationTypes')
+			->willReturn([
+				'type' => 'a translated description',
+				'type2' => [
+					'desc' => 'translated string description for the setting',
+					'methods' => [IExtension::METHOD_STREAM, IExtension::METHOD_MAIL],
+				]
+			]);
+
 		$time = \time();
 		$consumer = new Consumer($this->data, $this->userSettings, $this->l10nFactory);
 		$event = \OC::$server->getActivityManager()->generateEvent();
