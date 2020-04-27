@@ -299,7 +299,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	 */
 	public function theActivityNumberShouldContainMessageInTheActivityPage($index, $message) {
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
-		PHPUnit\Framework\Assert::assertContains($message, $latestActivityMessage);
+		PHPUnit\Framework\Assert::assertStringContainsString($message, $latestActivityMessage);
 	}
 
 	/**
