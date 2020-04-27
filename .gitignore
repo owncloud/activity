@@ -54,6 +54,7 @@ nbproject
 /tests/coverage*
 /tests/acceptance/output*
 /tests/output
+.phpunit.result.cache
 node_modules
 vendor-bin/**/composer.lock
 vendor/
