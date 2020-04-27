@@ -19,7 +19,7 @@
  *
  */
 
-namespace OCA\Activity\Tests\Comand;
+namespace OCA\Activity\Tests\Command;
 
 use OCA\Activity\Command\SendEmails;
 use OCA\Activity\MailQueueHandler;
@@ -116,6 +116,6 @@ class SendEmailsTest extends TestCase {
 		$tester = new CommandTester($this->sendEmails);
 		$tester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE]);
 		$output = $tester->getDisplay();
-		$this->assertContains("Notification to user 'anon' has been not sent: {$exceptionMessage}", $output);
+		$this->assertStringContainsString("Notification to user 'anon' has been not sent: {$exceptionMessage}", $output);
 	}
 }

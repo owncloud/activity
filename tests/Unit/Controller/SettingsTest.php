@@ -228,22 +228,22 @@ class SettingsTest extends TestCase {
 			]);
 
 		$renderedResponse = $this->controller->displayPanel()->render();
-		$this->assertContains('<form id="activity_notifications" class="section">', $renderedResponse);
+		$this->assertStringContainsString('<form id="activity_notifications" class="section">', $renderedResponse);
 
 		// Checkboxes for the type
-		$this->assertContains('<label for="NotificationTestTypeShared_email">', $renderedResponse);
-		$this->assertContains('<label for="NotificationTestTypeShared_stream">', $renderedResponse);
+		$this->assertStringContainsString('<label for="NotificationTestTypeShared_email">', $renderedResponse);
+		$this->assertStringContainsString('<label for="NotificationTestTypeShared_stream">', $renderedResponse);
 
 		$cleanedResponse = \str_replace(["\n", "\t"], ' ', $renderedResponse);
 		while (\strpos($cleanedResponse, '  ') !== false) {
 			$cleanedResponse = \str_replace('  ', ' ', $cleanedResponse);
 		}
-		$this->assertContains('<input type="checkbox" id="NotificationTestTypeShared2_email" name="NotificationTestTypeShared2_email" value="1" class="NotificationTestTypeShared2 email checkbox" />', $cleanedResponse);
-		$this->assertContains('<input type="checkbox" id="NotificationTestTypeShared2_stream" name="NotificationTestTypeShared2_stream" value="1" class="NotificationTestTypeShared2 stream checkbox" disabled="disabled" />', $cleanedResponse);
+		$this->assertStringContainsString('<input type="checkbox" id="NotificationTestTypeShared2_email" name="NotificationTestTypeShared2_email" value="1" class="NotificationTestTypeShared2 email checkbox" />', $cleanedResponse);
+		$this->assertStringContainsString('<input type="checkbox" id="NotificationTestTypeShared2_stream" name="NotificationTestTypeShared2_stream" value="1" class="NotificationTestTypeShared2 stream checkbox" disabled="disabled" />', $cleanedResponse);
 
 		// Description of the type
 		$cleanedResponse = \str_replace(["\n", "\t"], '', $renderedResponse);
-		$this->assertContains('<td class="activity_select_group" data-select-group="NotificationTestTypeShared">Share description</td>', $cleanedResponse);
+		$this->assertStringContainsString('<td class="activity_select_group" data-select-group="NotificationTestTypeShared">Share description</td>', $cleanedResponse);
 	}
 
 	public function displayPanelEmailWarningData() {
@@ -268,12 +268,12 @@ class SettingsTest extends TestCase {
 			->willReturn($email);
 
 		$renderedResponse = $this->controller->displayPanel()->render();
-		$this->assertContains('<form id="activity_notifications" class="section">', $renderedResponse);
+		$this->assertStringContainsString('<form id="activity_notifications" class="section">', $renderedResponse);
 
 		if ($containsWarning) {
-			$this->assertContains('You need to set up your email address before you can receive notification emails.', $renderedResponse);
+			$this->assertStringContainsString('You need to set up your email address before you can receive notification emails.', $renderedResponse);
 		} else {
-			$this->assertNotContains('You need to set up your email address before you can receive notification emails.', $renderedResponse);
+			$this->assertStringNotContainsString('You need to set up your email address before you can receive notification emails.', $renderedResponse);
 		}
 	}
 
@@ -304,9 +304,9 @@ class SettingsTest extends TestCase {
 			->willReturn($setting);
 
 		$renderedResponse = $this->controller->displayPanel()->render();
-		$this->assertContains('<form id="activity_notifications" class="section">', $renderedResponse);
+		$this->assertStringContainsString('<form id="activity_notifications" class="section">', $renderedResponse);
 
-		$this->assertContains('<option value="' . $selectedValue . '" selected="selected">' . $selectedLabel . '</option>', $renderedResponse);
+		$this->assertStringContainsString('<option value="' . $selectedValue . '" selected="selected">' . $selectedLabel . '</option>', $renderedResponse);
 	}
 
 	public function feedData() {

@@ -81,7 +81,7 @@ class NavigationTest extends TestCase {
 			foreach ($navigationEntries as $navigationEntry) {
 				if (\strpos($navigationEntry, 'data-navigation="' . $link['id'] . '"') !== false) {
 					$found = true;
-					$this->assertContains(
+					$this->assertStringContainsString(
 						'href="' . $link['url'] . '">' . $link['name']. '</a>',
 						$navigationEntry
 					);
@@ -97,7 +97,7 @@ class NavigationTest extends TestCase {
 
 		// Check size of app links
 		$this->assertSame(1, \sizeof($links['apps']));
-		$this->assertNotContains('data-navigation="files"', $navigationLinks, 'Files app should not be included when there are no other apps.');
+		$this->assertStringNotContainsString('data-navigation="files"', $navigationLinks, 'Files app should not be included when there are no other apps.');
 
 		if ($rssToken) {
 			$rssInputField = \strpos($output, 'input id="rssurl"');

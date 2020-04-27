@@ -131,7 +131,7 @@ class FeedTest extends TestCase {
 
 		$l = Util::getL10N('activity');
 		$description = (string) $l->t('Your feed URL is invalid');
-		$this->assertNotContains($description, $renderedResponse);
+		$this->assertStringNotContainsString($description, $renderedResponse);
 	}
 
 	/**
@@ -162,7 +162,7 @@ class FeedTest extends TestCase {
 
 		$l = Util::getL10N('activity');
 		$description = (string) $l->t('Your feed URL is invalid');
-		$this->assertContains($description, $renderedResponse);
+		$this->assertStringContainsString($description, $renderedResponse);
 	}
 
 	protected function mockUserSession($user) {
