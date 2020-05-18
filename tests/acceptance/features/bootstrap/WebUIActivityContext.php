@@ -360,35 +360,35 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	}
 
 	/**
-	 * @Then the activity number :index should have a message saying that user :user1 has shared :entry with user :user2
+	 * @Then the activity number :index should have a message saying that user :sharer has shared :entry with user :sharee
 	 *
 	 * @param integer $index (starting from 1, newest to the oldest)
-	 * @param string $user1
+	 * @param string $sharer
 	 * @param string $entry
-	 * @param string $user2
+	 * @param string $sharee
 	 *
 	 * @return void
 	 */
 	public function theActivityNumberShouldHaveAMessageSayingThatUserHasSharedWithUser(
 		$index,
-		$user1,
+		$sharer,
 		$entry,
-		$user2
+		$sharee
 	) {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
 				"activity index starts from 1"
 			);
 		}
-		$avatarTextUser1 = \strtoupper($user1[0]);
-		$avatarTextUser2 = \strtoupper($user2[0]);
+		$avatarTextSharer = \strtoupper($sharer[0]);
+		$avatarTextSharee = \strtoupper($sharee[0]);
 		$message = \sprintf(
 			$this->userSharedWithUserMsgFramework,
-			$avatarTextUser1,
-			$user1,
+			$avatarTextSharer,
+			$sharer,
 			$entry,
-			$avatarTextUser2,
-			$user2
+			$avatarTextSharee,
+			$sharee
 		);
 		$latestActivityMessage = $this->activityPage->getActivityMessageOfIndex($index - 1);
 		PHPUnit\Framework\Assert::assertEquals($message, $latestActivityMessage);
