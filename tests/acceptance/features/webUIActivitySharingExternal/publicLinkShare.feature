@@ -5,17 +5,17 @@ Feature: public link sharing file/folders activities
   So that I know what happened in my cloud storage
 
   Background:
-    Given user "user1" has been created with default attributes and skeleton files
-    And user "user1" has logged in using the webUI
+    Given user "Brian" has been created with default attributes and skeleton files
+    And user "Brian" has logged in using the webUI
 
   Scenario: Creating a public link of a folder and file should be listed in the activity list
-    Given user "user1" has created a public link share of folder "simple-folder"
-    And user "user1" has created a public link share of file "textfile0.txt"
+    Given user "Brian" has created a public link share of folder "simple-folder"
+    And user "Brian" has created a public link share of file "textfile0.txt"
     When the user browses to the activity page
     Then the activity number 1 should contain message "You shared textfile0.txt and simple-folder via link" in the activity page
 
   Scenario: Uploading a file to a public shared folder should be listed in the activity list
-    Given user "user1" has created a public link share with settings
+    Given user "Brian" has created a public link share with settings
       | path        | simple-folder |
       | permissions | create        |
     And the public has uploaded file "test.txt" with content "This is a test"
@@ -24,7 +24,7 @@ Feature: public link sharing file/folders activities
 
   @issue-690
   Scenario: Downloading a file from a public shared folder using API should be listed in the activity list
-    Given user "user1" has created a public link share of folder "simple-folder"
+    Given user "Brian" has created a public link share of folder "simple-folder"
     When the public downloads file "lorem.txt" from inside the last public shared folder with range "bytes=1-7" using the old public WebDAV API
     And the user browses to the activity page
     Then the activity number 1 should contain message "You shared simple-folder via link" in the activity page
@@ -45,15 +45,15 @@ Feature: public link sharing file/folders activities
     Then the activity number 1 should contain message "Public shared folder simple-folder was downloaded" in the activity page
 
   Scenario: Creating a public link of a folder and file should not be listed in the activity list stream when shared activity has been disabled
-    Given user "user1" has created a public link share of folder "simple-folder"
-    And user "user1" has created a public link share of file "textfile0.txt"
+    Given user "Brian" has created a public link share of folder "simple-folder"
+    And user "Brian" has created a public link share of file "textfile0.txt"
     And the user has browsed to the personal general settings page
     When the user disables activity log stream for "shared" using the webUI
     And the user browses to the activity page
     Then the activity should not have any message with keyword "shared"
 
   Scenario: Uploading a file to a public shared folder should not be listed in the activity list stream when file created activity has been disabled
-    Given user "user1" has created a public link share with settings
+    Given user "Brian" has created a public link share with settings
       | path        | simple-folder |
       | permissions | create        |
     And the public has uploaded file "test.txt" with content "This is a test"

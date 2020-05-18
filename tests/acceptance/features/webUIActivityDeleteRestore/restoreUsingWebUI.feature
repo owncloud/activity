@@ -5,11 +5,11 @@ Feature: Restored files/folders activities
   So that I know what happened in my cloud storage
 
   Background:
-    Given user "user0" has been created with default attributes and skeleton files
-    And user "user0" has logged in using the webUI
+    Given user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has logged in using the webUI
 
   Scenario Outline: Restore a file using the webUI and check the activity
-    Given user "user0" has deleted file "<file>"
+    Given user "Alice" has deleted file "<file>"
     And the user has browsed to the trashbin page
     When the user restores file "lorem.txt" from the trashbin using the webUI
     And the user browses to the activity page
@@ -20,7 +20,7 @@ Feature: Restored files/folders activities
       | simple-folder/lorem.txt |
 
   Scenario Outline: Restore a folder using the webUI and check the activity
-    Given user "user0" has deleted folder "<deleted-folder>"
+    Given user "Alice" has deleted folder "<deleted-folder>"
     And the user has browsed to the trashbin page
     When the user restores folder "<restored-folder>" from the trashbin using the webUI
     And the user browses to the activity page
