@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Beritahu aktivitas anda melalui email",
     "You need to set up your email address before you can receive notification emails." : "Anda perlu mengatur alamat email sebelum menerima pemberitahuan melalui email",
     "Send emails:" : "Kirim email:",
+    "As soon as possible" : "Pada kesempatan pertama",
     "Hourly" : " Setiap jam",
     "Daily" : "Setiap hari",
     "Weekly" : "Setiap minggu",
