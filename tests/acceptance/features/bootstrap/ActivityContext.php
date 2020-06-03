@@ -68,7 +68,7 @@ class ActivityContext implements Context {
 				$key, $activityData
 			);
 			$value = $this->featureContext->substituteInLineCodes(
-				$value, ['preg_quote' => ['/']]
+				$value, $user, ['preg_quote' => ['/']]
 			);
 			PHPUnit\Framework\Assert::assertNotFalse(
 				(bool)\preg_match($value, $activityData[$key]),
