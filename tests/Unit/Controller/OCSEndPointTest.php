@@ -563,10 +563,17 @@ class OCSEndPointTest extends TestCase {
 
 	public function dataGetPreview() {
 		return [
-			['author', 42, '/path', '/currentPath', true, true, false, '/preview/dir', true],
-			['author', 42, '/file.txt', '/currentFile.txt', false, true, false, '/preview/mpeg', true],
-			['author', 42, '/file.txt', '/currentFile.txt', false, true, true, 'remote.php/dav/files//file.txt?preview=1&x=150&y=150', false],
-			['author', 42, '/file.txt', '/currentFile.txt', false, false, true, 'source::getPreviewFromPath', true],
+			// test preview format
+			['author', 42, '/path', '/path', true, true, false, '/preview/dir', true],
+			['author', 42, '/file.txt', '/file.txt', false, true, false, '/preview/mpeg', true],
+			// test create file activity
+			['author', 42, '/file.txt', '/file.txt', false, true, true, 'remote.php/dav/files//file.txt?preview=1&x=150&y=150', false],
+			// test on renamed file
+			['author', 42, '/file.txt', '/changed-file.txt', false, true, true, 'remote.php/dav/files//changed-file.txt?preview=1&x=150&y=150', false],
+			// test e.g. tagging file activity on file
+			['author', 42, '', '/folder/file.txt', false, true, true, 'remote.php/dav/files//folder/file.txt?preview=1&x=150&y=150', false],
+			// test using source::
+			['author', 42, '/file.txt', '/file.txt', false, false, true, 'source::getPreviewFromPath', true],
 		];
 	}
 
@@ -574,8 +581,8 @@ class OCSEndPointTest extends TestCase {
 	 * @dataProvider dataGetPreview
 	 *
 	 * @param string $author
-	 * @param int $fileId
-	 * @param string $path
+	 * @param int $activityObjectId
+	 * @param string $activityObjectName
 	 * @param string $returnedPath
 	 * @param bool $isDir
 	 * @param bool $validFileInfo
@@ -583,7 +590,7 @@ class OCSEndPointTest extends TestCase {
 	 * @param string $source
 	 * @param bool $isMimeTypeIcon
 	 */
-	public function testGetPreview($author, $fileId, $path, $returnedPath, $isDir, $validFileInfo, $isMimeSup, $source, $isMimeTypeIcon) {
+	public function testGetPreview($author, $activityObjectId, $activityObjectName, $returnedPath, $isDir, $validFileInfo, $isMimeSup, $source, $isMimeTypeIcon) {
 		$controller = $this->getController([
 			'getPreviewLink',
 			'getPreviewFromPath',
@@ -592,7 +599,7 @@ class OCSEndPointTest extends TestCase {
 
 		$this->infoCache->expects($this->once())
 			->method('getInfoById')
-			->with($author, $fileId, $path)
+			->with($author, $activityObjectId, $activityObjectName)
 			->willReturn([
 				'path'		=> $returnedPath,
 				'exists'	=> true,
@@ -665,7 +672,7 @@ class OCSEndPointTest extends TestCase {
 
 			$controller->expects($this->once())
 				->method('getPreviewFromPath')
-				->with($path, $this->anything())
+				->with($activityObjectName, $this->anything())
 				->willReturn(['source' => 'source::getPreviewFromPath']);
 		}
 
@@ -673,7 +680,7 @@ class OCSEndPointTest extends TestCase {
 			'link' => '/preview' . $returnedPath,
 			'source' => $source,
 			'isMimeTypeIcon' => $isMimeTypeIcon,
-		], $this->invokePrivate($controller, 'getPreview', [$author, $fileId, $path]));
+		], $this->invokePrivate($controller, 'getPreview', [$author, $activityObjectId, $activityObjectName]));
 	}
 
 	public function dataGetPreviewFromPath() {
