@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Ενημερωθείτε για τις δράσεις σας μέσω ηλ. ταχυδρομείο",
     "You need to set up your email address before you can receive notification emails." : "Πρέπει να ρυθμίσετε τη διεύθυνση ηλ. ταχυδρομείου σας για να μπορείτε να λαμβάνετε ειδοποιήσεις μέσω ηλ. ταχυδρομείου.",
     "Send emails:" : "Αποστολή μηνυμάτων ηλ. ταχυδρομείου:",
+    "As soon as possible" : "Το συντομότερο δυνατό",
     "Hourly" : "Ωριαίως",
     "Daily" : "Καθημερινώς",
     "Weekly" : "Εβδομαδιαίως",
