@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased] - XXXX-XX-XX
+
+-
+
 ## [2.5.4] - 2020-08-07
 
 ### Fixed
@@ -108,6 +112,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.5.4...master
 [2.5.4]: https://github.com/owncloud/activity/compare/v2.5.3...v2.5.4
 [2.5.3]: https://github.com/owncloud/activity/compare/v2.5.2...v2.5.3
 [2.5.2]: https://github.com/owncloud/activity/compare/v2.5.1...v2.5.2
