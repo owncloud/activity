@@ -242,7 +242,7 @@ Feature: Sharing file/folders activities
     And user "Alice" has shared folder "simple-folder" with user "Brian"
     And user "Brian" has logged in using the webUI
     And user "Alice" has created folder "simple-folder/newFolder"
-    And user "Brian" has declined the share "/simple-folder" offered by user "Alice"
+    And user "Brian" has declined share "/simple-folder" offered by user "Alice"
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" created "newFolder"
 
@@ -251,7 +251,7 @@ Feature: Sharing file/folders activities
     And user "Alice" has shared folder "simple-folder" with user "Brian"
     And user "Alice" has logged in using the webUI
     And user "Brian" has created folder "simple-folder/newFolder"
-    And user "Brian" has declined the share "/simple-folder" offered by user "Alice"
+    And user "Brian" has declined share "/simple-folder" offered by user "Alice"
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" created "newFolder"
 
