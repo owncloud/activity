@@ -236,12 +236,14 @@ class MailQueueHandler {
 	 */
 	protected function sendMail($user, $email, $lang, $timezone, $mailData, $skippedCount) {
 		$l = $this->getLanguage($lang);
-		$parser = new PlainTextParser($l);
+		$plainParser = new PlainTextParser($l);
+		$htmlParser = new HtmlTextParser($l, $this->urlGenerator);
 		$this->dataHelper->setUser($user->getUid());
 		$this->dataHelper->setL10n($l);
 		$this->activityManager->setCurrentUserId($user->getUid());
 
-		$activityList = [];
+		$activityListPlain = [];
+		$activityListHtml = [];
 		foreach ($mailData as $activity) {
 			$event = $this->activityManager->generateEvent();
 			$event->setApp($activity['amq_appid'])
@@ -255,19 +257,23 @@ class MailQueueHandler {
 				new \DateTimeZone($timezone), $l
 			);
 
-			$activityList[] = [
-				$parser->parseMessage(
-					$this->dataHelper->translation(
-						$activity['amq_appid'], $activity['amq_subject'], $this->dataHelper->getParameters($event, 'subject', $activity['amq_subjectparams'])
-					)
-				),
+			$message = $this->dataHelper->translation(
+				$activity['amq_appid'], $activity['amq_subject'], $this->dataHelper->getParameters($event, 'subject', $activity['amq_subjectparams'])
+			);
+
+			$activityListPlain[] = [
+				$plainParser->parseMessage($message),
+				$relativeDateTime,
+			];
+			$activityListHtml[] = [
+				$htmlParser->parseMessage($message),
 				$relativeDateTime,
 			];
 		}
 
 		$alttext = new Template('activity', 'email.notification', '', false);
 		$alttext->assign('username', $user->getDisplayName());
-		$alttext->assign('activities', $activityList);
+		$alttext->assign('activities', $activityListPlain);
 		$alttext->assign('skippedCount', $skippedCount);
 		$alttext->assign('owncloud_installation', $this->urlGenerator->getAbsoluteURL('/'));
 		$alttext->assign('overwriteL10N', $l);
@@ -275,7 +281,7 @@ class MailQueueHandler {
 
 		$htmltext = new Template('activity', 'html.notification', '', false);
 		$htmltext->assign('username', $user->getDisplayName());
-		$htmltext->assign('activities', $activityList);
+		$htmltext->assign('activities', $activityListHtml);
 		$htmltext->assign('skippedCount', $skippedCount);
 		$htmltext->assign('owncloud_installation', $this->urlGenerator->getAbsoluteURL('/'));
 		$htmltext->assign('overwriteL10N', $l);

@@ -1,5 +1,5 @@
 <?php
-/** @var OC_L10N $l */
+/** @var \OCP\IL10N $l */
 /** @var array $_ */
 $l = $_['overwriteL10N'];
 
