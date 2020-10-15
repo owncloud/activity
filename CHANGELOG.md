@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased] - XXXX-XX-XX
+## [2.6.0] - 2020-10-16
 
--
+### Added
+
+- Files/folders in HTML emails are now clickable - [#893](https://github.com/owncloud/activity/issues/893)
+
 
 ## [2.5.4] - 2020-08-07
 
