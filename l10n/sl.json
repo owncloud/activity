@@ -33,6 +33,7 @@
     "Notify about your own actions via email" : "O dejanjih me obvesti po elektronski pošti",
     "You need to set up your email address before you can receive notification emails." : "Za prejemanje obvestil prek elektronske pošte je treba najprej nastaviti elektronski poštni naslov.",
     "Send emails:" : "Pošlji elektronsko sporočilo:",
+    "As soon as possible" : "Čim hitreje",
     "Hourly" : "Vsako uro",
     "Daily" : "Dnevno",
     "Weekly" : "Tedensko",
