@@ -14,8 +14,8 @@ And there you have it - a complete overview of all file and folder activities in
 Never again miss an important event related to content in ownCloud and always be up-to-date on all activities of your files and folders.
   </description>
   <licence>AGPL</licence>
-  <author>Frank Karlitschek, Joas Schilling, Tom Needham, Thomas Müller, Vincent Petry</author>
-  <version>2.5.4</version>
+  <author>Thomas Müller, Frank Karlitschek, Joas Schilling, Tom Needham, Vincent Petry</author>
+  <version>2.6.0</version>
   <default_enable/>
   <types>
     <filesystem/>
