@@ -906,7 +906,7 @@ def acceptance():
 									environment['MAILHOG_HOST'] = 'email'
 
 								if params['ldapNeeded']:
-									environment['TEST_EXTERNAL_USER_BACKENDS'] = True
+									environment['TEST_WITH_LDAP'] = True
 
 								if (cephS3Needed or scalityS3Needed):
 									environment['OC_TEST_ON_OBJECTSTORE'] = '1'
