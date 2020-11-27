@@ -126,33 +126,55 @@ config = {
 def main(ctx):
 	before = beforePipelines()
 
-	stages = stagePipelines()
+	coverageTests = coveragePipelines(ctx)
+	if (coverageTests == False):
+		print('Errors detected in coveragePipelines. Review messages above.')
+		return []
+
+	dependsOn(before, coverageTests)
+
+	stages = stagePipelines(ctx)
 	if (stages == False):
 		print('Errors detected. Review messages above.')
 		return []
 
 	dependsOn(before, stages)
 
-	after = afterPipelines()
-	dependsOn(stages, after)
+	afterCoverageTests = afterCoveragePipelines(ctx)
+	dependsOn(coverageTests, afterCoverageTests)
 
-	return before + stages + after
+	after = afterPipelines(ctx)
+	dependsOn(afterCoverageTests + stages, after)
+
+	return before + coverageTests + afterCoverageTests + stages + after
 
 def beforePipelines():
 	return codestyle() + jscodestyle() + phpstan() + phan()
 
-def stagePipelines():
-	buildPipelines = build()
-	jsPipelines = javascript()
-	phpUnitPipelines = phpTests('phpunit')
-	phpIntegrationPipelines = phpTests('phpintegration')
-	acceptancePipelines = acceptance()
-	if (buildPipelines == False) or (jsPipelines == False) or (phpUnitPipelines == False) or (phpIntegrationPipelines == False) or (acceptancePipelines == False):
+def coveragePipelines(ctx):
+	# All pipelines that might have coverage or other test analysis reported
+	jsPipelines = javascript(ctx)
+	phpUnitPipelines = phpTests(ctx, 'phpunit')
+	phpIntegrationPipelines = phpTests(ctx, 'phpintegration')
+	if (jsPipelines == False) or (phpUnitPipelines == False) or (phpIntegrationPipelines == False):
 		return False
 
-	return buildPipelines + jsPipelines + phpUnitPipelines + phpIntegrationPipelines + acceptancePipelines
+	return jsPipelines + phpUnitPipelines + phpIntegrationPipelines
 
-def afterPipelines():
+def stagePipelines(ctx):
+	buildPipelines = build()
+	acceptancePipelines = acceptance(ctx)
+	if (buildPipelines == False) or (acceptancePipelines == False):
+		return False
+
+	return buildPipelines + acceptancePipelines
+
+def afterCoveragePipelines(ctx):
+	return [
+		sonarAnalysis(ctx)
+	]
+
+def afterPipelines(ctx):
 	return [
 		notify()
 	]
@@ -509,7 +531,7 @@ def build():
 
 	return pipelines
 
-def javascript():
+def javascript(ctx):
 	pipelines = []
 
 	if 'javascript' not in config:
@@ -579,15 +601,23 @@ def javascript():
 
 	if params['coverage']:
 		result['steps'].append({
-			'name': 'codecov-js',
-			'image': 'plugins/codecov:latest',
+			'name': 'coverage-cache',
+			'image': 'plugins/s3',
 			'pull': 'always',
 			'settings': {
-				'paths': [
-					'coverage/*.info',
-				],
-				'token': {
-					'from_secret': 'codecov_token'
+				'endpoint': {
+					'from_secret': 'cache_s3_endpoint'
+				},
+				'bucket': 'cache',
+				'source': './coverage/lcov.info',
+				'target': '%s/%s' % (ctx.repo.slug, ctx.build.commit + '-${DRONE_BUILD_NUMBER}'),
+				'path_style': True,
+				'strip_prefix': './coverage',
+				'access_key': {
+					'from_secret': 'cache_s3_access_key'
+				},
+				'secret_key': {
+					'from_secret': 'cache_s3_secret_key'
 				}
 			}
 		})
@@ -597,7 +627,7 @@ def javascript():
 
 	return [result]
 
-def phpTests(testType):
+def phpTests(ctx, testType):
 	pipelines = []
 
 	if testType not in config:
@@ -736,15 +766,31 @@ def phpTests(testType):
 
 				if params['coverage']:
 					result['steps'].append({
-						'name': 'codecov-upload',
-						'image': 'plugins/codecov:latest',
+						'name': 'coverage-rename',
+						'image': 'owncloudci/php:%s' % phpVersion,
+						'pull': 'always',
+						'commands': [
+							'mv tests/output/clover.xml tests/output/clover-%s.xml' % (name)
+						]
+					})
+					result['steps'].append({
+						'name': 'coverage-cache-1',
+						'image': 'plugins/s3',
 						'pull': 'always',
 						'settings': {
-							'paths': [
-								'tests/output/clover.xml',
-							],
-							'token': {
-								'from_secret': 'codecov_token'
+							'endpoint': {
+								'from_secret': 'cache_s3_endpoint'
+							},
+							'bucket': 'cache',
+							'source': 'tests/output/clover-%s.xml' % (name),
+							'target': '%s/%s' % (ctx.repo.slug, ctx.build.commit + '-${DRONE_BUILD_NUMBER}'),
+							'path_style': True,
+							'strip_prefix': 'tests/output',
+							'access_key': {
+								'from_secret': 'cache_s3_access_key'
+							},
+							'secret_key': {
+								'from_secret': 'cache_s3_secret_key'
 							}
 						}
 					})
@@ -759,7 +805,7 @@ def phpTests(testType):
 
 	return pipelines
 
-def acceptance():
+def acceptance(ctx):
 	pipelines = []
 
 	if 'acceptance' not in config:
@@ -982,6 +1028,77 @@ def acceptance():
 		return False
 
 	return pipelines
+
+def sonarAnalysis(ctx, phpVersion = '7.4'):
+	result = {
+		'kind': 'pipeline',
+		'type': 'docker',
+		'name': 'sonar-analysis',
+		'workspace' : {
+			'base': '/drone',
+			'path': 'src'
+		},
+		'steps':
+			cacheRestore() +
+			composerInstall(phpVersion) +
+			installCore('daily-master-qa', 'sqlite', False) +
+		[
+			{
+				'name': 'sync-from-cache',
+				'image': 'minio/mc',
+				'pull': 'always',
+				'environment': {
+					'MC_HOST_cache': {
+						'from_secret': 'cache_s3_connection_url'
+					},
+				},
+				'commands': [
+					'mkdir -p results',
+					'mc mirror cache/cache/%s/%s results/' % (ctx.repo.slug, ctx.build.commit + '-${DRONE_BUILD_NUMBER}'),
+				]
+			},
+			{
+				'name': 'list-coverage-results',
+				'image': 'owncloudci/php:%s' % phpVersion,
+				'pull': 'always',
+				'commands': [
+					'ls -l results',
+				]
+			},
+			{
+				'name': 'sonarcloud',
+				'image': 'sonarsource/sonar-scanner-cli',
+				'pull': 'always',
+				'environment': {
+					'SONAR_TOKEN': {
+						'from_secret': 'sonar_token'
+					},
+					'SONAR_PULL_REQUEST_BASE': 'master' if ctx.build.event == 'pull_request' else None,
+					'SONAR_PULL_REQUEST_BRANCH': ctx.build.source if ctx.build.event == 'pull_request' else None,
+					'SONAR_PULL_REQUEST_KEY': ctx.build.ref.replace("refs/pull/", "").split("/")[0] if ctx.build.event == 'pull_request' else None,
+					'SONAR_SCANNER_OPTS': '-Xdebug'
+				},
+				'when': {
+					'instance': [
+						'drone.owncloud.services',
+						'drone.owncloud.com'
+					],
+				}
+			}
+		],
+		'depends_on': [],
+		'trigger': {
+			'ref': [
+				'refs/pull/**',
+				'refs/tags/**'
+			]
+		}
+	}
+
+	for branch in config['branches']:
+		result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+	return result
 
 def notify():
 	result = {
@@ -1222,6 +1339,44 @@ def getDbDatabase(db):
 		return 'XE'
 
 	return 'owncloud'
+
+def cacheRestore():
+	return [{
+		'name': 'cache-restore',
+		'image': 'plugins/s3-cache:1',
+		'pull': 'always',
+		'settings': {
+			'access_key': {
+				'from_secret': 'cache_s3_access_key'
+			},
+			'endpoint': {
+				'from_secret': 'cache_s3_endpoint'
+			},
+			'restore': True,
+			'secret_key': {
+				'from_secret': 'cache_s3_secret_key'
+			}
+		},
+		'when': {
+			'instance': [
+				'drone.owncloud.services',
+				'drone.owncloud.com'
+			],
+		}
+	}]
+
+def composerInstall(phpVersion):
+	return [{
+		'name': 'composer-install',
+		'image': 'owncloudci/php:%s' % phpVersion,
+		'pull': 'always',
+		'environment': {
+			'COMPOSER_HOME': '/drone/src/.cache/composer'
+		},
+		'commands': [
+			'make vendor'
+		]
+	}]
 
 def installCore(version, db, useBundledApp):
 	host = getDbName(db)
