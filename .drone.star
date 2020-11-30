@@ -822,6 +822,7 @@ def acceptance(ctx):
 		'browsers': ['chrome'],
 		'phpVersions': ['7.2'],
 		'databases': ['mariadb:10.2'],
+		'esVersions': ['none'],
 		'federatedServerNeeded': False,
 		'filterTags': '',
 		'logLevel': '2',
@@ -899,130 +900,134 @@ def acceptance(ctx):
 				for browser in params['browsers']:
 					for phpVersion in params['phpVersions']:
 						for db in params['databases']:
-							for runPart in range(1, params['numberOfParts'] + 1):
-								name = 'unknown'
+							for esVersion in params['esVersions']:
+								for runPart in range(1, params['numberOfParts'] + 1):
+									name = 'unknown'
 
-								if isWebUI or isAPI or isCLI:
-									browserString = '' if browser == '' else '-' + browser
-									keyString = '-' + category if params['includeKeyInMatrixName'] else ''
-									partString = '' if params['numberOfParts'] == 1 else '-%d-%d' % (params['numberOfParts'], runPart)
-									name = '%s%s%s-%s%s-%s-php%s' % (alternateSuiteName, keyString, partString, server.replace('daily-', '').replace('-qa', ''), browserString, db.replace(':', ''), phpVersion)
-									maxLength = 50
-									nameLength = len(name)
-									if nameLength > maxLength:
-										print("Error: generated stage name of length", nameLength, "is not supported. The maximum length is " + str(maxLength) + ".", name)
-										errorFound = True
+									if isWebUI or isAPI or isCLI:
+										esString = '-es' + esVersion if esVersion != 'none' else ''
+										browserString = '' if browser == '' else '-' + browser
+										keyString = '-' + category if params['includeKeyInMatrixName'] else ''
+										partString = '' if params['numberOfParts'] == 1 else '-%d-%d' % (params['numberOfParts'], runPart)
+										name = '%s%s%s-%s%s-%s-php%s%s' % (alternateSuiteName, keyString, partString, server.replace('daily-', '').replace('-qa', ''), browserString, db.replace(':', ''), phpVersion, esString)
+										maxLength = 50
+										nameLength = len(name)
+										if nameLength > maxLength:
+											print("Error: generated stage name of length", nameLength, "is not supported. The maximum length is " + str(maxLength) + ".", name)
+											errorFound = True
 
-								environment = {}
-								for env in params['extraEnvironment']:
-									environment[env] = params['extraEnvironment'][env]
+									environment = {}
+									for env in params['extraEnvironment']:
+										environment[env] = params['extraEnvironment'][env]
 
-								environment['TEST_SERVER_URL'] = 'http://server'
-								environment['BEHAT_FILTER_TAGS'] = params['filterTags']
+									environment['TEST_SERVER_URL'] = 'http://server'
+									environment['BEHAT_FILTER_TAGS'] = params['filterTags']
 
-								if (params['runAllSuites'] == False):
-									environment['BEHAT_SUITE'] = suite
-								else:
-									environment['DIVIDE_INTO_NUM_PARTS'] = params['numberOfParts']
-									environment['RUN_PART'] = runPart
-
-								if isWebUI:
-									environment['SELENIUM_HOST'] = 'selenium'
-									environment['SELENIUM_PORT'] = '4444'
-									environment['BROWSER'] = browser
-									environment['PLATFORM'] = 'Linux'
-									if (params['runCoreTests']):
-										makeParameter = 'test-acceptance-core-webui'
+									if (params['runAllSuites'] == False):
+										environment['BEHAT_SUITE'] = suite
 									else:
-										makeParameter = 'test-acceptance-webui'
+										environment['DIVIDE_INTO_NUM_PARTS'] = params['numberOfParts']
+										environment['RUN_PART'] = runPart
 
-								if isAPI:
-									if (params['runCoreTests']):
-										makeParameter = 'test-acceptance-core-api'
+									if isWebUI:
+										environment['SELENIUM_HOST'] = 'selenium'
+										environment['SELENIUM_PORT'] = '4444'
+										environment['BROWSER'] = browser
+										environment['PLATFORM'] = 'Linux'
+										if (params['runCoreTests']):
+											makeParameter = 'test-acceptance-core-webui'
+										else:
+											makeParameter = 'test-acceptance-webui'
+
+									if isAPI:
+										if (params['runCoreTests']):
+											makeParameter = 'test-acceptance-core-api'
+										else:
+											makeParameter = 'test-acceptance-api'
+
+									if isCLI:
+										if (params['runCoreTests']):
+											makeParameter = 'test-acceptance-core-cli'
+										else:
+											makeParameter = 'test-acceptance-cli'
+
+									if params['emailNeeded']:
+										environment['MAILHOG_HOST'] = 'email'
+
+									if params['ldapNeeded']:
+										environment['TEST_WITH_LDAP'] = True
+
+									if (cephS3Needed or scalityS3Needed):
+										environment['OC_TEST_ON_OBJECTSTORE'] = '1'
+										if (params['cephS3'] != False):
+											environment['S3_TYPE'] = 'ceph'
+										if (params['scalityS3'] != False):
+											environment['S3_TYPE'] = 'scality'
+									federationDbSuffix = '-federated'
+
+									result = {
+										'kind': 'pipeline',
+										'type': 'docker',
+										'name': name,
+										'workspace' : {
+											'base': '/var/www/owncloud',
+											'path': 'testrunner/apps/%s' % config['app']
+										},
+										'steps':
+											installCore(server, db, params['useBundledApp']) +
+											installTestrunner('7.4', params['useBundledApp']) +
+											(installFederated(server, phpVersion, params['logLevel'], db, federationDbSuffix) + owncloudLog('federated') if params['federatedServerNeeded'] else []) +
+											installApp(phpVersion) +
+											installExtraApps(phpVersion, params['extraApps']) +
+											setupServerAndApp(phpVersion, params['logLevel']) +
+											owncloudLog('server') +
+											setupCeph(params['cephS3']) +
+											setupScality(params['scalityS3']) +
+											setupElasticSearch(esVersion) +
+											params['extraSetup'] +
+											fixPermissions(phpVersion, params['federatedServerNeeded']) +
+										[
+											({
+												'name': 'acceptance-tests',
+												'image': 'owncloudci/php:7.4',
+												'pull': 'always',
+												'environment': environment,
+												'commands': params['extraCommandsBeforeTestRun'] + [
+													'touch /var/www/owncloud/saved-settings.sh',
+													'. /var/www/owncloud/saved-settings.sh',
+													'make %s' % makeParameter
+												]
+											}),
+										] + params['extraTeardown'],
+										'services':
+											databaseService(db) +
+											browserService(browser) +
+											emailService(params['emailNeeded']) +
+											ldapService(params['ldapNeeded']) +
+											cephService(params['cephS3']) +
+											scalityService(params['scalityS3']) +
+											elasticSearchService(esVersion) +
+											params['extraServices'] +
+											owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', params['ssl'], params['xForwardedFor']) +
+											((
+												owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', params['ssl'], params['xForwardedFor']) +
+												databaseServiceForFederation(db, federationDbSuffix)
+											) if params['federatedServerNeeded'] else [] ),
+										'depends_on': [],
+										'trigger': {}
+									}
+
+									if (params['cron'] == ''):
+										result['trigger']['ref'] = [
+											'refs/pull/**',
+											'refs/tags/**'
+										]
+										for branch in config['branches']:
+											result['trigger']['ref'].append('refs/heads/%s' % branch)
 									else:
-										makeParameter = 'test-acceptance-api'
+										result['trigger']['cron'] = params['cron']
 
-								if isCLI:
-									if (params['runCoreTests']):
-										makeParameter = 'test-acceptance-core-cli'
-									else:
-										makeParameter = 'test-acceptance-cli'
-
-								if params['emailNeeded']:
-									environment['MAILHOG_HOST'] = 'email'
-
-								if params['ldapNeeded']:
-									environment['TEST_WITH_LDAP'] = True
-
-								if (cephS3Needed or scalityS3Needed):
-									environment['OC_TEST_ON_OBJECTSTORE'] = '1'
-									if (params['cephS3'] != False):
-										environment['S3_TYPE'] = 'ceph'
-									if (params['scalityS3'] != False):
-										environment['S3_TYPE'] = 'scality'
-								federationDbSuffix = '-federated'
-
-								result = {
-									'kind': 'pipeline',
-									'type': 'docker',
-									'name': name,
-									'workspace' : {
-										'base': '/var/www/owncloud',
-										'path': 'testrunner/apps/%s' % config['app']
-									},
-									'steps':
-										installCore(server, db, params['useBundledApp']) +
-										installTestrunner('7.4', params['useBundledApp']) +
-										(installFederated(server, phpVersion, params['logLevel'], db, federationDbSuffix) + owncloudLog('federated') if params['federatedServerNeeded'] else []) +
-										installApp(phpVersion) +
-										installExtraApps(phpVersion, params['extraApps']) +
-										setupServerAndApp(phpVersion, params['logLevel']) +
-										owncloudLog('server') +
-										setupCeph(params['cephS3']) +
-										setupScality(params['scalityS3']) +
-										params['extraSetup'] +
-										fixPermissions(phpVersion, params['federatedServerNeeded']) +
-									[
-										({
-											'name': 'acceptance-tests',
-											'image': 'owncloudci/php:7.4',
-											'pull': 'always',
-											'environment': environment,
-											'commands': params['extraCommandsBeforeTestRun'] + [
-												'touch /var/www/owncloud/saved-settings.sh',
-												'. /var/www/owncloud/saved-settings.sh',
-												'make %s' % makeParameter
-											]
-										}),
-									] + params['extraTeardown'],
-									'services':
-										databaseService(db) +
-										browserService(browser) +
-										emailService(params['emailNeeded']) +
-										ldapService(params['ldapNeeded']) +
-										cephService(params['cephS3']) +
-										scalityService(params['scalityS3']) +
-										params['extraServices'] +
-										owncloudService(server, phpVersion, 'server', '/var/www/owncloud/server', params['ssl'], params['xForwardedFor']) +
-										((
-											owncloudService(server, phpVersion, 'federated', '/var/www/owncloud/federated', params['ssl'], params['xForwardedFor']) +
-											databaseServiceForFederation(db, federationDbSuffix)
-										) if params['federatedServerNeeded'] else [] ),
-									'depends_on': [],
-									'trigger': {}
-								}
-
-								if (params['cron'] == ''):
-									result['trigger']['ref'] = [
-										'refs/pull/**',
-										'refs/tags/**'
-									]
-									for branch in config['branches']:
-										result['trigger']['ref'].append('refs/heads/%s' % branch)
-								else:
-									result['trigger']['cron'] = params['cron']
-
-								pipelines.append(result)
+									pipelines.append(result)
 
 	if errorFound:
 		return False
@@ -1230,6 +1235,19 @@ def ldapService(ldapNeeded):
 		}]
 
 	return []
+
+def elasticSearchService(esVersion):
+	if esVersion == "none":
+		return []
+
+	return [{
+		'name': 'elasticsearch',
+		'image': 'webhippie/elasticsearch:%s' % esVersion,
+		'pull': 'always',
+		'environment': {
+			'ELASTICSEARCH_PLUGINS_INSTALL': 'ingest-attachment'
+		}
+	}]
 
 def scalityService(serviceParams):
 	serviceEnvironment = {
@@ -1535,6 +1553,22 @@ def setupScality(serviceParams):
 		] if createFirstBucket else []) + ([
 			'for I in $(seq 1 9); do php ./occ s3:create-bucket owncloud$I --accept-warning; done',
 		] if createExtraBuckets else [])
+	}]
+
+def setupElasticSearch(esVersion):
+	if esVersion == "none":
+		return []
+
+	return [{
+		'name': 'setup-es',
+		'image': 'owncloudci/php:7.2',
+		'pull': 'always',
+		'commands': [
+			'cd /var/www/owncloud/server',
+			'php occ config:app:set search_elastic servers --value elasticsearch',
+			'wait-for-it -t 60 elasticsearch:9200',
+			'php occ search:index:reset --force'
+		]
 	}]
 
 def fixPermissions(phpVersion, federatedServerNeeded):
