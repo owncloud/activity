@@ -1016,8 +1016,6 @@ def acceptance(ctx):
 						'refs/pull/**',
 						'refs/tags/**'
 					]
-					for branch in config['branches']:
-						result['trigger']['ref'].append('refs/heads/%s' % branch)
 				else:
 					result['trigger']['cron'] = testConfig['cron']
 
@@ -1034,8 +1032,8 @@ def sonarAnalysis(ctx, phpVersion = '7.4'):
 		'type': 'docker',
 		'name': 'sonar-analysis',
 		'workspace' : {
-			'base': '/drone',
-			'path': 'src'
+			'base': '/var/www/owncloud',
+			'path': 'server/apps/%s' % config['app']
 		},
 		'steps':
 			cacheRestore() +
