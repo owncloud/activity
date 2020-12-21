@@ -79,6 +79,7 @@ config = {
 			'cron': 'nightly',
 			'runAllSuites': True,
 			'numberOfParts': 35,
+			'filterTags': '~@skip&&~@app-required',
 		},
 		'core-cli-acceptance': {
 			'suites': {
@@ -98,6 +99,7 @@ config = {
 			'runAllSuites': True,
 			'numberOfParts': 3,
 			'emailNeeded': True,
+			'filterTags': '~@skip&&~@app-required',
 		},
 		'core-webui-acceptance': {
 			'suites': {
@@ -118,7 +120,7 @@ config = {
 			'cron': 'nightly',
 			'runAllSuites': True,
 			'numberOfParts': 5,
-			'filterTags': '@smokeTest&&~@skip',
+			'filterTags': '@smokeTest&&~@skip&&~@app-required',
 		}
 	}
 }
