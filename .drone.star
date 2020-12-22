@@ -1017,17 +1017,11 @@ def acceptance(ctx):
 					'trigger': {}
 				}
 
-				if (testConfig['pullRequestAndCron'] != ''):
-					if ctx.build.event == 'pull_request':
-						result['trigger']['ref'] = [
-							'refs/pull/**',
-							'refs/tags/**'
-						]
-					else:
-						result['trigger']['cron'] = testConfig['pullRequestAndCron']
+				if (testConfig['cron'] != ''):
+					result['trigger']['cron'] = testConfig['cron']
 				else:
-					if (testConfig['cron'] != ''):
-						result['trigger']['cron'] = testConfig['cron']
+					if ((testConfig['pullRequestAndCron'] != '') and (ctx.build.event != 'pull_request')):
+						result['trigger']['cron'] = testConfig['pullRequestAndCron']
 					else:
 						result['trigger']['ref'] = [
 							'refs/pull/**',
