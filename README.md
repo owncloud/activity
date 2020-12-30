@@ -10,8 +10,9 @@ And there you have it - a complete overview of all file and folder activities in
 ## QA metrics on master branch:
 
 [![Build Status](https://drone.owncloud.com/api/badges/owncloud/activity/status.svg?branch=master)](https://drone.owncloud.com/owncloud/activity)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/activity/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/activity/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/activity/?branch=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=owncloud_activity&metric=alert_status)](https://sonarcloud.io/dashboard?id=owncloud_activity)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=owncloud_activity&metric=security_rating)](https://sonarcloud.io/dashboard?id=owncloud_activity)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=owncloud_activity&metric=coverage)](https://sonarcloud.io/dashboard?id=owncloud_activity)
 
 # Add new activities / types for other apps
 
