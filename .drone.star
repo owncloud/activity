@@ -586,7 +586,7 @@ def javascript(ctx):
 		[
 			{
 				'name': 'js-tests',
-				'image': 'owncloudci/php:7.2',
+				'image': 'owncloudci/nodejs:12',
 				'pull': 'always',
 				'environment': params['extraEnvironment'],
 				'commands': params['extraCommandsBeforeTestRun'] + [
