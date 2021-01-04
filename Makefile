@@ -1,12 +1,7 @@
 #
-# Define NPM and COMPOSER_BIN and check if they are available on the system.
+# Define NPM and check if it is available on the system.
 #
 SHELL := /bin/bash
-
-COMPOSER_BIN := $(shell command -v composer 2> /dev/null)
-ifndef COMPOSER_BIN
-    $(error composer is not available on your system, please install composer)
-endif
 
 NPM := $(shell command -v npm 2> /dev/null)
 ifndef NPM
