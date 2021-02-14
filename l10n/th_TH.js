@@ -16,7 +16,7 @@ OC.L10N.register(
     "Personal activity feed for %s" : "ฟีดกิจกรรมส่วนตัวสำหรับ %s",
     "Your feed URL is invalid" : "ฟีด URL ของคุณไม่ถูกต้อง",
     "Your settings have been updated." : "อัปเดตการตั้งค่าเรียบร้อยแล้ว",
-    "Mail" : "จดหมาย",
+    "Mail" : "อีเมล",
     "Stream" : "สตรีม",
     "\"remote user\"" : "\"ผู้ใช้โดยการรีโมท\"",
     "Activity notification" : "การแจ้งเตือนกิจกรรม",
