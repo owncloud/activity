@@ -66,7 +66,7 @@ config = {
 				'apiAll': 'core-apiAll',
 			},
 			'databases': [
-				'mysql:5.7',
+				'mysql:8.0',
 			],
 			'servers': [
 				'daily-master-qa',
@@ -86,7 +86,7 @@ config = {
 				'cliAll': 'core-cliAll',
 			},
 			'databases': [
-				'mysql:5.7',
+				'mysql:8.0',
 			],
 			'servers': [
 				'daily-master-qa',
@@ -106,7 +106,7 @@ config = {
 				'webUIall': 'core-webUI',
 			},
 			'databases': [
-				'mysql:5.7',
+				'mysql:8.0',
 			],
 			'servers': [
 				'daily-master-qa',
@@ -1670,7 +1670,7 @@ def databaseServiceForFederation(db, suffix):
 		print('Not implemented federated database for ', dbName)
 		return []
 
-	return [{
+	service = {
 		'name': dbName + suffix,
 		'image': db,
 		'pull': 'always',
@@ -1680,7 +1680,10 @@ def databaseServiceForFederation(db, suffix):
 			'MYSQL_DATABASE': getDbDatabase(db) + suffix,
 			'MYSQL_ROOT_PASSWORD': getDbRootPassword()
 		}
-	}]
+	}
+	if (db == 'mysql:8.0'):
+		service['command'] = ['--default-authentication-plugin=mysql_native_password']
+	return [service]
 
 def buildTestConfig(params):
 	configs = []
