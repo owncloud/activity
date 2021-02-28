@@ -5,7 +5,7 @@ Feature: Sharing file/folders activities
   So that I know what happened in my cloud storage
 
   Background:
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
 
   Scenario: Sharing a file/folder with a user should be listed in the activity list of a sharer
     Given these users have been created with default attributes and skeleton files but not initialized:

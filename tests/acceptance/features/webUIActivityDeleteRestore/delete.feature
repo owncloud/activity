@@ -5,7 +5,7 @@ Feature: Deleted files/folders activities
   So that I know what happened in my cloud storage
 
   Background:
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
 
   @issue-622

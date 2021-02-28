@@ -5,7 +5,7 @@ Feature: Tag files/folders activities
   So that I know what happened in my cloud storage
 
   Scenario Outline: Adding a tag on a file/folder should be listed on the activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
     And user "Alice" has created a "normal" tag with name "lorem"
     # <filepath> already has an ending slash('/')
@@ -22,7 +22,7 @@ Feature: Tag files/folders activities
       | 'single'quotes/simple-empty-folder/ | for-git-commit      |
 
   Scenario Outline: Adding a tag on the shared file/folder should be listed on the activity list
-    Given these users have been created with default attributes and skeleton files:
+    Given these users have been created with default attributes and large skeleton files:
       | username |
       | Alice    |
       | Brian    |
@@ -46,7 +46,7 @@ Feature: Tag files/folders activities
       | simple-folder |
 
   Scenario Outline: tagging activity before sharing should not be listed for the share receiver.
-    Given these users have been created with default attributes and skeleton files:
+    Given these users have been created with default attributes and large skeleton files:
       | username |
       | Alice    |
       | Brian    |
@@ -70,7 +70,7 @@ Feature: Tag files/folders activities
       | simple-folder |
 
   Scenario Outline: Activity for tagging a shared file/folder by sharee should be listed for sharer as well
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
     And group "group1" has been created
     And user "Alice" has been added to group "group1"
@@ -92,7 +92,7 @@ Feature: Tag files/folders activities
       | simple-folder |
 
   Scenario: Activity for tagging a reshared folder by sharee should be listed for original sharer as well
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
     And user "Carol" has been created with default attributes and without skeleton files
     And group "group1" has been created
@@ -119,14 +119,14 @@ Feature: Tag files/folders activities
     And the activity should not have any message with keyword "Alice Hansen"
 
   Scenario: Activity for creating a normal system tag by a user should be listed in activity list of an admin
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has created a "normal" tag with name "lorem"
     And the administrator has logged in using the webUI
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" created system tag "lorem"
 
   Scenario: Activity for deleting a normal system tag by a user should be listed in activity list of an admin
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has created a "normal" tag with name "lorem"
     When user "Alice" deletes the tag with name "lorem" using the WebDAV API
     And the administrator logs in using the webUI
@@ -149,7 +149,7 @@ Feature: Tag files/folders activities
   @skipOnFIREFOX
   # Firefox does not auto-scroll to click the checkbox for 'disables activity log stream for "systemtags"'
   Scenario Outline: Adding a tag on a file/folder should not be listed in the activity list stream when system tags activity has been disabled
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
     And user "Alice" has created a "normal" tag with name "lorem"
     # <filepath> already has an ending slash('/')
@@ -168,7 +168,7 @@ Feature: Tag files/folders activities
       | 'single'quotes/simple-empty-folder/ | for-git-commit      |
 
   Scenario: Adding a tag on a file/folder should be listed on the activity tab
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
     And user "Alice" has created a "normal" tag with name "lorem"
     And user "Alice" has added tag "lorem" to file "lorem.txt"
@@ -177,7 +177,7 @@ Feature: Tag files/folders activities
     And the activity number 2 should contain message "You created lorem.txt" in the activity tab
 
   Scenario: Administrator checks the activity of user after deleting the user
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has created a "normal" tag with name "StaticTagName"
     And user "Alice" has been deleted
     And the administrator logs in using the webUI

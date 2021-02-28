@@ -6,7 +6,7 @@ Feature: Comment files/folders activities
 
   Background:
     Given using new DAV path
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
 
   Scenario Outline: Commenting on a file/folder should be listed in the activity page

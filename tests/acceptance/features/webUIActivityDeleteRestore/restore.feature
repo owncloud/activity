@@ -6,7 +6,7 @@ Feature: Restored files/folders activities
 
   Background:
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
 
   @issue-622
