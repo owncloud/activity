@@ -4,7 +4,7 @@ Feature: List activity
   So that I know what is happening with my files/folders
 
   Scenario: file deletion should be listed in the activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes file "textfile0.txt" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
       | type             | /^file_deleted$/      |
@@ -20,7 +20,7 @@ Feature: List activity
   @skipOnOcV10.2
   Scenario: file restore should be listed in the activity list
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and small skeleton files
     And user "Alice" has deleted file "textfile0.txt"
     And user "Alice" has logged in to a web-style session
     When user "Alice" restores the file with original path "textfile0.txt" using the trashbin API
@@ -35,7 +35,7 @@ Feature: List activity
       | subject_prepared | /^You restored <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0\.txt\" id=\"\d+\">textfile0\.txt<\/file>$/ |
 
   Scenario: folder deletion should be listed in the activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes folder "FOLDER" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
       | type             | /^file_deleted$/      |
@@ -51,7 +51,7 @@ Feature: List activity
   @skipOnOcV10.2
   Scenario: folder restore should be listed in the activity list
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and small skeleton files
     And user "Alice" has deleted folder "FOLDER"
     And user "Alice" has logged in to a web-style session
     When user "Alice" restores the folder with original path "FOLDER" using the trashbin API
@@ -66,7 +66,7 @@ Feature: List activity
       | subject_prepared | /^You restored <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\" id=\"\d+\">FOLDER<\/file>$/ |
 
   Scenario: file inside folder deletion should be listed in the activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes file "PARENT/parent.txt" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
       | type             | /^file_deleted$/         |
@@ -82,7 +82,7 @@ Feature: List activity
   @skipOnOcV10.2
   Scenario: file inside folder restore should be listed in the activity list
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and small skeleton files
     And user "Alice" has deleted file "PARENT/parent.txt"
     And user "Alice" has logged in to a web-style session
     When user "Alice" restores the file with original path "PARENT/parent.txt" using the trashbin API
@@ -97,7 +97,7 @@ Feature: List activity
       | subject_prepared | /^You restored <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT&scrollto=parent\.txt\" id=\"\d+\">PARENT\/parent\.txt<\/file>$/ |
 
   Scenario: sub folder deletion should be listed in the activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes folder "PARENT/CHILD" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
       | type             | /^file_deleted$/      |
@@ -113,7 +113,7 @@ Feature: List activity
   @skipOnOcV10.2
   Scenario: sub folder restore should be listed in the activity list
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and small skeleton files
     And user "Alice" has deleted folder "PARENT/CHILD"
     And user "Alice" has logged in to a web-style session
     When user "Alice" restores the folder with original path "PARENT/CHILD" using the trashbin API
@@ -128,7 +128,7 @@ Feature: List activity
       | subject_prepared | /^You restored <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT\/CHILD" id=\"\d+\">PARENT\/CHILD<\/file>$/ |
 
   Scenario: multiple file deletion should be listed in activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes file "textfile0.txt" using the WebDAV API
     And user "Alice" deletes file "textfile1.txt" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
@@ -143,7 +143,7 @@ Feature: List activity
       | subject_prepared | /^You deleted <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile1\.txt\.d\d+&view=trashbin\" id=\"\d+\">textfile1\.txt<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0\.txt\.d\d+&view=trashbin\" id=\"\d+\">textfile0\.txt<\/file><\/collection>$/ |
 
   Scenario: multiple folder deletion should be listed in activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes folder "PARENT" using the WebDAV API
     And user "Alice" deletes folder "FOLDER" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
@@ -160,7 +160,7 @@ Feature: List activity
   @skipOnOcV10.2
   Scenario: multiple file restore should be listed in activity list
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and small skeleton files
     And user "Alice" has deleted file "textfile0.txt"
     And user "Alice" has deleted file "textfile1.txt"
     And user "Alice" has logged in to a web-style session
@@ -179,7 +179,7 @@ Feature: List activity
   @skipOnOcV10.2
   Scenario: multiple folder restore should be listed in activity list
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and small skeleton files
     And user "Alice" has deleted folder "FOLDER"
     And user "Alice" has deleted folder "PARENT"
     And user "Alice" has logged in to a web-style session
@@ -196,7 +196,7 @@ Feature: List activity
       | subject_prepared | /^You restored <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT\" id=\"\d+\">PARENT<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\" id=\"\d+\">FOLDER<\/file><\/collection>$/ |
 
   Scenario: mix of folder and file deletion should be listed in activity list
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes file "textfile0.txt" using the WebDAV API
     And user "Alice" deletes folder "FOLDER" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
@@ -213,7 +213,7 @@ Feature: List activity
   @skipOnOcV10.2
   Scenario: mix of folder and file restore should be listed in activity list
     Given the administrator has enabled DAV tech_preview
-    And user "Alice" has been created with default attributes and skeleton files
+    And user "Alice" has been created with default attributes and small skeleton files
     And user "Alice" has deleted file "textfile0.txt"
     And user "Alice" has deleted folder "FOLDER"
     And user "Alice" has logged in to a web-style session
@@ -231,7 +231,7 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: folder share should be listed in the activity list
-    Given these users have been created with default attributes and skeleton files but not initialized:
+    Given these users have been created with default attributes and small skeleton files but not initialized:
       | username |
       | Alice    |
       | Brian    |
@@ -293,7 +293,7 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: different files share with different user should be listed in activity list of sharer
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
     And user "Carol" has been created with default attributes and without skeleton files
     When user "Alice" shares file "PARENT/parent.txt" with user "Carol" using the sharing API
@@ -323,7 +323,7 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: different files shared with same user should be listed in activity list of sharer
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
     When user "Alice" shares file "PARENT/parent.txt" with user "Brian" using the sharing API
     And user "Alice" shares file "textfile0.txt" with user "Brian" using the sharing API
@@ -352,7 +352,7 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: different files shared with different user should be listed in activity list of sharee
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
     And user "Carol" has been created with default attributes and without skeleton files
     When user "Alice" shares file "PARENT/parent.txt" with user "Brian" using the sharing API
@@ -382,7 +382,7 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: different files shared with same user should be listed in activity list of sharee
-    Given user "Alice" has been created with default attributes and skeleton files
+    Given user "Alice" has been created with default attributes and small skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
     When user "Alice" shares file "PARENT/parent.txt" with user "Brian" using the sharing API
     And user "Alice" shares file "textfile0.txt" with user "Brian" using the sharing API
@@ -400,7 +400,7 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: users checks a group related activity after deleting the group
-    Given these users have been created with default attributes and skeleton files:
+    Given these users have been created with default attributes and small skeleton files:
       | username |
       | Alice    |
       | Brian    |
@@ -423,7 +423,7 @@ Feature: List activity
 
   @skipOnOcV10.2
   Scenario: users checks a user related activity after deleting the user
-    Given these users have been created with default attributes and skeleton files:
+    Given these users have been created with default attributes and small skeleton files:
       | username |
       | Alice    |
       | Brian    |
