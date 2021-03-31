@@ -44,6 +44,9 @@ class ConsumerTest extends TestCase {
 	/** @var \OCA\Activity\UserSettings */
 	protected $userSettings;
 
+	/** @var \OCP\Activity\IManager */
+	protected $manager;
+
 	protected function setUp(): void {
 		parent::setUp();
 		$this->deleteTestActivities();
@@ -68,6 +71,10 @@ class ConsumerTest extends TestCase {
 			->method('get')
 			->with('activity')
 			->willReturn($l10n);
+
+		$this->manager = $this->getMockBuilder('OCP\Activity\IManager')
+			->disableOriginalConstructor()
+			->getMock();
 
 		$this->userSettings->expects($this->any())
 			->method('getUserSetting')
@@ -134,7 +141,7 @@ class ConsumerTest extends TestCase {
 				]
 			]);
 
-		$consumer = new Consumer($this->data, $this->userSettings, $this->l10nFactory);
+		$consumer = new Consumer($this->data, $this->userSettings, $this->l10nFactory, $this->manager);
 		$event = \OC::$server->getActivityManager()->generateEvent();
 		$event->setApp('test')
 			->setType($type)
@@ -178,7 +185,7 @@ class ConsumerTest extends TestCase {
 			]);
 
 		$time = \time();
-		$consumer = new Consumer($this->data, $this->userSettings, $this->l10nFactory);
+		$consumer = new Consumer($this->data, $this->userSettings, $this->l10nFactory, $this->manager);
 		$event = \OC::$server->getActivityManager()->generateEvent();
 		$event->setApp('test')
 			->setType($type)

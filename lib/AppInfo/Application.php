@@ -68,7 +68,8 @@ class Application extends App {
 			return new Consumer(
 				$c->query('ActivityData'),
 				$c->query('UserSettings'),
-				$server->getL10NFactory()
+				$server->getL10NFactory(),
+				$c->query('OCP\Activity\IManager')
 			);
 		});
 

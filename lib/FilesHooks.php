@@ -27,6 +27,7 @@ use OC\Files\Filesystem;
 use OC\Files\View;
 use OCA\Activity\Extension\Files;
 use OCA\Activity\Extension\Files_Sharing;
+use OCP\Activity\IEvent;
 use OCP\Activity\IManager;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\NotFoundException;
@@ -162,7 +163,12 @@ class FilesHooks {
 				continue;
 			}
 
-			if ($user === $this->currentUser) {
+			$agentAuthor = $this->manager->getAgentAuthor();
+
+			if ($agentAuthor === IEvent::AUTOMATION_AUTHOR) {
+				$userSubject = $subjectBy;
+				$userParams = [[$fileId => $path]];
+			} elseif ($user === $this->currentUser) {
 				$userSubject = $subject;
 				$userParams = [[$fileId => $path]];
 			} else {
@@ -563,11 +569,21 @@ class FilesHooks {
 		$event->setApp($app)
 			->setType($type)
 			->setAffectedUser($user)
-			->setAuthor($this->currentUser)
 			->setTimestamp(\time())
 			->setSubject($subject, $subjectParams)
 			->setObject($objectType, $fileId, $path)
 			->setLink($link);
+
+		$agentAuthor = $this->manager->getAgentAuthor();
+		if ($agentAuthor) {
+			$subjectParams[1] = $agentAuthor;
+			$event->setSubject($subject, $subjectParams);
+			$event->setAuthor($agentAuthor);
+		}
+
+		if ($event->getAuthor() === null) {
+			$event->setAuthor($this->currentUser);
+		}
 
 		// Add activity to stream
 		if ($streamSetting && (!$selfAction || $this->userSettings->getUserSetting($this->currentUser, 'setting', 'self'))) {
