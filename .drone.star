@@ -45,6 +45,9 @@ config = {
 				'chrome',
 				'firefox'
 			],
+			'servers': [
+				'daily-master-qa',
+			],
 		},
 		'federatedSuites': {
 			'suites': {
@@ -54,11 +57,17 @@ config = {
 				'chrome',
 				'firefox'
 			],
+			'servers': [
+				'daily-master-qa',
+			],
 			'federatedServerNeeded': True
 		},
 		'api': {
 			'suites': [
 				'apiActivity'
+			],
+			'servers': [
+				'daily-master-qa',
 			],
 		},
 		'core-api-acceptance': {
