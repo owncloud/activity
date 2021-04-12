@@ -251,11 +251,11 @@ class FilesHooks {
 	public function unShare($params) {
 		if ($params['itemType'] === 'file' || $params['itemType'] === 'folder') {
 			if ((int) $params['shareType'] === Share::SHARE_TYPE_USER) {
-				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], false);
+				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], false, $params['shareExpired']);
 			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
-				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], false);
+				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], false, $params['shareExpired']);
 			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
-				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], false);
+				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], false, $params['shareExpired']);
 			}
 		}
 	}
@@ -268,8 +268,9 @@ class FilesHooks {
 	 * @param string $itemType File type that is being shared (file or folder)
 	 * @param string $fileTarget File path
 	 * @param bool $isSharing True if sharing, false if unsharing
+	 * @param bool|null $shareExpired True if share is expired
 	 */
-	protected function shareFileOrFolderWithUser($shareWith, $fileSource, $itemType, $fileTarget, $isSharing) {
+	protected function shareFileOrFolderWithUser($shareWith, $fileSource, $itemType, $fileTarget, $isSharing, $shareExpired = false) {
 		if ($isSharing) {
 			$actionSharer = 'shared_user_self';
 			$actionOwner = 'reshared_user_by';
@@ -281,12 +282,17 @@ class FilesHooks {
 		}
 
 		// User performing the share
-		$this->shareNotificationForSharer($actionSharer, $shareWith, $fileSource, $itemType);
-		$this->shareNotificationForOriginalOwners($this->currentUser, $actionOwner, $shareWith, $fileSource, $itemType);
+		$this->shareNotificationForSharer($actionSharer, $shareWith, $fileSource, $itemType, $shareExpired);
+		$this->shareNotificationForOriginalOwners($this->currentUser, $actionOwner, $shareWith, $fileSource, $itemType, $shareExpired);
+
+		$subjectParams = [[$fileSource => $fileTarget], $this->currentUser];
+		if ($shareExpired === true) {
+			$subjectParams[] = 'shareExpired';
+		}
 
 		// New shared user
 		$this->addNotificationsForUser(
-			$shareWith, $actionUser, [[$fileSource => $fileTarget], $this->currentUser],
+			$shareWith, $actionUser, $subjectParams,
 			(int) $fileSource, $fileTarget, ($itemType === 'file'),
 			$this->userSettings->getUserSetting($shareWith, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($shareWith, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($shareWith, 'setting', 'batchtime') : 0
@@ -302,8 +308,9 @@ class FilesHooks {
 	 * @param string $fileTarget File path
 	 * @param int $shareId The Share ID of this share
 	 * @param bool $isSharing True if sharing, false if unsharing
+	 * @param bool|null $shareExpired True if share is expired
 	 */
-	protected function shareFileOrFolderWithGroup($shareWith, $fileSource, $itemType, $fileTarget, $shareId, $isSharing) {
+	protected function shareFileOrFolderWithGroup($shareWith, $fileSource, $itemType, $fileTarget, $shareId, $isSharing, $shareExpired = false) {
 		if ($isSharing) {
 			$actionSharer = 'shared_group_self';
 			$actionOwner = 'reshared_group_by';
@@ -321,13 +328,13 @@ class FilesHooks {
 		}
 
 		// User performing the share
-		$this->shareNotificationForSharer($actionSharer, $shareWith, $fileSource, $itemType);
-		$this->shareNotificationForOriginalOwners($this->currentUser, $actionOwner, $shareWith, $fileSource, $itemType);
+		$this->shareNotificationForSharer($actionSharer, $shareWith, $fileSource, $itemType, $shareExpired);
+		$this->shareNotificationForOriginalOwners($this->currentUser, $actionOwner, $shareWith, $fileSource, $itemType, $shareExpired);
 
 		$offset = 0;
 		$users = $group->searchUsers('', self::USER_BATCH_SIZE, $offset);
 		while (!empty($users)) {
-			$this->addNotificationsForGroupUsers($users, $actionUser, $fileSource, $itemType, $fileTarget, $shareId);
+			$this->addNotificationsForGroupUsers($users, $actionUser, $fileSource, $itemType, $fileTarget, $shareId, $shareExpired);
 			$offset += self::USER_BATCH_SIZE;
 			$users = $group->searchUsers('', self::USER_BATCH_SIZE, $offset);
 		}
@@ -340,8 +347,9 @@ class FilesHooks {
 	 * @param string $itemType File type that is being shared (file or folder)
 	 * @param string $fileTarget File path
 	 * @param int $shareId The Share ID of this share
+	 * @param bool|null $shareExpired True if the share is expired
 	 */
-	protected function addNotificationsForGroupUsers(array $usersInGroup, $actionUser, $fileSource, $itemType, $fileTarget, $shareId) {
+	protected function addNotificationsForGroupUsers(array $usersInGroup, $actionUser, $fileSource, $itemType, $fileTarget, $shareId, $shareExpired = false) {
 		$affectedUsers = [];
 
 		foreach ($usersInGroup as $user) {
@@ -365,8 +373,13 @@ class FilesHooks {
 				continue;
 			}
 
+			$subjectParams = [[$fileSource => $path], $this->currentUser];
+			if ($shareExpired === true) {
+				$subjectParams[] = 'shareExpired';
+			}
+
 			$this->addNotificationsForUser(
-				$user, $actionUser, [[$fileSource => $path], $this->currentUser],
+				$user, $actionUser, $subjectParams,
 				$fileSource, $path, ($itemType === 'file'),
 				!empty($filteredStreamUsersInGroup[$user]),
 				!empty($filteredEmailUsersInGroup[$user]) ? $filteredEmailUsersInGroup[$user] : 0
@@ -404,8 +417,9 @@ class FilesHooks {
 	 * @param string $itemType File type that is being shared (file or folder)
 	 * @param string $linkOwner
 	 * @param bool $isSharing True if sharing, false if unsharing
+	 * @param bool|null $shareExpired True if share is expired
 	 */
-	protected function shareFileOrFolderByLink($fileSource, $itemType, $linkOwner, $isSharing) {
+	protected function shareFileOrFolderByLink($fileSource, $itemType, $linkOwner, $isSharing, $shareExpired = false) {
 		if ($isSharing) {
 			$actionSharer = 'shared_link_self';
 			$actionOwner = 'reshared_link_by';
@@ -428,10 +442,15 @@ class FilesHooks {
 			return;
 		}
 
-		$this->shareNotificationForOriginalOwners($this->currentUser, $actionOwner, '', $fileSource, $itemType);
+		$this->shareNotificationForOriginalOwners($this->currentUser, $actionOwner, '', $fileSource, $itemType, $shareExpired);
+
+		$subjectParams = [[$fileSource => $path]];
+		if ($shareExpired === true) {
+			$subjectParams[] = 'shareExpired';
+		}
 
 		$this->addNotificationsForUser(
-			$this->currentUser, $actionSharer, [[$fileSource => $path]],
+			$this->currentUser, $actionSharer, $subjectParams,
 			(int) $fileSource, $path, ($itemType === 'file'),
 			$this->userSettings->getUserSetting($this->currentUser, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($this->currentUser, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($this->currentUser, 'setting', 'batchtime') : 0
@@ -445,8 +464,9 @@ class FilesHooks {
 	 * @param string $shareWith
 	 * @param int $fileSource
 	 * @param string $itemType
+	 * @param bool|null $shareExpired
 	 */
-	protected function shareNotificationForSharer($subject, $shareWith, $fileSource, $itemType) {
+	protected function shareNotificationForSharer($subject, $shareWith, $fileSource, $itemType, $shareExpired = false) {
 		$this->view->chroot('/' . $this->currentUser . '/files');
 
 		try {
@@ -455,8 +475,13 @@ class FilesHooks {
 			return;
 		}
 
+		$subjectParams = [[$fileSource => $path], $shareWith];
+		if ($shareExpired === true) {
+			$subjectParams[] = 'shareExpired';
+		}
+
 		$this->addNotificationsForUser(
-			$this->currentUser, $subject, [[$fileSource => $path], $shareWith],
+			$this->currentUser, $subject, $subjectParams,
 			$fileSource, $path, ($itemType === 'file'),
 			$this->userSettings->getUserSetting($this->currentUser, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($this->currentUser, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($this->currentUser, 'setting', 'batchtime') : 0
@@ -471,8 +496,9 @@ class FilesHooks {
 	 * @param string $shareWith
 	 * @param int $fileSource
 	 * @param string $itemType
+	 * @param bool|null $shareExpired
 	 */
-	protected function reshareNotificationForSharer($owner, $subject, $shareWith, $fileSource, $itemType) {
+	protected function reshareNotificationForSharer($owner, $subject, $shareWith, $fileSource, $itemType, $shareExpired = false) {
 		$this->view->chroot('/' . $owner . '/files');
 
 		try {
@@ -481,8 +507,13 @@ class FilesHooks {
 			return;
 		}
 
+		$subjectParams = [[$fileSource => $path], $this->currentUser, $shareWith];
+		if ($shareExpired === true) {
+			$subjectParams[] = 'shareExpired';
+		}
+
 		$this->addNotificationsForUser(
-			$owner, $subject, [[$fileSource => $path], $this->currentUser, $shareWith],
+			$owner, $subject, $subjectParams,
 			$fileSource, $path, ($itemType === 'file'),
 			$this->userSettings->getUserSetting($owner, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($owner, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($owner, 'setting', 'batchtime') : 0
@@ -497,8 +528,9 @@ class FilesHooks {
 	 * @param string $shareWith
 	 * @param int $fileSource
 	 * @param string $itemType
+	 * @param bool|null $shareExpired
 	 */
-	protected function shareNotificationForOriginalOwners($currentOwner, $subject, $shareWith, $fileSource, $itemType) {
+	protected function shareNotificationForOriginalOwners($currentOwner, $subject, $shareWith, $fileSource, $itemType, $shareExpired = false) {
 		// Get the full path of the current user
 		$this->view->chroot('/' . $currentOwner . '/files');
 
@@ -513,7 +545,7 @@ class FilesHooks {
 		 */
 		$owner = $this->view->getOwner($path);
 		if ($owner !== $currentOwner) {
-			$this->reshareNotificationForSharer($owner, $subject, $shareWith, $fileSource, $itemType);
+			$this->reshareNotificationForSharer($owner, $subject, $shareWith, $fileSource, $itemType, $shareExpired);
 		}
 
 		/**
@@ -536,7 +568,7 @@ class FilesHooks {
 			return;
 		}
 
-		$this->reshareNotificationForSharer($shareOwner, $subject, $shareWith, $fileSource, $itemType);
+		$this->reshareNotificationForSharer($shareOwner, $subject, $shareWith, $fileSource, $itemType, $shareExpired);
 	}
 
 	/**
