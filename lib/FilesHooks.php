@@ -249,13 +249,14 @@ class FilesHooks {
 	 * @param array $params The hook params
 	 */
 	public function unShare($params) {
+		$shareExpired = $params['shareExpired'] ?? false;
 		if ($params['itemType'] === 'file' || $params['itemType'] === 'folder') {
 			if ((int) $params['shareType'] === Share::SHARE_TYPE_USER) {
-				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], false, $params['shareExpired']);
+				$this->shareFileOrFolderWithUser($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], false, $shareExpired);
 			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_GROUP) {
-				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], false, $params['shareExpired']);
+				$this->shareFileOrFolderWithGroup($params['shareWith'], (int) $params['fileSource'], $params['itemType'], $params['fileTarget'], (int) $params['id'], false, $shareExpired);
 			} elseif ((int) $params['shareType'] === Share::SHARE_TYPE_LINK) {
-				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], false, $params['shareExpired']);
+				$this->shareFileOrFolderByLink((int) $params['fileSource'], $params['itemType'], $params['uidOwner'], false, $shareExpired);
 			}
 		}
 	}
@@ -268,7 +269,7 @@ class FilesHooks {
 	 * @param string $itemType File type that is being shared (file or folder)
 	 * @param string $fileTarget File path
 	 * @param bool $isSharing True if sharing, false if unsharing
-	 * @param bool|null $shareExpired True if share is expired
+	 * @param bool $shareExpired True if share is expired
 	 */
 	protected function shareFileOrFolderWithUser($shareWith, $fileSource, $itemType, $fileTarget, $isSharing, $shareExpired = false) {
 		if ($isSharing) {
@@ -308,7 +309,7 @@ class FilesHooks {
 	 * @param string $fileTarget File path
 	 * @param int $shareId The Share ID of this share
 	 * @param bool $isSharing True if sharing, false if unsharing
-	 * @param bool|null $shareExpired True if share is expired
+	 * @param bool $shareExpired True if share is expired
 	 */
 	protected function shareFileOrFolderWithGroup($shareWith, $fileSource, $itemType, $fileTarget, $shareId, $isSharing, $shareExpired = false) {
 		if ($isSharing) {
@@ -347,7 +348,7 @@ class FilesHooks {
 	 * @param string $itemType File type that is being shared (file or folder)
 	 * @param string $fileTarget File path
 	 * @param int $shareId The Share ID of this share
-	 * @param bool|null $shareExpired True if the share is expired
+	 * @param bool $shareExpired True if the share is expired
 	 */
 	protected function addNotificationsForGroupUsers(array $usersInGroup, $actionUser, $fileSource, $itemType, $fileTarget, $shareId, $shareExpired = false) {
 		$affectedUsers = [];
@@ -417,7 +418,7 @@ class FilesHooks {
 	 * @param string $itemType File type that is being shared (file or folder)
 	 * @param string $linkOwner
 	 * @param bool $isSharing True if sharing, false if unsharing
-	 * @param bool|null $shareExpired True if share is expired
+	 * @param bool $shareExpired True if share is expired
 	 */
 	protected function shareFileOrFolderByLink($fileSource, $itemType, $linkOwner, $isSharing, $shareExpired = false) {
 		if ($isSharing) {
@@ -464,7 +465,7 @@ class FilesHooks {
 	 * @param string $shareWith
 	 * @param int $fileSource
 	 * @param string $itemType
-	 * @param bool|null $shareExpired
+	 * @param bool $shareExpired
 	 */
 	protected function shareNotificationForSharer($subject, $shareWith, $fileSource, $itemType, $shareExpired = false) {
 		$this->view->chroot('/' . $this->currentUser . '/files');
@@ -496,7 +497,7 @@ class FilesHooks {
 	 * @param string $shareWith
 	 * @param int $fileSource
 	 * @param string $itemType
-	 * @param bool|null $shareExpired
+	 * @param bool $shareExpired
 	 */
 	protected function reshareNotificationForSharer($owner, $subject, $shareWith, $fileSource, $itemType, $shareExpired = false) {
 		$this->view->chroot('/' . $owner . '/files');
@@ -528,7 +529,7 @@ class FilesHooks {
 	 * @param string $shareWith
 	 * @param int $fileSource
 	 * @param string $itemType
-	 * @param bool|null $shareExpired
+	 * @param bool $shareExpired
 	 */
 	protected function shareNotificationForOriginalOwners($currentOwner, $subject, $shareWith, $fileSource, $itemType, $shareExpired = false) {
 		// Get the full path of the current user
