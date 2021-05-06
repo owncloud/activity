@@ -13,7 +13,7 @@ config = {
 
 	'javascript': {
 		'skip': True,
-	}
+	},
 
 	'phpunit': {
 		'allDatabases' : {
