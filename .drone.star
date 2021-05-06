@@ -11,7 +11,9 @@ config = {
 
 	'codestyle': True,
 
-	'javascript': True,
+	'javascript': {
+		'skip': True,
+	}
 
 	'phpunit': {
 		'allDatabases' : {
