@@ -559,6 +559,7 @@ def javascript(ctx):
 		'extraEnvironment': {},
 		'extraCommandsBeforeTestRun': [],
 		'extraTeardown': [],
+		'skip': False
 	}
 
 	if 'defaults' in config:
@@ -578,6 +579,9 @@ def javascript(ctx):
 	params = {}
 	for item in default:
 		params[item] = matrix[item] if item in matrix else default[item]
+
+	if params['skip']:
+		return pipelines
 
 	result = {
 		'kind': 'pipeline',
@@ -665,6 +669,7 @@ def phpTests(ctx, testType):
 		'extraCommandsBeforeTestRun': [],
 		'extraApps': {},
 		'extraTeardown': [],
+		'skip': False
 	}
 
 	if 'defaults' in config:
@@ -689,6 +694,9 @@ def phpTests(ctx, testType):
 		params = {}
 		for item in default:
 			params[item] = matrix[item] if item in matrix else default[item]
+
+		if params['skip']:
+			continue
 
 		cephS3Params = params['cephS3']
 		if type(cephS3Params) == "bool":
@@ -859,6 +867,7 @@ def acceptance(ctx):
 		'numberOfParts': 1,
 		'cron': '',
 		'pullRequestAndCron': 'nightly',
+		'skip': False
 	}
 
 	if 'defaults' in config:
@@ -882,6 +891,9 @@ def acceptance(ctx):
 			params = {}
 			for item in default:
 				params[item] = matrix[item] if item in matrix else default[item]
+
+			if params['skip']:
+				continue
 
 			if isAPI or isCLI:
 				params['browsers'] = ['']
