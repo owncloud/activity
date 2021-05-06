@@ -28,7 +28,8 @@ config = {
 				'sqlite',
 				'mariadb:10.2',
 			],
-			'coverage': False
+			'coverage': False,
+			'skip': True
 		},
 	},
 
@@ -48,6 +49,7 @@ config = {
 			'servers': [
 				'daily-master-qa',
 			],
+			'skip': True
 		},
 		'federatedSuites': {
 			'suites': {
@@ -60,6 +62,7 @@ config = {
 			'servers': [
 				'daily-master-qa',
 			],
+			'skip': True,
 			'federatedServerNeeded': True
 		},
 		'api': {
@@ -89,6 +92,7 @@ config = {
 			'runAllSuites': True,
 			'numberOfParts': 35,
 			'filterTags': '~@skip&&~@app-required',
+			'skip': True
 		},
 		'core-cli-acceptance': {
 			'suites': {
@@ -130,6 +134,7 @@ config = {
 			'runAllSuites': True,
 			'numberOfParts': 5,
 			'filterTags': '@smokeTest&&~@skip&&~@app-required',
+			'skip': True
 		}
 	}
 }
