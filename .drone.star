@@ -108,7 +108,6 @@ config = {
 				'7.2',
 			],
 			'runCoreTests': True,
-			'cron': 'nightly',
 			'runAllSuites': True,
 			'numberOfParts': 3,
 			'emailNeeded': True,
