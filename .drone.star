@@ -867,7 +867,9 @@ def acceptance(ctx):
 		'numberOfParts': 1,
 		'cron': '',
 		'pullRequestAndCron': 'nightly',
-		'skip': False
+		'skip': False,
+		'debugSuites': [],
+		'skipExceptParts': []
 	}
 
 	if 'defaults' in config:
@@ -882,6 +884,14 @@ def acceptance(ctx):
 				suites[suite] = suite
 		else:
 			suites = matrix['suites']
+		
+		if 'debugSuites' in matrix and len(matrix['debugSuites']) != 0:
+			if type(matrix['debugSuites']) == "list":
+				suites = {}
+				for suite in matrix['debugSuites']:
+					suites[suite] = suite
+			else:
+				suites = matrix['debugSuites']
 
 		for suite, alternateSuiteName in suites.items():
 			isWebUI = suite.startswith('webUI')
@@ -924,6 +934,10 @@ def acceptance(ctx):
 				params['extraApps'] = extraAppsDict
 
 			for testConfig in buildTestConfig(params):
+				debugPartsEnabled = (len(testConfig['skipExceptParts']) != 0)
+				if debugPartsEnabled and testConfig['runPart'] not in testConfig['skipExceptParts']:
+					continue
+
 				name = 'unknown'
 				if isWebUI or isAPI or isCLI:
 					esString = '-es' + testConfig['esVersion'] if testConfig['esVersion'] != 'none' else ''
