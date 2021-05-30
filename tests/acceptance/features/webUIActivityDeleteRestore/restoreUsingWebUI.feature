@@ -31,8 +31,8 @@ Feature: Restored files/folders activities
       | simple-folder/simple-empty-folder | simple-empty-folder |
 
   Scenario: Restore multiple deleted files/folder using the webUI and check the activity
-    Given the following files have been deleted
-      | name                                  |
+    Given user "Alice" has deleted the following files
+      | path                                  |
       | simple-folder/lorem.txt               |
       | lorem.txt                             |
       | folder with space/simple-empty-folder |
