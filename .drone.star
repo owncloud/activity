@@ -1351,11 +1351,13 @@ def owncloudService(version, phpVersion, name = 'server', path = '/var/www/owncl
 			'APACHE_CONFIG_TEMPLATE': 'ssl',
 			'APACHE_SSL_CERT_CN': 'server',
 			'APACHE_SSL_CERT': '/var/www/owncloud/%s.crt' % name,
-			'APACHE_SSL_KEY': '/var/www/owncloud/%s.key' % name
+			'APACHE_SSL_KEY': '/var/www/owncloud/%s.key' % name,
+			'APACHE_LOGGING_PATH': '/dev/null',
 		}
 	else:
 		environment = {
-			'APACHE_WEBROOT': path
+			'APACHE_WEBROOT': path,
+			'APACHE_LOGGING_PATH': '/dev/null',
 		}
 
 	return [{
