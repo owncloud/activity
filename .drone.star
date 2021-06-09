@@ -884,7 +884,7 @@ def acceptance(ctx):
 				suites[suite] = suite
 		else:
 			suites = matrix['suites']
-		
+
 		if 'debugSuites' in matrix and len(matrix['debugSuites']) != 0:
 			if type(matrix['debugSuites']) == "list":
 				suites = {}
@@ -1281,7 +1281,6 @@ def ldapService(ldapNeeded):
 				'LDAP_ORGANISATION': 'owncloud',
 				'LDAP_ADMIN_PASSWORD': 'admin',
 				'LDAP_TLS_VERIFY_CLIENT': 'never',
-				'HOSTNAME': 'ldap',
 			}
 		}]
 
