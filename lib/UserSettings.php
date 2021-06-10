@@ -40,10 +40,10 @@ class UserSettings {
 	/** @var Data */
 	protected $data;
 
-	const EMAIL_SEND_HOURLY = 0;
-	const EMAIL_SEND_DAILY = 1;
-	const EMAIL_SEND_WEEKLY = 2;
-	const EMAIL_SEND_ASAP = 255;
+	public const EMAIL_SEND_HOURLY = 0;
+	public const EMAIL_SEND_DAILY = 1;
+	public const EMAIL_SEND_WEEKLY = 2;
+	public const EMAIL_SEND_ASAP = 255;
 
 	/**
 	 * @param IManager $manager

@@ -163,11 +163,13 @@ class ActivityPage extends OwncloudPage {
 		$timeout_msec = STANDARD_UI_WAIT_TIMEOUT_MILLISEC
 	) {
 		$container = $this->waitTillElementIsNotNull(
-			$this->activityContainerXpath, $timeout_msec
+			$this->activityContainerXpath,
+			$timeout_msec
 		);
 		if ($container === null) {
 			$this->waitTillXpathIsVisible(
-				$this->noActivityIconXpath, $timeout_msec
+				$this->noActivityIconXpath,
+				$timeout_msec
 			);
 		}
 	}

@@ -38,9 +38,11 @@ class EndPoint extends Controller {
 	 * @param IRequest $request
 	 * @param OCSEndPoint $ocsEndPoint
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								OCSEndPoint $ocsEndPoint) {
+	public function __construct(
+		$appName,
+		IRequest $request,
+		OCSEndPoint $ocsEndPoint
+	) {
 		parent::__construct($appName, $request);
 		$this->ocsEndPoint = $ocsEndPoint;
 	}

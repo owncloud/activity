@@ -18,34 +18,34 @@ $l = $_['overwriteL10N'];
 					<td style="font-weight:normal; font-size:0.8em; line-height:1.2em; font-family:verdana,'arial',sans;">
 						<p>
 							<?php print_unescaped(
-								$l->t('Hello %s,', [$_['username']])
-							); ?>
+	$l->t('Hello %s,', [$_['username']])
+); ?>
 						</p>
 						<p>
 							<?php print_unescaped(
-								$l->t(
-										'You are receiving this email because the following things happened at <a href="%s">%s</a>',
-										[$_['owncloud_installation'], $theme->getName()]
-								)
-							) ?>
+	$l->t(
+		'You are receiving this email because the following things happened at <a href="%s">%s</a>',
+		[$_['owncloud_installation'], $theme->getName()]
+	)
+) ?>
 						</p>
 						<ul>
 							<?php foreach ($_['activities'] as $activityData) {
-								?>
+	?>
 							<li>
 								<?php print_unescaped($l->t('%1$s - %2$s', $activityData)); ?>
 							</li>
 							<?php
-							} ?>
+} ?>
 							<?php if ($_['skippedCount']) {
-								?>
+		?>
 							<li>
 								<?php print_unescaped(
-									$l->n('and %n more ', 'and %n more ', $_['skippedCount'])
-								); ?>
+			$l->n('and %n more ', 'and %n more ', $_['skippedCount'])
+		); ?>
 							</li>
 							<?php
-							} ?>
+	} ?>
 						</ul>
 					</td>
 				</tr>

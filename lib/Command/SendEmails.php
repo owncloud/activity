@@ -30,7 +30,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SendEmails extends Command {
-	const BATCH_SIZE = 250;
+	public const BATCH_SIZE = 250;
 
 	/** @var MailQueueHandler */
 	private $mqHandler;
@@ -48,9 +48,11 @@ class SendEmails extends Command {
 	 * @param IConfig $config
 	 * @param ILogger $logger
 	 */
-	public function __construct(MailQueueHandler $mailQueueHandler,
-								   IConfig $config,
-								   ILogger $logger) {
+	public function __construct(
+		MailQueueHandler $mailQueueHandler,
+		IConfig $config,
+		ILogger $logger
+	) {
 		parent::__construct();
 		$this->mqHandler = $mailQueueHandler;
 		$this->config = $config;

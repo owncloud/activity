@@ -71,14 +71,16 @@ class Factory {
 	 * @param IL10N $l
 	 * @param string $user
 	 */
-	public function __construct(IManager $activityManager,
-								IUserManager $userManager,
-								IURLGenerator $urlGenerator,
-								IContactsManager $contactsManager,
-								ViewInfoCache $infoCache,
-								IL10N $l,
-								IGroupManager $groupManager,
-								$user = null) {
+	public function __construct(
+		IManager $activityManager,
+		IUserManager $userManager,
+		IURLGenerator $urlGenerator,
+		IContactsManager $contactsManager,
+		ViewInfoCache $infoCache,
+		IL10N $l,
+		IGroupManager $groupManager,
+		$user = null
+	) {
 		$this->activityManager = $activityManager;
 		$this->userManager = $userManager;
 		$this->urlGenerator = $urlGenerator;

@@ -42,7 +42,7 @@ use OCP\Share;
  * The class to handle the filesystem hooks
  */
 class FilesHooks {
-	const USER_BATCH_SIZE = 50;
+	public const USER_BATCH_SIZE = 50;
 
 	/** @var \OCP\Activity\IManager */
 	protected $manager;
@@ -177,8 +177,12 @@ class FilesHooks {
 			}
 
 			$this->addNotificationsForUser(
-				$user, $userSubject, $userParams,
-				$fileId, $path, true,
+				$user,
+				$userSubject,
+				$userParams,
+				$fileId,
+				$path,
+				true,
 				!empty($filteredStreamUsers[$user]),
 				!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
 				$activityType
@@ -293,8 +297,12 @@ class FilesHooks {
 
 		// New shared user
 		$this->addNotificationsForUser(
-			$shareWith, $actionUser, $subjectParams,
-			(int) $fileSource, $fileTarget, ($itemType === 'file'),
+			$shareWith,
+			$actionUser,
+			$subjectParams,
+			(int) $fileSource,
+			$fileTarget,
+			($itemType === 'file'),
 			$this->userSettings->getUserSetting($shareWith, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($shareWith, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($shareWith, 'setting', 'batchtime') : 0
 		);
@@ -380,8 +388,12 @@ class FilesHooks {
 			}
 
 			$this->addNotificationsForUser(
-				$user, $actionUser, $subjectParams,
-				$fileSource, $path, ($itemType === 'file'),
+				$user,
+				$actionUser,
+				$subjectParams,
+				$fileSource,
+				$path,
+				($itemType === 'file'),
 				!empty($filteredStreamUsersInGroup[$user]),
 				!empty($filteredEmailUsersInGroup[$user]) ? $filteredEmailUsersInGroup[$user] : 0
 			);
@@ -451,8 +463,12 @@ class FilesHooks {
 		}
 
 		$this->addNotificationsForUser(
-			$this->currentUser, $actionSharer, $subjectParams,
-			(int) $fileSource, $path, ($itemType === 'file'),
+			$this->currentUser,
+			$actionSharer,
+			$subjectParams,
+			(int) $fileSource,
+			$path,
+			($itemType === 'file'),
 			$this->userSettings->getUserSetting($this->currentUser, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($this->currentUser, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($this->currentUser, 'setting', 'batchtime') : 0
 		);
@@ -482,8 +498,12 @@ class FilesHooks {
 		}
 
 		$this->addNotificationsForUser(
-			$this->currentUser, $subject, $subjectParams,
-			$fileSource, $path, ($itemType === 'file'),
+			$this->currentUser,
+			$subject,
+			$subjectParams,
+			$fileSource,
+			$path,
+			($itemType === 'file'),
 			$this->userSettings->getUserSetting($this->currentUser, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($this->currentUser, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($this->currentUser, 'setting', 'batchtime') : 0
 		);
@@ -514,8 +534,12 @@ class FilesHooks {
 		}
 
 		$this->addNotificationsForUser(
-			$owner, $subject, $subjectParams,
-			$fileSource, $path, ($itemType === 'file'),
+			$owner,
+			$subject,
+			$subjectParams,
+			$fileSource,
+			$path,
+			($itemType === 'file'),
 			$this->userSettings->getUserSetting($owner, 'stream', Files_Sharing::TYPE_SHARED),
 			$this->userSettings->getUserSetting($owner, 'email', Files_Sharing::TYPE_SHARED) ? $this->userSettings->getUserSetting($owner, 'setting', 'batchtime') : 0
 		);

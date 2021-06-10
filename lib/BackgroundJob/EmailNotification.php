@@ -36,8 +36,8 @@ use OCP\IUserManager;
  * @package OCA\Activity\BackgroundJob
  */
 class EmailNotification extends TimedJob {
-	const CLI_EMAIL_BATCH_SIZE = 500;
-	const WEB_EMAIL_BATCH_SIZE = 25;
+	public const CLI_EMAIL_BATCH_SIZE = 500;
+	public const WEB_EMAIL_BATCH_SIZE = 25;
 
 	/** @var MailQueueHandler */
 	protected $mqHandler;
@@ -60,11 +60,13 @@ class EmailNotification extends TimedJob {
 	 * @param ILogger $logger
 	 * @param bool|null $isCLI
 	 */
-	public function __construct(MailQueueHandler $mailQueueHandler = null,
-								IUserManager $userManager,
-								IConfig $config = null,
-								ILogger $logger = null,
-								$isCLI = null) {
+	public function __construct(
+		MailQueueHandler $mailQueueHandler = null,
+		IUserManager $userManager,
+		IConfig $config = null,
+		ILogger $logger = null,
+		$isCLI = null
+	) {
 		// Run all 15 Minutes
 		$this->setInterval(15 * 60);
 

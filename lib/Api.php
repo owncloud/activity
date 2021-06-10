@@ -27,7 +27,7 @@ namespace OCA\Activity;
  * @package OCA\Activity
  */
 class Api {
-	const DEFAULT_LIMIT = 30;
+	public const DEFAULT_LIMIT = 30;
 
 	public static function get() {
 		$app = new AppInfo\Application();
@@ -45,7 +45,11 @@ class Api {
 		$activities = $data->get(
 			$app->getContainer()->query('GroupHelper'),
 			$app->getContainer()->query('UserSettings'),
-			$user, $start, $count, 'desc', 'all'
+			$user,
+			$start,
+			$count,
+			'desc',
+			'all'
 		);
 		$parser = new PlainTextParser(\OC::$server->getL10NFactory()->get('activity'));
 

@@ -40,9 +40,9 @@ use OCP\Util;
  */
 class MailQueueHandler {
 	/** Number of entries we want to list in the email */
-	const ENTRY_LIMIT = 200;
+	public const ENTRY_LIMIT = 200;
 
-	const POSTGRE_MAX_INT = 2147483647;
+	public const POSTGRE_MAX_INT = 2147483647;
 
 	/** @var array */
 	protected $languages;
@@ -85,13 +85,15 @@ class MailQueueHandler {
 	 * @param IUserManager $userManager
 	 * @param IManager $activityManager
 	 */
-	public function __construct(IDateTimeFormatter $dateFormatter,
-								IDBConnection $connection,
-								DataHelper $dataHelper,
-								IMailer $mailer,
-								IURLGenerator $urlGenerator,
-								IUserManager $userManager,
-								IManager $activityManager) {
+	public function __construct(
+		IDateTimeFormatter $dateFormatter,
+		IDBConnection $connection,
+		DataHelper $dataHelper,
+		IMailer $mailer,
+		IURLGenerator $urlGenerator,
+		IUserManager $userManager,
+		IManager $activityManager
+	) {
 		$this->dateFormatter = $dateFormatter;
 		$this->connection = $connection;
 		$this->dataHelper = $dataHelper;
@@ -118,7 +120,8 @@ class MailQueueHandler {
 			. ' WHERE `amq_latest_send` < ? '
 			. ' GROUP BY `amq_affecteduser`, `email` '
 			. ' ORDER BY `amq_trigger_time` ASC',
-			$limit);
+			$limit
+		);
 		$query->execute([$latestSend]);
 
 		$affectedUsers = [];
@@ -253,12 +256,16 @@ class MailQueueHandler {
 
 			$relativeDateTime = $this->dateFormatter->formatDateTimeRelativeDay(
 				$activity['amq_timestamp'],
-				'long', 'medium',
-				new \DateTimeZone($timezone), $l
+				'long',
+				'medium',
+				new \DateTimeZone($timezone),
+				$l
 			);
 
 			$message = $this->dataHelper->translation(
-				$activity['amq_appid'], $activity['amq_subject'], $this->dataHelper->getParameters($event, 'subject', $activity['amq_subjectparams'])
+				$activity['amq_appid'],
+				$activity['amq_subject'],
+				$this->dataHelper->getParameters($event, 'subject', $activity['amq_subjectparams'])
 			);
 
 			$activityListPlain[] = [
@@ -316,7 +323,8 @@ class MailQueueHandler {
 		$query = $this->connection->prepare(
 			'DELETE FROM `*PREFIX*activity_mq` '
 			. ' WHERE `amq_timestamp` <= ? '
-			. ' AND `amq_affecteduser` IN (' . $placeholders . ')');
+			. ' AND `amq_affecteduser` IN (' . $placeholders . ')'
+		);
 		$query->execute($queryParams);
 	}
 
@@ -336,7 +344,8 @@ class MailQueueHandler {
 			. ' LEFT JOIN `*PREFIX*accounts` ON `user_id` = `amq_affecteduser` '
 			. ' GROUP BY `amq_affecteduser`, `email` '
 			. ' ORDER BY `amq_trigger_time` ASC',
-			$limit);
+			$limit
+		);
 		$query->execute();
 
 		$allUsers = [];

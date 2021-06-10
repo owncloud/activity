@@ -43,10 +43,12 @@ class Parameter implements IParameter {
 	 * @param IFormatter $formatter
 	 * @param string $type
 	 */
-	public function __construct($parameter,
-								IEvent $event,
-								IFormatter $formatter,
-								$type) {
+	public function __construct(
+		$parameter,
+		IEvent $event,
+		IFormatter $formatter,
+		$type
+	) {
 		$this->parameter = $parameter;
 		$this->event = $event;
 		$this->formatter = $formatter;
