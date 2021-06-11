@@ -78,8 +78,8 @@ class SendEmailsTest extends TestCase {
 			]);
 
 		$this->config->method('getUserValueForUsers')->willReturnOnConsecutiveCalls(
-				['anon' => 'en'],
-				['anon' => 'UTC']
+			['anon' => 'en'],
+			['anon' => 'UTC']
 		);
 
 		$this->sendEmails->execute(

@@ -70,15 +70,17 @@ class Settings extends Controller {
 	 * @param IL10N $l10n
 	 * @param IUser $user
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								IConfig $config,
-								ISecureRandom $random,
-								IURLGenerator $urlGenerator,
-								Data $data,
-								UserSettings $userSettings,
-								IL10N $l10n,
-								IUser $user) {
+	public function __construct(
+		$appName,
+		IRequest $request,
+		IConfig $config,
+		ISecureRandom $random,
+		IURLGenerator $urlGenerator,
+		Data $data,
+		UserSettings $userSettings,
+		IL10N $l10n,
+		IUser $user
+	) {
 		parent::__construct($appName, $request);
 		$this->config = $config;
 		$this->random = $random;
@@ -98,15 +100,17 @@ class Settings extends Controller {
 	 * @return DataResponse
 	 */
 	public function personal(
-			$notify_setting_batchtime = UserSettings::EMAIL_SEND_HOURLY,
-			$notify_setting_self = false,
-			$notify_setting_selfemail = false) {
+		$notify_setting_batchtime = UserSettings::EMAIL_SEND_HOURLY,
+		$notify_setting_self = false,
+		$notify_setting_selfemail = false
+	) {
 		$types = $this->data->getNotificationTypes($this->l10n);
 
 		foreach ($types as $type => $data) {
 			if (!\is_array($data) || (isset($data['methods']) && \in_array(IExtension::METHOD_MAIL, $data['methods']))) {
 				$this->config->setUserValue(
-					$this->user->getUID(), 'activity',
+					$this->user->getUID(),
+					'activity',
 					'notify_email_' . $type,
 					(int) $this->request->getParam($type . '_email', false)
 				);
@@ -114,7 +118,8 @@ class Settings extends Controller {
 
 			if (!\is_array($data) || (isset($data['methods']) && \in_array(IExtension::METHOD_STREAM, $data['methods']))) {
 				$this->config->setUserValue(
-					$this->user->getUID(), 'activity',
+					$this->user->getUID(),
+					'activity',
 					'notify_stream_' . $type,
 					(int) $this->request->getParam($type . '_stream', false)
 				);
@@ -131,17 +136,20 @@ class Settings extends Controller {
 		}
 
 		$this->config->setUserValue(
-			$this->user->getUID(), 'activity',
+			$this->user->getUID(),
+			'activity',
 			'notify_setting_batchtime',
 			$email_batch_time
 		);
 		$this->config->setUserValue(
-			$this->user->getUID(), 'activity',
+			$this->user->getUID(),
+			'activity',
 			'notify_setting_self',
 			(int) $notify_setting_self
 		);
 		$this->config->setUserValue(
-			$this->user->getUID(), 'activity',
+			$this->user->getUID(),
+			'activity',
 			'notify_setting_selfemail',
 			(int) $notify_setting_selfemail
 		);

@@ -35,7 +35,7 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 
 class Feed extends Controller {
-	const DEFAULT_PAGE_SIZE = 30;
+	public const DEFAULT_PAGE_SIZE = 30;
 
 	/** @var \OCA\Activity\Data */
 	protected $data;
@@ -81,16 +81,18 @@ class Feed extends Controller {
 	 * @param IConfig $config
 	 * @param string $user
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								Data $data,
-								GroupHelper $helper,
-								UserSettings $settings,
-								IURLGenerator $urlGenerator,
-								IManager $activityManager,
-								IFactory $l10nFactory,
-								IConfig $config,
-								$user) {
+	public function __construct(
+		$appName,
+		IRequest $request,
+		Data $data,
+		GroupHelper $helper,
+		UserSettings $settings,
+		IURLGenerator $urlGenerator,
+		IManager $activityManager,
+		IFactory $l10nFactory,
+		IConfig $config,
+		$user
+	) {
 		parent::__construct($appName, $request);
 		$this->data = $data;
 		$this->helper = $helper;

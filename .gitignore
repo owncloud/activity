@@ -62,6 +62,8 @@ vendor/
 tests/js/package-lock.json
 
 # php-cs-fixer
+.php-cs-fixer.cache
+# old php-cs-fixer v2
 .php_cs.cache
 
 # SonarCloud scanner

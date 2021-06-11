@@ -106,16 +106,18 @@ class OCSEndPoint {
 	 * @param View $view
 	 * @param ViewInfoCache $infoCache
 	 */
-	public function __construct(Data $data,
-								GroupHelper $helper,
-								UserSettings $settings,
-								IRequest $request,
-								IURLGenerator $urlGenerator,
-								IUserSession $userSession,
-								IPreview $preview,
-								IMimeTypeDetector $mimeTypeDetector,
-								View $view,
-								ViewInfoCache $infoCache) {
+	public function __construct(
+		Data $data,
+		GroupHelper $helper,
+		UserSettings $settings,
+		IRequest $request,
+		IURLGenerator $urlGenerator,
+		IUserSession $userSession,
+		IPreview $preview,
+		IMimeTypeDetector $mimeTypeDetector,
+		View $view,
+		ViewInfoCache $infoCache
+	) {
 		$this->data = $data;
 		$this->helper = $helper;
 		$this->settings = $settings;
@@ -197,11 +199,9 @@ class OCSEndPoint {
 				$this->helper,
 				$this->settings,
 				$this->user,
-
 				$this->since,
 				$this->limit,
 				$this->sort,
-
 				$this->filter,
 				$this->objectType,
 				$this->objectId

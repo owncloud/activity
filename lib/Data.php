@@ -408,7 +408,8 @@ class Data {
 			// Then use chunked delete
 			$max = 100000;
 			$query = $this->connection->prepare(
-				'DELETE FROM `*PREFIX*activity`' . $sqlWhere . " LIMIT " . $max);
+				'DELETE FROM `*PREFIX*activity`' . $sqlWhere . " LIMIT " . $max
+			);
 			do {
 				$query->execute($sqlParameters);
 				$deleted = $query->rowCount();
@@ -416,7 +417,8 @@ class Data {
 		} else {
 			// Dont use chunked delete - let the DB handle the large row count natively
 			$query = $this->connection->prepare(
-				'DELETE FROM `*PREFIX*activity`' . $sqlWhere);
+				'DELETE FROM `*PREFIX*activity`' . $sqlWhere
+			);
 			$query->execute($sqlParameters);
 		}
 	}

@@ -89,7 +89,13 @@ class DataHelper {
 
 		// Allow apps to correctly translate their activities
 		$translation = $this->activityManager->translate(
-			$app, $text, $preparedParams, false, false, $this->l->getLanguageCode());
+			$app,
+			$text,
+			$preparedParams,
+			false,
+			false,
+			$this->l->getLanguageCode()
+		);
 
 		if ($translation !== false) {
 			return $translation;

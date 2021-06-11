@@ -48,11 +48,13 @@ class Activities extends Controller {
 	 * @param Data $data
 	 * @param Navigation $navigation
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								IConfig $config,
-								Data $data,
-								Navigation $navigation) {
+	public function __construct(
+		$appName,
+		IRequest $request,
+		IConfig $config,
+		Data $data,
+		Navigation $navigation
+	) {
 		parent::__construct($appName, $request);
 		$this->data = $data;
 		$this->config = $config;

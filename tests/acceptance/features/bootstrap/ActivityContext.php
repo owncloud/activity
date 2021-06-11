@@ -46,7 +46,9 @@ class ActivityContext implements Context {
 	 * @return void
 	 */
 	public function activityWithIndexShouldMatch(
-		$index, $user, TableNode $expectedProperties
+		$index,
+		$user,
+		TableNode $expectedProperties
 	) {
 		$user = $this->featureContext->getActualUsername($user);
 		$fullUrl = $this->featureContext->getBaseUrl() .
@@ -57,18 +59,23 @@ class ActivityContext implements Context {
 			$this->featureContext->getPasswordForUser($user)
 		);
 		PHPUnit\Framework\Assert::assertEquals(
-			200, $response->getStatusCode()
+			200,
+			$response->getStatusCode()
 		);
 		$responseDecoded = \json_decode(
-			$response->getBody()->getContents(), true
+			$response->getBody()->getContents(),
+			true
 		);
 		$activityData = $responseDecoded['ocs']['data'][$index - 1];
 		foreach ($expectedProperties->getRowsHash() as $key => $value) {
 			PHPUnit\Framework\Assert::assertArrayHasKey(
-				$key, $activityData
+				$key,
+				$activityData
 			);
 			$value = $this->featureContext->substituteInLineCodes(
-				$value, $user, ['preg_quote' => ['/']]
+				$value,
+				$user,
+				['preg_quote' => ['/']]
 			);
 			PHPUnit\Framework\Assert::assertNotFalse(
 				(bool)\preg_match($value, $activityData[$key]),
