@@ -436,7 +436,7 @@ class FilesHooks {
 		if ($isSharing) {
 			$actionSharer = 'shared_link_self';
 			$actionOwner = 'reshared_link_by';
-		} elseif ($this->currentUser !== $linkOwner) {
+		} elseif ($shareExpired === true) {
 			// Link expired
 			$actionSharer = 'link_expired';
 			$actionOwner = 'link_by_expired';
