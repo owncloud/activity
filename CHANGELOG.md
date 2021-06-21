@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Add shareExpire-param to indicate if a share was removed due to its expiry - [#944](https://github.com/owncloud/activity/issues/944)
 - Automations in activity stream - [#942](https://github.com/owncloud/activity/issues/942)
 
+### Fixed
+
+- Expired public share has wrong activity message - [#965](https://github.com/owncloud/activity/issues/965)
 
 ## [2.6.0] - 2020-10-16
 
