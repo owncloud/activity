@@ -79,6 +79,7 @@ class Hooks {
 	public static function onRemoteShareAccepted($params) {
 		$shareId = $params->getArgument('shareId');
 		$fileId = $params->getArgument('fileId');
+		$shareRecipient = $params->getArgument('shareRecipient');
 
 		if ($shareId === null || $fileId === null) {
 			return;
@@ -91,9 +92,17 @@ class Hooks {
 			->set('object_id', $queryBuilder->createNamedParameter($fileId))
 			->where($queryBuilder->expr()->eq('subject', $queryBuilder->createParameter('subject')))
 			->andWhere(
+				$queryBuilder->expr()->eq('affecteduser', $queryBuilder->createParameter('affecteduser'))
+			)
+			->andWhere(
+				$queryBuilder->expr()->like('object_id', $queryBuilder->createParameter('object_id'))
+			)
+			->andWhere(
 				$queryBuilder->expr()->like('subjectparams', $queryBuilder->createParameter('subjectparams'))
 			)
 			->setParameter('subject', Activity::SUBJECT_REMOTE_SHARE_RECEIVED)
+			->setParameter('affecteduser', $shareRecipient)
+			->setParameter('object_id', 0)
 			->setParameter('subjectparams', '%{"shareId":"' . $shareId . '"}%');
 
 		$queryBuilder->execute();
