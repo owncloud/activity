@@ -211,7 +211,10 @@ class Data {
 		if ($filter === 'self') {
 			$query->andWhere($query->expr()->eq('user', $query->createNamedParameter($user)));
 		} elseif ($filter === 'by') {
-			$query->andWhere($query->expr()->neq('user', $query->createNamedParameter($user)));
+			$query->andWhere($query->expr()->orX(
+				$query->expr()->neq('user', $query->createNamedParameter($user)),
+				$query->expr()->isNull('user')
+			));
 		} elseif ($filter === 'all' && !$userSettings->getUserSetting($user, 'setting', 'self')) {
 			$query->andWhere($query->expr()->orX(
 				$query->expr()->neq('user', $query->createNamedParameter($user)),
