@@ -298,6 +298,8 @@ class Application extends App {
 		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
 		$eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', ['OCA\Activity\FilesHooksStatic', 'onLoadFilesAppScripts']);
 
+		$eventDispatcher->addListener('remoteshare.accepted', ['OCA\Activity\Hooks', 'onRemoteShareAccepted']);
+
 		Util::connectHook('OC_User', 'post_deleteUser', 'OCA\Activity\Hooks', 'deleteUser');
 
 		$this->registerFilesActivity();
