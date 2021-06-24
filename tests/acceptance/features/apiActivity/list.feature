@@ -598,3 +598,131 @@ Feature: List activity
       | object_type      | /^files$/             |
       | typeicon         | /^icon-shared$/       |
       | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file> with you$/|
+
+  Scenario: Check activity list after share is expired for user share
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | Alice    |
+      | Brian    |
+    And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
+    When user "Alice" creates a share using the sharing API with settings
+      | path       | /lorem.txt |
+      | shareType  | user       |
+      | shareWith  | Brian      |
+      | expireDate | +15 days   |
+    And the administrator expires the last created share using the testing API
+    # Testing api is used above so to tigger the latest list of activity
+    And user "Alice" gets all shares shared by him using the sharing API
+    Then the activity number 1 of user "Alice" should match these properties:
+      | type             | /^shared$/                                                                                                                                                                                        |
+      | user             | /^auto:automation$/                                                                                                                                                                               |
+      | affecteduser     | /^Alice$/                                                                                                                                                                                         |
+      | app              | /^files_sharing$/                                                                                                                                                                                 |
+      | subject          | /^unshared_user_self$/                                                                                                                                                                           |
+      | object_name      | /^\/lorem.txt$/                                                                                                                                                                                   |
+      | object_type      | /^files$/                                                                                                                                                                                         |
+      | subject_prepared | /^You removed the share of <user display-name="auto\:automation">auto\:automation<\/user> for <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file>$/ |
+    And the activity number 2 of user "Alice" should match these properties:
+      | type             | /^shared$/                                                                                                                                                                              |
+      | user             | /^Alice$/                                                                                                                                                                               |
+      | affecteduser     | /^Alice$/                                                                                                                                                                               |
+      | app              | /^files_sharing$/                                                                                                                                                                       |
+      | subject          | /^shared_user_self$/                                                                                                                                                                    |
+      | object_name      | /^\/lorem.txt$/                                                                                                                                                                         |
+      | object_type      | /^files$/                                                                                                                                                                               |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file> with <user display-name=\"Brian Murphy\">Brian<\/user>$/ |
+    And the activity number 1 of user "Brian" should match these properties:
+      | type             | /^shared$/                                                                                                                                  |
+      | user             | /^auto:automation$/                                                                                                                         |
+      | affecteduser     | /^Brian$/                                                                                                                                   |
+      | app              | /^files_sharing$/                                                                                                                           |
+      | subject          | /^unshared_by$/                                                                                                                             |
+      | object_name      | /^\/lorem.txt$/                                                                                                                             |
+      | object_type      | /^files$/                                                                                                                                   |
+      | subject_prepared | /^The share for <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file> expired$/ |
+    And the last share id should not be included in the response
+
+  Scenario: Check activity list after share is expired for group share
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | Alice    |
+      | Brian    |
+    And group "grp1" has been created
+    And user "Brian" has been added to group "grp1"
+    And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
+    When user "Alice" creates a share using the sharing API with settings
+      | path       | /lorem.txt |
+      | shareType  | group      |
+      | shareWith  | grp1       |
+      | expireDate | +15 days   |
+    And the administrator expires the last created share using the testing API
+    # Testing api is used above so to tigger the latest list of activity
+    And user "Alice" gets all shares shared by him using the sharing API
+    Then the activity number 1 of user "Alice" should match these properties:
+      | type             | /^shared$/                                                                                                                                                                                        |
+      | user             | /^auto:automation$/                                                                                                                                                                               |
+      | affecteduser     | /^Alice$/                                                                                                                                                                                         |
+      | app              | /^files_sharing$/                                                                                                                                                                                 |
+      | subject          | /^unshared_group_self$/                                                                                                                                                                           |
+      | object_name      | /^\/lorem.txt$/                                                                                                                                                                                   |
+      | object_type      | /^files$/                                                                                                                                                                                         |
+      | subject_prepared | /^You removed the share of group <parameter>auto\:automation<\/parameter> for <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file>$/ |
+    And the activity number 2 of user "Alice" should match these properties:
+      | type         | /^shared$/            |
+      | user         | /^Alice$/             |
+      | affecteduser | /^Alice$/             |
+      | app          | /^files_sharing$/     |
+      | subject      | /^shared_group_self$/ |
+      | object_name  | /^\/lorem.txt$/       |
+      | object_type  | /^files$/             |
+    And the activity number 1 of user "Brian" should match these properties:
+      | type             | /^shared$/                                                                                                                                  |
+      | user             | /^auto:automation$/                                                                                                                         |
+      | affecteduser     | /^Brian$/                                                                                                                                   |
+      | app              | /^files_sharing$/                                                                                                                           |
+      | subject          | /^unshared_by$/                                                                                                                             |
+      | object_name      | /^\/lorem.txt$/                                                                                                                             |
+      | object_type      | /^files$/                                                                                                                                   |
+      | subject_prepared | /^The share for <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file> expired$/ |
+    And the activity number 2 of user "Brian" should match these properties:
+      | type             | /^shared$/                                                                                                                                                                           |
+      | user             | /^Alice$/                                                                                                                                                                            |
+      | affecteduser     | /^Brian$/                                                                                                                                                                            |
+      | app              | /^files_sharing$/                                                                                                                                                                    |
+      | subject          | /^shared_with_by$/                                                                                                                                                                   |
+      | object_name      | /^\/lorem.txt$/                                                                                                                                                                      |
+      | object_type      | /^files$/                                                                                                                                                                            |
+      | typeicon         | /^icon-shared$/                                                                                                                                                                      |
+      | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem.txt" id=\"\d+\">lorem.txt<\/file> with you$/ |
+    And the last share id should not be included in the response
+
+  Scenario: Check activity list after share is expired for public link share
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | Alice    |
+    And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
+    When user "Alice" has created a public link share with settings
+      | path       | /lorem.txt |
+      | expireDate | +15 days   |
+    And the administrator expires the last created share using the testing API
+    # Testing api is used above so to tigger the latest list of activity
+    And user "Alice" gets all shares shared by him using the sharing API
+    Then the activity number 1 of user "Alice" should match these properties:
+      | type             | /^shared$/                                                                                                                                         |
+      | user             | /^auto:automation$/                                                                                                                                |
+      | affecteduser     | /^Alice$/                                                                                                                                          |
+      | app              | /^files_sharing$/                                                                                                                                  |
+      | subject          | /^link_expired$/                                                                                                                                   |
+      | object_name      | /^\/lorem.txt$/                                                                                                                                    |
+      | object_type      | /^files$/                                                                                                                                          |
+      | subject_prepared | /^Your public link for <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file> expired$/ |
+    And the activity number 2 of user "Alice" should match these properties:
+      | type             | /^shared$/                                                                                                                                |
+      | user             | /^Alice$/                                                                                                                                 |
+      | affecteduser     | /^Alice$/                                                                                                                                 |
+      | app              | /^files_sharing$/                                                                                                                         |
+      | subject          | /^shared_link_self$/                                                                                                                      |
+      | object_name      | /^\/lorem.txt$/                                                                                                                           |
+      | object_type      | /^files$/                                                                                                                                 |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file> via link$/ |
+    And the last share id should not be included in the response
