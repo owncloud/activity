@@ -754,4 +754,10 @@ class GroupHelperTest extends TestCase {
 		$instance = $helper->getEventFromArray($activity);
 		$this->assertSame($event, $instance);
 	}
+
+	public function testGetSomethingElse() {
+		$helper = $this->getHelper();
+		$text = $helper->getSomethingElse(false);
+		$this->assertSame('it is false', $text);
+	}
 }

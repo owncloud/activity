@@ -86,7 +86,7 @@ class GroupHelper {
 		$activity['object_id'] = (int) $activity['object_id'];
 		$activity['object_name'] = (string) $activity['file'];
 		unset($activity['priority'], $activity['file']);
-		
+
 		$event = $this->getEventFromArray(\array_merge($activity, [
 			'subjectparams' => [],
 			'messageparams' => [],
@@ -248,5 +248,16 @@ class GroupHelper {
 			->setLink($activity['link']);
 
 		return $event;
+	}
+
+	/**
+	 * @param bool $someParameter
+	 * @return string
+	 */
+	public function getSomethingElse(bool $someParameter) {
+		if ($someParameter) {
+			return "it is true";
+		}
+		return "it is false";
 	}
 }
