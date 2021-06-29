@@ -1104,6 +1104,22 @@ def acceptance(ctx):
 	return pipelines
 
 def sonarAnalysis(ctx, phpVersion = '7.4'):
+	sonar_env = {
+			"SONAR_TOKEN": {
+				"from_secret": "sonar_token",
+			},
+			'SONAR_SCANNER_OPTS': '-Xdebug'
+		}
+
+	if ctx.build.event == "pull_request":
+		sonar_env.update({
+			"SONAR_PULL_REQUEST_BASE": "%s" % (ctx.build.target),
+			"SONAR_PULL_REQUEST_BRANCH": "%s" % (ctx.build.source),
+			"SONAR_PULL_REQUEST_KEY": "%s" % (ctx.build.ref.replace("refs/pull/", "").split("/")[0]),
+		})
+
+	repo_slug = ctx.build.source_repo if ctx.build.source_repo else ctx.repo.slug
+
 	result = {
 		'kind': 'pipeline',
 		'type': 'docker',
@@ -1112,7 +1128,19 @@ def sonarAnalysis(ctx, phpVersion = '7.4'):
 			'base': '/var/www/owncloud',
 			'path': 'server/apps/%s' % config['app']
 		},
-		'steps':
+		'clone': {
+			'disable': True, # Sonarcloud does not apply issues on already merged branch
+		},
+		'steps': [
+			{
+				"name": "clone",
+				"image": "owncloudci/alpine:latest",
+				"commands": [
+					"git clone https://github.com/%s.git ." % repo_slug,
+					"git checkout $DRONE_COMMIT",
+				],
+			},
+		] +
 			cacheRestore() +
 			composerInstall(phpVersion) +
 			installCore('daily-master-qa', 'sqlite', False) +
@@ -1143,15 +1171,7 @@ def sonarAnalysis(ctx, phpVersion = '7.4'):
 				'name': 'sonarcloud',
 				'image': 'sonarsource/sonar-scanner-cli',
 				'pull': 'always',
-				'environment': {
-					'SONAR_TOKEN': {
-						'from_secret': 'sonar_token'
-					},
-					'SONAR_PULL_REQUEST_BASE': 'master' if ctx.build.event == 'pull_request' else '',
-					'SONAR_PULL_REQUEST_BRANCH': ctx.build.source if ctx.build.event == 'pull_request' else '',
-					'SONAR_PULL_REQUEST_KEY': ctx.build.ref.replace("refs/pull/", "").split("/")[0] if ctx.build.event == 'pull_request' else '',
-					'SONAR_SCANNER_OPTS': '-Xdebug'
-				},
+				'environment': sonar_env,
 				'when': {
 					'instance': [
 						'drone.owncloud.services',
@@ -1175,6 +1195,7 @@ def sonarAnalysis(ctx, phpVersion = '7.4'):
 		'depends_on': [],
 		'trigger': {
 			'ref': [
+				'refs/heads/master',
 				'refs/pull/**',
 				'refs/tags/**'
 			]
