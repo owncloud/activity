@@ -262,6 +262,8 @@ class MailQueueHandler {
 				$l
 			);
 
+			$a  = $this->dataHelper->getParameters($event, 'subject', $activity['amq_subjectparams']);
+
 			$message = $this->dataHelper->translation(
 				$activity['amq_appid'],
 				$activity['amq_subject'],
