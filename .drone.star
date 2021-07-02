@@ -901,7 +901,8 @@ def acceptance(ctx):
 		'pullRequestAndCron': 'nightly',
 		'skip': False,
 		'debugSuites': [],
-		'skipExceptParts': []
+		'skipExceptParts': [],
+		'earlyFail': True,
 	}
 
 	if 'defaults' in config:
@@ -936,6 +937,14 @@ def acceptance(ctx):
 
 			if params['skip']:
 				continue
+
+			# switch off earlyFail if the PR title contains full-ci
+			if ("full-ci" in ctx.build.title.lower()):
+				params["earlyFail"] = False
+
+			# switch off earlyFail when running cron builds (for example, nightly CI)
+			if (ctx.build.event == "cron"):
+				params["earlyFail"] = False
 
 			if isAPI or isCLI:
 				params['browsers'] = ['']
@@ -1065,7 +1074,7 @@ def acceptance(ctx):
 								'make %s' % makeParameter
 							]
 						}),
-					] + testConfig['extraTeardown'],
+					] + testConfig['extraTeardown'] + buildGithubCommentForBuildStopped(name, params['earlyFail']) + githubComment(params['earlyFail']) + stopBuild(ctx, params['earlyFail']),
 					'services':
 						databaseService(testConfig['database']) +
 						browserService(testConfig['browser']) +
@@ -1791,3 +1800,80 @@ def buildTestConfig(params):
 							config['runPart'] = runPart
 							configs.append(config)
 	return configs
+
+def stopBuild(ctx, earlyFail):
+    if (earlyFail):
+        return [{
+            "name": "stop-build",
+            "image": "drone/cli:alpine",
+            "pull": "always",
+            "environment": {
+                "DRONE_SERVER": "https://drone.owncloud.com",
+                "DRONE_TOKEN": {
+                    "from_secret": "drone_token",
+                },
+            },
+            "commands": [
+                "drone build stop owncloud/%s ${DRONE_BUILD_NUMBER}" % ctx.repo.name,
+            ],
+            "when": {
+                "status": [
+                    "failure",
+                ],
+                "event": [
+                    "pull_request",
+                ],
+            },
+        }]
+
+    else:
+        return []
+
+def buildGithubCommentForBuildStopped(alternateSuiteName, earlyFail):
+    if (earlyFail):
+        return [{
+            "name": "build-github-comment-buildStop",
+            "image": "owncloud/ubuntu:16.04",
+            "pull": "always",
+            "commands": [
+                'echo ":boom: Acceptance tests pipeline <strong>%s</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}/1\\n" >> /drone/src/comments.file' % alternateSuiteName,
+            ],
+            "when": {
+                 "status": [
+                     "failure",
+                 ],
+                "event": [
+                    "pull_request",
+                ],
+            },
+        }]
+
+    else:
+        return []
+
+def githubComment(earlyFail):
+    if (earlyFail):
+        return [{
+            "name": "github-comment",
+            "image": "jmccann/drone-github-comment:1",
+            "pull": "if-not-exists",
+            "settings": {
+                "message_file": "/drone/src/comments.file",
+            },
+            "environment": {
+                "GITHUB_TOKEN": {
+                    "from_secret": "github_token",
+                },
+            },
+            "when": {
+                "status": [
+                    "failure",
+                ],
+                "event": [
+                    "pull_request",
+                ],
+            },
+        }]
+
+    else:
+        return []
