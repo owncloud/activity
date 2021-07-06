@@ -46,7 +46,7 @@ Feature: List activity
       | object_name      | /^\/FOLDER$/          |
       | object_type      | /^files$/             |
       | typeicon         | /^icon-delete-color$/ |
-      | subject_prepared | /^You wrong <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\.d\d+&view=trashbin\" id=\"\d+\">FOLDER<\/file>$/ |
+      | subject_prepared | /^You abc <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\.d\d+&view=trashbin\" id=\"\d+\">FOLDER<\/file>$/ |
 
   @skipOnOcV10.2
   Scenario: folder restore should be listed in the activity list
