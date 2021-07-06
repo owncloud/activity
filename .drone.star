@@ -134,6 +134,7 @@ config = {
 }
 
 def main(ctx):
+
 	before = beforePipelines(ctx)
 
 	coverageTests = coveragePipelines(ctx)
@@ -1836,7 +1837,7 @@ def buildGithubCommentForBuildStopped(alternateSuiteName, earlyFail):
             "image": "owncloud/ubuntu:16.04",
             "pull": "always",
             "commands": [
-                'echo ":boom: Acceptance tests pipeline <strong>%s</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}/1\\n" >> /drone/src/comments.file' % alternateSuiteName,
+                'echo ":boom: Acceptance tests pipeline <strong>%s</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}/1\\n" >> /var/www/owncloud/comments.file' % alternateSuiteName,
             ],
             "when": {
                  "status": [
@@ -1858,7 +1859,7 @@ def githubComment(earlyFail):
             "image": "jmccann/drone-github-comment:1",
             "pull": "if-not-exists",
             "settings": {
-                "message_file": "/drone/src/comments.file",
+                "message_file": "/var/www/owncloud/comments.file",
             },
             "environment": {
                 "GITHUB_TOKEN": {
