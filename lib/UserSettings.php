@@ -40,6 +40,9 @@ class UserSettings {
 	/** @var Data */
 	protected $data;
 
+	/** @var int */
+	protected $random;
+
 	public const EMAIL_SEND_HOURLY = 0;
 	public const EMAIL_SEND_DAILY = 1;
 	public const EMAIL_SEND_WEEKLY = 2;
@@ -54,6 +57,14 @@ class UserSettings {
 		$this->manager = $manager;
 		$this->config = $config;
 		$this->data = $data;
+		$this->random = 42;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getRandom(): int {
+		return $this->random;
 	}
 
 	/**
