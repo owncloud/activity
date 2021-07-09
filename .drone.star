@@ -1754,7 +1754,7 @@ def setupElasticSearch(esVersion):
 		'commands': [
 			'cd %s' % dir["server"],
 			'php occ config:app:set search_elastic servers --value elasticsearch',
-			'wait-for-it -t 60 elasticsearch:9200',
+			'wait-for-it -t 600 elasticsearch:9200',
 			'php occ search:index:reset --force'
 		]
 	}]
