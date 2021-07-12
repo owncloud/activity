@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased] - XXXX-XX-XX
 
+
+
+## [2.6.1] - 2021-06-17
+
+### Changed
+
+- Add shareExpire-param to indicate if a share was removed due to its expiry - [#944](https://github.com/owncloud/activity/issues/944)
+- Automations in activity stream - [#942](https://github.com/owncloud/activity/issues/942)
+
+### Fixed
+
+- Expired public share has wrong activity message - [#965](https://github.com/owncloud/activity/issues/965)
+
+
 ## [2.6.0] - 2020-10-16
 
 ### Added
@@ -117,7 +131,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.6.0...master
+
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.6.1...master
+[2.6.1]: https://github.com/owncloud/activity/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/owncloud/activity/compare/v2.5.4...v2.6.0
 [2.5.4]: https://github.com/owncloud/activity/compare/v2.5.3...v2.5.4
 [2.5.3]: https://github.com/owncloud/activity/compare/v2.5.2...v2.5.3
