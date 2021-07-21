@@ -1129,7 +1129,7 @@ def acceptance(ctx):
 						(installFederated(testConfig['server'], testConfig['phpVersion'], testConfig['logLevel'], testConfig['database'], federationDbSuffix) + owncloudLog('federated') if testConfig['federatedServerNeeded'] else []) +
 						installApp(ctx, testConfig['phpVersion']) +
 						installExtraApps(testConfig['phpVersion'], testConfig['extraApps']) +
-						setupServerAndApp(ctx, testConfig['phpVersion'], testConfig['logLevel']) +
+						setupServerAndApp(ctx, testConfig['phpVersion'], testConfig['logLevel'], testConfig['federatedServerNeeded']) +
 						owncloudLog('server') +
 						setupCeph(testConfig['cephS3']) +
 						setupScality(testConfig['scalityS3']) +
@@ -1672,7 +1672,7 @@ def installApp(ctx, phpVersion):
 		]
 	}]
 
-def setupServerAndApp(ctx, phpVersion, logLevel):
+def setupServerAndApp(ctx, phpVersion, logLevel, federatedServerNeeded = False):
 	return [{
 		'name': 'setup-server-%s' % ctx.repo.name,
 		'image': 'owncloudci/php:%s' % phpVersion,
@@ -1685,6 +1685,7 @@ def setupServerAndApp(ctx, phpVersion, logLevel):
 			'php occ a:l',
 			'php occ config:system:set trusted_domains 1 --value=server',
 			'php occ log:manage --level %s' % logLevel,
+			'php occ config:system:set csrf.disabled --value=true' if federatedServerNeeded else ''
 		]
 	}]
 
