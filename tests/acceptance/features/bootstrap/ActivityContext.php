@@ -55,6 +55,7 @@ class ActivityContext implements Context {
 				   "/index.php/apps/activity/api/v2/activity";
 		$response = HttpRequestHelper::get(
 			$fullUrl,
+			$this->featureContext->getStepLineRef(),
 			$user,
 			$this->featureContext->getPasswordForUser($user)
 		);
