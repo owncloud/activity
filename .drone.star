@@ -230,13 +230,13 @@ def codestyle(ctx):
 
     if type(codestyleConfig) == "bool":
         if codestyleConfig:
-            # the config has 'codestyle' true, so specify an empty dict that will get the defaults
+            # the config has "codestyle" true, so specify an empty dict that will get the defaults
             codestyleConfig = {}
         else:
             return pipelines
 
     if len(codestyleConfig) == 0:
-        # 'codestyle' is an empty dict, so specify a single section that will get the defaults
+        # "codestyle" is an empty dict, so specify a single section that will get the defaults
         codestyleConfig = {"doDefault": {}}
 
     for category, matrix in codestyleConfig.items():
@@ -346,13 +346,13 @@ def phpstan(ctx):
 
     if type(phpstanConfig) == "bool":
         if phpstanConfig:
-            # the config has 'phpstan' true, so specify an empty dict that will get the defaults
+            # the config has "phpstan" true, so specify an empty dict that will get the defaults
             phpstanConfig = {}
         else:
             return pipelines
 
     if len(phpstanConfig) == 0:
-        # 'phpstan' is an empty dict, so specify a single section that will get the defaults
+        # "phpstan" is an empty dict, so specify a single section that will get the defaults
         phpstanConfig = {"doDefault": {}}
 
     for category, matrix in phpstanConfig.items():
@@ -420,13 +420,13 @@ def phan(ctx):
 
     if type(phanConfig) == "bool":
         if phanConfig:
-            # the config has 'phan' true, so specify an empty dict that will get the defaults
+            # the config has "phan" true, so specify an empty dict that will get the defaults
             phanConfig = {}
         else:
             return pipelines
 
     if len(phanConfig) == 0:
-        # 'phan' is an empty dict, so specify a single section that will get the defaults
+        # "phan" is an empty dict, so specify a single section that will get the defaults
         phanConfig = {"doDefault": {}}
 
     for category, matrix in phanConfig.items():
@@ -496,7 +496,7 @@ def build(ctx):
 
     if type(matrix) == "bool":
         if matrix:
-            # the config has 'build' true, so specify an empty dict that will get the defaults
+            # the config has "build" true, so specify an empty dict that will get the defaults
             matrix = {}
         else:
             return pipelines
@@ -587,7 +587,7 @@ def javascript(ctx, withCoverage):
 
     if type(matrix) == "bool":
         if matrix:
-            # the config has 'javascript' true, so specify an empty dict that will get the defaults
+            # the config has "javascript" true, so specify an empty dict that will get the defaults
             matrix = {}
         else:
             return pipelines
@@ -750,7 +750,7 @@ def phpTests(ctx, testType, withCoverage):
             filesPrimaryS3NeededForScality = scalityS3Params["filesPrimaryS3Needed"] if "filesPrimaryS3Needed" in scalityS3Params else True
 
         if ((ctx.repo.name != "files_primary_s3") and (filesPrimaryS3NeededForCeph or filesPrimaryS3NeededForScality)):
-            # If we are not already 'files_primary_s3' and we need S3 storage, then install the 'files_primary_s3' app
+            # If we are not already "files_primary_s3" and we need S3 storage, then install the "files_primary_s3" app
             extraAppsDict = {
                 "files_primary_s3": "composer install",
             }
@@ -958,11 +958,11 @@ def acceptance(ctx):
                         "commands": [
                             "cd /var/www/owncloud/server/apps/files_primary_s3",
                             "cp tests/drone/scality.config.php /var/www/owncloud/server/config",
-                            'sed -i -e "s/owncloud/owncloud-acceptance-tests-$DRONE_BUILD_NUMBER-$DRONE_STAGE_NUMBER/" /var/www/owncloud/server/config/scality.config.php',
-                            'sed -i -e "s/accessKey1/$SCALITY_KEY/" /var/www/owncloud/server/config/scality.config.php',
-                            'sed -i -e "s/verySecretKey1/$SCALITY_SECRET_ESCAPED/" /var/www/owncloud/server/config/scality.config.php',
-                            'sed -i -e "s/http/https/" /var/www/owncloud/server/config/scality.config.php',
-                            'sed -i -e "s/scality:8000/%s/" /var/www/owncloud/server/config/scality.config.php' % params["externalScality"]["externalServerUrl"],
+                            "sed -i -e 's/owncloud/owncloud-acceptance-tests-$DRONE_BUILD_NUMBER-$DRONE_STAGE_NUMBER/' /var/www/owncloud/server/config/scality.config.php",
+                            "sed -i -e 's/accessKey1/$SCALITY_KEY/' /var/www/owncloud/server/config/scality.config.php",
+                            "sed -i -e 's/verySecretKey1/$SCALITY_SECRET_ESCAPED/' /var/www/owncloud/server/config/scality.config.php",
+                            "sed -i -e 's/http/https/' /var/www/owncloud/server/config/scality.config.php",
+                            "sed -i -e 's/scality:8000/%s/' /var/www/owncloud/server/config/scality.config.php" % params["externalScality"]["externalServerUrl"],
                             "cd /var/www/owncloud/server/",
                             "php occ s3:create-bucket owncloud-acceptance-tests-$DRONE_BUILD_NUMBER-$DRONE_STAGE_NUMBER --accept-warning",
                             "cd /var/www/owncloud/testrunner/apps/files_primary_s3",
@@ -1031,7 +1031,7 @@ def acceptance(ctx):
                 filesPrimaryS3NeededForScality = scalityS3Params["filesPrimaryS3Needed"] if "filesPrimaryS3Needed" in scalityS3Params else True
 
             if ((ctx.repo.name != "files_primary_s3") and (filesPrimaryS3NeededForCeph or filesPrimaryS3NeededForScality)):
-                # If we are not already 'files_primary_s3' and we need S3 object storage, then install the 'files_primary_s3' app
+                # If we are not already "files_primary_s3" and we need S3 object storage, then install the "files_primary_s3" app
                 extraAppsDict = {
                     "files_primary_s3": "composer install",
                 }
@@ -1489,11 +1489,11 @@ def owncloudService(version, phpVersion, name, path, ssl, xForwardedFor):
         "commands": ([
             "a2enmod remoteip",
             "cd /etc/apache2",
-            'echo "RemoteIPHeader X-Forwarded-For" >> apache2.conf',
+            "echo 'RemoteIPHeader X-Forwarded-For' >> apache2.conf",
             # This replaces the first occurrence of "%h with "%a in apache2.conf file telling Apache to log the client
             # IP as recorded by mod_remoteip (%a) rather than hostname (%h). For more info check this out:
             # https://www.digitalocean.com/community/questions/get-client-public-ip-on-apache-server-used-behind-load-balancer
-            'sed -i \'0,/"%h/s//"%a/\' apache2.conf',
+            "sed -i '0,/\"%h/s//\"%a/' apache2.conf",
         ] if xForwardedFor else []) + [
             "/usr/local/bin/apachectl -e debug -D FOREGROUND",
         ],
@@ -1810,7 +1810,7 @@ def installFederated(federatedServerVersion, phpVersion, logLevel, db, dbSuffix 
             "image": "owncloudci/php:%s" % phpVersion,
             "pull": "always",
             "commands": [
-                'echo "export TEST_SERVER_FED_URL=http://federated" > %s/saved-settings.sh' % dir["base"],
+                "echo 'export TEST_SERVER_FED_URL=http://federated' > %s/saved-settings.sh" % dir["base"],
                 "cd %s" % dir["federated"],
                 "php occ a:l",
                 "php occ a:e testing",
@@ -1897,7 +1897,7 @@ def buildGithubCommentForBuildStopped(alternateSuiteName, earlyFail):
             "image": "owncloud/ubuntu:16.04",
             "pull": "always",
             "commands": [
-                'echo ":boom: Acceptance tests pipeline <strong>%s</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}/1\\n" >> %s/comments.file' % (alternateSuiteName, dir["base"]),
+                "echo ':boom: Acceptance tests pipeline <strong>%s</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}/1\\n' >> %s/comments.file" % (alternateSuiteName, dir["base"]),
             ],
             "when": {
                 "status": [
