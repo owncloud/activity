@@ -1703,7 +1703,18 @@ def installApp(ctx, phpVersion):
     if "appInstallCommand" not in config:
         return []
 
-    return [{
+    return [
+        {
+            "name": "install-app-js-%s" % config["app"],
+            "image": "owncloudci/nodejs:%s" % config["nodeVersion"],
+            "pull": "always",
+            "commands": [
+                "cd /var/www/owncloud/server/apps/%s" % config["app"],
+                "make install-js-deps",
+                "make build-dev",
+            ],
+        },
+    ] if config["buildJsDeps"] else [] + [{
         "name": "install-app-%s" % ctx.repo.name,
         "image": "owncloudci/php:%s" % phpVersion,
         "pull": "always",
