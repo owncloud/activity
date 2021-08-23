@@ -1704,6 +1704,11 @@ def installApp(ctx, phpVersion):
     if "appInstallCommand" not in config:
         return []
 
+    if "buildJsDeps" not in config:
+        installJsDeps = False
+    else:
+        installJsDeps = config["buildJsDeps"]
+
     return [
         {
             "name": "install-app-js-%s" % config["app"],
@@ -1715,7 +1720,7 @@ def installApp(ctx, phpVersion):
                 "make build-dev",
             ],
         },
-    ] if config["buildJsDeps"] else [] + [{
+    ] if installJsDeps else [] + [{
         "name": "install-app-%s" % ctx.repo.name,
         "image": "owncloudci/php:%s" % phpVersion,
         "pull": "always",
