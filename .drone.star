@@ -1471,10 +1471,11 @@ def elasticSearchService(esVersion):
 
     return [{
         "name": "elasticsearch",
-        "image": "webhippie/elasticsearch:%s" % esVersion,
+        "image": "owncloudops/elasticsearch:%s" % esVersion,
         "pull": "always",
         "environment": {
-            "ELASTICSEARCH_PLUGINS_INSTALL": "ingest-attachment",
+            "ELASTICSEARCH_ROOT_LOG_LEVEL": "warn",
+            "ELASTICSEARCH_BOOTSTRAP_MEMORY_LOCK": "false",
         },
     }]
 
@@ -1703,6 +1704,11 @@ def installApp(ctx, phpVersion):
     if "appInstallCommand" not in config:
         return []
 
+    if "buildJsDeps" not in config:
+        installJsDeps = False
+    else:
+        installJsDeps = config["buildJsDeps"]
+
     return [
         {
             "name": "install-app-js-%s" % config["app"],
@@ -1714,7 +1720,7 @@ def installApp(ctx, phpVersion):
                 "make build-dev",
             ],
         },
-    ] if config["buildJsDeps"] else [] + [{
+    ] if installJsDeps else [] + [{
         "name": "install-app-%s" % ctx.repo.name,
         "image": "owncloudci/php:%s" % phpVersion,
         "pull": "always",
