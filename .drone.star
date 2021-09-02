@@ -18,12 +18,11 @@ config = {
     "phpunit": {
         "allDatabases": {
             "phpVersions": [
-                "7.2",
+                "7.3",
             ],
         },
         "reducedDatabases": {
             "phpVersions": [
-                "7.3",
                 "7.4",
             ],
             "databases": [
@@ -82,7 +81,7 @@ config = {
                 "daily-master-qa",
             ],
             "phpVersions": [
-                "7.2",
+                "7.4",
             ],
             "runCoreTests": True,
             "federatedServerNeeded": True,
@@ -102,7 +101,7 @@ config = {
                 "daily-master-qa",
             ],
             "phpVersions": [
-                "7.2",
+                "7.4",
             ],
             "runCoreTests": True,
             "cron": "nightly",
@@ -122,7 +121,7 @@ config = {
                 "daily-master-qa",
             ],
             "phpVersions": [
-                "7.2",
+                "7.4",
             ],
             "emailNeeded": True,
             "runCoreTests": True,
@@ -218,7 +217,7 @@ def codestyle(ctx):
         return pipelines
 
     default = {
-        "phpVersions": ["7.2"],
+        "phpVersions": ["7.3"],
     }
 
     if "defaults" in config:
@@ -383,7 +382,7 @@ def phpstan(ctx):
         return pipelines
 
     default = {
-        "phpVersions": ["7.2"],
+        "phpVersions": ["7.3"],
         "logLevel": "2",
         "extraApps": {},
         "enableApp": True,
@@ -460,7 +459,7 @@ def phan(ctx):
         return pipelines
 
     default = {
-        "phpVersions": ["7.2", "7.3", "7.4"],
+        "phpVersions": ["7.3", "7.4"],
     }
 
     if "defaults" in config:
@@ -531,7 +530,7 @@ def build(ctx):
         return pipelines
 
     default = {
-        "phpVersions": ["7.2"],
+        "phpVersions": ["7.3"],
         "commands": [
             "make dist",
         ],
@@ -730,7 +729,7 @@ def phpTests(ctx, testType, withCoverage):
     errorFound = False
 
     default = {
-        "phpVersions": ["7.2", "7.3", "7.4"],
+        "phpVersions": ["7.3", "7.4"],
         "databases": [
             "sqlite",
             "mariadb:10.2",
@@ -927,7 +926,7 @@ def acceptance(ctx):
     default = {
         "servers": ["daily-master-qa", "latest"],
         "browsers": ["chrome"],
-        "phpVersions": ["7.2"],
+        "phpVersions": ["7.4"],
         "databases": ["mariadb:10.2"],
         "esVersions": ["none"],
         "federatedServerNeeded": False,
@@ -1008,7 +1007,7 @@ def acceptance(ctx):
                 params["extraSetup"] = [
                     {
                         "name": "configure-app",
-                        "image": "owncloudci/php:7.2",
+                        "image": "owncloudci/php:7.4",
                         "pull": "always",
                         "commands": [
                             "cd /var/www/owncloud/server/apps/files_primary_s3",
@@ -1772,7 +1771,7 @@ def setupCeph(serviceParams):
 
     return [{
         "name": "setup-ceph",
-        "image": "owncloudci/php:7.2",
+        "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": setupCommands + ([
             "./apps/files_primary_s3/tests/drone/create-bucket.sh",
@@ -1800,7 +1799,7 @@ def setupScality(serviceParams):
 
     return [{
         "name": "setup-scality",
-        "image": "owncloudci/php:7.2",
+        "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": setupCommands + ([
             "php occ s3:create-bucket owncloud --accept-warning",
@@ -1815,7 +1814,7 @@ def setupElasticSearch(esVersion):
 
     return [{
         "name": "setup-es",
-        "image": "owncloudci/php:7.2",
+        "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
             "cd %s" % dir["server"],
@@ -2105,7 +2104,7 @@ def installNPM():
 def lintTest():
     return [{
         "name": "lint-test",
-        "image": "owncloudci/php:7.2",
+        "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
             "make test-lint",
