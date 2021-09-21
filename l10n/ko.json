@@ -34,6 +34,7 @@
     "Notify about your own actions via email" : "내 활동도 이메일로 알림 받기",
     "You need to set up your email address before you can receive notification emails." : "알림 이메일을 받으려면 이메일 주소를 설정해야 합니다.",
     "Send emails:" : "이메일 보내는 간격:",
+    "As soon as possible" : "가능한 한 빨리",
     "Hourly" : "1시간마다",
     "Daily" : "매일",
     "Weekly" : "매주",
