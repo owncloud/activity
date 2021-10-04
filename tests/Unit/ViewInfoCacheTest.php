@@ -374,31 +374,46 @@ class ViewInfoCacheTest extends TestCase {
 	 * @param array $expectedCache
 	 */
 	public function testFindInfoById($user, $fileId, $filename, $path, $pathTrash, $isDirPath, $isDir, $expected, array $expectedCache) {
-		$this->view->expects($this->at(0))
-			->method('chroot')
-			->with('/' . $user . '/files');
 		if ($path === null) {
-			$this->view->expects($this->at(1))
-				->method('getPath')
-				->with($fileId)
-				->willThrowException(new NotFoundException());
-
-			$this->view->expects($this->at(2))
+			$this->view
+				->expects($this->exactly(2))
 				->method('chroot')
-				->with('/' . $user . '/files_trashbin');
+				->withConsecutive(
+					['/' . $user . '/files'],
+					['/' . $user . '/files_trashbin'],
+				);
 			if ($pathTrash === null) {
-				$this->view->expects($this->at(3))
+				$this->view
+					->expects($this->exactly(2))
 					->method('getPath')
-					->with($fileId)
-					->willThrowException(new NotFoundException());
+					->withConsecutive(
+						[$fileId],
+						[$fileId],
+					)
+					->willReturnOnConsecutiveCalls(
+						$this->throwException(new NotFoundException()),
+						$this->throwException(new NotFoundException()),
+					);
 			} else {
-				$this->view->expects($this->at(3))
+				$this->view
+					->expects($this->exactly(2))
 					->method('getPath')
-					->with($fileId)
-					->willReturn($pathTrash);
+					->withConsecutive(
+						[$fileId],
+						[$fileId],
+					)
+					->willReturnOnConsecutiveCalls(
+						$this->throwException(new NotFoundException()),
+						$pathTrash,
+					);
 			}
 		} else {
-			$this->view->expects($this->at(1))
+			$this->view
+				->expects($this->once())
+				->method('chroot')
+				->with('/' . $user . '/files');
+
+			$this->view->expects($this->once())
 				->method('getPath')
 				->with($fileId)
 				->willReturn($path);

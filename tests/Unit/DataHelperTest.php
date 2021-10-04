@@ -304,16 +304,24 @@ class DataHelperTest extends TestCase {
 
 		global $call;
 		$call = 0;
-		foreach ($factoryCalls as $i => $factoryCall) {
-			$this->parameterFactory->expects($this->at($i))
-				->method('get')
-				->with($factoryCall[0], $event, $factoryCall[1])
-				->willReturnCallback(function () {
+		$withConsecutive = [];
+		$callbacks = [];
+		foreach ($factoryCalls as $factoryCall) {
+			$withConsecutive[] = [$factoryCall[0], $event, $factoryCall[1]];
+			$callbacks[] = $this->returnCallback(
+				function () {
 					global $call;
 					$call++;
 					return 'param' . $call;
-				});
+				}
+			);
 		}
+
+		$this->parameterFactory
+			->expects($this->exactly(\count($factoryCalls)))
+			->method('get')
+			->withConsecutive(...$withConsecutive)
+			->willReturnOnConsecutiveCalls(...$callbacks);
 
 		$instance = $this->getHelper([
 			'parseParameters',
