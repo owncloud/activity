@@ -404,7 +404,7 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	public function theActivityShouldNotHaveAnyMessageWithKeyword($tag) {
 		$activities = $this->activityPage->getAllActivityMessageLists();
 		foreach ($activities as $activity) {
-			PHPUnit\Framework\Assert::assertNotContains($tag, $activity);
+			PHPUnit\Framework\Assert::assertStringNotContainsString($tag, $activity);
 		}
 	}
 
