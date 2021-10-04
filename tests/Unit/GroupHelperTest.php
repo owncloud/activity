@@ -465,14 +465,18 @@ class GroupHelperTest extends TestCase {
 
 		$getGroupParameter = empty($subjectParams) ? null : 0;
 
-		$this->dataHelper->expects($this->at(0))
+		$this->dataHelper
+			->expects($this->exactly(2))
 			->method('getParameters')
-			->with($event, 'subject', $this->anything())
-			->willReturn($subjectParams);
-		$this->dataHelper->expects($this->at(1))
-			->method('getParameters')
-			->with($event, 'message', $this->anything())
-			->willReturn([]);
+			->withConsecutive(
+				[$event, 'subject', $this->anything()],
+				[$event, 'message', $this->anything()],
+			)
+			->willReturnOnConsecutiveCalls(
+				$subjectParams,
+				[],
+			);
+
 		if ($createCollection === null) {
 			$this->dataHelper->expects($this->never())
 				->method('createCollection');
