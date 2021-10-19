@@ -44,11 +44,11 @@ class ActivitySettingForm extends OwncloudPage {
 	 * @throws \Exception
 	 */
 	public function changeActivityLogSetting(
-		$disablesOrEnables,
-		$streamOrMail,
-		$activityType,
-		$session
-	) {
+		string $disablesOrEnables,
+		string $streamOrMail,
+		string $activityType,
+		Session $session
+	): void {
 		$streamOrMailNumber = $streamOrMail === "stream" ? 1 : 2;
 		$checkboxFullXpath = \sprintf(
 			$this->activityCheckboxXpath,
