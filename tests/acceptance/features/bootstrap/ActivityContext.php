@@ -39,17 +39,17 @@ class ActivityContext implements Context {
 	/**
 	 * @Then the activity number :index of user :user should match these properties:
 	 *
-	 * @param integer $index (starting from 1, newest to the oldest)
+	 * @param string $index (starting from 1, newest to the oldest)
 	 * @param string $user
 	 * @param TableNode $expectedProperties
 	 *
 	 * @return void
 	 */
 	public function activityWithIndexShouldMatch(
-		$index,
-		$user,
+		string $index,
+		string $user,
 		TableNode $expectedProperties
-	) {
+	): void {
 		$user = $this->featureContext->getActualUsername($user);
 		$fullUrl = $this->featureContext->getBaseUrl() .
 				   "/index.php/apps/activity/api/v2/activity";
@@ -93,7 +93,7 @@ class ActivityContext implements Context {
 	 * @return void
 	 * @throws Exception
 	 */
-	public function setUpScenario(BeforeScenarioScope $scope) {
+	public function setUpScenario(BeforeScenarioScope $scope): void {
 		// Get the environment
 		$environment = $scope->getEnvironment();
 		// Get all the contexts you need in this context

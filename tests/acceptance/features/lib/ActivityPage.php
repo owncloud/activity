@@ -60,7 +60,7 @@ class ActivityPage extends OwncloudPage {
 	 *
 	 * @return string
 	 */
-	public function getActivityMessageOfIndex($index) {
+	public function getActivityMessageOfIndex(int $index): string {
 		$activities = $this->getAllActivityMessageLists();
 		Assert::assertArrayHasKey(
 			$index,
@@ -76,7 +76,7 @@ class ActivityPage extends OwncloudPage {
 	 *
 	 * @return string[]
 	 */
-	public function getAllActivityMessageLists() {
+	public function getAllActivityMessageLists(): array {
 		$messages = [];
 		$messagesElement =  $this->findAll("xpath", $this->activityListXpath);
 		foreach ($messagesElement as $messageElement) {
@@ -94,7 +94,7 @@ class ActivityPage extends OwncloudPage {
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function filterActivityListBy($session, $activityType) {
+	public function filterActivityListBy(Session $session, string $activityType): void {
 		$activityFilters = [
 			'All Activities' => 'all',
 			'Activities by you' => 'self',
@@ -131,12 +131,14 @@ class ActivityPage extends OwncloudPage {
 	 *
 	 * @param string $index
 	 * 		The index starts from 1 as it's retrieved from xpath directly
+	 *      Note: this is called with the "text" from a test step, so it comes
+	 *            as a string, although it is expected to be a numeric string.
 	 *
 	 * @throws \Exception
 	 *
 	 * @return string|null
 	 */
-	public function getCommentMessageOfIndex($index) {
+	public function getCommentMessageOfIndex(string $index): ?string {
 		if ($index < 1) {
 			throw new InvalidArgumentException(
 				"comment index starts from 1"
@@ -160,8 +162,8 @@ class ActivityPage extends OwncloudPage {
 	 */
 	public function waitTillPageIsLoaded(
 		Session $session,
-		$timeout_msec = STANDARD_UI_WAIT_TIMEOUT_MILLISEC
-	) {
+		int $timeout_msec = STANDARD_UI_WAIT_TIMEOUT_MILLISEC
+	): void {
 		$container = $this->waitTillElementIsNotNull(
 			$this->activityContainerXpath,
 			$timeout_msec
