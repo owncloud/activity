@@ -301,7 +301,7 @@ def jscodestyle(ctx):
         "steps": [
             {
                 "name": "coding-standard-js",
-                "image": "owncloudci/php:8.0",
+                "image": "owncloudci/nodejs:14",
                 "pull": "always",
                 "commands": [
                     "make test-js-style",
