@@ -1181,6 +1181,7 @@ def acceptance(ctx):
                              setupElasticSearch(testConfig["esVersion"]) +
                              testConfig["extraSetup"] +
                              fixPermissions(testConfig["phpVersion"], testConfig["federatedServerNeeded"]) +
+                             waitForBrowserService(testConfig["phpVersion"], isWebUI) +
                              [
                                  ({
                                      "name": "acceptance-tests",
@@ -1437,6 +1438,18 @@ def browserService(browser):
             },
         }]
 
+    return []
+
+def waitForBrowserService(phpVersion, isWebUi):
+    if isWebUi:
+        return [{
+            "name": "wait-for-selenium",
+            "image": "owncloudci/php:%s" % phpVersion,
+            "pull": "always",
+            "commands": [
+                "wait-for-it -t 600 selenium:4444",
+            ],
+        }]
     return []
 
 def emailService(emailNeeded):
