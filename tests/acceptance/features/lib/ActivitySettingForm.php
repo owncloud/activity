@@ -55,9 +55,10 @@ class ActivitySettingForm extends OwncloudPage {
 			$activityType,
 			$streamOrMailNumber
 		);
+		$checkboxId = $activityType . "_" . $streamOrMail;
 		$checkCheckboxFullId = \sprintf(
 			$this->activityCheckboxId,
-			$activityType . "_" . $streamOrMail
+			$checkboxId
 		);
 		$checkCheckbox = $this->find("xpath", $checkCheckboxFullId);
 		$activityCheckbox = $this->find("xpath", $checkboxFullXpath);
@@ -75,10 +76,12 @@ class ActivitySettingForm extends OwncloudPage {
 		);
 		if ($disablesOrEnables === 'enables') {
 			if (!$checkCheckbox->isChecked()) {
+				$this->scrollDownAppContent($checkboxId, $session);
 				$activityCheckbox->click();
 			}
 		} elseif ($disablesOrEnables === 'disables') {
 			if ($checkCheckbox->isChecked()) {
+				$this->scrollDownAppContent($checkboxId, $session);
 				$activityCheckbox->click();
 			}
 		} else {
@@ -87,5 +90,27 @@ class ActivitySettingForm extends OwncloudPage {
 			);
 		}
 		$this->waitForAjaxCallsToStartAndFinish($session);
+	}
+
+	/**
+	 * scrolls down the content of the general settings page to make the
+	 * requested id visible. The div with the scrollbar has id app-content.
+	 *
+	 * Note: there is a similar function in core acceptance tests FilesPageBasic.php
+	 *
+	 * @param string $idToScrollIntoView
+	 * @param Session $session
+	 *
+	 * @return void
+	 */
+	public function scrollDownAppContent(
+		string $idToScrollIntoView,
+		Session $session
+	): void {
+		$this->scrollToPosition(
+			"#app-content",
+			'$("#' . $idToScrollIntoView . '").position().top',
+			$session
+		);
 	}
 }
