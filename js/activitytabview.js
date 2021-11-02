@@ -139,8 +139,10 @@
 		 * @return {Object}
 		 */
 		_formatItem: function(activity) {
+			var displayFullPath = activity.get('type') === 'file_moved';
+
 			var output = {
-				subject: OCA.Activity.Formatter.parseMessage(activity.get('subject_prepared'), false),
+				subject: OCA.Activity.Formatter.parseMessage(activity.get('subject_prepared'), false, displayFullPath),
 				formattedDate: activity.getRelativeDate(),
 				formattedDateTooltip: activity.getFullDate(),
 				message: OCA.Activity.Formatter.parseMessage(activity.get('message_prepared'), false)

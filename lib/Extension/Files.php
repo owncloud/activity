@@ -26,4 +26,6 @@ class Files {
 	public const TYPE_SHARE_CHANGED = 'file_changed';
 	public const TYPE_SHARE_DELETED = 'file_deleted';
 	public const TYPE_SHARE_RESTORED = 'file_restored';
+	public const TYPE_FILE_RENAMED = 'file_renamed';
+	public const TYPE_FILE_MOVED = 'file_moved';
 }

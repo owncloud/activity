@@ -938,4 +938,75 @@ class FilesHooksTest extends TestCase {
 
 		$this->invokePrivate($this->filesHooks, 'addNotificationsForUser', [$user, $subject, $parameter, $fileId, $path, $isFile, $stream, $email, $type]);
 	}
+
+	public function testFileBeforeRename() {
+		$filesHooks = $this->getFilesHooks([
+			'getSourcePathAndOwner',
+			'getUserPathsFromPath',
+		]);
+
+		$filesHooks->expects($this->once())->method('getSourcePathAndOwner')->willReturn(['oldPath', 'admin', 1]);
+		$filesHooks->expects($this->once())->method('getUserPathsFromPath')->willReturn(['admin' => 'oldpath']);
+		$filesHooks->fileBeforeRename('oldPath', 'newPath');
+	}
+
+	public function testFileRename() {
+		$filesHooks = $this->getFilesHooks([
+			'getSourcePathAndOwner',
+			'getUserPathsFromPath',
+			'addNotificationsForUser',
+		]);
+
+		$oldPath = 'test.txt';
+		$newPath = 'testRenamed.txt';
+		$filesHooks->expects($this->once())->method('getSourcePathAndOwner')->willReturn([$newPath, 'user', 1]);
+		$filesHooks->expects($this->once())->method('getUserPathsFromPath')->willReturn(['user' => $newPath]);
+		$filesHooks
+			->expects($this->once())
+			->method('addNotificationsForUser')
+			->with(
+				'user',
+				'renamed_self',
+				[[1 => $newPath], $oldPath],
+				1,
+				$newPath,
+				true,
+				true,
+				true,
+				Files::TYPE_FILE_RENAMED,
+			);
+
+		$this->settings->method('filterUsersBySetting')->willReturn(['user' => true]);
+		$filesHooks->fileAfterRename($oldPath, $newPath);
+	}
+
+	public function testFileMove() {
+		$filesHooks = $this->getFilesHooks([
+			'getSourcePathAndOwner',
+			'getUserPathsFromPath',
+			'addNotificationsForUser',
+		]);
+
+		$oldPath = 'folderA/test.txt';
+		$newPath = 'folderB/test.txt';
+		$filesHooks->expects($this->once())->method('getSourcePathAndOwner')->willReturn([$newPath, 'user', 1]);
+		$filesHooks->expects($this->once())->method('getUserPathsFromPath')->willReturn(['user' => $newPath]);
+		$filesHooks
+			->expects($this->once())
+			->method('addNotificationsForUser')
+			->with(
+				'user',
+				'moved_self',
+				[[1 => $newPath], $oldPath],
+				1,
+				$newPath,
+				true,
+				true,
+				true,
+				Files::TYPE_FILE_MOVED,
+			);
+
+		$this->settings->method('filterUsersBySetting')->willReturn(['user' => true]);
+		$filesHooks->fileAfterRename($oldPath, $newPath);
+	}
 }

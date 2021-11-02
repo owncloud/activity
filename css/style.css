@@ -189,10 +189,18 @@
 .icon-delete-color {
 	background-image: url('../img/delete-color.svg');
 }
+.icon-rename {
+	background-image: url('../img/rename.svg');
+}
+.icon-move {
+	background-image: url('../img/move.svg');
+}
 /* grey the changed and shared icons so they are less intense */
 .icon-change,
 .icon-shared,
-.icon-public {
+.icon-public,
+.icon-rename,
+.icon-move {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	filter: alpha(opacity=50);
 	opacity: .5;

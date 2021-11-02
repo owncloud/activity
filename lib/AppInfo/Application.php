@@ -21,6 +21,7 @@
 
 namespace OCA\Activity\AppInfo;
 
+use OC\Files\Filesystem;
 use OC\Files\View;
 use OCA\Activity\Consumer;
 use OCA\Activity\Controller\Activities;
@@ -310,9 +311,11 @@ class Application extends App {
 	 */
 	public function registerFilesActivity() {
 		// All other events from other apps have to be send via the Consumer
-		Util::connectHook('OC_Filesystem', 'post_create', 'OCA\Activity\FilesHooksStatic', 'fileCreate');
-		Util::connectHook('OC_Filesystem', 'post_update', 'OCA\Activity\FilesHooksStatic', 'fileUpdate');
-		Util::connectHook('OC_Filesystem', 'delete', 'OCA\Activity\FilesHooksStatic', 'fileDelete');
+		Util::connectHook('OC_Filesystem', FileSystem::signal_post_create, 'OCA\Activity\FilesHooksStatic', 'fileCreate');
+		Util::connectHook('OC_Filesystem', Filesystem::signal_post_update, 'OCA\Activity\FilesHooksStatic', 'fileUpdate');
+		Util::connectHook('OC_Filesystem', Filesystem::signal_delete, 'OCA\Activity\FilesHooksStatic', 'fileDelete');
+		Util::connectHook('OC_Filesystem', Filesystem::signal_rename, 'OCA\Activity\FilesHooksStatic', 'fileBeforeRename');
+		Util::connectHook('OC_Filesystem', Filesystem::signal_post_rename, 'OCA\Activity\FilesHooksStatic', 'fileAfterRename');
 		Util::connectHook('\OCA\Files_Trashbin\Trashbin', 'post_restore', 'OCA\Activity\FilesHooksStatic', 'fileRestore');
 		Util::connectHook('OCP\Share', 'post_shared', 'OCA\Activity\FilesHooksStatic', 'share');
 		Util::connectHook('OCP\Share', 'pre_unshare', 'OCA\Activity\FilesHooksStatic', 'unShare');
