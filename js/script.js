@@ -199,7 +199,8 @@ $(function(){
 
 		addActivity: function(activity) {
 			subject = activity.subject_prepared;
-			var parsedSubject = OCA.Activity.Formatter.parseMessage(subject);
+			var displayFullPath = activity.type === 'file_moved';
+			var parsedSubject = OCA.Activity.Formatter.parseMessage(subject, false, displayFullPath);
 
 			if (parsedSubject.indexOf('<a') >= 0) {
 				activity.link = '';
