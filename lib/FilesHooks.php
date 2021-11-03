@@ -258,6 +258,14 @@ class FilesHooks {
 
 			if ($activityType === Files::TYPE_FILE_RENAMED) {
 				$userParams[] = $oldAffectedUsers[$user] ?? $oldPath;
+
+				// Share itself gets renamed -> It only affects the user who renamed.
+				// For other users, the old and new path stay the same -> no activity.
+				$oldUserPath = $oldAffectedUsers[$user] ?? null;
+				$newUserPath = $newAffectedUsers[$user] ?? null;
+				if ($oldUserPath && $newUserPath && $oldUserPath === $newUserPath) {
+					continue;
+				}
 			}
 
 			$this->addNotificationsForUser(
@@ -282,18 +290,6 @@ class FilesHooks {
 	 * @return array
 	 */
 	protected function getUserPathsFromPath($path, $uidOwner, $currentUserFilePath, $activityType) {
-		if ($activityType === Files::TYPE_FILE_RENAMED) {
-			list($storage, ) = \OC\Files\Filesystem::resolvePath($this->currentUser . "/files/$currentUserFilePath");
-			if ($storage->instanceOfStorage('\OCA\Files_Sharing\SharedStorage')) {
-				/** @var \OCA\Files_Sharing\SharedStorage $storage */
-				'@phan-var \OCA\Files_Sharing\SharedStorage $storage';
-				$share = $storage->getShare();
-				// the share itself was renamed -> only afftects the current user
-				if ($share->getTarget() === $currentUserFilePath) {
-					return [$this->currentUser => $currentUserFilePath];
-				}
-			}
-		}
 		return Share::getUsersSharingFile($path, $uidOwner, true, true);
 	}
 
