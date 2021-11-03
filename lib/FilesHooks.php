@@ -170,13 +170,7 @@ class FilesHooks {
 			return;
 		}
 
-		if (\dirname($oldPath) === \dirname($newPath)) {
-			$activityType = Files::TYPE_FILE_RENAMED;
-		} else {
-			$activityType = Files::TYPE_FILE_MOVED;
-		}
-
-		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner, $oldPath, $activityType);
+		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
 
 		$this->renameInfo[$oldPath] = [
 			'oldAffectedUsers' => $affectedUsers,
@@ -209,7 +203,7 @@ class FilesHooks {
 			return;
 		}
 
-		$newAffectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner, $currentUserPath, $activityType);
+		$newAffectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
 		$oldAffectedUsers = $this->renameInfo['/' . $oldPath]['oldAffectedUsers'] ?? []; // affected users for old path
 		$allAffectedUsers = \array_merge($oldAffectedUsers, $newAffectedUsers);
 
@@ -289,7 +283,7 @@ class FilesHooks {
 	 * @param string $uidOwner
 	 * @return array
 	 */
-	protected function getUserPathsFromPath($path, $uidOwner, $currentUserFilePath, $activityType) {
+	protected function getUserPathsFromPath($path, $uidOwner) {
 		return Share::getUsersSharingFile($path, $uidOwner, true, true);
 	}
 
