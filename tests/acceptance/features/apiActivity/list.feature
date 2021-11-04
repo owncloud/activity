@@ -1024,3 +1024,57 @@ Feature: List activity
       | object_type      | /^files$/                                                                                                                                                                                                                                     |
       | typeicon         | /^icon-move/                                                                                                                                                                                                                                  |
       | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> moved <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/Shares\/folder\&scrollto=textfile0\.txt\" id=\"\">Shares\/folder\/textfile0\.txt<\/file> to <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/Shares\/folder\/sub\&scrollto=textfile0\.txt\" id=\"\d+\">Shares\/folder\/sub\/textfile0\.txt<\/file>$/    |
+
+
+  Scenario: move a file between shares
+    Given these users have been created with default attributes and without skeleton files:
+      | username |
+      | Alice    |
+      | Brian    |
+      | Carol    |
+    And user "Alice" has created folder "FolderForBrian"
+    And user "Alice" has created folder "FolderForCarol"
+    And user "Alice" has uploaded file with content "file to move" to "/FolderForBrian/textfile0.txt"
+    And user "Alice" has shared folder "FolderForBrian" with user "Brian"
+    And user "Alice" has shared folder "FolderForCarol" with user "Carol"
+    And user "Brian" has accepted share "/FolderForBrian" offered by user "Alice"
+    And user "Carol" has accepted share "/FolderForCarol" offered by user "Alice"
+    When user "Alice" moves file "/FolderForBrian/textfile0.txt" to "/FolderForCarol/textfile0.txt" using the WebDAV API
+    Then the activity number 1 of user "Alice" should match these properties:
+      | type             | /^file_moved$/                                                                                                                                                                                                                                                                                                                    |
+      | user             | /^Alice$/                                                                                                                                                                                                                                                                                                                         |
+      | affecteduser     | /^Alice$/                                                                                                                                                                                                                                                                                                                         |
+      | app              | /^files$/                                                                                                                                                                                                                                                                                                                         |
+      | subject          | /^moved_self$/                                                                                                                                                                                                                                                                                                                    |
+      | object_name      | /^\/FolderForCarol\/textfile0\.txt/                                                                                                                                                                                                                                                                                               |
+      | object_type      | /^files$/                                                                                                                                                                                                                                                                                                                         |
+      | typeicon         | /^icon-move/                                                                                                                                                                                                                                                                                                                      |
+      | subject_prepared | /^You moved <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FolderForBrian\&scrollto=textfile0\.txt\" id=\"\">FolderForBrian\/textfile0\.txt<\/file> to <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FolderForCarol\&scrollto=textfile0\.txt\" id=\"\d+\">FolderForCarol\/textfile0\.txt<\/file>/ |
+    And the activity number 1 of user "Brian" should match these properties:
+      | type             | /^file_deleted/                                                                                                                                                                                                        |
+      | user             | /^Alice/                                                                                                                                                                                                               |
+      | affecteduser     | /^Brian/                                                                                                                                                                                                              |
+      | app              | /^files$/                                                                                                                                                                                                              |
+      | subject          | /^deleted_by/                                                                                                                                                                                                          |
+      | object_name      | /^\/FolderForBrian\/textfile0\.txt/                                                                                                                                                                                            |
+      | object_type      | /^files$/                                                                                                                                                                                                              |
+      | typeicon         | /^icon-delete/                                                                                                                                                                                                      |
+      | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FolderForBrian\&scrollto=textfile0\.txt\" id=\"\d+\">FolderForBrian\/textfile0\.txt<\/file>$/ |
+    And the activity number 1 of user "Carol" should match these properties:
+      | type             | /^file_moved/                                                                                                                                                                                                        |
+      | user             | /^Alice/                                                                                                                                                                                                               |
+      | affecteduser     | /^Carol/                                                                                                                                                                                                              |
+      | app              | /^files$/                                                                                                                                                                                                              |
+      | subject          | /^moved_by/                                                                                                                                                                                                          |
+      | object_name      | /^\/FolderForCarol\/textfile0\.txt/                                                                                                                                                                                            |
+      | object_type      | /^files$/                                                                                                                                                                                                              |
+      | typeicon         | /^icon-move/                                                                                                                                                                                                      |
+      | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> created <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FolderForCarol\&scrollto=textfile0\.txt\" id=\"\d+\">FolderForCarol\/textfile0\.txt<\/file>$/ |
+
+    # I think that the activity of Carol should be a file create - that is what Carol sees.
+    # so the expectations for these fields should be:
+    # type file_created
+    # subject created_by
+    # typeicon icon-add-color
+    #
+    # And subject_prepared should be something like what is above - a message about user Alice creating a file
