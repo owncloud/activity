@@ -23,6 +23,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 use TestHelpers\HttpRequestHelper;
 
 require_once 'bootstrap.php';
@@ -50,26 +51,10 @@ class ActivityContext implements Context {
 		string $user,
 		TableNode $expectedProperties
 	): void {
-		$user = $this->featureContext->getActualUsername($user);
-		$fullUrl = $this->featureContext->getBaseUrl() .
-				   "/index.php/apps/activity/api/v2/activity";
-		$response = HttpRequestHelper::get(
-			$fullUrl,
-			$this->featureContext->getStepLineRef(),
-			$user,
-			$this->featureContext->getPasswordForUser($user)
-		);
-		PHPUnit\Framework\Assert::assertEquals(
-			200,
-			$response->getStatusCode()
-		);
-		$responseDecoded = \json_decode(
-			$response->getBody()->getContents(),
-			true
-		);
+		$responseDecoded = $this->getActivitiesForUser($user);
 		$activityData = $responseDecoded['ocs']['data'][$index - 1];
 		foreach ($expectedProperties->getRowsHash() as $key => $value) {
-			PHPUnit\Framework\Assert::assertArrayHasKey(
+			Assert::assertArrayHasKey(
 				$key,
 				$activityData
 			);
@@ -78,11 +63,88 @@ class ActivityContext implements Context {
 				$user,
 				['preg_quote' => ['/']]
 			);
-			PHPUnit\Framework\Assert::assertNotFalse(
+			Assert::assertNotFalse(
 				(bool)\preg_match($value, $activityData[$key]),
 				"'$value' does not match '{$activityData[$key]}'"
 			);
 		}
+	}
+
+	/**
+	 * @Then user :user should not have any activity entries
+	 *
+	 * @param string $user
+	 *
+	 * @return void
+	 */
+	public function userShouldNotHaveAnyActivityEntries(
+		string $user
+	): void {
+		$responseDecoded = $this->getActivitiesForUser($user);
+		$activityDataArray = $responseDecoded['ocs']['data'];
+		Assert::assertIsArray($activityDataArray);
+		$numberOfActivityEntries = \count($activityDataArray);
+		Assert::assertEquals(
+			0,
+			$numberOfActivityEntries,
+			"User $user has $numberOfActivityEntries activity entries but should have none"
+		);
+	}
+
+	/**
+	 * @Then user :user should not have any activity entries with type :type
+	 *
+	 * @param string $user
+	 * @param string $activityType
+	 *
+	 * @return void
+	 */
+	public function userShouldNotHaveAnyActivityEntriesWithType(
+		string $user,
+		string $activityType
+	): void {
+		$responseDecoded = $this->getActivitiesForUser($user);
+		$activityDataArray = $responseDecoded['ocs']['data'];
+		Assert::assertIsArray($activityDataArray);
+		foreach ($activityDataArray as $activityData) {
+			Assert::assertArrayHasKey(
+				'type',
+				$activityData
+			);
+			Assert::assertNotEquals(
+				$activityType,
+				$activityData['type'],
+				"found an activity entry of type $activityType for user $user which should not exist"
+			);
+		}
+	}
+
+	/**
+	 * @param string $user
+	 *
+	 * @return array of activity entries
+	 */
+	public function getActivitiesForUser(
+		string $user
+	): array {
+		$user = $this->featureContext->getActualUsername($user);
+		$fullUrl = $this->featureContext->getBaseUrl() .
+			"/index.php/apps/activity/api/v2/activity";
+		$response = HttpRequestHelper::get(
+			$fullUrl,
+			$this->featureContext->getStepLineRef(),
+			$user,
+			$this->featureContext->getPasswordForUser($user)
+		);
+		Assert::assertEquals(
+			200,
+			$response->getStatusCode()
+		);
+		$responseDecoded = \json_decode(
+			$response->getBody()->getContents(),
+			true
+		);
+		return $responseDecoded;
 	}
 
 	/**
