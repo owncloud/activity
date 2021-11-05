@@ -1061,20 +1061,12 @@ Feature: List activity
       | typeicon         | /^icon-delete/                                                                                                                                                                                                      |
       | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FolderForBrian\&scrollto=textfile0\.txt\" id=\"\d+\">FolderForBrian\/textfile0\.txt<\/file>$/ |
     And the activity number 1 of user "Carol" should match these properties:
-      | type             | /^file_moved/                                                                                                                                                                                                        |
+      | type             | /^file_created/                                                                                                                                                                                                        |
       | user             | /^Alice/                                                                                                                                                                                                               |
       | affecteduser     | /^Carol/                                                                                                                                                                                                              |
       | app              | /^files$/                                                                                                                                                                                                              |
-      | subject          | /^moved_by/                                                                                                                                                                                                          |
+      | subject          | /^created_by/                                                                                                                                                                                                          |
       | object_name      | /^\/FolderForCarol\/textfile0\.txt/                                                                                                                                                                                            |
       | object_type      | /^files$/                                                                                                                                                                                                              |
-      | typeicon         | /^icon-move/                                                                                                                                                                                                      |
+      | typeicon         | /^icon-add-color/                                                                                                                                                                                                      |
       | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> created <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FolderForCarol\&scrollto=textfile0\.txt\" id=\"\d+\">FolderForCarol\/textfile0\.txt<\/file>$/ |
-
-    # I think that the activity of Carol should be a file create - that is what Carol sees.
-    # so the expectations for these fields should be:
-    # type file_created
-    # subject created_by
-    # typeicon icon-add-color
-    #
-    # And subject_prepared should be something like what is above - a message about user Alice creating a file
