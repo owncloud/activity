@@ -235,7 +235,7 @@ class FilesHooks {
 				if ($oldUserPath && $newUserPath) {
 					// File was moved inside a share -> old and new path can be seen by all affected users.
 					$userParams[] = $oldAffectedUsers[$user] ?? $oldPath;
-				} else if (!$newUserPath) {
+				} elseif (!$newUserPath) {
 					// File was moved out of a share -> for the user who moved the file, this is a move action.
 					// For all other share attendants, this is a delete action.
 					$userSubject = 'deleted_by';
