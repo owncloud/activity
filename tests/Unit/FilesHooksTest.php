@@ -989,8 +989,8 @@ class FilesHooksTest extends TestCase {
 
 		$oldPath = 'folderA/test.txt';
 		$newPath = 'folderB/test.txt';
-		$filesHooks->expects($this->once())->method('getSourcePathAndOwner')->willReturn([$newPath, 'user', 1]);
-		$filesHooks->expects($this->once())->method('getUserPathsFromPath')->willReturn(['user' => $newPath]);
+		$filesHooks->method('getSourcePathAndOwner')->willReturn([$newPath, 'user', 1]);
+		$filesHooks->method('getUserPathsFromPath')->willReturn(['user' => $oldPath], ['user' => $newPath]);
 		$filesHooks
 			->expects($this->once())
 			->method('addNotificationsForUser')
@@ -1007,6 +1007,7 @@ class FilesHooksTest extends TestCase {
 			);
 
 		$this->settings->method('filterUsersBySetting')->willReturn(['user' => true]);
-		$filesHooks->fileAfterRename($oldPath, $newPath);
+		$filesHooks->fileBeforeRename("/$oldPath", "/$newPath");
+		$filesHooks->fileAfterRename("/$oldPath", "/$newPath");
 	}
 }
