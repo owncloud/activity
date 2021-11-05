@@ -195,7 +195,6 @@ class FilesHooks {
 			return;
 		}
 
-		$currentUserPath = $filePath;
 		list($filePath, $uidOwner, $fileId) = $this->getSourcePathAndOwner($filePath);
 		if (!$fileId) {
 			// no owner, possibly deleted or unknown
@@ -230,19 +229,18 @@ class FilesHooks {
 			}
 
 			if ($activityType === Files::TYPE_FILE_MOVED) {
-				$showOldAndNewPath = \array_key_exists($user, $newAffectedUsers);
-				if ($showOldAndNewPath) {
+				$oldUserPath = $oldAffectedUsers[$user] ?? null;
+				$newUserPath = $newAffectedUsers[$user] ?? null;
+
+				if ($oldUserPath && $newUserPath) {
 					// File was moved inside a share -> old and new path can be seen by all affected users.
 					$userParams[] = $oldAffectedUsers[$user] ?? $oldPath;
-				} else {
+				} else if (!$newUserPath) {
 					// File was moved out of a share -> for the user who moved the file, this is a move action.
 					// For all other share attendants, this is a delete action.
 					$userSubject = 'deleted_by';
 					$computedActivityType = Files::TYPE_SHARE_DELETED;
-				}
-
-				$firstOldAffectedUser = \array_keys($oldAffectedUsers)[0] ?? null;
-				if (\count($oldAffectedUsers) === 1 && $firstOldAffectedUser !== $user) {
+				} else {
 					// File was moved into a share -> for the user who moved the file, this is a move action.
 					// For all other share attendants, this is a create action.
 					$userSubject = 'created_by';
@@ -253,7 +251,7 @@ class FilesHooks {
 			if ($activityType === Files::TYPE_FILE_RENAMED) {
 				$userParams[] = $oldAffectedUsers[$user] ?? $oldPath;
 
-				// Share itself gets renamed -> It only affects the user who renamed.
+				// Share itself gets renamed -> it only affects the user who renamed.
 				// For other users, the old and new path stay the same -> no activity.
 				$oldUserPath = $oldAffectedUsers[$user] ?? null;
 				$newUserPath = $newAffectedUsers[$user] ?? null;
