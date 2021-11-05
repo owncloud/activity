@@ -203,7 +203,14 @@ class FilesHooks {
 		}
 
 		$newAffectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
-		$oldAffectedUsers = $this->renameInfo['/' . $oldPath]['oldAffectedUsers'] ?? []; // affected users for old path
+
+		// affected users for old path
+		$oldAffectedUsers = [];
+		$renameInfo = $this->renameInfo['/' . $oldPath] ?? null;
+		if ($renameInfo && $renameInfo['oldFileId'] === $fileId) {
+			$oldAffectedUsers = $renameInfo['oldAffectedUsers'] ?? [];
+		}
+
 		$allAffectedUsers = \array_merge($oldAffectedUsers, $newAffectedUsers);
 
 		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(\array_keys($allAffectedUsers), 'stream', $activityType);
@@ -233,16 +240,14 @@ class FilesHooks {
 				$newUserPath = $newAffectedUsers[$user] ?? null;
 
 				if ($oldUserPath && $newUserPath) {
-					// File was moved inside a share -> old and new path can be seen by all affected users.
-					$userParams[] = $oldAffectedUsers[$user] ?? $oldPath;
+					// User has old and new path -> regular move action. Add the old path as additional info.
+					$userParams[] = $oldUserPath;
 				} elseif (!$newUserPath) {
-					// File was moved out of a share -> for the user who moved the file, this is a move action.
-					// For all other share attendants, this is a delete action.
+					// No new path -> file was moved somewhere the user has no access to (e.g. out of a share).
 					$userSubject = 'deleted_by';
 					$computedActivityType = Files::TYPE_SHARE_DELETED;
 				} else {
-					// File was moved into a share -> for the user who moved the file, this is a move action.
-					// For all other share attendants, this is a create action.
+					// No old path -> file was moved from somewhere the user has no access to (e.g. into a share).
 					$userSubject = 'created_by';
 					$computedActivityType = Files::TYPE_SHARE_CREATED;
 				}
