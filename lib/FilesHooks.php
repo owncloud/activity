@@ -143,6 +143,7 @@ class FilesHooks {
 	 * @param string $newPath Path of the file after rename
 	 */
 	public function fileAfterRename($oldPath, $newPath) {
+		// .part files are already being handled in addNotificationsForFileAction()
 		// rename
 		if (\dirname($oldPath) === \dirname($newPath)) {
 			$this->addNotificationsForFileAction($newPath, Files::TYPE_FILE_RENAMED, 'renamed_self', 'renamed_by', \ltrim($oldPath, '/'));
@@ -242,12 +243,13 @@ class FilesHooks {
 				if ($oldUserPath && $newUserPath) {
 					// User has old and new path -> regular move action. Add the old path as additional info.
 					$userParams[] = $oldUserPath;
-				} elseif (!$newUserPath) {
+				} elseif ($newUserPath === null) {
 					// No new path -> file was moved somewhere the user has no access to (e.g. out of a share).
 					$userSubject = 'deleted_by';
 					$computedActivityType = Files::TYPE_SHARE_DELETED;
 				} else {
 					// No old path -> file was moved from somewhere the user has no access to (e.g. into a share).
+					// A scenario where $oldUserPath and $newUserPath both are null is technically not possible.
 					$userSubject = 'created_by';
 					$computedActivityType = Files::TYPE_SHARE_CREATED;
 				}
@@ -258,6 +260,7 @@ class FilesHooks {
 
 				// Share itself gets renamed -> it only affects the user who renamed.
 				// For other users, the old and new path stay the same -> no activity.
+				// A scenario where $oldUserPath and $newUserPath both are null is technically not possible.
 				$oldUserPath = $oldAffectedUsers[$user] ?? null;
 				$newUserPath = $newAffectedUsers[$user] ?? null;
 				if ($oldUserPath && $newUserPath && $oldUserPath === $newUserPath) {
