@@ -68,6 +68,9 @@ class FilesHooks {
 	/** @var string */
 	protected $currentUser;
 
+	/** @var array */
+	protected $renameInfo = [];
+
 	/**
 	 * Constructor
 	 *
@@ -135,14 +138,59 @@ class FilesHooks {
 	}
 
 	/**
+	 * After rename/move events
+	 * @param string $oldPath Path of the file before rename
+	 * @param string $newPath Path of the file after rename
+	 */
+	public function fileAfterRename($oldPath, $newPath) {
+		// .part files are already being handled in addNotificationsForFileAction()
+		// rename
+		if (\dirname($oldPath) === \dirname($newPath)) {
+			$this->addNotificationsForFileAction($newPath, Files::TYPE_FILE_RENAMED, 'renamed_self', 'renamed_by', \ltrim($oldPath, '/'));
+			return;
+		}
+
+		// move
+		$this->addNotificationsForFileAction($newPath, Files::TYPE_FILE_MOVED, 'moved_self', 'moved_by', \ltrim($oldPath, '/'));
+	}
+
+	/**
+	 * Before rename/move events. This method saves necessary information for fileAfterRename()
+	 * @param string $oldPath Path of the file before rename
+	 * @param string $newPath Path of the file after rename
+	 */
+	public function fileBeforeRename($oldPath, $newPath) {
+		// Do not add activities for .part-files
+		if (substr($oldPath, -5) === '.part') {
+			return;
+		}
+		list($filePath, $uidOwner, $fileId) = $this->getSourcePathAndOwner($oldPath);
+		if (!$fileId) {
+			// no owner, possibly deleted or unknown
+			// skip notifications
+			return;
+		}
+
+		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
+
+		$this->renameInfo[$oldPath] = [
+			'oldAffectedUsers' => $affectedUsers,
+			'oldPath' => $filePath,
+			'oldUidOwner' => $uidOwner,
+			'oldFileId' => $fileId,
+		];
+	}
+
+	/**
 	 * Creates the entries for file actions on $file_path
 	 *
 	 * @param string $filePath         The file that is being changed
 	 * @param int    $activityType     The activity type
 	 * @param string $subject          The subject for the actor
 	 * @param string $subjectBy        The subject for other users (with "by $actor")
+	 * @param string $oldPath	   	   Old path in case of a rename/move
 	 */
-	protected function addNotificationsForFileAction($filePath, $activityType, $subject, $subjectBy) {
+	protected function addNotificationsForFileAction($filePath, $activityType, $subject, $subjectBy, $oldPath = '') {
 		// Do not add activities for .part-files
 		if (\substr($filePath, -5) === '.part') {
 			return;
@@ -154,26 +202,70 @@ class FilesHooks {
 			// skip notifications
 			return;
 		}
-		$affectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
-		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(\array_keys($affectedUsers), 'stream', $activityType);
-		$filteredEmailUsers = $this->userSettings->filterUsersBySetting(\array_keys($affectedUsers), 'email', $activityType);
 
-		foreach ($affectedUsers as $user => $path) {
+		$newAffectedUsers = $this->getUserPathsFromPath($filePath, $uidOwner);
+
+		// affected users for old path
+		$oldAffectedUsers = [];
+		$renameInfo = $this->renameInfo['/' . $oldPath] ?? null;
+		if ($renameInfo && $renameInfo['oldFileId'] === $fileId) {
+			$oldAffectedUsers = $renameInfo['oldAffectedUsers'] ?? [];
+		}
+
+		$allAffectedUsers = \array_merge($oldAffectedUsers, $newAffectedUsers);
+
+		$filteredStreamUsers = $this->userSettings->filterUsersBySetting(\array_keys($allAffectedUsers), 'stream', $activityType);
+		$filteredEmailUsers = $this->userSettings->filterUsersBySetting(\array_keys($allAffectedUsers), 'email', $activityType);
+
+		foreach ($allAffectedUsers as $user => $affectedUserPath) {
 			if (empty($filteredStreamUsers[$user]) && empty($filteredEmailUsers[$user])) {
 				continue;
 			}
 
+			$computedActivityType = $activityType;
 			$agentAuthor = $this->manager->getAgentAuthor();
 
 			if ($agentAuthor === IEvent::AUTOMATION_AUTHOR) {
 				$userSubject = $subjectBy;
-				$userParams = [[$fileId => $path]];
+				$userParams = [[$fileId => $affectedUserPath]];
 			} elseif ($user === $this->currentUser) {
 				$userSubject = $subject;
-				$userParams = [[$fileId => $path]];
+				$userParams = [[$fileId => $affectedUserPath]];
 			} else {
 				$userSubject = $subjectBy;
-				$userParams = [[$fileId => $path], $this->currentUser];
+				$userParams = [[$fileId => $affectedUserPath], $this->currentUser];
+			}
+
+			if ($activityType === Files::TYPE_FILE_MOVED) {
+				$oldUserPath = $oldAffectedUsers[$user] ?? null;
+				$newUserPath = $newAffectedUsers[$user] ?? null;
+
+				if ($oldUserPath && $newUserPath) {
+					// User has old and new path -> regular move action. Add the old path as additional info.
+					$userParams[] = $oldUserPath;
+				} elseif ($newUserPath === null) {
+					// No new path -> file was moved somewhere the user has no access to (e.g. out of a share).
+					$userSubject = 'deleted_by';
+					$computedActivityType = Files::TYPE_SHARE_DELETED;
+				} else {
+					// No old path -> file was moved from somewhere the user has no access to (e.g. into a share).
+					// A scenario where $oldUserPath and $newUserPath both are null is technically not possible.
+					$userSubject = 'created_by';
+					$computedActivityType = Files::TYPE_SHARE_CREATED;
+				}
+			}
+
+			if ($activityType === Files::TYPE_FILE_RENAMED) {
+				$userParams[] = $oldAffectedUsers[$user] ?? $oldPath;
+
+				// Share itself gets renamed -> it only affects the user who renamed.
+				// For other users, the old and new path stay the same -> no activity.
+				// A scenario where $oldUserPath and $newUserPath both are null is technically not possible.
+				$oldUserPath = $oldAffectedUsers[$user] ?? null;
+				$newUserPath = $newAffectedUsers[$user] ?? null;
+				if ($oldUserPath && $newUserPath && $oldUserPath === $newUserPath) {
+					continue;
+				}
 			}
 
 			$this->addNotificationsForUser(
@@ -181,11 +273,11 @@ class FilesHooks {
 				$userSubject,
 				$userParams,
 				$fileId,
-				$path,
+				$affectedUserPath,
 				true,
 				!empty($filteredStreamUsers[$user]),
 				!empty($filteredEmailUsers[$user]) ? $filteredEmailUsers[$user] : 0,
-				$activityType
+				$computedActivityType
 			);
 		}
 	}

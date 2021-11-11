@@ -30,11 +30,18 @@ use OCP\Util;
 class FilesHooksStatic {
 
 	/**
+	 * @var Appinfo\Application
+	 */
+	private static $app = null;
+
+	/**
 	 * @return FilesHooks
 	 */
 	protected static function getHooks() {
-		$app = new AppInfo\Application();
-		return $app->getContainer()->query('Hooks');
+		if (self::$app === null) {
+			self::$app = new AppInfo\Application();
+		}
+		return self::$app->getContainer()->query('Hooks');
 	}
 
 	/**
@@ -83,6 +90,22 @@ class FilesHooksStatic {
 	 */
 	public static function unShare($params) {
 		self::getHooks()->unShare($params);
+	}
+
+	/**
+	 * Manage post file rename/move
+	 * @param array $params The hook params
+	 */
+	public static function fileAfterRename($params) {
+		self::getHooks()->fileAfterRename($params['oldpath'], $params['newpath']);
+	}
+
+	/**
+	 * Manage pre file rename/move
+	 * @param array $params The hook params
+	 */
+	public static function fileBeforeRename($params) {
+		self::getHooks()->fileBeforeRename($params['oldpath'], $params['newpath']);
 	}
 
 	/**

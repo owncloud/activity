@@ -27,11 +27,15 @@
 		 *
 		 * @param {String} message
 		 * @param {boolean} forceFullMessage
+		 * @param {boolean} displayFullPath
 		 * @returns {String}
 		 */
-		parseMessage: function (message, forceFullMessage) {
+		parseMessage: function (message, forceFullMessage, displayFullPath) {
+			if (displayFullPath === undefined) {
+				displayFullPath = false;
+			}
 			var parsedMessage = this._parseCollection(message, forceFullMessage || false);
-			parsedMessage = this._parseParameters(parsedMessage, true);
+			parsedMessage = this._parseParameters(parsedMessage, true, displayFullPath);
 			return parsedMessage;
 		},
 
@@ -103,13 +107,14 @@
 		 *
 		 * @param {String} message
 		 * @param {boolean} useHtml
+		 * @param {boolean} displayFullPath
 		 * @returns {String}
 		 */
-		_parseParameters: function (message, useHtml) {
+		_parseParameters: function (message, useHtml, displayFullPath) {
 			message = this._parseUntypedParameters(message, useHtml);
 			message = this._parseUserParameters(message, useHtml);
 			message = this._parseFederatedCloudIDParameters(message, useHtml);
-			message = this._parseFileParameters(message, useHtml);
+			message = this._parseFileParameters(message, useHtml, displayFullPath);
 
 			return message;
 		},
@@ -181,16 +186,17 @@
 		 *
 		 * @param {String} message
 		 * @param {boolean} useHtml
+		 * @param {boolean} displayFullPath
 		 * @returns {String}
 		 */
-		_parseFileParameters: function(message, useHtml) {
+		_parseFileParameters: function(message, useHtml, displayFullPath) {
 			return message.replace(/<file\ link=\"(.*?)\"\ id=\"(.*?)\">(.*?)<\/file>/g, function (match, link, fileId, path) {
 				var title = '',
 					displayPath = path,
 					lastSlashPosition = path.lastIndexOf('/');
 
 
-				if (lastSlashPosition > 0) {
+				if (lastSlashPosition > 0 && displayFullPath !== true) {
 					var dirPath = path.substring(0, lastSlashPosition);
 					displayPath = path.substring(lastSlashPosition + 1);
 
