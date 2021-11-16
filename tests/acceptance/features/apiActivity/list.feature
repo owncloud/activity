@@ -19,8 +19,17 @@ Feature: List activity
       | subject_prepared | /^You deleted <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=textfile0\.txt\.d\d+&view=trashbin\" id=\"\d+\">textfile0\.txt<\/file>$/ |
 
 
+  Scenario: root file rename should not be listed in the activity list when disabled
+    Given user "Alice" has been created with default attributes and without skeleton files
+    And the administrator has added config key "enable_move_and_rename_activities" with value "no" in app "activity"
+    And user "Alice" has uploaded file with content "upload-content" to "/textfile0.txt"
+    When user "Alice" moves file "/textfile0.txt" to "/textfile1.txt" using the WebDAV API
+    Then user "Alice" should not have any activity entries with type "file_renamed$"
+
+
   Scenario: root file rename should be listed in the activity list
     Given user "Alice" has been created with default attributes and without skeleton files
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has uploaded file with content "upload-content" to "/textfile0.txt"
     When user "Alice" moves file "/textfile0.txt" to "/textfile1.txt" using the WebDAV API
     Then the activity number 1 of user "Alice" should match these properties:
@@ -37,6 +46,7 @@ Feature: List activity
 
   Scenario: file rename inside a subfolder should be listed in the activity list
     Given user "Alice" has been created with default attributes and without skeleton files
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "folder"
     And user "Alice" has created folder "folder/sub-folder"
     And user "Alice" has uploaded file with content "upload-content" to "/folder/sub-folder/textfile0.txt"
@@ -53,8 +63,19 @@ Feature: List activity
       | subject_prepared | /^You renamed <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/folder\/sub-folder&scrollto=textfile0\.txt\" id=\"\">folder\/sub-folder\/textfile0\.txt<\/file> to <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/folder\/sub-folder&scrollto=textfile1\.txt\" id=\"\d+\">folder\/sub-folder\/textfile1\.txt<\/file>$/ |
 
 
+  Scenario: move file action into a subfolder should be not listed in the activity list when disabled
+    Given user "Alice" has been created with default attributes and without skeleton files
+    And the administrator has added config key "enable_move_and_rename_activities" with value "no" in app "activity"
+    And user "Alice" has created folder "folder"
+    And user "Alice" has created folder "folder/sub-folder"
+    And user "Alice" has uploaded file with content "upload-content" to "/textfile0.txt"
+    When user "Alice" moves file "/textfile0.txt" to "/folder/sub-folder/textfile1.txt" using the WebDAV API
+    Then user "Alice" should not have any activity entries with type "file_moved$"
+
+
   Scenario: move file action into a subfolder should be listed in the activity list
     Given user "Alice" has been created with default attributes and without skeleton files
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "folder"
     And user "Alice" has created folder "folder/sub-folder"
     And user "Alice" has uploaded file with content "upload-content" to "/textfile0.txt"
@@ -73,6 +94,7 @@ Feature: List activity
 
   Scenario: move folder out of a subfolder should be listed in the activity list
     Given user "Alice" has been created with default attributes and without skeleton files
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "folder"
     And user "Alice" has created folder "folder/sub-folder"
     And user "Alice" has created folder "folder/sub-folder/deep-folder"
@@ -814,6 +836,7 @@ Feature: List activity
       | username |
       | Alice    |
       | Brian    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "FOLDER"
     And user "Alice" has shared folder "/FOLDER" with user "Brian"
     And user "Brian" has accepted share "/FOLDER" offered by user "Alice"
@@ -836,6 +859,7 @@ Feature: List activity
       | username |
       | Alice    |
       | Brian    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "FOLDER"
     And user "Alice" has uploaded file with content "file to share" to "/FOLDER/textfile0.txt"
     And user "Alice" has shared folder "/FOLDER" with user "Brian"
@@ -868,6 +892,7 @@ Feature: List activity
       | username |
       | Alice    |
       | Brian    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "FOLDER"
     And user "Alice" has uploaded file with content "file to share" to "/textfile0.txt"
     And user "Alice" has shared folder "FOLDER" with user "Brian"
@@ -900,6 +925,7 @@ Feature: List activity
       | username |
       | Alice    |
       | Brian    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And the administrator has set the default folder for received shares to "Shares"
     And user "Alice" has created folder "FOLDER"
     And user "Alice" has uploaded file with content "file to share" to "/textfile0.txt"
@@ -933,6 +959,7 @@ Feature: List activity
       | username |
       | Alice    |
       | Brian    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "FOLDER"
     And user "Alice" has uploaded file with content "file to share" to "/FOLDER/textfile0.txt"
     And user "Alice" has shared folder "FOLDER" with user "Brian"
@@ -965,6 +992,7 @@ Feature: List activity
       | username |
       | Alice    |
       | Brian    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "folder"
     And user "Alice" has created folder "folder/sub"
     And user "Alice" has uploaded file with content "file to share" to "/folder/textfile0.txt"
@@ -997,6 +1025,7 @@ Feature: List activity
       | username |
       | Alice    |
       | Brian    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And the administrator has set the default folder for received shares to "Shares"
     And user "Alice" has created folder "folder"
     And user "Alice" has created folder "folder/sub"
@@ -1032,6 +1061,7 @@ Feature: List activity
       | Alice    |
       | Brian    |
       | Carol    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And user "Alice" has created folder "FolderForBrian"
     And user "Alice" has created folder "FolderForCarol"
     And user "Alice" has uploaded file with content "file to move" to "/FolderForBrian/textfile0.txt"
@@ -1079,6 +1109,7 @@ Feature: List activity
       | Brian    |
       | Carol    |
       | David    |
+    And the administrator has added config key "enable_move_and_rename_activities" with value "yes" in app "activity"
     And group "grp1" has been created
     And group "grp2" has been created
     And user "Brian" has been added to group "grp1"
