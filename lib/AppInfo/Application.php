@@ -131,6 +131,7 @@ class Application extends App {
 				new View(''),
 				$server->getDatabaseConnection(),
 				$server->getURLGenerator(),
+				$server->getConfig(),
 				(string)$currentUser
 			);
 		});

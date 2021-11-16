@@ -31,6 +31,7 @@ use OCP\Activity\IEvent;
 use OCP\Activity\IManager;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\NotFoundException;
+use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IGroup;
 use OCP\IGroupManager;
@@ -65,6 +66,9 @@ class FilesHooks {
 	/** @var IURLGenerator */
 	protected $urlGenerator;
 
+	/** @var IConfig */
+	protected $config;
+
 	/** @var string */
 	protected $currentUser;
 
@@ -81,9 +85,10 @@ class FilesHooks {
 	 * @param View $view
 	 * @param IDBConnection $connection
 	 * @param IURLGenerator $urlGenerator
+	 * @param IConfig $config
 	 * @param string $currentUser
 	 */
-	public function __construct(IManager $manager, Data $activityData, UserSettings $userSettings, IGroupManager $groupManager, View $view, IDBConnection $connection, IURLGenerator $urlGenerator, string $currentUser) {
+	public function __construct(IManager $manager, Data $activityData, UserSettings $userSettings, IGroupManager $groupManager, View $view, IDBConnection $connection, IURLGenerator $urlGenerator, IConfig $config, string $currentUser) {
 		$this->manager = $manager;
 		$this->activityData = $activityData;
 		$this->userSettings = $userSettings;
@@ -91,6 +96,7 @@ class FilesHooks {
 		$this->view = $view;
 		$this->connection = $connection;
 		$this->urlGenerator = $urlGenerator;
+		$this->config = $config;
 		$this->currentUser = $currentUser;
 	}
 
@@ -143,6 +149,10 @@ class FilesHooks {
 	 * @param string $newPath Path of the file after rename
 	 */
 	public function fileAfterRename($oldPath, $newPath) {
+		if ($this->config->getAppValue('activity', 'enable_move_and_rename_activities', 'no') !== 'yes') {
+			return;
+		}
+
 		// .part files are already being handled in addNotificationsForFileAction()
 		// rename
 		if (\dirname($oldPath) === \dirname($newPath)) {

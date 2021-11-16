@@ -49,6 +49,8 @@ class FilesHooksTest extends TestCase {
 	protected $view;
 	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\IURLGenerator */
 	protected $urlGenerator;
+	/** @var \PHPUnit\Framework\MockObject\MockObject|\OCP\IConfig */
+	protected $config;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -74,6 +76,9 @@ class FilesHooksTest extends TestCase {
 		$this->urlGenerator = $this->getMockBuilder('OCP\IURLGenerator')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->config = $this->getMockBuilder('OCP\IConfig')
+			->disableOriginalConstructor()
+			->getMock();
 
 		$this->filesHooks = $this->getFilesHooks();
 	}
@@ -94,6 +99,7 @@ class FilesHooksTest extends TestCase {
 					$this->view,
 					\OC::$server->getDatabaseConnection(),
 					$this->urlGenerator,
+					$this->config,
 					$user,
 				])
 				->setMethods($mockedMethods)
@@ -107,6 +113,7 @@ class FilesHooksTest extends TestCase {
 				$this->view,
 				\OC::$server->getDatabaseConnection(),
 				$this->urlGenerator,
+				$this->config,
 				$user
 			);
 		}
@@ -951,6 +958,7 @@ class FilesHooksTest extends TestCase {
 	}
 
 	public function testFileRename() {
+		$this->config->method('getAppValue')->willReturn('yes');
 		$filesHooks = $this->getFilesHooks([
 			'getSourcePathAndOwner',
 			'getUserPathsFromPath',
@@ -981,6 +989,7 @@ class FilesHooksTest extends TestCase {
 	}
 
 	public function testFileMove() {
+		$this->config->method('getAppValue')->willReturn('yes');
 		$filesHooks = $this->getFilesHooks([
 			'getSourcePathAndOwner',
 			'getUserPathsFromPath',

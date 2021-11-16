@@ -169,9 +169,14 @@ class Settings extends Controller {
 	 */
 	public function displayPanel() {
 		$types = $this->data->getNotificationTypes($this->l10n);
+		$moveActivitiesEnabled = $this->config->getAppValue('activity', 'enable_move_and_rename_activities', 'no') === 'yes';
 
 		$activities = [];
 		foreach ($types as $type => $desc) {
+			if (!$moveActivitiesEnabled && ($type === 'file_moved' || $type === 'file_renamed')) {
+				continue;
+			}
+
 			if (\is_array($desc)) {
 				$methods = isset($desc['methods']) ? $desc['methods'] : [IExtension::METHOD_STREAM, IExtension::METHOD_MAIL];
 				$desc = isset($desc['desc']) ? $desc['desc'] : '';
