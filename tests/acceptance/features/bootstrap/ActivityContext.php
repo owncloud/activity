@@ -23,6 +23,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use GuzzleHttp\Exception\GuzzleException;
 use PHPUnit\Framework\Assert;
 use TestHelpers\HttpRequestHelper;
 
@@ -38,20 +39,21 @@ class ActivityContext implements Context {
 	private $featureContext;
 
 	/**
-	 * @Then the activity number :index of user :user should match these properties:
+	 * Asserts provided table data with index to json decoded activity response
 	 *
-	 * @param string $index (starting from 1, newest to the oldest)
 	 * @param string $user
+	 * @param string $index
+	 * @param array $responseDecoded
 	 * @param TableNode $expectedProperties
 	 *
 	 * @return void
 	 */
-	public function activityWithIndexShouldMatch(
-		string $index,
+	private function assertActivityIndexContent(
 		string $user,
+		string $index,
+		array $responseDecoded,
 		TableNode $expectedProperties
-	): void {
-		$responseDecoded = $this->getActivitiesForUser($user);
+	):void {
 		$activityData = $responseDecoded['ocs']['data'][$index - 1];
 		foreach ($expectedProperties->getRowsHash() as $key => $value) {
 			Assert::assertArrayHasKey(
@@ -71,11 +73,52 @@ class ActivityContext implements Context {
 	}
 
 	/**
+	 * @Then the activity number :index of user :user should match these properties:
+	 *
+	 * @param string $index (starting from 1, newest to the oldest)
+	 * @param string $user
+	 * @param TableNode $expectedProperties
+	 *
+	 * @return void
+	 * @throws GuzzleException
+	 */
+	public function activityWithIndexShouldMatch(
+		string $index,
+		string $user,
+		TableNode $expectedProperties
+	): void {
+		$responseDecoded = $this->getActivitiesForUser($user);
+		$this->assertActivityIndexContent($user, $index, $responseDecoded, $expectedProperties);
+	}
+
+	/**
+	 * @Then /^as user "([^"]*)" the activity number (\d+) for "([^"]*)" should match these properties:$/
+	 *
+	 * @param string $user
+	 * @param string $index
+	 * @param string $path
+	 * @param TableNode $expectedProperties
+	 *
+	 * @return void
+	 * @throws GuzzleException
+	 */
+	public function asUserTheActivityNumberForShouldMatchTheseProperties(
+		string $user,
+		string $index,
+		string $path,
+		TableNode $expectedProperties
+	):void {
+		$responseDecoded = $this->getActivitiesForFileAsUser($user, $path);
+		$this->assertActivityIndexContent($user, $index, $responseDecoded, $expectedProperties);
+	}
+
+	/**
 	 * @Then user :user should not have any activity entries
 	 *
 	 * @param string $user
 	 *
 	 * @return void
+	 * @throws GuzzleException
 	 */
 	public function userShouldNotHaveAnyActivityEntries(
 		string $user
@@ -98,6 +141,7 @@ class ActivityContext implements Context {
 	 * @param string $activityType
 	 *
 	 * @return void
+	 * @throws GuzzleException
 	 */
 	public function userShouldNotHaveAnyActivityEntriesWithType(
 		string $user,
@@ -123,13 +167,43 @@ class ActivityContext implements Context {
 	 * @param string $user
 	 *
 	 * @return array of activity entries
+	 * @throws GuzzleException
 	 */
 	public function getActivitiesForUser(
 		string $user
 	): array {
 		$user = $this->featureContext->getActualUsername($user);
-		$fullUrl = $this->featureContext->getBaseUrl() .
-			"/index.php/apps/activity/api/v2/activity";
+		$url = "/index.php/apps/activity/api/v2/activity";
+		return $this->sendActivityGetRequest($url, $user);
+	}
+
+	/**
+	 * @param string $user
+	 * @param string $resource
+	 *
+	 * @return array
+	 * @throws GuzzleException
+	 * @throws JsonException
+	 */
+	public function getActivitiesForFileAsUser(
+		string $user,
+		string $resource
+	): array {
+		$user = $this->featureContext->getActualUsername($user);
+		$objectId = $this->featureContext->getFileIdForPath($user, $resource);
+		$url = "/index.php/apps/activity/api/v2/activity/filter?object_type=files&object_id=${objectId}";
+		return $this->sendActivityGetRequest($url, $user);
+	}
+
+	/**
+	 * @param string $url
+	 * @param string $user
+	 *
+	 * @return array
+	 * @throws GuzzleException
+	 */
+	private function sendActivityGetRequest(string $url, string $user):array {
+		$fullUrl = $this->featureContext->getBaseUrl() . $url;
 		$response = HttpRequestHelper::get(
 			$fullUrl,
 			$this->featureContext->getStepLineRef(),
@@ -140,11 +214,10 @@ class ActivityContext implements Context {
 			200,
 			$response->getStatusCode()
 		);
-		$responseDecoded = \json_decode(
+		return \json_decode(
 			$response->getBody()->getContents(),
 			true
 		);
-		return $responseDecoded;
 	}
 
 	/**
