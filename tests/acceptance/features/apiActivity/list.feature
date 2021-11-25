@@ -24,7 +24,7 @@ Feature: List activity
     And the administrator has added config key "enable_move_and_rename_activities" with value "no" in app "activity"
     And user "Alice" has uploaded file with content "upload-content" to "/textfile0.txt"
     When user "Alice" moves file "/textfile0.txt" to "/textfile1.txt" using the WebDAV API
-    Then user "Alice" should not have any activity entries with type "file_renamed$"
+    Then user "Alice" should not have any activity entries with type "file_renamed"
 
 
   Scenario: root file rename should be listed in the activity list
@@ -70,7 +70,7 @@ Feature: List activity
     And user "Alice" has created folder "folder/sub-folder"
     And user "Alice" has uploaded file with content "upload-content" to "/textfile0.txt"
     When user "Alice" moves file "/textfile0.txt" to "/folder/sub-folder/textfile1.txt" using the WebDAV API
-    Then user "Alice" should not have any activity entries with type "file_moved$"
+    Then user "Alice" should not have any activity entries with type "file_moved"
 
 
   Scenario: move file action into a subfolder should be listed in the activity list
