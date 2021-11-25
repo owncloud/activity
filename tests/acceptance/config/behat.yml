@@ -105,4 +105,5 @@ default:
         - ActivityContext:
         - OccContext:
         - TrashbinContext:
+        - PublicWebDavContext:
         - FeatureContext: *common_feature_context_params

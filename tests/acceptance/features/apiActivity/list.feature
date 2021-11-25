@@ -1164,3 +1164,36 @@ Feature: List activity
       | object_type      | /^files$/                                                                                                                                                                                                        |
       | typeicon         | /^icon-add-color/                                                                                                                                                                                                |
       | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> created <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FolderForG2\&scrollto=textfile0\.txt\" id=\"\d+\">FolderForG2\/textfile0\.txt<\/file>$/ |
+
+  @issue-1032
+  Scenario: public renames a link shared resource
+    Given user "Alice" has been created with default attributes and without skeleton files
+    And user "Alice" has created folder "parent"
+    And user "Alice" has uploaded file with content "ownCloud test text file 0" to "/parent/textfile0.txt"
+    And user "Alice" has created a public link share with settings
+      | path        | /parent                   |
+      | permissions | read,update,create,delete |
+    When the public renames file "/textfile0.txt" to "textfile.txt" from the last public share using the new public WebDAV API
+    Then the HTTP status code should be "201"
+    And as "Alice" file "/parent/textfile.txt" should exist
+    And as user "Alice" the activity number 1 for "/parent/textfile.txt" should match these properties:
+      | type             | /^file_created/                                                                                                                                         |
+      | user             | /^Alice$/                                                                                                                                               |
+      | affecteduser     | /^Alice$/                                                                                                                                               |
+      | app              | /^files$/                                                                                                                                               |
+      | subject          | /^created_self$/                                                                                                                                        |
+      | object_name      | /^\/parent\/textfile0\.txt$/                                                                                                                            |
+      | object_type      | /^files$/                                                                                                                                               |
+      | typeicon         | /^icon-add-color$/                                                                                                                                      |
+      | subject_prepared | /^You created <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/parent\&scrollto=textfile\.txt\" id=\"\d+\">parent\/textfile0\.txt<\/file>$/ |
+#    After fixing the issue remove the above expectation and enable the following one
+#    And as user "Alice" the activity number 1 for "/parent/textfile.txt" should match these properties:
+#      | type             | /^file_renamed/                                                                                                                                                                                                                                                     |
+#      | user             | /^public$/                                                                                                                                                                                                                                                           |
+#      | affecteduser     | /^Alice$/                                                                                                                                                                                                                                                           |
+#      | app              | /^files$/                                                                                                                                                                                                                                                           |
+#      | subject          | /^renamed_public$/                                                                                                                                                                                                                                                    |
+#      | object_name      | /^\/parent\/textfile0\.txt$/                                                                                                                                                                                                                                                 |
+#      | object_type      | /^files$/                                                                                                                                                                                                                                                           |
+#      | typeicon         | /^icon-rename/                                                                                                                                                                                                                                                      |
+#      | subject_prepared | /^The public renamed <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/parent&scrollto=textfile0\.txt\" id=\"\">textfile0\.txt<\/file> to <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/parent&scrollto=textfile\.txt\" id=\"\d+\">textfile\.txt<\/file>$/ |
