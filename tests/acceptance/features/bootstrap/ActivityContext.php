@@ -127,10 +127,15 @@ class ActivityContext implements Context {
 		$activityDataArray = $responseDecoded['ocs']['data'];
 		Assert::assertIsArray($activityDataArray);
 		$numberOfActivityEntries = \count($activityDataArray);
+		$activityTypes = [];
+		foreach ($activityDataArray as $activityData) {
+			$activityTypes[$activityData["type"]] = true;
+		}
+		$activityTypesString = \implode(",", \array_keys($activityTypes));
 		Assert::assertEquals(
 			0,
 			$numberOfActivityEntries,
-			"User $user has $numberOfActivityEntries activity entries but should have none"
+			"User $user has $numberOfActivityEntries activity entries but should have none (found activity type(s) $activityTypesString)"
 		);
 	}
 
