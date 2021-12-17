@@ -1832,20 +1832,28 @@ def setupCeph(serviceParams):
 
     createFirstBucket = serviceParams["createFirstBucket"] if "createFirstBucket" in serviceParams else True
     setupCommands = serviceParams["setupCommands"] if "setupCommands" in serviceParams else [
-        "wait-for-it -t 600 ceph:80",
         "cd %s/apps/files_primary_s3" % dir["server"],
         "cp tests/drone/ceph.config.php %s/config" % dir["server"],
         "cd %s" % dir["server"],
     ]
 
-    return [{
-        "name": "setup-ceph",
-        "image": "owncloudci/php:7.4",
-        "pull": "always",
-        "commands": setupCommands + ([
-            "./apps/files_primary_s3/tests/drone/create-bucket.sh",
-        ] if createFirstBucket else []),
-    }]
+    return [
+        {
+            "name": "wait-for-ceph",
+            "image": OC_CI_WAIT_FOR,
+            "commands": [
+                "wait-for -it ceph:80 -t 600",
+            ],
+        },
+        {
+            "name": "setup-ceph",
+            "image": "owncloudci/php:7.4",
+            "pull": "always",
+            "commands": setupCommands + ([
+                "./apps/files_primary_s3/tests/drone/create-bucket.sh",
+            ] if createFirstBucket else []),
+        },
+    ]
 
 def setupScality(serviceParams):
     if type(serviceParams) == "bool":
@@ -1860,22 +1868,30 @@ def setupScality(serviceParams):
     createFirstBucket = serviceParams["createFirstBucket"] if "createFirstBucket" in serviceParams else True
     createExtraBuckets = serviceParams["createExtraBuckets"] if "createExtraBuckets" in serviceParams else False
     setupCommands = serviceParams["setupCommands"] if "setupCommands" in serviceParams else [
-        "wait-for-it -t 600 scality:8000",
         "cd %s/apps/files_primary_s3" % dir["server"],
         "cp tests/drone/%s %s/config" % (configFile, dir["server"]),
         "cd %s" % dir["server"],
     ]
 
-    return [{
-        "name": "setup-scality",
-        "image": "owncloudci/php:7.4",
-        "pull": "always",
-        "commands": setupCommands + ([
-            "php occ s3:create-bucket owncloud --accept-warning",
-        ] if createFirstBucket else []) + ([
-            "for I in $(seq 1 9); do php ./occ s3:create-bucket owncloud$I --accept-warning; done",
-        ] if createExtraBuckets else []),
-    }]
+    return [
+        {
+            "name": "wait-for-scality",
+            "image": OC_CI_WAIT_FOR,
+            "commands": [
+                "wait-for -it scality:8000 -t 600",
+            ],
+        },
+        {
+            "name": "setup-scality",
+            "image": "owncloudci/php:7.4",
+            "pull": "always",
+            "commands": setupCommands + ([
+                "php occ s3:create-bucket owncloud --accept-warning",
+            ] if createFirstBucket else []) + ([
+                "for I in $(seq 1 9); do php ./occ s3:create-bucket owncloud$I --accept-warning; done",
+            ] if createExtraBuckets else []),
+        },
+    ]
 
 def setupElasticSearch(esVersion):
     if esVersion == "none":
