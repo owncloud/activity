@@ -15,7 +15,7 @@ Never again miss an important event related to content in ownCloud and always be
   </description>
   <licence>AGPL</licence>
   <author>Thomas Müller, Frank Karlitschek, Joas Schilling, Tom Needham, Vincent Petry</author>
-  <version>2.6.1</version>
+  <version>2.7.0</version>
   <default_enable/>
   <types>
     <filesystem/>
@@ -30,7 +30,7 @@ Never again miss an important event related to content in ownCloud and always be
   <screenshot>https://raw.githubusercontent.com/owncloud/screenshots/68550c2b7c53e6309132ca1c7b177adca976db0b/activity/activity.png</screenshot>
   <category>tools</category>
   <dependencies>
-    <owncloud min-version="10.8.0" max-version="10"/>
+    <owncloud min-version="10.9.0" max-version="10"/>
   </dependencies>
   <background-jobs>
     <job>OCA\Activity\BackgroundJob\EmailNotification</job>
