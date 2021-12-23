@@ -306,7 +306,7 @@ def jscodestyle(ctx):
         "steps": [
             {
                 "name": "coding-standard-js",
-                "image": OC_CI_NODEJS,
+                "image": "owncloudci/nodejs:14",
                 "pull": "always",
                 "commands": [
                     "make test-js-style",
@@ -535,7 +535,7 @@ def build(ctx):
         return pipelines
 
     default = {
-        "phpVersions": ["7.3"],
+        "phpVersions": ["7.4"],
         "commands": [
             "make dist",
         ],
@@ -734,7 +734,7 @@ def phpTests(ctx, testType, withCoverage):
     errorFound = False
 
     default = {
-        "phpVersions": ["7.3", "7.4"],
+        "phpVersions": ["7.4"],
         "databases": [
             "sqlite",
             "mariadb:10.2",
@@ -1187,10 +1187,8 @@ def acceptance(ctx):
                              setupScality(testConfig["scalityS3"]) +
                              setupElasticSearch(testConfig["esVersion"]) +
                              testConfig["extraSetup"] +
-                             waitForServer(testConfig["federatedServerNeeded"]) +
-                             waitForEmailService(testConfig["emailNeeded"]) +
                              fixPermissions(testConfig["phpVersion"], testConfig["federatedServerNeeded"], params["selUserNeeded"]) +
-                             waitForBrowserService(testConfig["browser"]) +
+                             waitForBrowserService(testConfig["phpVersion"], isWebUI) +
                              [
                                  ({
                                      "name": "acceptance-tests",
@@ -1277,7 +1275,7 @@ def sonarAnalysis(ctx, phpVersion = "7.4"):
         "steps": [
                      {
                          "name": "clone",
-                         "image": OC_CI_ALPINE,
+                         "image": "owncloudci/alpine:latest",
                          "commands": [
                              "git clone https://github.com/%s.git ." % repo_slug,
                              "git checkout $DRONE_COMMIT",
@@ -1483,18 +1481,6 @@ def emailService(emailNeeded):
             "name": "email",
             "image": "mailhog/mailhog",
             "pull": "always",
-        }]
-
-    return []
-
-def waitForEmailService(emailNeeded):
-    if emailNeeded:
-        return [{
-            "name": "wait-for-email",
-            "image": OC_CI_WAIT_FOR,
-            "commands": [
-                "wait-for -it email:8025 -t 600",
-            ],
         }]
 
     return []
@@ -1898,36 +1884,24 @@ def setupElasticSearch(esVersion):
         return []
 
     return [
-        {
-            "name": "wait-for-es",
-            "image": OC_CI_WAIT_FOR,
-            "commands": [
-                "wait-for -it elasticsearch:9200 -t 600",
-            ],
-        },
-        {
-            "name": "setup-es",
-            "image": "owncloudci/php:7.4",
-            "pull": "always",
-            "commands": [
-                "cd %s" % dir["server"],
-                "php occ config:app:set search_elastic servers --value elasticsearch",
-                "php occ search:index:reset --force",
-            ],
-        },
-    ]
-
-def waitForServer(federatedServerNeeded):
-    return [{
-        "name": "wait-for-server",
-        "image": OC_CI_WAIT_FOR,
-        "pull": "always",
-        "commands": [
-            "wait-for -it server:80 -t 600",
-        ] + ([
-            "wait-for -it federated:80 -t 600",
-        ] if federatedServerNeeded else []),
-    }]
+            {
+                "name": "wait-for-es",
+                "image": OC_CI_WAIT_FOR,
+                "commands": [
+                    "wait-for -it elasticsearch:9200 -t 600",
+                ],
+            },
+            {
+                "name": "setup-es",
+                "image": "owncloudci/php:7.4",
+                "pull": "always",
+                "commands": [
+                    "cd %s" % dir["server"],
+                    "php occ config:app:set search_elastic servers --value elasticsearch",
+                    "php occ search:index:reset --force",
+                ],
+            },
+        ]
 
 def fixPermissions(phpVersion, federatedServerNeeded, selUserNeeded = False):
     return [{
@@ -2218,4 +2192,16 @@ def lintTest():
         "commands": [
             "make test-lint",
         ],
+    }]
+
+def waitForServer(federatedServerNeeded):
+    return [{
+        "name": "wait-for-server",
+        "image": OC_CI_WAIT_FOR,
+        "pull": "always",
+        "commands": [
+            "wait-for -it server:80 -t 600",
+        ] + ([
+            "wait-for -it federated:80 -t 600",
+        ] if federatedServerNeeded else []),
     }]
