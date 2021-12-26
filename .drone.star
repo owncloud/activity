@@ -20,23 +20,7 @@ config = {
     ],
     "codestyle": True,
     "javascript": True,
-    "phpunit": {
-        "allDatabases": {
-            "phpVersions": [
-                "7.3",
-            ],
-        },
-        "reducedDatabases": {
-            "phpVersions": [
-                "7.4",
-            ],
-            "databases": [
-                "sqlite",
-                "mariadb:10.2",
-            ],
-            "coverage": False,
-        },
-    },
+    "phpunit": True,
     "acceptance": {
         "webUI": {
             "suites": {
@@ -535,7 +519,7 @@ def build(ctx):
         return pipelines
 
     default = {
-        "phpVersions": ["7.3"],
+        "phpVersions": ["7.4"],
         "commands": [
             "make dist",
         ],
@@ -734,7 +718,7 @@ def phpTests(ctx, testType, withCoverage):
     errorFound = False
 
     default = {
-        "phpVersions": ["7.3", "7.4"],
+        "phpVersions": ["7.4"],
         "databases": [
             "sqlite",
             "mariadb:10.2",
