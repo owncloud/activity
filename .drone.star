@@ -18,67 +18,10 @@ config = {
     "branches": [
         "master",
     ],
-    "codestyle": True,
-    "javascript": True,
-    "phpunit": True,
+    "codestyle": False,
+    "javascript": False,
+    "phpunit": False,
     "acceptance": {
-        "webUI": {
-            "suites": {
-                "webUIActivityComments": "webUIComments",
-                "webUIActivityCreateUpdate": "webUICreateUpdat",
-                "webUIActivityDeleteRestore": "webUIDelRestore",
-                "webUIActivitySharingInternal": "webUISharingInt",
-                "webUIActivityTags": "webUITags",
-            },
-            "browsers": [
-                "chrome",
-                "firefox",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-        },
-        "federatedSuites": {
-            "suites": {
-                "webUIActivitySharingExternal": "webUISharingExt",
-            },
-            "browsers": [
-                "chrome",
-                "firefox",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-            "federatedServerNeeded": True,
-        },
-        "api": {
-            "suites": [
-                "apiActivity",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-        },
-        "core-api-acceptance": {
-            "suites": {
-                "apiAll": "core-apiAll",
-            },
-            "databases": [
-                "mysql:8.0",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-            "phpVersions": [
-                "7.4",
-            ],
-            "runCoreTests": True,
-            "federatedServerNeeded": True,
-            "cron": "nightly",
-            "runAllSuites": True,
-            "numberOfParts": 35,
-            "filterTags": "~@skip&&~@app-required",
-        },
         "core-cli-acceptance": {
             "suites": {
                 "cliAll": "core-cliAll",
@@ -93,32 +36,10 @@ config = {
                 "7.4",
             ],
             "runCoreTests": True,
-            "cron": "nightly",
             "runAllSuites": True,
-            "numberOfParts": 3,
+            "numberOfParts": 30,
             "emailNeeded": True,
             "filterTags": "~@skip&&~@app-required&&~@dbConversion",
-        },
-        "core-webui-acceptance": {
-            "suites": {
-                "webUIall": "core-webUI",
-            },
-            "databases": [
-                "mysql:8.0",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-            "phpVersions": [
-                "7.4",
-            ],
-            "emailNeeded": True,
-            "runCoreTests": True,
-            "federatedServerNeeded": True,
-            "cron": "nightly",
-            "runAllSuites": True,
-            "numberOfParts": 5,
-            "filterTags": "@smokeTest&&~@skip&&~@app-required",
         },
     },
 }
