@@ -139,7 +139,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 
 [Unreleased]: https://github.com/owncloud/activity/compare/v2.7.0...master
-[2.7.0]: https://github.com/owncloud/activity/compare/v2.6.0...v2.7.0
+[2.7.0]: https://github.com/owncloud/activity/compare/v2.6.1...v2.7.0
 [2.6.1]: https://github.com/owncloud/activity/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/owncloud/activity/compare/v2.5.4...v2.6.0
 [2.5.4]: https://github.com/owncloud/activity/compare/v2.5.3...v2.5.4
