@@ -93,6 +93,7 @@ config = {
                 "7.4",
             ],
             "runCoreTests": True,
+            "federatedServerNeeded": True,
             "cron": "nightly",
             "runAllSuites": True,
             "numberOfParts": 3,
