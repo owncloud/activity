@@ -718,7 +718,33 @@ def phpTests(ctx, testType, withCoverage):
 
     errorFound = False
 
-    default = {
+    # The default PHP unit test settings for a PR.
+    # Note: do not run Oracle by default in PRs.
+    prDefault = {
+        "phpVersions": ["7.4"],
+        "databases": [
+            "sqlite",
+            "mariadb:10.2",
+            "mysql:8.0",
+            "postgres:9.4",
+        ],
+        "coverage": True,
+        "includeKeyInMatrixName": False,
+        "logLevel": "2",
+        "cephS3": False,
+        "scalityS3": False,
+        "extraSetup": [],
+        "extraServices": [],
+        "extraEnvironment": {},
+        "extraCommandsBeforeTestRun": [],
+        "extraApps": {},
+        "extraTeardown": [],
+        "skip": False,
+        "enableApp": True,
+    }
+
+    # The default PHP unit test settings for the cron job (usually runs nightly).
+    cronDefault = {
         "phpVersions": ["7.4"],
         "databases": [
             "sqlite",
@@ -741,6 +767,11 @@ def phpTests(ctx, testType, withCoverage):
         "skip": False,
         "enableApp": True,
     }
+
+    if (ctx.build.event == "cron"):
+        default = cronDefault
+    else:
+        default = prDefault
 
     if "defaults" in config:
         if testType in config["defaults"]:
