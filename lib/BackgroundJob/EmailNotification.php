@@ -137,6 +137,14 @@ class EmailNotification extends TimedJob {
 				continue;
 			}
 
+			if (!$this->mqHandler->validateMailAddress($user['email'])) {
+				// The user's email address does not pass validation
+				// So we will not send an email but still discard the queued entries
+				$this->logger->debug("Couldn't send notification email to user '$uid' (invalid email address set for that user)", ['app' => 'activity']);
+				$sentMailForUsers[] = $uid;
+				continue;
+			}
+
 			$language = (!empty($userLanguages[$uid])) ? $userLanguages[$uid] : $default_lang;
 			$timezone = (!empty($userTimezones[$uid])) ? $userTimezones[$uid] : $defaultTimeZone;
 
