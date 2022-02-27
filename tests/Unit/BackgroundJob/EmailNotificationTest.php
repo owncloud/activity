@@ -101,6 +101,7 @@ class EmailNotificationTest extends TestCase {
 				['uid' => 'test1', 'email' => 'foo@owncloud.com'],
 				['uid' => 'test2', 'email' => ''],
 			]);
+			
 		$this->mqHandler->expects($this->once())
 			->method('sendEmailToUser')
 			->with('test1', 'foo@owncloud.com', 'de', \date_default_timezone_get(), $this->anything());
@@ -110,6 +111,7 @@ class EmailNotificationTest extends TestCase {
 				['core', 'lang', [
 					'test1',
 					'test2',
+					'test3',
 				], [
 					'test1' => 'de',
 					'test2' => 'en',
@@ -138,7 +140,7 @@ class EmailNotificationTest extends TestCase {
 		// Sending the email will throw an exception
 		$this->mqHandler->expects($this->once())
 			->method('sendEmailToUser')
-			->with('test1', 'test1@localhost', 'de', \date_default_timezone_get(), $this->anything())
+			->with('test1', 'foo@owncloud.com', 'de', \date_default_timezone_get(), $this->anything())
 			->willThrowException($e);
 		$this->config->expects($this->any())
 			->method('getUserValueForUsers')
