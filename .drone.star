@@ -2273,7 +2273,6 @@ def skipIfUnchanged(ctx, type):
 
     if type == "acceptance-tests":
         acceptance_skip_steps = [
-            "",
             "^tests/js/.*",
             "^tests/Unit/.*",
         ]
