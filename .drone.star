@@ -2154,31 +2154,30 @@ def checkStarlark():
         "kind": "pipeline",
         "type": "docker",
         "name": "check-starlark",
-        "steps": skipIfUnchanged(ctx, "lint") +
-                 [
-                     {
-                         "name": "format-check-starlark",
-                         "image": "owncloudci/bazel-buildifier",
-                         "pull": "always",
-                         "commands": [
-                             "buildifier --mode=check .drone.star",
-                         ],
-                     },
-                     {
-                         "name": "show-diff",
-                         "image": "owncloudci/bazel-buildifier",
-                         "pull": "always",
-                         "commands": [
-                             "buildifier --mode=fix .drone.star",
-                             "git diff",
-                         ],
-                         "when": {
-                             "status": [
-                                 "failure",
-                             ],
-                         },
-                     },
-                 ],
+        "steps": [
+            {
+                "name": "format-check-starlark",
+                "image": "owncloudci/bazel-buildifier",
+                "pull": "always",
+                "commands": [
+                    "buildifier --mode=check .drone.star",
+                ],
+            },
+            {
+                "name": "show-diff",
+                "image": "owncloudci/bazel-buildifier",
+                "pull": "always",
+                "commands": [
+                    "buildifier --mode=fix .drone.star",
+                    "git diff",
+                ],
+                "when": {
+                    "status": [
+                        "failure",
+                    ],
+                },
+            },
+        ],
         "depends_on": [],
         "trigger": {
             "ref": [
