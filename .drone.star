@@ -2,6 +2,7 @@ OC_CI_ALPINE = "owncloudci/alpine:latest"
 OC_CI_WAIT_FOR = "owncloudci/wait-for:latest"
 OC_CI_NODEJS = "owncloudci/nodejs:14"
 OC_UBUNTU = "owncloud/ubuntu:20.04"
+OC_CI_DRONE_SKIP_PIPELINE = "owncloudci/drone-skip-pipeline"
 
 dir = {
     "base": "/var/www/owncloud",
@@ -244,16 +245,17 @@ def codestyle(ctx):
                     "base": dir["base"],
                     "path": "server/apps/%s" % ctx.repo.name,
                 },
-                "steps": [
-                    {
-                        "name": "coding-standard",
-                        "image": "owncloudci/php:%s" % phpVersion,
-                        "pull": "always",
-                        "commands": [
-                            "make test-php-style",
-                        ],
-                    },
-                ],
+                "steps": skipIfUnchanged(ctx, "lint") +
+                         [
+                             {
+                                 "name": "coding-standard",
+                                 "image": "owncloudci/php:%s" % phpVersion,
+                                 "pull": "always",
+                                 "commands": [
+                                     "make test-php-style",
+                                 ],
+                             },
+                         ],
                 "depends_on": [],
                 "trigger": {
                     "ref": [
@@ -288,16 +290,17 @@ def jscodestyle(ctx):
             "base": dir["base"],
             "path": "server/apps/%s" % ctx.repo.name,
         },
-        "steps": [
-            {
-                "name": "coding-standard-js",
-                "image": OC_CI_NODEJS,
-                "pull": "always",
-                "commands": [
-                    "make test-js-style",
-                ],
-            },
-        ],
+        "steps": skipIfUnchanged(ctx, "lint") +
+                 [
+                     {
+                         "name": "coding-standard-js",
+                         "image": OC_CI_NODEJS,
+                         "pull": "always",
+                         "commands": [
+                             "make test-js-style",
+                         ],
+                     },
+                 ],
         "depends_on": [],
         "trigger": {
             "ref": [
@@ -412,7 +415,8 @@ def phpstan(ctx):
                     "base": dir["base"],
                     "path": "server/apps/%s" % ctx.repo.name,
                 },
-                "steps": installCore(ctx, "daily-master-qa", "sqlite", False) +
+                "steps": skipIfUnchanged(ctx, "lint") +
+                         installCore(ctx, "daily-master-qa", "sqlite", False) +
                          installAppPhp(ctx, phpVersion) +
                          installExtraApps(phpVersion, params["extraApps"]) +
                          setupServerAndApp(ctx, phpVersion, params["logLevel"], False, params["enableApp"]) +
@@ -486,7 +490,8 @@ def phan(ctx):
                     "base": dir["base"],
                     "path": "server/apps/%s" % ctx.repo.name,
                 },
-                "steps": installCore(ctx, "daily-master-qa", "sqlite", False) +
+                "steps": skipIfUnchanged(ctx, "lint") +
+                         installCore(ctx, "daily-master-qa", "sqlite", False) +
                          [
                              {
                                  "name": "phan",
@@ -657,7 +662,8 @@ def javascript(ctx, withCoverage):
             "base": dir["base"],
             "path": "server/apps/%s" % ctx.repo.name,
         },
-        "steps": installCore(ctx, "daily-master-qa", "sqlite", False) +
+        "steps": skipIfUnchanged(ctx, "unit-tests") +
+                 installCore(ctx, "daily-master-qa", "sqlite", False) +
                  installAppJavaScript(ctx) +
                  setupServerAndApp(ctx, "7.4", params["logLevel"], False, params["enableApp"]) +
                  params["extraSetup"] +
@@ -860,7 +866,8 @@ def phpTests(ctx, testType, withCoverage):
                         "base": dir["base"],
                         "path": "server/apps/%s" % ctx.repo.name,
                     },
-                    "steps": installCore(ctx, "daily-master-qa", db, False) +
+                    "steps": skipIfUnchanged(ctx, "unit-tests") +
+                             installCore(ctx, "daily-master-qa", db, False) +
                              installAppPhp(ctx, phpVersion) +
                              installExtraApps(phpVersion, params["extraApps"]) +
                              setupServerAndApp(ctx, phpVersion, params["logLevel"], False, params["enableApp"]) +
@@ -1191,7 +1198,8 @@ def acceptance(ctx):
                         "base": dir["base"],
                         "path": "testrunner/apps/%s" % ctx.repo.name,
                     },
-                    "steps": installCore(ctx, testConfig["server"], testConfig["database"], testConfig["useBundledApp"]) +
+                    "steps": skipIfUnchanged(ctx, "acceptance-tests") +
+                             installCore(ctx, testConfig["server"], testConfig["database"], testConfig["useBundledApp"]) +
                              installTestrunner(ctx, "7.4", testConfig["useBundledApp"]) +
                              (installFederated(testConfig["server"], testConfig["phpVersion"], testConfig["logLevel"], testConfig["database"], federationDbSuffix) + owncloudLog("federated") if testConfig["federatedServerNeeded"] else []) +
                              installAppPhp(ctx, testConfig["phpVersion"]) +
@@ -1300,6 +1308,7 @@ def sonarAnalysis(ctx, phpVersion = "7.4"):
                          ],
                      },
                  ] +
+                 skipIfUnchanged(ctx, "unit-tests") +
                  cacheRestore() +
                  composerInstall(phpVersion) +
                  installCore(ctx, "daily-master-qa", "sqlite", False) +
@@ -2197,7 +2206,8 @@ def phplint(ctx):
             "base": "/var/www/owncloud",
             "path": "server/apps/%s" % ctx.repo.name,
         },
-        "steps": installNPM() +
+        "steps": skipIfUnchanged(ctx, "lint") +
+                 installNPM() +
                  lintTest(),
         "depends_on": [],
         "trigger": {
@@ -2235,3 +2245,61 @@ def lintTest():
             "make test-lint",
         ],
     }]
+
+def skipIfUnchanged(ctx, type):
+    if ("full-ci" in ctx.build.title.lower()):
+        return []
+
+    skip_step = {
+        "name": "skip-if-unchanged",
+        "image": OC_CI_DRONE_SKIP_PIPELINE,
+        "when": {
+            "event": [
+                "pull_request",
+            ],
+        },
+    }
+
+    base_skip_steps = [
+        "^.github/.*",
+        "^changelog/.*",
+        "^docs/.*",
+        "README.md",
+    ]
+
+    if type == "lint":
+        skip_step["settings"] = {
+            "ALLOW_SKIP_CHANGED": base_skip_steps,
+        }
+        return [skip_step]
+
+    if type == "acceptance-tests":
+        acceptance_skip_steps = [
+            "^tests/acceptance/.*",
+            "^appinfo/.*",
+            "^css/.*",
+            "^js/.*",
+            "^lib/.*",
+            "^templates/.*",
+        ]
+        skip_step["settings"] = {
+            "DISALLOW_SKIP_CHANGED": acceptance_skip_steps,
+        }
+        return [skip_step]
+
+    if type == "unit-tests":
+        unit_skip_steps = [
+            "^tests/js/.*",
+            "^tests/Unit/.*",
+            "^appinfo/.*",
+            "^css/.*",
+            "^js/.*",
+            "^lib/.*",
+            "^templates/.*",
+        ]
+        skip_step["settings"] = {
+            "DISALLOW_SKIP_CHANGED": unit_skip_steps,
+        }
+        return [skip_step]
+
+    return []
