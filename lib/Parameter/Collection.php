@@ -81,7 +81,7 @@ class Collection implements IParameter {
 	 * @return string The formatted parameter
 	 */
 	public function format() {
-		$parameterList = $plainParameterList = [];
+		$parameterList = [];
 
 		foreach ($this->parameters as $parameter) {
 			$parameterList[] = $parameter->format();

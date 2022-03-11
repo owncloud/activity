@@ -98,7 +98,7 @@ class DataTest extends TestCase {
 			// Filter from extension
 			['filter1', 'filter1'],
 
-			// Inexistent or empty filter
+			// Nonexistent or empty filter
 			['test', 'all'],
 			[null, 'all'],
 		];
