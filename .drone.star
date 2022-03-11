@@ -2274,20 +2274,20 @@ def skipIfUnchanged(ctx, type):
 
     if type == "acceptance-tests":
         acceptance_skip_steps = [
-            "^tests/js/.*",
-            "^tests/Unit/.*",
+            "^tests/acceptance/.*",
         ]
         skip_step["settings"] = {
-            "ALLOW_SKIP_CHANGED": base_skip_steps + acceptance_skip_steps,
+            "DISALLOW_SKIP_CHANGED": acceptance_skip_steps,
         }
         return [skip_step]
 
     if type == "unit-tests":
         unit_skip_steps = [
-            "^tests/acceptance/.*",
+            "^tests/js/.*",
+            "^tests/Unit/.*",
         ]
         skip_step["settings"] = {
-            "ALLOW_SKIP_CHANGED": base_skip_steps + unit_skip_steps,
+            "DISALLOW_SKIP_CHANGED": unit_skip_steps,
         }
         return [skip_step]
 
