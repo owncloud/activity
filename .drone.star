@@ -2,7 +2,7 @@ OC_CI_ALPINE = "owncloudci/alpine:latest"
 OC_CI_WAIT_FOR = "owncloudci/wait-for:latest"
 OC_CI_NODEJS = "owncloudci/nodejs:14"
 OC_UBUNTU = "owncloud/ubuntu:20.04"
-OC_DRONE_SKIP_PIPELINE = "owncloudci/drone-skip-pipeline"
+OC_CI_DRONE_SKIP_PIPELINE = "owncloudci/drone-skip-pipeline"
 
 dir = {
     "base": "/var/www/owncloud",
@@ -2252,7 +2252,7 @@ def skipIfUnchanged(ctx, type):
 
     skip_step = {
         "name": "skip-if-unchanged",
-        "image": OC_DRONE_SKIP_PIPELINE,
+        "image": OC_CI_DRONE_SKIP_PIPELINE,
         "when": {
             "event": [
                 "pull_request",
@@ -2276,6 +2276,11 @@ def skipIfUnchanged(ctx, type):
     if type == "acceptance-tests":
         acceptance_skip_steps = [
             "^tests/acceptance/.*",
+            "^appinfo/.*",
+            "^css/.*",
+            "^js/.*",
+            "^lib/.*",
+            "^templates/.*",
         ]
         skip_step["settings"] = {
             "DISALLOW_SKIP_CHANGED": acceptance_skip_steps,
@@ -2286,6 +2291,11 @@ def skipIfUnchanged(ctx, type):
         unit_skip_steps = [
             "^tests/js/.*",
             "^tests/Unit/.*",
+            "^appinfo/.*",
+            "^css/.*",
+            "^js/.*",
+            "^lib/.*",
+            "^templates/.*",
         ]
         skip_step["settings"] = {
             "DISALLOW_SKIP_CHANGED": unit_skip_steps,

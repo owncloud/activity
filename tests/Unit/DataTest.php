@@ -479,7 +479,7 @@ class DataTest extends TestCase {
 	}
 
 	/**
-	 * Delete all testing activities
+	 * Delete all testing activities test
 	 */
 	protected function deleteTestActivities() {
 		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
