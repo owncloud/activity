@@ -1298,7 +1298,8 @@ def sonarAnalysis(ctx, phpVersion = "7.4"):
         "clone": {
             "disable": True,  # Sonarcloud does not apply issues on already merged branch
         },
-        "steps": [
+        "steps": skipIfUnchanged(ctx, "unit-tests") +
+                 [
                      {
                          "name": "clone",
                          "image": OC_CI_ALPINE,
