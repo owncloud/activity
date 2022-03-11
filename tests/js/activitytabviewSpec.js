@@ -44,14 +44,6 @@ describe('ActivityTabView', function() {
 			expect(tabView.$el.find('.activity').length).toEqual(0);
 		});
 
-		it('renders loading icon while fetching activities', function() {
-			tabView.setFileInfo(fileInfo);
-			tabView.collection.trigger('request');
-
-			expect(tabView.$el.find('.loading').length).toEqual(1);
-			expect(tabView.$el.find('.activity').length).toEqual(0);
-		});
-
 		it('renders activities', function() {
 			var activity1 = {
 				subject_prepared: 'The <parameter class="markup">Subject</parameter>',
