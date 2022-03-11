@@ -2,7 +2,7 @@
 Feature: List activity
   As a user
   I want to be able to see the activity list
-  So that I know what is happening with my files/folders testing
+  So that I know what is happening with my files/folders
 
   Scenario: file deletion should be listed in the activity list
     Given user "Alice" has been created with default attributes and small skeleton files

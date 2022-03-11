@@ -2,6 +2,7 @@ OC_CI_ALPINE = "owncloudci/alpine:latest"
 OC_CI_WAIT_FOR = "owncloudci/wait-for:latest"
 OC_CI_NODEJS = "owncloudci/nodejs:14"
 OC_UBUNTU = "owncloud/ubuntu:20.04"
+OC_DRONE_SKIP_PIPELINE = "owncloudci/drone-skip-pipeline"
 
 dir = {
     "base": "/var/www/owncloud",
@@ -2250,7 +2251,7 @@ def skipIfUnchanged(ctx, type):
 
     skip_step = {
         "name": "skip-if-unchanged",
-        "image": "owncloudci/drone-skip-pipeline",
+        "image": OC_DRONE_SKIP_PIPELINE,
         "when": {
             "event": [
                 "pull_request",
