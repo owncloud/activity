@@ -1298,8 +1298,7 @@ def sonarAnalysis(ctx, phpVersion = "7.4"):
         "clone": {
             "disable": True,  # Sonarcloud does not apply issues on already merged branch
         },
-        "steps": skipIfUnchanged(ctx, "unit-tests") +
-                 [
+        "steps": [
                      {
                          "name": "clone",
                          "image": OC_CI_ALPINE,
@@ -1309,6 +1308,7 @@ def sonarAnalysis(ctx, phpVersion = "7.4"):
                          ],
                      },
                  ] +
+                 skipIfUnchanged(ctx, "unit-tests") +
                  cacheRestore() +
                  composerInstall(phpVersion) +
                  installCore(ctx, "daily-master-qa", "sqlite", False) +
