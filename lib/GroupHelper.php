@@ -175,7 +175,7 @@ class GroupHelper {
 			return false;
 		}
 
-		// the group key is based on all parameters outside of the one
+		// the group key is based on all parameters outside the one
 		// pointed at by $parameterIndex as it's the varying part
 		$subjectParams = \json_decode($activity['subjectparams'], true);
 		unset($subjectParams[$parameterIndex]);
