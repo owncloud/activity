@@ -311,7 +311,7 @@ class Application extends App {
 	 * Register the hooks for filesystem operations
 	 */
 	public function registerFilesActivity() {
-		// All other events from other apps have to be send via the Consumer
+		// All other events from other apps have to be sent via the Consumer
 		Util::connectHook('OC_Filesystem', FileSystem::signal_post_create, 'OCA\Activity\FilesHooksStatic', 'fileCreate');
 		Util::connectHook('OC_Filesystem', Filesystem::signal_post_update, 'OCA\Activity\FilesHooksStatic', 'fileUpdate');
 		Util::connectHook('OC_Filesystem', Filesystem::signal_delete, 'OCA\Activity\FilesHooksStatic', 'fileDelete');
