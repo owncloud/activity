@@ -10,6 +10,7 @@
 describe('ActivityCollection', function() {
 	var ActivityCollection = OCA.Activity.ActivityCollection;
 
+	// touch a JS test
 	describe('query url', function() {
 		it('does not filter by default', function() {
 			var col = new ActivityCollection();
