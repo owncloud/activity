@@ -39,6 +39,7 @@ class AppTest extends TestCase {
 		});
 
 		// Test whether the navigation entry got added
+		// touch a unit test
 		$this->assertCount(1, $onlyActivity);
 	}
 
