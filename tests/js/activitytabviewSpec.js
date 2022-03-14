@@ -88,7 +88,6 @@ describe('ActivityTabView', function() {
 			expect($a1.find('.previews').length).toEqual(0);
 
 			var $a2 = $activities.eq(1);
-			expect($a2.find('.previews').length).toEqual(0);
 			expect($a2.find('.activitytime').attr('data-original-title')).toContain(moment().format('MMMM'));
 			expect($a2.find('.activitytime').attr('data-original-title')).toContain(moment().format('YYYY') - 1);
 		});
