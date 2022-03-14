@@ -51,7 +51,7 @@ class ActivityPage extends OwncloudPage {
 
 	protected $messageTextXpath = "(//div[@class='activitysubject'])[%s]/../*[@class='activitymessage']";
 
-	protected $activityListFilterXpath = "//a[@data-navigation='%s']";
+	protected $activityListFilterXpath = "";
 
 	/**
 	 * get specified activity message
