@@ -2264,6 +2264,8 @@ def skipIfUnchanged(ctx, type):
         "^.github/.*",
         "^changelog/.*",
         "^docs/.*",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
         "README.md",
     ]
 
