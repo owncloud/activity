@@ -12,7 +12,7 @@ Feature: List activity
       | user             | /^Alice$/                                                                                                                                                     |
       | affecteduser     | /^Alice$/                                                                                                                                                     |
       | app              | /^files$/                                                                                                                                                     |
-      | subject          | /^deleted_self$/                                                                                                                                              |
+      | subject          | /^broken/                                                                                                                                              |
       | object_name      | /^\/textfile0.txt$/                                                                                                                                           |
       | object_type      | /^files$/                                                                                                                                                     |
       | typeicon         | /^icon-delete-color$/                                                                                                                                         |
