@@ -1216,7 +1216,7 @@ def acceptance(ctx):
                                          "path": "%s/downloads" % dir["server"],
                                      }],
                                  }),
-                             ] + testConfig["extraTeardown"] + buildGithubCommentForBuildStopped(name, params["earlyFail"]) + githubComment(params["earlyFail"]) + stopBuild(ctx, params["earlyFail"]),
+                             ] + testConfig["extraTeardown"] + githubComment(params["earlyFail"]) + stopBuild(ctx, params["earlyFail"]),
                     "services": databaseService(testConfig["database"]) +
                                 browserService(testConfig["browser"]) +
                                 emailService(testConfig["emailNeeded"]) +
@@ -2054,38 +2054,17 @@ def stopBuild(ctx, earlyFail):
     else:
         return []
 
-def buildGithubCommentForBuildStopped(alternateSuiteName, earlyFail):
-    if (earlyFail):
-        return [{
-            "name": "build-github-comment-buildStop",
-            "image": OC_UBUNTU,
-            "commands": [
-                "echo ':boom: Acceptance tests pipeline <strong>%s</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}/1\\n' >> %s/comments.file" % (alternateSuiteName, dir["base"]),
-            ],
-            "when": {
-                "status": [
-                    "failure",
-                ],
-                "event": [
-                    "pull_request",
-                ],
-            },
-        }]
-
-    else:
-        return []
-
 def githubComment(earlyFail):
     if (earlyFail):
         return [{
             "name": "github-comment",
-            "image": "thegeeklab/drone-github-comment:1",
+            "image": THEGEEKLAB_DRONE_GITHUB_COMMENT,
             "pull": "if-not-exists",
             "settings": {
-                "message_file": "%s/comments.file" % dir["base"],
-            },
-            "environment": {
-                "GITHUB_TOKEN": {
+                "message": ":boom: Acceptance tests pipeline <strong>${DRONE_STAGE_NAME}</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}",
+                "key": "pr-${DRONE_PULL_REQUEST}",  #TODO: we could delete the comment after a successful CI run
+                "update": "true",
+                "api_key": {
                     "from_secret": "github_token",
                 },
             },
