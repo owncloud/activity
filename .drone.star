@@ -1,20 +1,20 @@
 BANST_AWS_CLI = "banst/awscli"
-DRONE_CI_ALPINE = "drone/cli:alpine"
-MAILHOG = "mailhog/mailhog"
-MINIO_MC_RELEASE_2020_VERSION = "minio/mc:RELEASE.2020-12-18T10-53-53Z"
+DRONE_CLI = "drone/cli:alpine"
+MAILHOG_MAILHOG = "mailhog/mailhog"
+MINIO_MC = "minio/mc:RELEASE.2020-12-18T10-53-53Z"
 OC_CI_ALPINE = "owncloudci/alpine:latest"
 OC_CI_BAZEL_BUILDIFIER = "owncloudci/bazel-buildifier"
-OC_CI_CEPH_UBUNTU = "owncloudci/ceph:tag-build-master-jewel-ubuntu-16.04"
+OC_CI_CEPH = "owncloudci/ceph:tag-build-master-jewel-ubuntu-16.04"
 OC_CI_CORE = "owncloudci/core"
 OC_CI_DRONE_CANCEL_PREVIOUS_BUILDS = "owncloudci/drone-cancel-previous-builds"
-OC_OPS_ELASTIC_SEARCH = "owncloudops/elasticsearch:%s"
+OC_CI_DRONE_SKIP_PIPELINE = "owncloudci/drone-skip-pipeline"
 OC_CI_NODEJS = "owncloudci/nodejs:%s"
 OC_CI_ORACLE_XE = "owncloudci/oracle-xe:latest"
 OC_CI_PHP = "owncloudci/php:%s"
+OC_CI_SCALITY_S3_SERVER = "owncloudci/scality-s3server"
 OC_CI_WAIT_FOR = "owncloudci/wait-for:latest"
-OC_SCALITY_S3_SERVER = "owncloudci/scality-s3server"
+OC_OPS_ELASTIC_SEARCH = "owncloudops/elasticsearch:%s"
 OC_UBUNTU = "owncloud/ubuntu:20.04"
-OC_CI_DRONE_SKIP_PIPELINE = "owncloudci/drone-skip-pipeline"
 OSIXIA_OPEN_LDAP = "osixia/openldap"
 PLUGINS_GITHUB_RELEASE = "plugins/github-release"
 PLUGINS_S3 = "plugins/s3"
@@ -26,6 +26,7 @@ SONARSOURCE_SONAR_SCANNER_CLI = "sonarsource/sonar-scanner-cli"
 THEGEEKLAB_DRONE_GITHUB_COMMENT = "thegeeklab/drone-github-comment:1"
 
 DEFAULT_PHP_VERSION = "7.4"
+DEFAULT_NODEJS_VERSION = "14"
 
 dir = {
     "base": "/var/www/owncloud",
@@ -272,8 +273,7 @@ def codestyle(ctx):
                          [
                              {
                                  "name": "coding-standard",
-                                 "image": "owncloudci/php:%s" % phpVersion,
-                                 "pull": "always",
+                                 "image": OC_CI_PHP % phpVersion,
                                  "commands": [
                                      "make test-php-style",
                                  ],
@@ -317,8 +317,7 @@ def jscodestyle(ctx):
                  [
                      {
                          "name": "coding-standard-js",
-                         "image": OC_CI_NODEJS,
-                         "pull": "always",
+                         "image": OC_CI_NODEJS % DEFAULT_NODEJS_VERSION,
                          "commands": [
                              "make test-js-style",
                          ],
@@ -1300,7 +1299,7 @@ def sonarAnalysis(ctx, phpVersion = DEFAULT_PHP_VERSION):
                  [
                      {
                          "name": "sync-from-cache",
-                         "image": MINIO_MC_RELEASE_2020_VERSION,
+                         "image": MINIO_MC,
                          "environment": {
                              "MC_HOST_cache": {
                                  "from_secret": "cache_s3_connection_url",
@@ -1331,7 +1330,7 @@ def sonarAnalysis(ctx, phpVersion = DEFAULT_PHP_VERSION):
                      },
                      {
                          "name": "purge-cache",
-                         "image": MINIO_MC_RELEASE_2020_VERSION,
+                         "image": MINIO_MC,
                          "environment": {
                              "MC_HOST_cache": {
                                  "from_secret": "cache_s3_connection_url",
@@ -1482,7 +1481,7 @@ def emailService(emailNeeded):
     if emailNeeded:
         return [{
             "name": "email",
-            "image": MAILHOG,
+            "image": MAILHOG_MAILHOG,
         }]
 
     return []
@@ -1541,7 +1540,7 @@ def scalityService(serviceParams):
 
     return [{
         "name": "scality",
-        "image": OC_SCALITY_S3_SERVER,
+        "image": OC_CI_SCALITY_S3_SERVER,
         "environment": serviceEnvironment,
     }]
 
@@ -1563,7 +1562,7 @@ def cephService(serviceParams):
 
     return [{
         "name": "ceph",
-        "image": OC_CI_CEPH_UBUNTU,
+        "image": OC_CI_CEPH,
         "environment": serviceEnvironment,
     }]
 
@@ -1636,7 +1635,7 @@ def getDbDatabase(db):
 def getNodeJsVersion():
     if "nodeJsVersion" not in config:
         # We use nodejs 14 as the default
-        return "14"
+        return DEFAULT_NODEJS_VERSION
     else:
         return config["nodeJsVersion"]
 
@@ -2031,7 +2030,7 @@ def stopBuild(ctx, earlyFail):
     if (earlyFail):
         return [{
             "name": "stop-build",
-            "image": DRONE_CI_ALPINE,
+            "image": DRONE_CLI,
             "environment": {
                 "DRONE_SERVER": "https://drone.owncloud.com",
                 "DRONE_TOKEN": {
@@ -2062,7 +2061,7 @@ def githubComment(earlyFail):
             "pull": "if-not-exists",
             "settings": {
                 "message": ":boom: Acceptance tests pipeline <strong>${DRONE_STAGE_NAME}</strong> failed. The build has been cancelled.\\n\\n${DRONE_BUILD_LINK}/${DRONE_JOB_NUMBER}${DRONE_STAGE_NUMBER}",
-                "key": "pr-${DRONE_PULL_REQUEST}",  #TODO: we could delete the comment after a successful CI run
+                "key": "pr-${DRONE_PULL_REQUEST}",
                 "update": "true",
                 "api_key": {
                     "from_secret": "github_token",
