@@ -1986,6 +1986,7 @@ def installFederated(federatedServerVersion, phpVersion, logLevel, db, dbSuffix 
                 "echo 'export TEST_SERVER_FED_URL=http://federated' > %s/saved-settings.sh" % dir["base"],
                 "cd %s" % dir["federated"],
                 "php occ a:l",
+                "php occ a:e files_external",
                 "php occ a:e testing",
                 "php occ a:l",
                 "php occ config:system:set trusted_domains 1 --value=federated",
