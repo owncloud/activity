@@ -50,7 +50,9 @@ class Application extends App {
 		$container = $this->getContainer();
 
 		/**
-		 * Activity Services
+				 * Activity Services
+				 * returns new data with activity manager
+				 *
 		 */
 		$container->registerService('ActivityData', function (IContainer $c) {
 			/** @var \OC\Server $server */
