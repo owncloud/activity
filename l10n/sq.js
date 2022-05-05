@@ -9,7 +9,7 @@ OC.L10N.register(
     "{parameterList} and {lastParameter}" : "{parameterList} dhe {lastParameter}",
     "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} dhe {linkStart}%n tjetër{linkEnd}","{parameterList} dhe {linkStart}%n të tjera{linkEnd}"],
     "in {directory}" : "në {directory}",
-    "This stream will show events like additions, changes & shares" : "Kjo rrjedhë do të shfaqë veprimtari të tilla si shtime, ndryshime & ndarje me të tjerë",
+    "This stream will show events like additions, changes & shares" : "Kjo rrjedhë do të shfaqë veprimtari të tilla si shtime, ndryshime & pjesë",
     "There are no events for this filter" : "S’ka veprimtari për këtë filtër",
     "Today" : "Sot",
     "Yesterday" : "Dje",
