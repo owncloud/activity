@@ -54,6 +54,7 @@ config = {
                 "webUIActivityDeleteRestore": "webUIDelRestore",
                 "webUIActivitySharingInternal": "webUISharingInt",
                 "webUIActivityTags": "webUITags",
+                "webUIActivityFileMoveAndRename": "webUIMoveRename",
             },
             "browsers": [
                 "chrome",
