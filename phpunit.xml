@@ -23,11 +23,7 @@
   </coverage>
   <testsuites>
     <testsuite name="unit">
-      <directory suffix="Test.php">./tests/Unit</directory>
+      <directory suffix="Test.php">./tests/unit</directory>
     </testsuite>
   </testsuites>
-  <!-- filters for code coverage -->
-  <logging>
-    <!-- and this is where your report will be written -->
-  </logging>
 </phpunit>
