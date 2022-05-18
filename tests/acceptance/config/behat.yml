@@ -12,7 +12,7 @@ default:
       contexts:
         - WebUIActivityContext:
         - FeatureContext: &common_feature_context_params
-            baseUrl:  http://localhost:8080
+            baseUrl: http://localhost:8080
             adminUsername: admin
             adminPassword: admin
             regularUserPassword: 123456
@@ -49,6 +49,20 @@ default:
         - WebUIGeneralContext:
         - WebUILoginContext:
         - WebUIPersonalGeneralSettingsContext:
+
+    webUIActivityMoving:
+      paths:
+        - '%paths.base%/../features/webUIActivityMoving'
+      contexts:
+        - WebUIActivityContext:
+        - FeatureContext: *common_feature_context_params
+        - ActivityContext:
+        - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
+        - WebUISharingContext:
+        - OccContext:
 
     webUIActivitySharingExternal:
       paths:
@@ -96,7 +110,7 @@ default:
 
     apiActivity:
       paths:
-        - '%paths.base%/../features/apiActivity'
+        - 'paths.base%/../features/apiActivity'
       contexts:
         - ActivityContext:
         - OccContext:
