@@ -50,6 +50,20 @@ default:
         - WebUILoginContext:
         - WebUIPersonalGeneralSettingsContext:
 
+    webUIActivityFileMoveAndRename:
+      paths:
+        - '%paths.base%/../features/webUIActivityFileMoveAndRename'
+      contexts:
+        - WebUIActivityContext:
+        - FeatureContext: *common_feature_context_params
+        - ActivityContext:
+        - WebUIFilesContext:
+        - WebUIGeneralContext:
+        - WebUILoginContext:
+        - WebUIPersonalGeneralSettingsContext:
+        - WebUISharingContext:
+        - OccContext:
+
     webUIActivitySharingExternal:
       paths:
         - '%paths.base%/../features/webUIActivitySharingExternal'
