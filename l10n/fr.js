@@ -7,7 +7,7 @@ OC.L10N.register(
     "Load more activities" : "Charger plus d'activités",
     ", " : ", ",
     "{parameterList} and {lastParameter}" : "{parameterList} et {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} et {linkStart}%n autre{linkEnd}","{parameterList} et {linkStart}%n autres{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} et {linkStart}%n autre{linkEnd}","{parameterList} et {linkStart}%n autres{linkEnd}","{parameterList} et {linkStart}%n autres{linkEnd}"],
     "in {directory}" : "dans {directory}",
     "This stream will show events like additions, changes & shares" : "Ce flux liste les événements tels que les ajouts, les modifications et les partages",
     "There are no events for this filter" : "Il n'y a pas d'événement pour ce filtre",
@@ -27,10 +27,10 @@ OC.L10N.register(
     "Hello %s," : "Bonjour %s,",
     "You are receiving this email because the following things happened at %s" : "Vous recevez ce message car l'activité suivante a eu lieu sur %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* et %n autre","* et %n autres"],
+    "_* and %n more _::_* and %n more _" : ["* et %n autre","* et %n autres","* et %n autres"],
     "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Vous recevez ce courriel car l'activité suivante a eu lieu sur <a href=\"%s\">%s</a>",
     "%1$s - %2$s" : "%1$s - %2$s",
-    "_and %n more _::_and %n more _" : ["et %n supplémentaire","et %n supplémentaires"],
+    "_and %n more _::_and %n more _" : ["et %n supplémentaire","et %n supplémentaires","et %n supplémentaires"],
     "Activity" : "Activité",
     "List your own file actions in the stream" : "Liste de vos propres actions dans le flux",
     "Notify about your own actions via email" : "M'informer de mes propres actions par courriel",
@@ -46,4 +46,4 @@ OC.L10N.register(
     "No more events to load" : "Plus aucun événement à charger",
     "Files" : "Fichiers"
 },
-"nplurals=2; plural=(n > 1);");
+"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

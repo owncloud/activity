@@ -7,7 +7,7 @@ OC.L10N.register(
     "Load more activities" : "Carregar mais actividades",
     ", " : ",",
     "{parameterList} and {lastParameter}" : "{parameterList} e {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} e {linkStart}%n mais{linkEnd}","{parameterList} e {linkStart}%n mais{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} e {linkStart}%n mais{linkEnd}","{parameterList} e {linkStart}%n mais{linkEnd}","{parameterList} e {linkStart}%n mais{linkEnd}"],
     "in {directory}" : "Em {directory}",
     "This stream will show events like additions, changes & shares" : "Este fluxo vai mostrar eventos como aditamentos, alterações e compartilhamentos",
     "There are no events for this filter" : "Não há eventos para este filtro",
@@ -27,10 +27,10 @@ OC.L10N.register(
     "Hello %s," : "Olá %s,",
     "You are receiving this email because the following things happened at %s" : "Você está recebendo este e-mail porque  ocorreu o seguinte em %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* e %n mais","* e %n mais "],
+    "_* and %n more _::_* and %n more _" : ["* e %n mais","* e %n mais ","* e %n mais "],
     "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Você está recebendo este e-mail porque as seguintes coisas aconteceram em <a href=\"%s\">%s</a>",
     "%1$s - %2$s" : "%1$s - %2$s",
-    "_and %n more _::_and %n more _" : ["e %n mais","e %n mais"],
+    "_and %n more _::_and %n more _" : ["e %n mais","e %n mais","e %n mais"],
     "Activity" : "Atividade",
     "List your own file actions in the stream" : "Lista de suas próprias ações de arquivo no fluxo",
     "Notify about your own actions via email" : "Notificar sobre suas próprias ações por e-mail",
@@ -46,4 +46,4 @@ OC.L10N.register(
     "No more events to load" : "Não ha mais eventos para carregar",
     "Files" : "Arquivos"
 },
-"nplurals=2; plural=(n > 1);");
+"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
