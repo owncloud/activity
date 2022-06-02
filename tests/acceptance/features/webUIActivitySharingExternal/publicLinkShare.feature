@@ -25,7 +25,7 @@ Feature: public link sharing file/folders activities
   @issue-690
   Scenario: Downloading a file from a public shared folder using API should be listed in the activity list
     Given user "Brian" has created a public link share of folder "simple-folder"
-    When the public downloads file "lorem.txt" from inside the last public shared folder with range "bytes=1-7" using the old public WebDAV API
+    When the public downloads file "lorem.txt" from inside the last public link shared folder with range "bytes=1-7" using the old public WebDAV API
     And the user browses to the activity page
     Then the activity number 1 should contain message "You shared simple-folder via link" in the activity page
     #Then the activity number 1 should contain message "Public shared file lorem.txt was downloaded" in the activity page

@@ -807,7 +807,7 @@ Feature: List activity
     When user "Alice" has created a public link share with settings
       | path       | /lorem.txt |
       | expireDate | +15 days   |
-    And the administrator expires the last created share using the testing API
+    And the administrator expires the last created public link share using the testing API
     # Testing api is used above so to tigger the latest list of activity
     And user "Alice" gets all shares shared by him using the sharing API
     Then the activity number 1 of user "Alice" should match these properties:
@@ -828,7 +828,7 @@ Feature: List activity
       | object_name      | /^\/lorem.txt$/                                                                                                                           |
       | object_type      | /^files$/                                                                                                                                 |
       | subject_prepared | /^You shared <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file> via link$/ |
-    And the last share id should not be included in the response
+    And the last public link share id should not be included in the response
 
 
   Scenario: check activity after renaming a shared folder
@@ -1173,7 +1173,7 @@ Feature: List activity
     And user "Alice" has created a public link share with settings
       | path        | /parent                   |
       | permissions | read,update,create,delete |
-    When the public renames file "/textfile0.txt" to "textfile.txt" from the last public share using the new public WebDAV API
+    When the public renames file "/textfile0.txt" to "textfile.txt" from the last public link share using the new public WebDAV API
     Then the HTTP status code should be "201"
     And as "Alice" file "/parent/textfile.txt" should exist
     And as user "Alice" the activity number 1 for "/parent/textfile.txt" should match these properties:
