@@ -117,3 +117,4 @@ default:
         - TrashbinContext:
         - PublicWebDavContext:
         - FeatureContext: *common_feature_context_params
+        - FederationContext:
