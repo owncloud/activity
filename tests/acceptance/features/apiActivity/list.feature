@@ -1197,3 +1197,52 @@ Feature: List activity
 #      | object_type      | /^files$/                                                                                                                                                                                                                                                           |
 #      | typeicon         | /^icon-rename/                                                                                                                                                                                                                                                      |
 #      | subject_prepared | /^The public renamed <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/parent&scrollto=textfile0\.txt\" id=\"\">textfile0\.txt<\/file> to <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/parent&scrollto=textfile\.txt\" id=\"\d+\">textfile\.txt<\/file>$/ |
+
+
+  Scenario: Check activity list after share is expired for federated share
+    Given using server "REMOTE"
+    And user "Brian" has been created with default attributes and without skeleton files
+    And using server "LOCAL"
+    And user "Alice" has been created with default attributes and without skeleton files
+    And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
+    And user "Alice" from server "LOCAL" has shared "/lorem.txt" with user "Brian" from server "REMOTE" with expiry date of "+15 days"
+    And user "Brian" from server "REMOTE" has accepted the last pending share
+    When the administrator expires the last created share using the testing API
+    And user "Alice" gets all shares shared by him using the sharing API
+    # The user "Alice" should have 3 activities, but only 2 have been found, and no removal of share activity is there for user "Alice"
+    Then the activity number 1 of user "Alice" should match these properties:
+      | type             | /^remote_share/                                                                                                                                                                                                                                                                    |
+      | affecteduser     | /^Alice$/                                                                                                                                                                                                                                                                          |
+      | app              | /^files_sharing$/                                                                                                                                                                                                                                                                  |
+      | subject          | /^remote_share_accepted$/                                                                                                                                                                                                                                                          |
+      | object_name      | /^\/lorem.txt$/                                                                                                                                                                                                                                                                    |
+      | object_type      | /^files$/                                                                                                                                                                                                                                                                          |
+      | subject_prepared | /^<federated-cloud-id display-name=\"Brian@\…\" user=\"Brian\" server=\"%remote_server%\">Brian@%remote_server%<\/federated-cloud-id> accepted federated share <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file>$/ |
+    And the activity number 2 of user "Alice" should match these properties:
+      | type             | /^file_created/                                                                                                                                                                                                                                 |
+      | user             | /^Alice$/                                                                                                                                                                                                                                       |
+      | affecteduser     | /^Alice$/                                                                                                                                                                                                                                       |
+      | app              | /^files$/                                                                                                                                                                                                                                       |
+      | subject          | /^created_self$/                                                                                                                                                                                                                                |
+      | object_name      | /^\/lorem.txt$/                                                                                                                                                                                                                                 |
+      | object_type      | /^files$/                                                                                                                                                                                                                                       |
+      | subject_prepared | /^You created <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/&scrollto=lorem\.txt\" id=\"\d+\">lorem\.txt<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/" id=\"\d+\">\/<\/file><\/collection>$/ |
+    And using server "REMOTE"
+    # The user "Brian" should have 'share expired message' on activities list, but 'unshared share message' is on activities list
+    And the activity number 1 of user "Brian" should match these properties:
+      | type             | /^remote_share$/                                                                                                                                                                   |
+      | affecteduser     | /^Brian$/                                                                                                                                                                          |
+      | app              | /^files_sharing$/                                                                                                                                                                  |
+      | subject          | /^remote_share_unshared$/                                                                                                                                                          |
+      | object_name      | /^$/                                                                                                                                                                               |
+      | object_type      | /^files$/                                                                                                                                                                          |
+      | subject_prepared | /^<federated-cloud-id display-name=\"Alice@\…\" user=\"Alice\" server=\"%local_server%\">Alice@%local_server%<\/federated-cloud-id> unshared <parameter>lorem\.txt<\/parameter> from you$/ |
+    And the activity number 2 of user "Brian" should match these properties:
+      | type             | /^remote_share$/                                                                                                                                                                                         |
+      | affecteduser     | /^Brian$/                                                                                                                                                                                                |
+      | app              | /^files_sharing$/                                                                                                                                                                                        |
+      | subject          | /^remote_share_received$/                                                                                                                                                                                |
+      | object_name      | /^$/                                                                                                                                                                                                     |
+      | object_type      | /^files$/                                                                                                                                                                                                |
+      | subject_prepared | /^You received a new federated share <parameter>lorem\.txt<\/parameter> from <federated-cloud-id display-name=\"Alice@\…\" user=\"Alice\" server=\"%local_server%\">Alice@%local_server%<\/federated-cloud-id>$/ |
+    And the last share id should not be included in the response
