@@ -45,7 +45,17 @@ config = {
     ],
     "codestyle": True,
     "javascript": True,
-    "phpunit": True,
+    "phpunit": {
+        "allDatabases": {
+            "phpVersions": [
+                "7.4",
+            ],
+            "servers": [
+                "daily-master-qa",
+                "10.10.0-qa",
+            ],
+        },
+    },
     "acceptance": {
         "webUI": {
             "suites": {
