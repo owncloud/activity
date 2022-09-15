@@ -18,7 +18,7 @@ OC.L10N.register(
     "Your settings have been updated." : "تم تحديث الإعدادات الخاصة بك.",
     "Mail" : "البريد",
     "Stream" : "دفق",
-    "\"remote user\"" : "\"مستخدم بعيد\"",
+    "\"remote user\"" : "\"مستخدم عن بعد\"",
     "Activity notification" : "إشعار النشاط",
     "All Activities" : "جميع الأنشطة",
     "Activities by you" : "أنشطتك",
