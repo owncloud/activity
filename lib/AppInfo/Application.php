@@ -301,6 +301,7 @@ class Application extends App {
 		$eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', ['OCA\Activity\FilesHooksStatic', 'onLoadFilesAppScripts']);
 
 		$eventDispatcher->addListener('remoteshare.accepted', ['OCA\Activity\Hooks', 'onRemoteShareAccepted']);
+		$eventDispatcher->addListener('share.afterreject', ['OCA\Activity\FilesHooksStatic', 'unShare']);
 
 		Util::connectHook('OC_User', 'post_deleteUser', 'OCA\Activity\Hooks', 'deleteUser');
 
@@ -320,5 +321,6 @@ class Application extends App {
 		Util::connectHook('\OCA\Files_Trashbin\Trashbin', 'post_restore', 'OCA\Activity\FilesHooksStatic', 'fileRestore');
 		Util::connectHook('OCP\Share', 'post_shared', 'OCA\Activity\FilesHooksStatic', 'share');
 		Util::connectHook('OCP\Share', 'pre_unshare', 'OCA\Activity\FilesHooksStatic', 'unShare');
+
 	}
 }
