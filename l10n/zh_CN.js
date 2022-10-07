@@ -1,8 +1,8 @@
 OC.L10N.register(
     "activity",
     {
-    "Activities" : "动态",
-    "Error loading activities" : "加载动态出错",
+    "Activities" : "活动",
+    "Error loading activities" : "载入活动时发生错误",
     "No activities" : "暂无动态",
     "Load more activities" : "加载更多动态",
     ", " : "，",
