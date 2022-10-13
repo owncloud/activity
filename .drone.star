@@ -851,6 +851,12 @@ def phpTests(ctx, testType, withCoverage):
             else:
                 command = "make test-php-integration"
 
+            # Get the first 3 characters of the PHP version (7.4 or 8.0 etc)
+            # And use that for constructing the pipeline name
+            # That helps shorten pipeline names when using owncloud-ci images
+            # that have longer names like 7.4-ubuntu20.04
+            phpVersionForPipelineName = phpVersion[0:3]
+
             for server in params["servers"]:
                 for db in params["databases"]:
                     keyString = "-" + category if params["includeKeyInMatrixName"] else ""
@@ -858,7 +864,7 @@ def phpTests(ctx, testType, withCoverage):
                         serverString = "-%s" % server.replace("daily-", "").replace("-qa", "")
                     else:
                         serverString = ""
-                    name = "%s%s-php%s%s-%s" % (testType, keyString, phpVersion, serverString, db.replace(":", ""))
+                    name = "%s%s-php%s%s-%s" % (testType, keyString, phpVersionForPipelineName, serverString, db.replace(":", ""))
                     maxLength = 50
                     nameLength = len(name)
                     if nameLength > maxLength:
