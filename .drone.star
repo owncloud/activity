@@ -1952,11 +1952,11 @@ def fixPermissions(phpVersion, federatedServerNeeded, selUserNeeded = False):
         ] + ([
             "chown -R www-data %s" % dir["federated"],
         ] if federatedServerNeeded else []) + ([
-            "chmod 777 /home/seluser/Downloads/",
+            "chmod 777 %s" % dir["browserService"],
         ] if selUserNeeded else []),
         "volumes": [{
             "name": "downloads",
-            "path": "/home/seluser/Downloads/",
+            "path": dir["browserService"],
         }],
     }]
 
