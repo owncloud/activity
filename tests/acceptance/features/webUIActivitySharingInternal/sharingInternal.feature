@@ -7,6 +7,7 @@ Feature: Sharing file/folders activities
   Background:
     Given user "Alice" has been created with default attributes and large skeleton files
 
+  
   Scenario: Sharing a file/folder with a user should be listed in the activity list of a sharer
     Given these users have been created with default attributes and large skeleton files but not initialized:
       | username |
@@ -33,6 +34,7 @@ Feature: Sharing file/folders activities
     And the activity number 3 should have a message saying that you have shared folder "folder with space" with user "Carol King"
     And the activity number 4 should have a message saying that you have shared file "textfile0.txt" with user "Brian Murphy"
 
+  
   Scenario: Sharing a file/folder with a group should be listed in the activity list of a sharer
     Given group "grp1" has been created
     And group "grp2" has been created
@@ -57,6 +59,7 @@ Feature: Sharing file/folders activities
     And the activity number 3 should contain message "You shared folder with space with group grp2" in the activity page
     And the activity number 4 should contain message "You shared textfile0.txt with group grp1" in the activity page
 
+  
   Scenario: Sharing a file/folder with a user should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Alice" has shared file "textfile0.txt" with user "Brian"
@@ -71,6 +74,7 @@ Feature: Sharing file/folders activities
     When the user filters activity list by "Shares"
     Then the activity number 1 should have a message saying that user "Alice Hansen" has shared "simple-empty-folder, lorem.txt, folder with space and textfile0.txt" with you
 
+  
   Scenario: Sharing a file/folder with a group should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and large skeleton files
     And group "grp1" has been created
@@ -87,6 +91,7 @@ Feature: Sharing file/folders activities
     When the user filters activity list by "Shares"
     Then the activity number 1 should have a message saying that user "Alice Hansen" has shared "simple-empty-folder, lorem.txt, folder with space and textfile0.txt" with you
 
+  
   Scenario: Sharing a file/folder with a user should not be listed in the activity list stream when shared activity has been disabled
     Given these users have been created with default attributes and large skeleton files but not initialized:
       | username |
@@ -102,6 +107,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "shared"
 
+  
   Scenario: Sharing a file/folder with a group should not be listed in the activity list stream when shared activity has been disabled
     Given group "grp1" has been created
     And group "grp2" has been created
@@ -115,6 +121,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "shared"
 
+  
   Scenario: Receiving a file/folder from a sharer should not be listed in the activity list stream when shared activity has been disabled
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Alice" has shared file "textfile0.txt" with user "Brian"
@@ -127,6 +134,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "shared"
 
+  
   Scenario: Receiving a file/folder in a group as a share should not be listed in the activity list stream when shared activity has been disabled
     Given user "Brian" has been created with default attributes and large skeleton files
     And group "grp1" has been created
@@ -141,6 +149,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "shared"
 
+  
   Scenario: Uploading a file inside a shared folder by a sharee should be listed in the activity list of a sharer
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -149,6 +158,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" created "textfilemoved.txt"
 
+  
   Scenario: Creating a folder inside a shared folder by a sharee should be listed in the activity list of a sharer
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -157,6 +167,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" created "newFolder"
 
+  
   Scenario: Uploading a file inside a shared folder by a sharer should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -165,6 +176,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" created "textfilemoved.txt"
 
+  
   Scenario: Creating a folder inside a shared folder by a sharer should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -173,6 +185,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" created "newFolder"
 
+  
   Scenario: Deleting a file inside a shared folder by a sharee should be listed in the activity list of a sharer
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -181,6 +194,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" deleted "lorem.txt"
 
+  
   Scenario: Deleting a folder inside a shared folder by a sharee should be listed in the activity list of a sharer
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -189,6 +203,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" deleted "simple-empty-folder"
 
+  
   Scenario: Deleting a file inside a shared folder by a sharer should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -197,6 +212,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" deleted "lorem.txt"
 
+  
   Scenario: Deleting a folder inside a shared folder by a sharer should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -205,6 +221,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" deleted "simple-empty-folder"
 
+  
   Scenario: Changing a shared file by a sharee should be listed in the activity list of a sharer
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared file "lorem.txt" with user "Brian"
@@ -213,6 +230,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" changed "lorem.txt"
 
+  
   Scenario: Changing a file inside a shared folder by a sharee should be listed in the activity list of a sharer
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -221,6 +239,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" changed "lorem.txt"
 
+  
   Scenario: Changing a shared file by a sharer should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared file "lorem.txt" with user "Brian"
@@ -229,6 +248,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" changed "lorem.txt"
 
+  
   Scenario: Changing a file inside a shared folder by a sharer should be listed in the activity list of a sharee
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -237,6 +257,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" changed "lorem.txt"
 
+  
   Scenario: Creating a folder inside a shared folder by a sharer should be listed in the activity list of a sharee even after the sharee has unshared the share
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -246,6 +267,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" created "newFolder"
 
+  
   Scenario: Creating a folder inside a shared folder by a sharee should be listed in the activity list of a sharer even after the sharee has unshared the share
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -255,6 +277,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Brian Murphy" created "newFolder"
 
+  
   Scenario: Deleting a share by a sharer should be listed in the activity list of the sharee
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -263,6 +286,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that "Alice Hansen" removed the share for "simple-folder"
 
+  
   Scenario: Deleting a share by a sharer should be listed in the activity list of the sharer
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared folder "simple-folder" with user "Brian"
@@ -286,6 +310,7 @@ Feature: Sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that you have shared file "textfile0.txt" with user "Brian Murphy"
 
+  
   Scenario: Sharing a file/folder with a user should be listed in the activity tab of the sharer for the file
     Given these users have been created with default attributes and large skeleton files but not initialized:
       | username |
@@ -302,6 +327,7 @@ Feature: Sharing file/folders activities
     Then the activity number 1 should have message saying that the folder is shared with user "Carol King" in the activity tab
     And the activity number 2 should contain message "You created folder with space" in the activity tab
 
+  
   Scenario: Sharing a file/folder with a user should be listed in the activity tab of the sharee for the file
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared file "block-aligned.txt" with user "Brian"
@@ -325,6 +351,7 @@ Feature: Sharing file/folders activities
     #remove the above step when issue is fixed
     #Then the activity number 1 should contain message "You shared textfile0.txt with Alice Hansen and Carol King" in the activity page
 
+  
   Scenario: users checks a group related activity after deleting the group
     Given these users have been created with default attributes and without skeleton files:
       | username |
@@ -338,6 +365,7 @@ Feature: Sharing file/folders activities
     When the user browses to the activity page
     Then the activity number 1 should contain message "You shared textfile0.txt with group grp1" in the activity page
 
+  
   Scenario: users checks a user related activity after deleting the user
     Given these users have been created with default attributes and without skeleton files:
       | username |

@@ -9,6 +9,7 @@ Feature: Moving and renaming file/folders activity
         And user "Alice" has been created with default attributes and without skeleton files
         And user "Alice" has logged in using the webUI
 
+    
     Scenario: moving a folder should be listed in the activity list
         Given user "Alice" has created the following folders
             | path            |
@@ -19,6 +20,7 @@ Feature: Moving and renaming file/folders activity
         And the user browses to the activity page
         Then the activity number 1 should contain message "You moved folder2 to folder1/folder3" in the activity page
 
+    
     Scenario: renaming a folder should be listed in the activity list
         Given user "Alice" has created folder "New folder"
         When user "Alice" moves folder "New folder" to "newFolder" using the WebDAV API

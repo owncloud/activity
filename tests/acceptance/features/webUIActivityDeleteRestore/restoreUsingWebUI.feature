@@ -8,6 +8,7 @@ Feature: Restored files/folders activities
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
 
+  
   Scenario Outline: Restore a file using the webUI and check the activity
     Given user "Alice" has deleted file "<file>"
     And the user has browsed to the trashbin page
@@ -19,6 +20,7 @@ Feature: Restored files/folders activities
       | lorem.txt               |
       | simple-folder/lorem.txt |
 
+  
   Scenario Outline: Restore a folder using the webUI and check the activity
     Given user "Alice" has deleted folder "<deleted-folder>"
     And the user has browsed to the trashbin page
@@ -30,6 +32,7 @@ Feature: Restored files/folders activities
       | simple-folder                     | simple-folder       |
       | simple-folder/simple-empty-folder | simple-empty-folder |
 
+  
   Scenario: Restore multiple deleted files/folder using the webUI and check the activity
     Given user "Alice" has deleted the following files
       | path                                  |

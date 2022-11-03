@@ -93,6 +93,7 @@ Feature: Created files/folders activities
       # Favorites shows the same as 'All Activities'. Uncomment after the fix
       #| Favorites            |
 
+  
   Scenario: Creating multiple files should be listed in the activity list with contracted list
     Given user "Alice" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
     And user "Alice" has uploaded file "filesForUpload/textfile.txt" to "/text1.txt"
@@ -132,6 +133,7 @@ Feature: Created files/folders activities
       # Favorites shows the same as 'All Activities'. Uncomment after the fix
       #| Favorites            |
 
+  
   Scenario: Uploading new file using async should register in the activity list
     Given the administrator has enabled async operations
     And using new DAV path
@@ -143,11 +145,13 @@ Feature: Created files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should contain message "You created text.txt" in the activity page
 
+  
   Scenario: Uploading new files using all mechanisms should be listed in the activity list
     When user "Alice" uploads file "filesForUpload/textfile.txt" to filenames based on "/text.txt" with all mechanisms using the WebDAV API
     And the user browses to the activity page
     Then the activity number 1 should contain message "You created text.txt-newdav-newchunking, text.txt-newdav-regular, text.txt-olddav-oldchunking" in the activity page
 
+  
   Scenario: Creating multiple folders should be listed in the activity list with contracted list
     Given user "Alice" has created folder "Doc1"
     And user "Alice" has created folder "Doc2"
@@ -156,6 +160,7 @@ Feature: Created files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should contain message "You created Doc4, Doc3, Doc2" in the activity page
 
+  
   Scenario: Creating multiple folders and files should be listed in activity list
     Given user "Alice" has created folder "doc"
     And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/doc/text1.txt"
@@ -163,18 +168,21 @@ Feature: Created files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should contain message "You created nested, text1.txt, doc" in the activity page
 
+  
   Scenario: Creating files inside folder should be listed in the activity list
     Given user "Alice" has created folder "doc"
     And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/doc/text1.txt"
     When the user browses to the activity page
     Then the activity number 1 should contain message "You created text1.txt, doc" in the activity page
 
+  
   Scenario: Copying files should be shown in activity log
     Given user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/text1.txt"
     And user "Alice" has copied file "/text1.txt" to "/text2.txt"
     When the user browses to the activity page
     And the activity number 1 should contain message "You created text2.txt, text1.txt" in the activity page
 
+  
   Scenario: Copying folder should be shown in activity log as created
     Given user "Alice" has created folder "doc"
     And user "Alice" has copied file "/doc" to "/doc2"
@@ -212,6 +220,7 @@ Feature: Created files/folders activities
       # Favorites shows the same as 'All Activities'. Uncomment after the fix
       #| Favorites            |
 
+  
   Scenario: Creating new file should not be listed in the activity list when file creation activity has been disabled
     Given user "Alice" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
     And the user has browsed to the personal general settings page
@@ -219,6 +228,7 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Creating new folder should not be listed in the activity list when file creation activity has been disabled
     Given user "Alice" has created folder "Docs"
     And the user has browsed to the personal general settings page
@@ -226,6 +236,7 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Uploading new file using async should not be listed in the activity list when file creation activity has been disabled
     Given the administrator has enabled async operations
     And using new DAV path
@@ -239,6 +250,7 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Uploading new files using all mechanisms should not be listed in the activity list when file created activity has been disabled
     Given the user has browsed to the personal general settings page
     When user "Alice" uploads file "filesForUpload/textfile.txt" to filenames based on "/text.txt" with all mechanisms using the WebDAV API
@@ -246,6 +258,7 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Creating files inside folder should not be listed in the activity list stream when file created activity has been disabled
     Given user "Alice" has created folder "doc"
     And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/doc/text1.txt"
@@ -254,6 +267,7 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Copying files should not be listed in the activity list stream when file created activity has been disabled
     Given user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/text1.txt"
     And user "Alice" has copied file "/text1.txt" to "/text2.txt"
@@ -262,6 +276,7 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Copying folder should not be listed in the activity list stream when file created activity has been disabled
     Given user "Alice" has created folder "doc"
     And user "Alice" has copied file "/doc" to "/doc2"
@@ -270,6 +285,7 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Copying files to another folder should not be listed in the activity list stream when file created activity has been disabled
     Given user "Alice" has created folder "doc"
     And user "Alice" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
@@ -279,11 +295,13 @@ Feature: Created files/folders activities
     And the user browses to the activity page
     Then the activity list should be empty
 
+  
   Scenario: Creating new file activity should be listed in the activity tab
     Given user "Alice" has uploaded file "filesForUpload/textfile.txt" to "/text.txt"
     When the user browses directly to display the details of file "/text.txt" in folder "/"
     Then the activity number 1 should contain message "You created text.txt" in the activity tab
 
+  
   Scenario: Creating folders should be listed in the activity tab
     Given user "Alice" has created folder "/Doc1"
     When the user browses to the files page

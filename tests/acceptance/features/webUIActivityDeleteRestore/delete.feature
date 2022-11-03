@@ -35,21 +35,25 @@ Feature: Deleted files/folders activities
       # Favorites shows the same as 'All Activities'. Uncomment after the fix
       #| Favorites            |
 
+  
   Scenario: folder deletion should be listed in the activity list
     Given user "Alice" has deleted folder "simple-folder"
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted simple-folder" in the activity page
 
+  
   Scenario: file inside folder deleted should be listed in the activity list
     Given user "Alice" has deleted file "simple-folder/block-aligned.txt"
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted block-aligned.txt" in the activity page
 
+  
   Scenario: folder inside folder deleted should be listed in the activity list
     Given user "Alice" has deleted folder "simple-folder/simple-empty-folder"
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted simple-empty-folder" in the activity page
 
+  
   Scenario: Deleting multiple folders should be listed in the activity list
     Given user "Alice" has deleted folder "simple-folder/simple-empty-folder"
     And user "Alice" has deleted folder "0"
@@ -59,6 +63,7 @@ Feature: Deleted files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted strängé नेपाली folder, 'single'quotes, simple-empty-folder, 0 and simple-empty-folder" in the activity page
 
+  
   Scenario: Deleting 6 or more folders at once should be contracted in the activity list
     Given user "Alice" has deleted folder "simple-folder/simple-empty-folder"
     And user "Alice" has deleted folder "0"
@@ -69,6 +74,7 @@ Feature: Deleted files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted strängé नेपाली folder empty, strängé नेपाली folder, 'single'quotes and 3 more" in the activity page
 
+  
   Scenario: Deleting multiple files should be listed in the activity list
     Given user "Alice" has deleted file "simple-folder/lorem.txt"
     And user "Alice" has deleted file "lorem.txt"
@@ -78,6 +84,7 @@ Feature: Deleted files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted testavatar.png, textfile0.txt, data.zip, lorem.txt and lorem.txt" in the activity page
 
+  
   Scenario: Deleting 6 or more files at once should be contracted in the activity list
     Given user "Alice" has deleted file "simple-folder/lorem.txt"
     And user "Alice" has deleted file "lorem.txt"
@@ -123,6 +130,7 @@ Feature: Deleted files/folders activities
       # Favorites shows the same as 'All Activities'. Uncomment after the fix
       #| Favorites            |
 
+  
   Scenario: Deleting mix of files and folders 6 or more at once should be contracted in the activity list
     Given user "Alice" has deleted folder "0"
     And user "Alice" has deleted file "strängé नेपाली folder/testavatar.png"
@@ -133,6 +141,7 @@ Feature: Deleted files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have message "You deleted data.zip, simple-empty-folder, textfile0.txt and 3 more" in the activity page
 
+  
   Scenario: folder deletion should not be listed in the activity list stream when file deleted activity has been disabled
     Given user "Alice" has deleted folder "simple-folder"
     And the user has browsed to the personal general settings page
@@ -140,6 +149,7 @@ Feature: Deleted files/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "deleted"
 
+  
   Scenario: file inside folder deleted should not be listed in the activity list stream when file deleted activity has been disabled
     Given user "Alice" has deleted file "simple-folder/block-aligned.txt"
     And the user has browsed to the personal general settings page
@@ -147,6 +157,7 @@ Feature: Deleted files/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "deleted"
 
+  
   Scenario: Sharer and sharee check activity after sharer deletes shared file
     Given these users have been created with default attributes and without skeleton files:
       | username |

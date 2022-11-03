@@ -4,6 +4,7 @@ Feature: Tag files/folders activities
   I want to be able to see history of the files and folders that I have tagged
   So that I know what happened in my cloud storage
 
+  
   Scenario Outline: Adding a tag on a file/folder should be listed on the activity list
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
@@ -21,6 +22,7 @@ Feature: Tag files/folders activities
       | 0/                                  | lorem.txt           |
       | 'single'quotes/simple-empty-folder/ | for-git-commit      |
 
+  
   Scenario Outline: Adding a tag on the shared file/folder should be listed on the activity list
     Given these users have been created with default attributes and large skeleton files:
       | username |
@@ -45,6 +47,7 @@ Feature: Tag files/folders activities
       | lorem.txt     |
       | simple-folder |
 
+  
   Scenario Outline: tagging activity before sharing should not be listed for the share receiver.
     Given these users have been created with default attributes and large skeleton files:
       | username |
@@ -69,6 +72,7 @@ Feature: Tag files/folders activities
       | lorem.txt     |
       | simple-folder |
 
+  
   Scenario Outline: Activity for tagging a shared file/folder by sharee should be listed for sharer as well
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
@@ -91,6 +95,7 @@ Feature: Tag files/folders activities
       | lorem.txt     |
       | simple-folder |
 
+  
   Scenario: Activity for tagging a reshared folder by sharee should be listed for original sharer as well
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
@@ -118,6 +123,7 @@ Feature: Tag files/folders activities
     And the activity number 2 should have a message saying that user "Brian Murphy" has shared "simple-empty-folder" with you
     And the activity should not have any message with keyword "Alice Hansen"
 
+  
   Scenario: Activity for creating a normal system tag by a user should be listed in activity list of an admin
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has created a "normal" tag with name "lorem"
@@ -125,6 +131,7 @@ Feature: Tag files/folders activities
     When the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" created system tag "lorem"
 
+  
   Scenario: Activity for deleting a normal system tag by a user should be listed in activity list of an admin
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has created a "normal" tag with name "lorem"
@@ -133,12 +140,14 @@ Feature: Tag files/folders activities
     And the user browses to the activity page
     Then the activity number 1 should have a message saying that user "Alice Hansen" deleted system tag "lorem"
 
+  
   Scenario: Activity for creating a static system tag by a administrator should be listed in activity list of an admin
     Given the administrator has created a "static" tag with name "StaticTagName"
     And the administrator has logged in using the webUI
     When the user browses to the activity page
     Then the activity number 1 should have message "You created system tag StaticTagName (static)" in the activity page
 
+  
   Scenario: Activity for deleting a static system tag by a administrator should be listed in activity list of an admin
     Given the administrator has created a "static" tag with name "StaticTagName"
     When the administrator deletes the tag with name "StaticTagName" using the WebDAV API
@@ -167,6 +176,7 @@ Feature: Tag files/folders activities
       | 0/                                  | lorem.txt           |
       | 'single'quotes/simple-empty-folder/ | for-git-commit      |
 
+  
   Scenario: Adding a tag on a file/folder should be listed on the activity tab
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
@@ -176,6 +186,7 @@ Feature: Tag files/folders activities
     Then the activity number 1 should contain message "You assigned system tag lorem" in the activity tab
     And the activity number 2 should contain message "You created lorem.txt" in the activity tab
 
+  
   Scenario: Administrator checks the activity of user after deleting the user
     Given user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has created a "normal" tag with name "StaticTagName"

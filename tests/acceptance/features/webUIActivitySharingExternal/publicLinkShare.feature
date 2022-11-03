@@ -8,12 +8,14 @@ Feature: public link sharing file/folders activities
     Given user "Brian" has been created with default attributes and large skeleton files
     And user "Brian" has logged in using the webUI
 
+  
   Scenario: Creating a public link of a folder and file should be listed in the activity list
     Given user "Brian" has created a public link share of folder "simple-folder"
     And user "Brian" has created a public link share of file "textfile0.txt"
     When the user browses to the activity page
     Then the activity number 1 should contain message "You shared textfile0.txt and simple-folder via link" in the activity page
 
+  
   Scenario: Uploading a file to a public shared folder should be listed in the activity list
     Given user "Brian" has created a public link share with settings
       | path        | simple-folder |
@@ -30,6 +32,7 @@ Feature: public link sharing file/folders activities
     Then the activity number 1 should contain message "You shared simple-folder via link" in the activity page
     #Then the activity number 1 should contain message "Public shared file lorem.txt was downloaded" in the activity page
 
+  
   Scenario: Downloading a public shared file from a webUI should be listed in the activity list
     Given the user has created a public link share of file "textfile0.txt"
     And the public accesses the last created public link using the webUI
@@ -37,6 +40,7 @@ Feature: public link sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should contain message "Public shared file textfile0.txt was downloaded" in the activity page
 
+  
   Scenario: Downloading a public shared folder from a webUI should be listed in the activity list
     Given the user has created a public link share of folder "simple-folder"
     And the public accesses the last created public link using the webUI
@@ -44,6 +48,7 @@ Feature: public link sharing file/folders activities
     And the user browses to the activity page
     Then the activity number 1 should contain message "Public shared folder simple-folder was downloaded" in the activity page
 
+  
   Scenario: Creating a public link of a folder and file should not be listed in the activity list stream when shared activity has been disabled
     Given user "Brian" has created a public link share of folder "simple-folder"
     And user "Brian" has created a public link share of file "textfile0.txt"
@@ -52,6 +57,7 @@ Feature: public link sharing file/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "shared"
 
+  
   Scenario: Uploading a file to a public shared folder should not be listed in the activity list stream when file created activity has been disabled
     Given user "Brian" has created a public link share with settings
       | path        | simple-folder |

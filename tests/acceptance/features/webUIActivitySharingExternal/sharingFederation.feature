@@ -11,23 +11,27 @@ Feature: federation sharing file/folder activities
     And user "Brian" has been created with default attributes and large skeleton files
     And user "Brian" has logged in using the webUI
 
+  
   Scenario: Sharing a folder with a remote server should not be listed in the activity list of a sharer if the sharee has not accepted the share
     Given user "Brian" from server "LOCAL" has shared "simple-folder" with user "Carol" from server "REMOTE"
     When the user browses to the activity page
     Then the activity should not have any message with keyword "remote share"
 
+  
   Scenario: Sharing a folder with a remote server should be listed in the activity list of a sharer
     Given user "Brian" from server "LOCAL" has shared "simple-folder" with user "Carol" from server "REMOTE"
     When user "Carol" from server "REMOTE" accepts the last pending share using the sharing API
     And the user browses to the activity page
     Then the activity number 1 should contain message "Carol@… accepted federated share simple-folder" in the activity page
 
+  
   Scenario: Sharing a file with a remote server should be listed in the activity list of a sharer
     Given user "Brian" from server "LOCAL" has shared "textfile0.txt" with user "Carol" from server "REMOTE"
     When user "Carol" from server "REMOTE" accepts the last pending share using the sharing API
     And the user browses to the activity page
     Then the activity number 1 should contain message "Carol@… accepted federated share textfile0.txt" in the activity page
 
+  
   Scenario: Sharing a file/folder with a remote server should be listed in the activity list of a sharee eventhough they have not accepted the share
     Given user "Carol" from server "REMOTE" has shared "textfile0.txt" with user "Brian" from server "LOCAL"
     And user "Carol" from server "REMOTE" has shared "simple-folder" with user "Brian" from server "LOCAL"
@@ -35,12 +39,14 @@ Feature: federation sharing file/folder activities
     Then the activity number 1 should contain message "You received a new federated share simple-folder from Carol@…" in the activity page
     And the activity number 2 should contain message "You received a new federated share textfile0.txt from Carol@…" in the activity page
 
+  
   Scenario: federated sharee does not get new activity message after accepting the pending share
     Given user "Carol" from server "REMOTE" has shared "textfile0.txt" with user "Brian" from server "LOCAL"
     When user "Brian" from server "LOCAL" accepts the last pending share using the sharing API
     And the user browses to the activity page
     Then the activity number 1 should contain message "You received a new federated share textfile0.txt from Carol@…" in the activity page
 
+  
   Scenario: Sharing a folder with a remote server should not be listed in the activity list stream when federated share activity has been disabled
     Given user "Brian" from server "LOCAL" has shared "simple-folder" with user "Carol" from server "REMOTE"
     And the user has browsed to the personal general settings page
@@ -49,6 +55,7 @@ Feature: federation sharing file/folder activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "federated share"
 
+  
   Scenario: Sharing a file with a remote server should not be listed in the activity list stream when federated share activity has been disabled
     Given user "Brian" from server "LOCAL" has shared "textfile0.txt" with user "Carol" from server "REMOTE"
     And the user has browsed to the personal general settings page
@@ -57,6 +64,7 @@ Feature: federation sharing file/folder activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "federated share"
 
+  
   Scenario: Receiving a file/folder from a remote server should not be listed in the activity list stream when federated share activity has been disabled
     Given user "Carol" from server "REMOTE" has shared "textfile0.txt" with user "Brian" from server "LOCAL"
     And user "Carol" from server "REMOTE" has shared "simple-folder" with user "Brian" from server "LOCAL"
