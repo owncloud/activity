@@ -8,6 +8,7 @@ Feature: Updated files/folders activities
     Given user "Alice" has been created with default attributes and without skeleton files
     And user "Alice" has logged in using the webUI
 
+  
   Scenario: Changing file contents should be shown in activity list
     Given user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/text.txt"
     And user "Alice" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
@@ -50,6 +51,7 @@ Feature: Updated files/folders activities
       # Favorites shows the same as 'All Activities'. Uncomment after the fix
       #| Favorites            |
 
+  
   Scenario: Changing multiple files in different order should be shown in activity list in the way it happens
     Given user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/text.txt"
     And user "Alice" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
@@ -61,6 +63,7 @@ Feature: Updated files/folders activities
     And the activity number 3 should have message "You changed text.txt" in the activity page
     And the activity number 4 should contain message "You created text.txt" in the activity page
 
+  
   Scenario: Changing contents of file inside folder should be shown in activity list
     Given user "Alice" has created folder "doc"
     And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/doc/text.txt"
@@ -73,6 +76,7 @@ Feature: Updated files/folders activities
     And the activity number 3 should have message "You changed text.txt" in the activity page
     And the activity number 4 should contain message "You created text.txt, doc" in the activity page
 
+  
   Scenario: Changing file contents should not be listed in the activity list stream when file changed activity has been disabled
     Given user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/text.txt"
     And user "Alice" has uploaded file "filesForUpload/lorem-big.txt" to "/text.txt"
@@ -81,6 +85,7 @@ Feature: Updated files/folders activities
     And the user browses to the activity page
     Then the activity should not have any message with keyword "changed"
 
+  
   Scenario: Changing contents of file should be shown in the activity tab
     Given user "Alice" has created folder "doc"
     And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/doc/text.txt"

@@ -9,6 +9,7 @@ Feature: Comment files/folders activities
     And user "Alice" has been created with default attributes and large skeleton files
     And user "Alice" has logged in using the webUI
 
+  
   Scenario Outline: Commenting on a file/folder should be listed in the activity page
     Given user "Alice" has commented with content "My first comment" on file "<filepath><filename>"
     When the user browses to the activity page
@@ -26,6 +27,7 @@ Feature: Comment files/folders activities
       | 0/                                  | lorem.txt           |
       | 'single'quotes/simple-empty-folder/ | for-git-commit      |
 
+  
   Scenario Outline: Comment, and then deleting comment on a file/folder should be listed in the activity page without any comment
     Given user "Alice" has commented with content "My first comment" on file "<filepath><filename>"
     And user "Alice" has deleted the last created comment
@@ -41,6 +43,7 @@ Feature: Comment files/folders activities
       | 0/                                  | lorem.txt           |
       | 'single'quotes/simple-empty-folder/ | for-git-commit      |
 
+  
   Scenario Outline: Adding a comment on the shared file/folder should be listed on the activity list
     Given user "Brian" has been created with default attributes and without skeleton files
     And group "group1" has been created
@@ -67,6 +70,7 @@ Feature: Comment files/folders activities
       | lorem.txt     |
       | simple-folder |
 
+  
   Scenario Outline: Activity for commenting before sharing file/folder should not be listed on the activity list
     Given user "Brian" has been created with default attributes and without skeleton files
     And group "group1" has been created
@@ -89,6 +93,7 @@ Feature: Comment files/folders activities
       | lorem.txt     |
       | simple-folder |
 
+  
   Scenario Outline: Activity for commenting on a shared file/folder by sharee should be listed for sharer as well
     Given user "Brian" has been created with default attributes and without skeleton files
     And group "group1" has been created
@@ -115,6 +120,7 @@ Feature: Comment files/folders activities
       | lorem.txt     |
       | simple-folder |
 
+  
   Scenario: Activity for commenting a reshared folder by sharee should be listed for original sharer as well
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Carol" has been created with default attributes and without skeleton files
@@ -150,6 +156,7 @@ Feature: Comment files/folders activities
     And the activity number 2 should have a message saying that user "Brian Murphy" has shared "simple-empty-folder" with you
     And the activity should not have any message with keyword "Alice Hansen"
 
+  
   Scenario: Activity for commenting on a shared file/folder by sharee should be listed for sharer and sharee as well in the activity tab
     Given user "Brian" has been created with default attributes and without skeleton files
     And user "Alice" has shared file "lorem.txt" with user "Brian"

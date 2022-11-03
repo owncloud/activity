@@ -4,6 +4,7 @@ Feature: List activity
   I want to be able to see the activity list
   So that I know what is happening with my files/folders
 
+  
   Scenario: file deletion should be listed in the activity list
     Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes file "textfile0.txt" using the WebDAV API
@@ -293,6 +294,7 @@ Feature: List activity
       | object_type      | /^files$/                                                                                                                                                                                                                                 |
       | subject_prepared | /^You restored <collection><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/PARENT\" id=\"\d+\">PARENT<\/file><file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/FOLDER\" id=\"\d+\">FOLDER<\/file><\/collection>$/ |
 
+  
   Scenario: mix of folder and file deletion should be listed in activity list
     Given user "Alice" has been created with default attributes and small skeleton files
     When user "Alice" deletes file "textfile0.txt" using the WebDAV API
@@ -1020,6 +1022,7 @@ Feature: List activity
       | typeicon         | /^icon-move/                                                                                                                                                                                                                                                                                                                                            |
       | subject_prepared | /^<user display-name=\"Alice Hansen\">Alice<\/user> moved <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/folder\&scrollto=textfile0\.txt\" id=\"\">folder\/textfile0\.txt<\/file> to <file link=\"%base_url%\/(index\.php\/)?apps\/files\/\?dir=\/folder\/sub\&scrollto=textfile0\.txt\" id=\"\d+\">folder\/sub\/textfile0\.txt<\/file>$/ |
 
+  
   Scenario: move a file inside a subfolder of a shared folder (into Shares folder)
     Given these users have been created with default attributes and without skeleton files:
       | username |
