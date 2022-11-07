@@ -1249,3 +1249,40 @@ Feature: List activity
       | object_type      | /^files$/                                                                                                                                                                                                |
       | subject_prepared | /^You received a new federated share <parameter>lorem\.txt<\/parameter> from <federated-cloud-id display-name=\"Alice@\…\" user=\"Alice\" server=\"%local_server%\">Alice@%local_server%<\/federated-cloud-id>$/ |
     And the last share id should not be included in the response
+
+  @issue-800
+  Scenario: adding a ownCloud server to the public link shows the share activity for the receiver
+    Given using server "REMOTE"
+    And user "Brian" has been created with default attributes and without skeleton files
+    And using server "LOCAL"
+    And user "Alice" has been created with default attributes and without skeleton files
+    And user "Alice" has uploaded file with content "ownCloud test text file 0" to "/fileToShare.txt"
+    And user "Alice" has created a public link share with settings
+      | path        | /fileToShare.txt |
+      | permissions | read             |
+    When using server "REMOTE"
+    And user "Brian" adds the last public link share to the remote server using the Sharing API
+    Then the HTTP status code should be "200"
+    And user "Brian" should not have any activity entries with type "shared"
+    #  remove the above step and use the following one after the issue has been resolved
+    #  And the activity number 1 of user "Brian" should match these properties:
+    #    | type             | /^shared$/                                                                                                                                                      |
+    #    | user             | /^Alice$/                                                                                                                                                       |
+    #    | affecteduser     | /^Alice$/                                                                                                                                                       |
+    #    | app              | /^files_sharing$/                                                                                                                                               |
+    #    | subject          | /^shared_link_self$/                                                                                                                                            |
+    #    | object_name      | /^\/fileToShare.txt/                                                                                                                                            |
+    #    | object_type      | /^files$/                                                                                                                                                       |
+    #    | typeicon         | /^icon-shared$/                                                                                                                                                 |
+    #    | subject_prepared | /^You received <file link=\"%base_url%\/(index.php\/)?apps\/files\/\?dir\=\/\&scrollto\=fileToShare\.txt\"\sid=\"\d{10}\">fileToShare\.txt<\/file>\svia\slink$/ |
+    When using server "LOCAL"
+    Then the activity number 1 of user "Alice" should match these properties:
+      | type             | /^shared$/                                                                                                                                                    |
+      | user             | /^Alice$/                                                                                                                                                     |
+      | affecteduser     | /^Alice$/                                                                                                                                                     |
+      | app              | /^files_sharing$/                                                                                                                                             |
+      | subject          | /^shared_link_self$/                                                                                                                                          |
+      | object_name      | /^\/fileToShare.txt/                                                                                                                                          |
+      | object_type      | /^files$/                                                                                                                                                     |
+      | typeicon         | /^icon-shared$/                                                                                                                                               |
+      | subject_prepared | /^You shared <file link=\"%base_url%\/(index.php\/)?apps\/files\/\?dir\=\/\&scrollto\=fileToShare\.txt\"\sid=\"\d{10}\">fileToShare\.txt<\/file>\svia\slink$/ |

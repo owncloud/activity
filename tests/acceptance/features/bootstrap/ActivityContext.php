@@ -25,6 +25,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\Exception\GuzzleException;
 use PHPUnit\Framework\Assert;
+use Psr\Http\Message\ResponseInterface;
 use TestHelpers\HttpRequestHelper;
 
 require_once 'bootstrap.php';
@@ -238,5 +239,68 @@ class ActivityContext implements Context {
 		$environment = $scope->getEnvironment();
 		// Get all the contexts you need in this context
 		$this->featureContext = $environment->getContext('FeatureContext');
+	}
+
+	/**
+	 * @param string $remote remote url to add as server to the public link
+	 * @param string $user actor for this operation
+	 * @param string $token token of the public link to be interacted with
+	 * @param string $owner owner of the public link
+	 * @param string $ownerDisplayName display name of the owner of the public link
+	 * @param string $path path of the resource in the public link share
+	 * @param string $password password of the public link if password protected
+	 *
+	 * @return ResponseInterface
+	 * @throws GuzzleException|JsonException
+	 */
+	public function addOwnCloudServerToThePublicLink(
+		string $remote,
+		string $user,
+		string $token,
+		string $owner,
+		string $ownerDisplayName,
+		string $path,
+		string $password = ""
+	): ResponseInterface {
+		$user = $this->featureContext->getActualUsername($user);
+		$userPassword = $this->featureContext->getPasswordForUser($user);
+		$fullUrl = $this->featureContext->getRemoteBaseUrl() . "/index.php/apps/files_sharing/external";
+
+		return HttpRequestHelper::post(
+			$fullUrl,
+			$this->featureContext->getStepLineRef(),
+			$user,
+			$userPassword,
+			null,
+			[
+				'remote' => $remote,
+				'token' => $token,
+				'owner' => $owner,
+				'ownerDisplayName' => $ownerDisplayName,
+				'name' => $path,
+				'password' => $password
+			]
+		);
+	}
+
+	/**
+	 * @When /^user "([^"]*)" adds the last public link share to the remote server using the Sharing API$/
+	 *
+	 * @param string $user
+	 *
+	 * @return void
+	 * @throws GuzzleException|JsonException|Exception
+	 */
+	public function userHasAddedTheLastPublicLinkShareToRemoteServer(string $user):void {
+		$this->featureContext->setResponse(
+			$this->addOwnCloudServerToThePublicLink(
+				$this->featureContext->getLocalBaseUrl(),
+				$user,
+				$this->featureContext->getLastPublicShareToken(),
+				$this->featureContext->getLastPublicShareAttribute("uid_owner"),
+				$this->featureContext->getLastPublicShareAttribute("displayname_owner"),
+				$this->featureContext->getLastPublicShareAttribute("path")
+			)
+		);
 	}
 }
