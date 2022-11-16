@@ -24,7 +24,6 @@ namespace OCA\Activity;
 use OCP\IL10N;
 
 class PlainTextParser {
-
 	/** @var IL10N */
 	protected $l;
 

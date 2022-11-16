@@ -26,7 +26,6 @@ use OCA\Activity\Formatter\UserFormatter;
 use OCA\Activity\Tests\Unit\TestCase;
 
 class UserFormatterTest extends TestCase {
-
 	/** @var \OCP\IUserManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $userManager;
 

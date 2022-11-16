@@ -35,7 +35,6 @@ use Behat\Mink\Session;
  * activity app gets an overhaul, it might require us to have two separate pages.
  */
 class ActivityPage extends OwncloudPage {
-
 	/**
 	 *
 	 * @var string $path

@@ -28,7 +28,6 @@ use OCP\Activity\IExtension;
 use OCP\L10N\IFactory;
 
 class Consumer implements IConsumer {
-
 	/** @var Data */
 	protected $data;
 

@@ -37,7 +37,6 @@ use OCP\IUser;
 use OCP\IUserSession;
 
 class OCSEndPoint {
-
 	/** @var string */
 	protected $filter;
 

@@ -11,7 +11,6 @@ use OCP\Migration\ISchemaMigration;
  */
 
 class Version20170724182159 implements ISchemaMigration {
-
 	/**
 	 * @param Schema $schema
 	 * @param array $options

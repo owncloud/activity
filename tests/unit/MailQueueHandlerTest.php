@@ -32,7 +32,6 @@ use OCP\IUser;
  * @package OCA\Activity\Tests
  */
 class MailQueueHandlerTest extends TestCase {
-
 	/** @var MailQueueHandler */
 	protected $mailQueueHandler;
 

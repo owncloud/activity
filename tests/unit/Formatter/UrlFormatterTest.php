@@ -27,7 +27,6 @@ use OCA\Activity\Tests\Unit\TestCase;
 use OCP\Activity\IEvent;
 
 class UrlFormatterTest extends TestCase {
-
 	/**
 	 * @param array $methods
 	 * @return IFormatter|\PHPUnit\Framework\MockObject\MockObject

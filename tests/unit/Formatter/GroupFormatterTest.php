@@ -28,7 +28,6 @@ use OCP\IGroup;
 use OCP\IGroupManager;
 
 class GroupFormatterTest extends TestCase {
-
 	/** @var  \OCP\IGroupManager|\PHPUnit\Framework\MockObject\MockObject */
 	protected $groupManager;
 

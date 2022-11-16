@@ -5,7 +5,6 @@ namespace OCA\Activity;
 use OCP\Settings\ISettings;
 
 class PersonalPanel implements ISettings {
-
 	/** @var AppInfo\Application  */
 	protected $app;
 

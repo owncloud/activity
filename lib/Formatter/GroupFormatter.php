@@ -26,7 +26,6 @@ use OCP\IGroupManager;
 use OCP\Util;
 
 class GroupFormatter implements IFormatter {
-
 	/** @var IGroupManager  */
 	protected $groupManager;
 

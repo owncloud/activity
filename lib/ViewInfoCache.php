@@ -25,7 +25,6 @@ use OC\Files\View;
 use OCP\Files\NotFoundException;
 
 class ViewInfoCache {
-
 	/** @var array */
 	protected $cachePath;
 	/** @var array */

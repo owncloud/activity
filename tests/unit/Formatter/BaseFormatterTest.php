@@ -26,7 +26,6 @@ use OCA\Activity\Formatter\BaseFormatter;
 use OCA\Activity\Tests\Unit\TestCase;
 
 class BaseFormatterTest extends TestCase {
-
 	/**
 	 * @param array $methods
 	 * @return IFormatter|\PHPUnit\Framework\MockObject\MockObject

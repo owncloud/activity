@@ -28,7 +28,6 @@ use OCP\Util;
  * The class to handle the filesystem hooks
  */
 class FilesHooksStatic {
-
 	/**
 	 * @var Appinfo\Application
 	 */

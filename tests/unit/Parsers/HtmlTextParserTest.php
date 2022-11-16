@@ -8,7 +8,6 @@ use OCP\IURLGenerator;
 use Test\TestCase;
 
 class HtmlTextParserTest extends TestCase {
-
 	/**
 	 * @dataProvider providesMessages
 	 * @param string $expected

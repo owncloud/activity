@@ -22,7 +22,6 @@
 namespace OCA\Activity\Parameter;
 
 interface IParameter {
-
 	/**
 	 * A value that is used to check, if the parameter is already in a Collection
 	 * @return mixed
