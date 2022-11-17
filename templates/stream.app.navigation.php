@@ -8,22 +8,22 @@
 ?>
 <div id="app-navigation">
 	<?php foreach ($_['navigations'] as $navigationGroup => $navigationEntries) {
-	?>
+		?>
 		<?php if ($navigationGroup !== 'apps'): ?><ul><?php endif; ?>
 
 		<?php foreach ($navigationEntries as $navigation) {
-		?>
+			?>
 		<li<?php if ($_['activeNavigation'] === $navigation['id']): ?> class="active"<?php endif; ?>>
 			<a data-navigation="<?php p($navigation['id']) ?>" href="<?php p($navigation['url']) ?>">
 				<?php p($navigation['name']) ?>
 			</a>
 		</li>
 		<?php
-	} ?>
+		} ?>
 
 		<?php if ($navigationGroup !== 'top'): ?></ul><?php endif; ?>
 	<?php
-} ?>
+	} ?>
 
 	<div id="app-settings">
 		<div id="app-settings-header">

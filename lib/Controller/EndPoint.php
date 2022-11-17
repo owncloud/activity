@@ -27,7 +27,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class EndPoint extends Controller {
-
 	/** @var OCSEndPoint */
 	protected $ocsEndPoint;
 

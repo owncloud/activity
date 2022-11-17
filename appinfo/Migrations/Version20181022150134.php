@@ -34,7 +34,6 @@ use OCP\IDBConnection;
  *
  */
 class Version20181022150134 implements ISqlMigration {
-
 	/**
 	 * @param Schema $schema
 	 * @param array $options

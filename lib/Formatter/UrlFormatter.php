@@ -25,7 +25,6 @@ use OCP\Activity\IEvent;
 use OCP\Util;
 
 class UrlFormatter implements IFormatter {
-
 	/**
 	 * Format a list of url parameters into an html a-tag. The parameters have to be provided as json encoded data, i.e. a string.
 	 * Allowed values are:

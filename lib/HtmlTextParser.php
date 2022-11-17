@@ -25,7 +25,6 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 
 class HtmlTextParser extends PlainTextParser {
-
 	/**
 	 * @var IURLGenerator
 	 */

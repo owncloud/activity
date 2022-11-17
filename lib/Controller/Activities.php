@@ -29,7 +29,6 @@ use OCP\IConfig;
 use OCP\IRequest;
 
 class Activities extends Controller {
-
 	/** @var \OCA\Activity\Data */
 	protected $data;
 

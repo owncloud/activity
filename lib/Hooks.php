@@ -30,7 +30,6 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  * Handles the stream and mail queue of a user when he is being deleted
  */
 class Hooks {
-
 	/**
 	 * Delete remaining activities and emails when a user is deleted
 	 *

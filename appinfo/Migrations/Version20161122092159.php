@@ -8,7 +8,6 @@ use Doctrine\DBAL\Types\Type;
 use OCP\Migration\ISchemaMigration;
 
 class Version20161122092159 implements ISchemaMigration {
-
 	/**
 	 * @param Schema $schema
 	 * @param array $options
