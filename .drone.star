@@ -45,7 +45,14 @@ config = {
     "branches": [
         "master",
     ],
-    "codestyle": True,
+    "codestyle": {
+        "multiple": {
+            "phpVersions": [
+                DEFAULT_PHP_VERSION,
+                "7.3",
+            ],
+        },
+    },
     "javascript": True,
     "phpunit": True,
     "acceptance": {
