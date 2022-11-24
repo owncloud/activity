@@ -71,10 +71,8 @@ foreach ($notificationTypes as $type => $data) {
 $deleteNotificationTypes[] = 'notify_stream_comments';
 $deleteNotificationTypes[] = 'notify_email_files_favorites';
 
-if (!empty($deleteNotificationTypes)) {
-	$query = $connection->getQueryBuilder();
-	$query->delete('preferences')
-		->where($query->expr()->eq('appid', $query->createNamedParameter('activity')))
-		->andWhere($query->expr()->in('configkey', $query->createNamedParameter($deleteNotificationTypes, IQueryBuilder::PARAM_STR_ARRAY)));
-	$query->execute();
-}
+$query = $connection->getQueryBuilder();
+$query->delete('preferences')
+	->where($query->expr()->eq('appid', $query->createNamedParameter('activity')))
+	->andWhere($query->expr()->in('configkey', $query->createNamedParameter($deleteNotificationTypes, IQueryBuilder::PARAM_STR_ARRAY)));
+$query->execute();

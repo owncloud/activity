@@ -354,7 +354,7 @@ class Data {
 	/**
 	 * Verify that the filter is valid
 	 *
-	 * @param string $filterValue
+	 * @param string|null $filterValue
 	 * @return string
 	 */
 	public function validateFilter($filterValue) {
@@ -389,6 +389,7 @@ class Data {
 		$this->deleteActivities([
 			'timestamp' => [$timelimit, '<'],
 		]);
+		return null;
 	}
 
 	/**
@@ -430,5 +431,6 @@ class Data {
 			);
 			$query->execute($sqlParameters);
 		}
+		return null;
 	}
 }

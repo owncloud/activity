@@ -29,7 +29,7 @@ use OCP\Util;
  */
 class FilesHooksStatic {
 	/**
-	 * @var Appinfo\Application
+	 * @var AppInfo\Application
 	 */
 	private static $app = null;
 

@@ -2,3 +2,35 @@ parameters:
   bootstrapFiles:
     - %currentWorkingDirectory%/../../lib/base.php
   ignoreErrors:
+    -
+      message: '#Variable \$this might not be defined.#'
+      path: appinfo/routes.php
+      count: 1
+    -
+      message: '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required.#'
+      path: lib/AppInfo/Application.php
+      count: 1
+    -
+      message: '#Comparison operation ">" between int<1, max> and 0 is always true.#'
+      path: lib/Command/SendEmails.php
+      count: 1
+    -
+      message: '#Strict comparison using === between non-empty-string and null will always evaluate to false.#'
+      path: lib/Data.php
+      count: 2
+    -
+      message: '#Method OCP\\DB\\QueryBuilder\\IExpressionBuilder::orX\(\) invoked with 2 parameters, 0-1 required.#'
+      path: lib/Data.php
+      count: 3
+    -
+      message: '#Call to method getSharedFrom\(\) on an unknown class OC\\Files\\Storage\\Shared.#'
+      path: lib/FilesHooks.php
+      count: 1
+    -
+      message: '#PHPDoc tag @var for variable \$storage contains unknown class OC\\Files\\Storage\\Shared.#'
+      path: lib/FilesHooks.php
+      count: 1
+    -
+      message: '#Strict comparison using === between string and null will always evaluate to false.#'
+      path: lib/FilesHooks.php
+      count: 1

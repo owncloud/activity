@@ -46,7 +46,7 @@ config = {
         "master",
     ],
     "codestyle": True,
-    "phpstan": False,
+    "phpstan": True,
     "phan": {
         "multipleVersions": {
             "phpVersions": [

@@ -33,8 +33,8 @@ use OCP\IDBConnection;
  */
 class Version20181022150134 implements ISqlMigration {
 	/**
-	 * @param Schema $schema
-	 * @param array $options
+	 * @param IDBConnection $connection
+	 * @return array|string[]
 	 */
 	public function sql(IDBConnection $connection) {
 		$platform = $connection->getDatabasePlatform();

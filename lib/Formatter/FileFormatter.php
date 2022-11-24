@@ -67,8 +67,7 @@ class FileFormatter implements IFormatter {
 			$info = $this->infoCache->getInfoById($this->user, $fileId, $param);
 		} elseif ($event->getObjectType() === 'files' && $event->getObjectName() === $param) {
 			$fileId = $event->getObjectId();
-			/* @phan-suppress-next-line PhanTypeMismatchArgument */
-			$info = $this->infoCache->getInfoById($this->user, $fileId, $param);
+			$info = $this->infoCache->getInfoById($this->user, (int) $fileId, $param);
 		} else {
 			$info = $this->infoCache->getInfoByPath($this->user, $param);
 		}
