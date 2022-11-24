@@ -1,0 +1,4 @@
+parameters:
+  bootstrapFiles:
+    - %currentWorkingDirectory%/../../lib/base.php
+  ignoreErrors:
