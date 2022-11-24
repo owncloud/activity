@@ -20,6 +20,9 @@
  *
  */
 
+/* @phan-suppress-next-line PhanUndeclaredClassMethod */
 $app = new \OCA\Activity\AppInfo\Application();
+/* @phan-suppress-next-line PhanUndeclaredClassMethod */
 $app->registerActivityConsumer();
+/* @phan-suppress-next-line PhanUndeclaredClassMethod */
 $app->registerHooksAndEvents();

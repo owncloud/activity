@@ -69,8 +69,7 @@ class Application extends App {
 			return new Consumer(
 				$c->query('ActivityData'),
 				$c->query('UserSettings'),
-				$server->getL10NFactory(),
-				$c->query('OCP\Activity\IManager')
+				$server->getL10NFactory()
 			);
 		});
 
@@ -117,8 +116,8 @@ class Application extends App {
 			if ($currentUser === "") {
 				// Get the federated user from dav v1 server
 				$event = $server->getEventDispatcher()->dispatch(
-					'public.user.resolve',
-					new GenericEvent('', ['user' => ""])
+					new GenericEvent('', ['user' => ""]),
+					'public.user.resolve'
 				);
 				$currentUser = $event->getArgument("user");
 			}

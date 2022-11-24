@@ -27,7 +27,7 @@ class Collection implements IParameter {
 	/** @var IL10N */
 	protected $l;
 
-	/** @var Parameter[] */
+	/** @var IParameter[] */
 	protected $parameters;
 
 	/** @var string */

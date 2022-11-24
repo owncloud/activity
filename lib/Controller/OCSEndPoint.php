@@ -188,8 +188,10 @@ class OCSEndPoint {
 		try {
 			$this->readParameters($parameters);
 		} catch (InvalidFilterException $e) {
+			/* @phan-suppress-next-line PhanDeprecatedClass */
 			return new \OC_OCS_Result(null, Http::STATUS_NOT_FOUND);
 		} catch (\OutOfBoundsException $e) {
+			/* @phan-suppress-next-line PhanDeprecatedClass */
 			return new \OC_OCS_Result(null, Http::STATUS_FORBIDDEN);
 		}
 
@@ -207,14 +209,17 @@ class OCSEndPoint {
 			);
 		} catch (\OutOfBoundsException $e) {
 			// Invalid since argument
+			/* @phan-suppress-next-line PhanDeprecatedClass */
 			return new \OC_OCS_Result(null, Http::STATUS_FORBIDDEN);
 		} catch (\BadMethodCallException $e) {
 			// No activity settings enabled
+			/* @phan-suppress-next-line PhanDeprecatedClass */
 			return new \OC_OCS_Result(null, Http::STATUS_NO_CONTENT);
 		}
 
 		$headers = $this->generateHeaders($response['headers'], $response['has_more']);
 		if (empty($response['data'])) {
+			/* @phan-suppress-next-line PhanDeprecatedClass */
 			return new \OC_OCS_Result([], Http::STATUS_NOT_MODIFIED, null, $headers);
 		}
 
@@ -242,6 +247,7 @@ class OCSEndPoint {
 			$preparedActivities[] = $activity;
 		}
 
+		/* @phan-suppress-next-line PhanDeprecatedClass */
 		return new \OC_OCS_Result($preparedActivities, 100, null, $headers);
 	}
 

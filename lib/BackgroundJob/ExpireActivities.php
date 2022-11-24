@@ -38,8 +38,8 @@ class ExpireActivities extends TimedJob {
 	protected $config;
 
 	/**
-	 * @param Data $data
-	 * @param IConfig $config
+	 * @param Data|null $data
+	 * @param IConfig|null $config
 	 */
 	public function __construct(Data $data = null, IConfig $config = null) {
 		// Run once per day

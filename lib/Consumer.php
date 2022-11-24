@@ -85,5 +85,6 @@ class Consumer implements IConsumer {
 			$latestSend = $event->getTimestamp() + $emailSetting;
 			$this->data->storeMail($event, $latestSend);
 		}
+		return null;
 	}
 }

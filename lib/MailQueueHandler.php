@@ -125,6 +125,7 @@ class MailQueueHandler {
 		$query->execute([$latestSend]);
 
 		$affectedUsers = [];
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		while ($row = $query->fetch()) {
 			$affectedUsers[] = [
 				'uid' => $row['amq_affecteduser'],
@@ -155,6 +156,7 @@ class MailQueueHandler {
 		$query->execute([(int) $maxTime, $affectedUser]);
 
 		$activities = [];
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		while ($row = $query->fetch()) {
 			$activities[] = $row;
 		}
@@ -169,6 +171,7 @@ class MailQueueHandler {
 			);
 			$query->execute([(int) $maxTime, $affectedUser]);
 
+			/* @phan-suppress-next-line PhanDeprecatedFunction */
 			$row = $query->fetch();
 			return [$activities, $row['actual_count'] - $maxNumItems];
 		} else {
@@ -348,6 +351,7 @@ class MailQueueHandler {
 		$query->execute();
 
 		$allUsers = [];
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		while ($row = $query->fetch()) {
 			$allUsers[] = [
 				'uid' => $row['amq_affecteduser'],

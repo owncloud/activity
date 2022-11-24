@@ -23,8 +23,6 @@ namespace OCA\activity\Migrations;
 
 use OCP\Migration\ISqlMigration;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
-use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use OCP\IDBConnection;
 
 /**
@@ -35,8 +33,8 @@ use OCP\IDBConnection;
  */
 class Version20181022150134 implements ISqlMigration {
 	/**
-	 * @param Schema $schema
-	 * @param array $options
+	 * @param IDBConnection $connection
+	 * @return array|string[]
 	 */
 	public function sql(IDBConnection $connection) {
 		$platform = $connection->getDatabasePlatform();

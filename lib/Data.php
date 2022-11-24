@@ -272,6 +272,7 @@ class Data {
 
 		$result = $query->execute();
 		$hasMore = false;
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		while ($row = $result->fetch()) {
 			if ($limit === 0) {
 				$hasMore = true;
@@ -281,6 +282,7 @@ class Data {
 			$groupHelper->addActivity($row);
 			$limit--;
 		}
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$result->closeCursor();
 
 		return ['data' => $groupHelper->getActivities(), 'has_more' => $hasMore, 'headers' => $headers];
@@ -303,7 +305,9 @@ class Data {
 				->from('activity')
 				->where($queryBuilder->expr()->eq('activity_id', $queryBuilder->createNamedParameter((int) $since)));
 			$result = $queryBuilder->execute();
+			/* @phan-suppress-next-line PhanDeprecatedFunction */
 			$activity = $result->fetch();
+			/* @phan-suppress-next-line PhanDeprecatedFunction */
 			$result->closeCursor();
 
 			if ($activity) {
@@ -333,7 +337,9 @@ class Data {
 			->orderBy('timestamp', $sort)
 			->setMaxResults(1);
 		$result = $fetchQuery->execute();
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$activity = $result->fetch();
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$result->closeCursor();
 
 		if ($activity !== false) {
@@ -348,7 +354,7 @@ class Data {
 	/**
 	 * Verify that the filter is valid
 	 *
-	 * @param string $filterValue
+	 * @param string|null $filterValue
 	 * @return string
 	 */
 	public function validateFilter($filterValue) {
@@ -383,6 +389,7 @@ class Data {
 		$this->deleteActivities([
 			'timestamp' => [$timelimit, '<'],
 		]);
+		return null;
 	}
 
 	/**
@@ -424,5 +431,6 @@ class Data {
 			);
 			$query->execute($sqlParameters);
 		}
+		return null;
 	}
 }
