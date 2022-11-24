@@ -195,7 +195,7 @@ class FilesHooks {
 	 * Creates the entries for file actions on $file_path
 	 *
 	 * @param string $filePath         The file that is being changed
-	 * @param int    $activityType     The activity type
+	 * @param string $activityType     The activity type
 	 * @param string $subject          The subject for the actor
 	 * @param string $subjectBy        The subject for other users (with "by $actor")
 	 * @param string $oldPath	   	   Old path in case of a rename/move
@@ -518,6 +518,7 @@ class FilesHooks {
 			->setParameter('parent', (int) $shareId);
 		$query = $queryBuilder->execute();
 
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		while ($row = $query->fetch()) {
 			$affectedUsers[$row['share_with']] = $row['file_target'];
 		}
@@ -690,6 +691,7 @@ class FilesHooks {
 		}
 
 		/** @var \OC\Files\Storage\Shared $storage */
+		/* @phan-suppress-next-line PhanUndeclaredMethod */
 		$shareOwner = $storage->getSharedFrom();
 		if ($shareOwner === '' || $shareOwner === null || $shareOwner === $owner || $shareOwner === $currentOwner) {
 			return;

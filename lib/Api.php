@@ -65,6 +65,7 @@ class Api {
 			];
 		}
 
+		/* @phan-suppress-next-line PhanDeprecatedClass */
 		return new \OC_OCS_Result($entries);
 	}
 
@@ -83,7 +84,9 @@ class Api {
 			->setMaxResults(1);
 
 		$result = $query->execute();
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$row = $result->fetch();
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$result->closeCursor();
 
 		if ($row) {

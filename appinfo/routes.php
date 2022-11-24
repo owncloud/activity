@@ -47,7 +47,7 @@ API::register(
 	'activity'
 );
 
-/* @phan-suppress-next-line PhanUndeclaredClassMethod */
+/* @phan-suppress-next-line PhanUndeclaredClassMethod,PhanUndeclaredThis */
 $app->registerRoutes($this, ['routes' => [
 	['name' => 'Settings#personal', 'url' => '/settings', 'verb' => 'POST'],
 	['name' => 'Settings#feed', 'url' => '/settings/feed', 'verb' => 'POST'],

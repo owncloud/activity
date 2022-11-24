@@ -75,6 +75,8 @@ class SendEmails extends Command {
 		if ($verbocity >= OutputInterface::VERBOSITY_VERBOSE) {
 			$progress = new ProgressBar($output);
 			$progress->start();
+		} else {
+			$progress = null;
 		}
 		do {
 			$users = $this->mqHandler->getAllUsers(self::BATCH_SIZE);
@@ -85,12 +87,12 @@ class SendEmails extends Command {
 			}
 
 			$this->sendBatch($users, $output);
-			if ($verbocity >= OutputInterface::VERBOSITY_VERBOSE) {
+			if ($progress !== null) {
 				$progress->advance($batchCount);
 			}
 		} while ($batchCount > 0);
 
-		if ($verbocity >= OutputInterface::VERBOSITY_VERBOSE) {
+		if ($progress !== null) {
 			$progress->finish();
 		}
 	}

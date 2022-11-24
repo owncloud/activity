@@ -38,17 +38,15 @@ return [
 	// your application should be included in this list.
 	'directory_list' => [
 		'appinfo',
-		'handlers',
+		'lib',
 		'vendor',
-		'../../apps/files_versions/lib',
+		'../../apps/files_sharing/lib',
 		'../../lib',
 		'../../core'
 	],
 
 	// A list of files to include in analysis
 	'file_list' => [
-		'helper.php',
-		'logger.php',
 	],
 
 	// A directory list that defines files that will be excluded
@@ -64,7 +62,7 @@ return [
 	//       and `exclude_analysis_directory_list` arrays.
 	'exclude_analysis_directory_list' => [
 		'vendor',
-		'../../apps/files_versions/lib',
+		'../../apps/files_sharing/lib',
 		'../../lib',
 		'../../core'
 	],

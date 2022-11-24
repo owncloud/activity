@@ -122,7 +122,7 @@ class Feed extends Controller {
 			$this->helper->setL10n($this->l);
 			$this->helper->setUser($user);
 
-			$description = (string) $this->l->t('Personal activity feed for %s', $user);
+			$description = (string) $this->l->t('Personal activity feed for %s', [$user]);
 			$response = $this->data->get($this->helper, $this->settings, $user, 0, self::DEFAULT_PAGE_SIZE, 'desc', 'all');
 			$data = $response['data'];
 

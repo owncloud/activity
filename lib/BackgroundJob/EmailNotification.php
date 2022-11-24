@@ -23,7 +23,6 @@
 namespace OCA\Activity\BackgroundJob;
 
 use OC\BackgroundJob\TimedJob;
-use OCA\Activity\AppInfo\Application;
 use OCA\Activity\MailQueueHandler;
 use OCP\IConfig;
 use OCP\ILogger;
@@ -55,9 +54,10 @@ class EmailNotification extends TimedJob {
 	protected $isCLI;
 
 	/**
-	 * @param MailQueueHandler $mailQueueHandler
-	 * @param IConfig $config
-	 * @param ILogger $logger
+	 * @param MailQueueHandler|null $mailQueueHandler
+	 * @param IUserManager $userManager
+	 * @param IConfig|null $config
+	 * @param ILogger|null $logger
 	 * @param bool|null $isCLI
 	 */
 	public function __construct(

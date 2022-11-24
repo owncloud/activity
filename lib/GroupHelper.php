@@ -22,6 +22,7 @@
 namespace OCA\Activity;
 
 use OCA\Activity\Parameter\Collection;
+/* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use OCA\Activity\Parameter\IParameter;
 use OCP\Activity\IEvent;
 use OCP\Activity\IManager;
@@ -43,15 +44,15 @@ class GroupHelper {
 	/** @var bool */
 	protected $allowGrouping;
 
-	/** @var \OCP\Activity\IManager */
+	/** @var IManager */
 	protected $activityManager;
 
-	/** @var \OCA\Activity\DataHelper */
+	/** @var DataHelper */
 	protected $dataHelper;
 
 	/**
-	 * @param \OCP\Activity\IManager $activityManager
-	 * @param \OCA\Activity\DataHelper $dataHelper
+	 * @param IManager $activityManager
+	 * @param DataHelper $dataHelper
 	 * @param bool $allowGrouping
 	 */
 	public function __construct(IManager $activityManager, DataHelper $dataHelper, $allowGrouping) {
