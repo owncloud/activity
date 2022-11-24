@@ -46,6 +46,8 @@ config = {
         "master",
     ],
     "codestyle": True,
+    "phpstan": False,
+    "phan": True,
     "javascript": True,
     "phpunit": True,
     "acceptance": {
