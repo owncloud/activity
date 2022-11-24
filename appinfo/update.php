@@ -34,6 +34,7 @@ if (\version_compare($installedVersion, '1.2.2', '<')) {
 	foreach ($mistakes as $entry) {
 		list($table, $column) = $entry;
 
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$numEntries = $connection->executeUpdate(
 			'DELETE FROM `' . $table . '` WHERE `' . $column . "` NOT LIKE '%]' AND `" . $column . "` NOT LIKE '%}'"
 		);
@@ -43,7 +44,9 @@ if (\version_compare($installedVersion, '1.2.2', '<')) {
 }
 
 if (\version_compare($installedVersion, '1.2.2', '<')) {
+	/* @phan-suppress-next-line PhanDeprecatedFunction */
 	$connection->executeUpdate('UPDATE `*PREFIX*activity` SET `app` = ? WHERE `type` = ?', ['files_sharing', 'shared']);
+	/* @phan-suppress-next-line PhanDeprecatedFunction */
 	$connection->executeUpdate('UPDATE `*PREFIX*activity_mq` SET `amq_appid` = ? WHERE `amq_type` = ?', ['files_sharing', 'shared']);
 }
 

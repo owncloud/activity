@@ -17,6 +17,7 @@ class Version20161122092159 implements ISchemaMigration {
 		$tableName = "{$prefix}activity";
 		$table = $schema->getTable($tableName);
 		// we only apply this step if the columns is not yet a CLOB
+		/* @phan-suppress-next-line PhanDeprecatedClassConstant */
 		if ($table->getColumn('subjectparams')->getType() === Type::getType(Type::TEXT)) {
 			return;
 		}

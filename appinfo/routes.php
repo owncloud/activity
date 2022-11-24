@@ -23,6 +23,7 @@
 
 use OCP\API;
 
+/* @phan-suppress-next-line PhanUndeclaredClassMethod */
 $app = new \OCA\Activity\AppInfo\Application();
 
 // Register an OCS API call
@@ -38,6 +39,7 @@ $app = new \OCA\Activity\AppInfo\Application();
 //	array($application->getContainer()->query('OCA\Activity\Controller\OCSEndPoint'), 'getFilter'),
 //	'activity'
 //);
+/* @phan-suppress-next-line PhanUndeclaredClassInCallable */
 API::register(
 	'get',
 	'/cloud/activity',
@@ -45,6 +47,7 @@ API::register(
 	'activity'
 );
 
+/* @phan-suppress-next-line PhanUndeclaredClassMethod */
 $app->registerRoutes($this, ['routes' => [
 	['name' => 'Settings#personal', 'url' => '/settings', 'verb' => 'POST'],
 	['name' => 'Settings#feed', 'url' => '/settings/feed', 'verb' => 'POST'],

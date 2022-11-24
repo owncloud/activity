@@ -22,7 +22,6 @@
 namespace OCA\activity\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Types\Type;
 use OCP\Migration\ISchemaMigration;
 
 /**

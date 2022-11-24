@@ -23,8 +23,6 @@ namespace OCA\activity\Migrations;
 
 use OCP\Migration\ISqlMigration;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
-use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use OCP\IDBConnection;
 
 /**
