@@ -22,7 +22,7 @@ OC.L10N.register(
     "Activity notification" : "Известия за активност",
     "All Activities" : "Цялата активност",
     "Activities by you" : "Вашата активност",
-    "Activities by others" : "Активността на другите",
+    "Activities by others" : "Активност от други",
     "%s and %s" : "%s и %s",
     "Hello %s," : "Здравейте %s,",
     "You are receiving this email because the following things happened at %s" : "Получавате този имейл, защото се случиха следните неща в %s",
