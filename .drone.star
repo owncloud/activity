@@ -1239,6 +1239,7 @@ def acceptance(ctx):
                              testConfig["extraSetup"] +
                              waitForServer(testConfig["federatedServerNeeded"]) +
                              waitForEmailService(testConfig["emailNeeded"]) +
+                             waitForSamba(testConfig["extraServices"]) +
                              fixPermissions(phpVersionForDocker, testConfig["federatedServerNeeded"], params["selUserNeeded"]) +
                              waitForBrowserService(testConfig["browser"]) +
                              [
@@ -1534,6 +1535,26 @@ def waitForEmailService(emailNeeded):
             "image": OC_CI_WAIT_FOR,
             "commands": [
                 "wait-for -it email:9000 -t 600",
+            ],
+        }]
+
+    return []
+
+def waitForSamba(extraServices):
+    foundSamba = False
+
+    for extraService in extraServices:
+        # each service entry should be a key-value dictionary that has at least a "name" key
+        # if there is a "samba" service specified, then we need to wait for it to start.
+        if (extraService["name"] == "samba"):
+            foundSamba = True
+
+    if (foundSamba):
+        return [{
+            "name": "wait-for-samba",
+            "image": OC_CI_WAIT_FOR,
+            "commands": [
+                "wait-for -it samba:139,samba:445 -t 300",
             ],
         }]
 
