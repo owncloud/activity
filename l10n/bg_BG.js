@@ -2,7 +2,7 @@ OC.L10N.register(
     "activity",
     {
     "Activities" : "Активност",
-    "Error loading activities" : "Грешка при зареждане на активността",
+    "Error loading activities" : "Грешка при зареждането на активността",
     "No activities" : "Няма активност",
     "Load more activities" : "Зареждане на още от активността",
     ", " : ", ",
