@@ -470,6 +470,7 @@ def phan(ctx):
 
     default = {
         "phpVersions": [DEFAULT_PHP_VERSION],
+        "extraApps": {},
     }
 
     if "defaults" in config:
@@ -508,6 +509,7 @@ def phan(ctx):
                 },
                 "steps": skipIfUnchanged(ctx, "lint") +
                          installCore(ctx, "daily-master-qa", "sqlite", False) +
+                         installExtraApps(phpVersion, params["extraApps"], False) +
                          [
                              {
                                  "name": "phan",
@@ -1786,7 +1788,7 @@ def installTestrunner(ctx, phpVersion, useBundledApp):
         ] if not useBundledApp else []),
     }]
 
-def installExtraApps(phpVersion, extraApps):
+def installExtraApps(phpVersion, extraApps, enableExtraApps = True):
     commandArray = []
     for app, command in extraApps.items():
         commandArray.append("ls %s/apps/%s || git clone https://github.com/owncloud/%s.git %s/apps/%s" % (dir["testrunner"], app, app, dir["testrunner"], app))
@@ -1795,9 +1797,10 @@ def installExtraApps(phpVersion, extraApps):
             commandArray.append("cd %s/apps/%s" % (dir["server"], app))
             commandArray.append(command)
         commandArray.append("cd %s" % dir["server"])
-        commandArray.append("php occ a:l")
-        commandArray.append("php occ a:e %s" % app)
-        commandArray.append("php occ a:l")
+        if (enableExtraApps):
+            commandArray.append("php occ a:l")
+            commandArray.append("php occ a:e %s" % app)
+            commandArray.append("php occ a:l")
 
     if (commandArray == []):
         return []
