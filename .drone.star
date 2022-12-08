@@ -2345,17 +2345,13 @@ def validateDailyTarballBuild():
     pipeline = {
         "kind": "pipeline",
         "type": "docker",
-        "name": "validate-daily-tarball-build",
-        "environment": {
-            # provide multiple values separated by comma
-            "DAILY_TARBALLS": "daily-master,daily-master-qa",
-        },
+        "name": "check-tarball-build-date",
         "steps": [{
-            "name": "check-daily-tarball",
+            "name": "check-build-date",
             "image": OC_CI_ALPINE,
             "commands": [
-                "chmod +x ./tests/drone/validate-oc-daily-tarball.sh",
-                "./tests/drone/validate-oc-daily-tarball.sh",
+                "chmod +x ./tests/drone/check-daily-update.sh",
+                "./tests/drone/check-daily-update.sh %s %s" % ("daily-master", "daily-master-qa"),
             ],
         }],
         "depends_on": [],

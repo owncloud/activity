@@ -1,9 +1,12 @@
 #! /bin/bash
 set -e
 
-if [[ -z "${DAILY_TARBALLS}" ]]; then
-    echo "[ERROR] 'DAILY_TARBALLS' is not set"
-    echo "[INFO] Provide 'DAILY_TARBALLS' as env with values separated by comma"
+# Args:
+# 1...n - tarballs to check
+
+if ! [[ $# -gt 0 ]]; then
+    echo "[ERROR] Tarball is not provided"
+    echo "[INFO] Provide tarballs as command args separated by a space"
     exit 1
 fi
 
@@ -11,16 +14,17 @@ DOWNLOAD_URL="https://download.owncloud.com/server/daily"
 DESTINATION="/tmp/owncloud"
 EXIT_CODE=1
 
-IFS=',' read -ra TARBALLS <<<"$DAILY_TARBALLS"
-for TARBALL in "${TARBALLS[@]}"; do
+while [[ $# -gt 0 ]]; do
     # create the destination
     mkdir -p "${DESTINATION}"
 
     # remove white spaces
-    TARBALL=$(echo "${TARBALL}" | tr -d '[:space:]')
-    if [[ "${TARBALL}" != "owncloud-*" ]] && [[ "${TARBALL}" != "*.tar.bz2" ]]; then
+    TARBALL=$(echo "$1" | tr -d '[:space:]')
+
+    if ! [[ "${TARBALL}" =~ ^owncloud-.* ]] && ! [[ "${TARBALL}" =~ .*\.tar\.bz2$ ]]; then
         TARBALL="owncloud-${TARBALL}.tar.bz2"
     fi
+
     echo -e "\n-----------------------------------------------------------------"
     echo "[INFO] Checking tarball '${TARBALL}'"
     echo "[INFO] Downloading '${DOWNLOAD_URL}/${TARBALL}'"
@@ -45,9 +49,10 @@ for TARBALL in "${TARBALLS[@]}"; do
     else
         echo "[ERROR] Daily tarball '${TARBALL}' is not up to date"
         echo "[INFO] Tarball build date: ${BUILD_DATE}"
-        echo "[INFO] Today: ${BUILD_DATE}"
+        echo "[INFO] Today: ${TODAY}"
         EXIT_CODE=1
     fi
+    shift
 done
 
 exit ${EXIT_CODE}
