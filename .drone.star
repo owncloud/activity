@@ -46,6 +46,7 @@ config = {
         "master",
     ],
     "codestyle": True,
+    "validateDailyTarball": True,
     "phpstan": True,
     "phan": {
         "multipleVersions": {
@@ -2342,6 +2343,12 @@ def skipIfUnchanged(ctx, type):
     return []
 
 def validateDailyTarballBuild():
+    if "validateDailyTarball" not in config:
+        return []
+
+    if not config["validateDailyTarball"]:
+        return []
+
     pipeline = {
         "kind": "pipeline",
         "type": "docker",
