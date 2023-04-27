@@ -28,7 +28,7 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "Otrzymujesz tę wiadomość, ponieważ w chmurze %s miały miejsce następujące aktywności:",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* i %n więcej ","* i %n więcej ","* i %n więcej ","* i %n więcej "],
-    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Otrzymałeś tą wiadomość ponieważ zaszły następujące zdarzenia na <a href=\"%s\">%s</a>",
+    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "Otrzymałeś tę wiadomość, ponieważ zaszły następujące zdarzenia na <a href=\"%s\">%s</a>",
     "%1$s - %2$s" : "%1$s - %2$s",
     "_and %n more _::_and %n more _" : ["i %n więcej","i %n więcej","i %n więcej","i %n więcej"],
     "Activity" : "Aktywność",
