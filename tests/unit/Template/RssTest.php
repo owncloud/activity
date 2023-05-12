@@ -84,24 +84,24 @@ class RssTest extends TestCase {
 			],
 			[
 				[
-					['activity_id' => 42, 'subject' => 'text', 'subject_prepared' => '<no>html</no>', 'link' => 'http://doc.owncloud.org', 'timestamp' => 21, 'message' => 'text2', 'message_prepared' => '<no2>html</no2>'],
+					['activity_id' => 42, 'subject' => 'text', 'subject_prepared' => '<no>html</no>', 'link' => 'http://doc.owncloud.com', 'timestamp' => 21, 'message' => 'text2', 'message_prepared' => '<no2>html</no2>'],
 				],
 				'		<item>'
 				. "\n" . '			<guid isPermaLink="false">42</guid>'
 				. "\n" . '			<title>&lt;no&gt;html&lt;/no&gt;</title>'
-				. "\n" . '			<link>http://doc.owncloud.org</link>'
+				. "\n" . '			<link>http://doc.owncloud.com</link>'
 				. "\n" . '			<pubDate>Thu, 01 Jan 1970 00:00:21 +0000</pubDate>'
 				. "\n" . '			<description><![CDATA[&lt;no2&gt;html&lt;/no2&gt;]]></description>'
 				. "\n" . '		</item>',
 			],
 			[
 				[
-					['activity_id' => 42, 'subject' => 'text', 'subject_prepared' => "line\nbreak", 'link' => 'http://doc.owncloud.org', 'timestamp' => 21, 'message' => 'text2', 'message_prepared' => "line2\nbreak2"],
+					['activity_id' => 42, 'subject' => 'text', 'subject_prepared' => "line\nbreak", 'link' => 'http://doc.owncloud.com', 'timestamp' => 21, 'message' => 'text2', 'message_prepared' => "line2\nbreak2"],
 				],
 				'		<item>'
 				. "\n" . '			<guid isPermaLink="false">42</guid>'
 				. "\n" . '			<title>line break</title>'
-				. "\n" . '			<link>http://doc.owncloud.org</link>'
+				. "\n" . '			<link>http://doc.owncloud.com</link>'
 				. "\n" . '			<pubDate>Thu, 01 Jan 1970 00:00:21 +0000</pubDate>'
 				. "\n" . '			<description><![CDATA[line2<br />break2]]></description>'
 				. "\n" . '		</item>',

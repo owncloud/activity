@@ -22,7 +22,7 @@ Never again miss an important event related to content in ownCloud and always be
   </types>
   <use-migrations>true</use-migrations>
   <documentation>
-    <admin>https://doc.owncloud.org/server/latest/admin_manual/configuration_server/activity_configuration.html</admin>
+    <admin>https://doc.owncloud.com/server/latest/admin_manual/configuration_server/activity_configuration.html</admin>
   </documentation>
   <website>https://github.com/owncloud/activity/</website>
   <bugs>https://github.com/owncloud/activity/issues</bugs>
