@@ -68,11 +68,11 @@ class SendEmails extends Command {
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
 	 *
-	 * @return int|void
+	 * @return int
 	 */
-	public function execute(InputInterface $input, OutputInterface $output) {
-		$verbocity = $output->getVerbosity();
-		if ($verbocity >= OutputInterface::VERBOSITY_VERBOSE) {
+	public function execute(InputInterface $input, OutputInterface $output): int {
+		$verbosity = $output->getVerbosity();
+		if ($verbosity >= OutputInterface::VERBOSITY_VERBOSE) {
 			$progress = new ProgressBar($output);
 			$progress->start();
 		} else {
@@ -95,6 +95,7 @@ class SendEmails extends Command {
 		if ($progress !== null) {
 			$progress->finish();
 		}
+		return 0;
 	}
 
 	/**
