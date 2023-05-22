@@ -7,10 +7,6 @@ parameters:
       path: appinfo/routes.php
       count: 1
     -
-      message: '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required.#'
-      path: lib/AppInfo/Application.php
-      count: 1
-    -
       message: '#Comparison operation ">" between int<1, max> and 0 is always true.#'
       path: lib/Command/SendEmails.php
       count: 1
