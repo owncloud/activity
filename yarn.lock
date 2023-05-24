@@ -652,10 +652,15 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-jasmine-core@^3.10.1, jasmine-core@^3.6.0:
+jasmine-core@^3.6.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.10.1.tgz#7aa6fa2b834a522315c651a128d940eca553989a"
   integrity sha512-ooZWSDVAdh79Rrj4/nnfklL3NQVra0BcuhcuWoAwwi+znLDoUeH87AFfeX8s+YeYi6xlv5nveRyaA1v7CintfA==
+
+jasmine-core@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-5.0.0.tgz#84a200637f9ef92f6d0788e96bb4e67bb1316a81"
+  integrity sha512-BJLxZlSVyWPN/oyaS1IIvIjChghI9/xWsLAIJqL9J5Fz47CN3JNr8Lmik3S2S7QS2RxclYjvSVSXP7IR35PAmg==
 
 jasmine-sinon@^0.4.0:
   version "0.4.0"
