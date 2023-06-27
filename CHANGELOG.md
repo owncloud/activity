@@ -4,8 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased] 
+## [2.7.2] 
 
+### Changed
+
+- [#1173](https://github.com/owncloud/activity/pull/1173) - Always return an int from Symfony Command execute method
+- Dependency updates
+- String updates
 
 
 ## [2.7.1] - 2022-08-30
@@ -147,7 +152,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
 
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.7.1...master
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.7.2...master
+[2.7.2]: https://github.com/owncloud/activity/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/owncloud/activity/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/owncloud/activity/compare/v2.6.1...v2.7.0
 [2.6.1]: https://github.com/owncloud/activity/compare/v2.6.0...v2.6.1
