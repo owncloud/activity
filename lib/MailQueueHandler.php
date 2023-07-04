@@ -257,9 +257,16 @@ class MailQueueHandler {
 				->setTimestamp($activity['amq_timestamp'])
 				->setSubject($activity['amq_subject'], []);
 
-			$relativeDateTime = $this->dateFormatter->formatDateRelativeDay(
+			$relativeDate = $this->dateFormatter->formatDateRelativeDay(
 				$activity['amq_timestamp'],
 				'long',
+				new \DateTimeZone($timezone),
+				$l
+			);
+			$relativeDateTime = $this->dateFormatter->formatDateTimeRelativeDay(
+				$activity['amq_timestamp'],
+				'long',
+				'short',
 				new \DateTimeZone($timezone),
 				$l
 			);
@@ -270,14 +277,25 @@ class MailQueueHandler {
 				$this->dataHelper->getParameters($event, 'subject', $activity['amq_subjectparams'])
 			);
 
-			$activityListPlain[] = [
-				$plainParser->parseMessage($message),
-				$relativeDateTime,
-			];
-			$activityListHtml[] = [
-				$htmlParser->parseMessage($message),
-				$relativeDateTime,
-			];
+			if ((strpos($activity['amq_subjectparams'], 'shareExpired') !== false)) {
+				$activityListPlain[] = [
+					$plainParser->parseMessage($message),
+				        $relativeDate,
+				];
+				$activityListHtml[] = [
+					$htmlParser->parseMessage($message),
+					$relativeDate,
+				];
+			} else {
+				$activityListPlain[] = [
+					$plainParser->parseMessage($message),
+				        $relativeDateTime,
+				];
+				$activityListHtml[] = [
+					$htmlParser->parseMessage($message),
+					$relativeDateTime,
+				];
+			}
 		}
 
 		$alttext = new Template('activity', 'email.notification', '', false);
