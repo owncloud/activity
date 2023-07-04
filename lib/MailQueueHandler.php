@@ -280,7 +280,7 @@ class MailQueueHandler {
 			if ((strpos($activity['amq_subjectparams'], 'shareExpired') !== false)) {
 				$activityListPlain[] = [
 					$plainParser->parseMessage($message),
-				        $relativeDate,
+					$relativeDate,
 				];
 				$activityListHtml[] = [
 					$htmlParser->parseMessage($message),
@@ -289,7 +289,7 @@ class MailQueueHandler {
 			} else {
 				$activityListPlain[] = [
 					$plainParser->parseMessage($message),
-				        $relativeDateTime,
+					$relativeDateTime,
 				];
 				$activityListHtml[] = [
 					$htmlParser->parseMessage($message),
