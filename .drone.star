@@ -38,7 +38,7 @@ dir = {
 config = {
     "rocketchat": {
         "channel": "builds",
-        "from_secret": "private_rocketchat",
+        "from_secret": "rocketchat_chat_webhook",
     },
     "branches": [
         "master",
@@ -682,7 +682,7 @@ def javascript(ctx, withCoverage):
             "image": PLUGINS_S3,
             "settings": {
                 "endpoint": {
-                    "from_secret": "cache_s3_endpoint",
+                    "from_secret": "cache_s3_server",
                 },
                 "bucket": "cache",
                 "source": "./coverage/lcov.info",
@@ -910,7 +910,7 @@ def phpTests(ctx, testType, withCoverage):
                             "image": PLUGINS_S3,
                             "settings": {
                                 "endpoint": {
-                                    "from_secret": "cache_s3_endpoint",
+                                    "from_secret": "cache_s3_server",
                                 },
                                 "bucket": "cache",
                                 "source": "tests/output/clover-%s.xml" % (name),
@@ -1324,13 +1324,19 @@ def sonarAnalysis(ctx, phpVersion = DEFAULT_PHP_VERSION):
                          "name": "sync-from-cache",
                          "image": MINIO_MC,
                          "environment": {
-                             "MC_HOST_cache": {
-                                 "from_secret": "cache_s3_connection_url",
+                             "S3_ACCESS_KEY": {
+                                 "from_secret": "cache_s3_access_key",
+                             },
+                             "S3_SECRET_KEY": {
+                                 "from_secret": "cache_s3_secret_key",
+                             },
+                             "S3_SERVER": {
+                                 "from_secret": "cache_s3_server",
                              },
                          },
                          "commands": [
                              "mkdir -p results",
-                             "mc mirror cache/cache/%s/%s results/" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
+                             "export MC_HOST_cache=\"https://$S3_ACCESS_KEY:$S3_SECRET_KEY@$${S3_SERVER:8}\"; mc mirror cache/cache/%s/%s results/" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
                          ],
                      },
                      {
@@ -1355,12 +1361,18 @@ def sonarAnalysis(ctx, phpVersion = DEFAULT_PHP_VERSION):
                          "name": "purge-cache",
                          "image": MINIO_MC,
                          "environment": {
-                             "MC_HOST_cache": {
-                                 "from_secret": "cache_s3_connection_url",
+                             "S3_ACCESS_KEY": {
+                                 "from_secret": "cache_s3_access_key",
+                             },
+                             "S3_SECRET_KEY": {
+                                 "from_secret": "cache_s3_secret_key",
+                             },
+                             "S3_SERVER": {
+                                 "from_secret": "cache_s3_server",
                              },
                          },
                          "commands": [
-                             "mc rm --recursive --force cache/cache/%s/%s" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
+                             "export MC_HOST_cache=\"https://$S3_ACCESS_KEY:$S3_SECRET_KEY@$${S3_SERVER:8}\"; mc rm --recursive --force cache/cache/%s/%s" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
                          ],
                      },
                  ],
@@ -1691,7 +1703,7 @@ def cacheRestore():
                 "from_secret": "cache_s3_access_key",
             },
             "endpoint": {
-                "from_secret": "cache_s3_endpoint",
+                "from_secret": "cache_s3_server",
             },
             "restore": True,
             "secret_key": {
