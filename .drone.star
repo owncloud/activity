@@ -26,6 +26,22 @@ THEGEEKLAB_DRONE_GITHUB_COMMENT = "thegeeklab/drone-github-comment:1"
 DEFAULT_PHP_VERSION = "7.4"
 DEFAULT_NODEJS_VERSION = "14"
 
+# minio mc environment variables
+MINIO_MC_ENV = {
+    "CACHE_BUCKET": {
+        "from_secret": "cache_s3_bucket",
+    },
+    "MC_HOST": {
+        "from_secret": "cache_s3_server",
+    },
+    "AWS_ACCESS_KEY_ID": {
+        "from_secret": "cache_s3_access_key",
+    },
+    "AWS_SECRET_ACCESS_KEY": {
+        "from_secret": "cache_s3_secret_key",
+    },
+}
+
 dir = {
     "base": "/var/www/owncloud",
     "federated": "/var/www/owncloud/federated",
@@ -1323,20 +1339,11 @@ def sonarAnalysis(ctx, phpVersion = DEFAULT_PHP_VERSION):
                      {
                          "name": "sync-from-cache",
                          "image": MINIO_MC,
-                         "environment": {
-                             "S3_ACCESS_KEY": {
-                                 "from_secret": "cache_s3_access_key",
-                             },
-                             "S3_SECRET_KEY": {
-                                 "from_secret": "cache_s3_secret_key",
-                             },
-                             "S3_SERVER": {
-                                 "from_secret": "cache_s3_server",
-                             },
-                         },
+                         "environment": MINIO_MC_ENV,
                          "commands": [
                              "mkdir -p results",
-                             "export MC_HOST_cache=\"https://$S3_ACCESS_KEY:$S3_SECRET_KEY@$${S3_SERVER:8}\"; mc mirror cache/cache/%s/%s results/" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
+                             "mc alias set cache $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY",
+                             "mc mirror cache/cache/%s/%s results/" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
                          ],
                      },
                      {
@@ -1360,19 +1367,10 @@ def sonarAnalysis(ctx, phpVersion = DEFAULT_PHP_VERSION):
                      {
                          "name": "purge-cache",
                          "image": MINIO_MC,
-                         "environment": {
-                             "S3_ACCESS_KEY": {
-                                 "from_secret": "cache_s3_access_key",
-                             },
-                             "S3_SECRET_KEY": {
-                                 "from_secret": "cache_s3_secret_key",
-                             },
-                             "S3_SERVER": {
-                                 "from_secret": "cache_s3_server",
-                             },
-                         },
+                         "environment": MINIO_MC_ENV,
                          "commands": [
-                             "export MC_HOST_cache=\"https://$S3_ACCESS_KEY:$S3_SECRET_KEY@$${S3_SERVER:8}\"; mc rm --recursive --force cache/cache/%s/%s" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
+                             "mc alias set cache $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY",
+                             "mc rm --recursive --force cache/cache/%s/%s" % (ctx.repo.slug, ctx.build.commit + "-${DRONE_BUILD_NUMBER}"),
                          ],
                      },
                  ],
