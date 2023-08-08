@@ -22,7 +22,7 @@
 	"resolutions": {
 		"minimist": "0.2.4",
 		"json-schema": "0.4.0",
-		"qs": "json-schema"
+		"qs": "6.7.3"
 	},
 	"engine": "node >= 0.8"
 }
