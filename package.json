@@ -19,5 +19,10 @@
 		"karma-jasmine-sinon": "^1.0.4",
 		"karma-phantomjs-launcher": "*"
 	},
+	"resolutions": {
+		"minimist": "0.2.4",
+		"json-schema": "0.4.0",
+		"qs": "6.7.3"
+	},
 	"engine": "node >= 0.8"
 }
