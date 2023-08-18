@@ -296,10 +296,10 @@ class ActivityContext implements Context {
 			$this->addOwnCloudServerToThePublicLink(
 				$this->featureContext->getLocalBaseUrl(),
 				$user,
-				$this->featureContext->getLastPublicShareToken(),
-				$this->featureContext->getLastPublicShareAttribute("uid_owner"),
-				$this->featureContext->getLastPublicShareAttribute("displayname_owner"),
-				$this->featureContext->getLastPublicShareAttribute("path")
+				(string)$this->featureContext->getLastCreatedPublicShareToken(),
+				(string)$this->featureContext->getLastCreatedPublicShare()->uid_owner,
+				(string)$this->featureContext->getLastCreatedPublicShare()->displayname_owner,
+				(string)$this->featureContext->getLastCreatedPublicShare()->path
 			)
 		);
 	}
