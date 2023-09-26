@@ -197,7 +197,7 @@ class ActivityContext implements Context {
 	): array {
 		$user = $this->featureContext->getActualUsername($user);
 		$objectId = $this->featureContext->getFileIdForPath($user, $resource);
-		$url = "/index.php/apps/activity/api/v2/activity/filter?object_type=files&object_id=${objectId}";
+		$url = "/index.php/apps/activity/api/v2/activity/filter?object_type=files&object_id=$objectId";
 		return $this->sendActivityGetRequest($url, $user);
 	}
 
