@@ -7,7 +7,7 @@ From creation of new files or folders, to file or folder changes, updates, resto
 
 And there you have it - a complete overview of all file and folder activities in your ownCloud with the additional ability to receive activity notifications via email in a time interval of your choice. Never again miss an important event related to content in ownCloud and always be up-to-date on all activities of your files and folders.
 
-Change text (2).
+Change text (3).
 
 ## QA metrics on master branch:
 
