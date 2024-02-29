@@ -7,7 +7,7 @@ OC.L10N.register(
     "Load more activities" : "טעינת פעילויות נוספות",
     ", " : ",",
     "{parameterList} and {lastParameter}" : "{parameterList} וכן {lastParameter}",
-    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} וכן {linkStart}%n ועוד{linkEnd}","{parameterList} וכן {linkStart}%n ועוד{linkEnd}","{parameterList} וכן {linkStart}%n ועוד{linkEnd}","{parameterList} וכן {linkStart}%n ועוד{linkEnd}"],
+    "_{parameterList} and {linkStart}%n more{linkEnd}_::_{parameterList} and {linkStart}%n more{linkEnd}_" : ["{parameterList} וכן {linkStart}%n ועוד{linkEnd}","{parameterList} וכן {linkStart}%n ועוד{linkEnd}","{parameterList} וכן {linkStart}%n ועוד{linkEnd}"],
     "in {directory}" : "ב- {directory}",
     "This stream will show events like additions, changes & shares" : "הזרמת מידע זו מראה אירועים כגון תוספות, שינויים ושיתופים",
     "There are no events for this filter" : "אין אירועים לסינון זה",
@@ -27,10 +27,10 @@ OC.L10N.register(
     "Hello %s," : "שלום %s,",
     "You are receiving this email because the following things happened at %s" : "הודעת דואר אלקטרוני זו נשלחת כיוון שאירעו הדברים הבאים ב- %s",
     "* %1$s - %2$s" : "* %1$s - %2$s",
-    "_* and %n more _::_* and %n more _" : ["* וכן %n נוסף ","* וכן %n נוספים ","* וכן %n נוספים ","* וכן %n נוספים "],
+    "_* and %n more _::_* and %n more _" : ["* וכן %n נוסף ","* וכן %n נוספים ","* וכן %n נוספים "],
     "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "דואר אלקטרוני זה התקבל כיוון שמספר דברים ארעו ב-<a href=\"%s\">%s</a>",
     "%1$s - %2$s" : "%1$s - %2$s",
-    "_and %n more _::_and %n more _" : ["וכן עוד %n ","וכן עוד %n ","וכן עוד %n","וכן עוד %n  "],
+    "_and %n more _::_and %n more _" : ["וכן עוד %n ","וכן עוד %n ","וכן עוד %n  "],
     "Activity" : "פעילות",
     "List your own file actions in the stream" : "רישום של פעילויות הקובץ שלך בהזרמת המידע",
     "Notify about your own actions via email" : "דיווח על האירועים שלך על בסיס דואר אלקטרוני",
@@ -46,4 +46,4 @@ OC.L10N.register(
     "No more events to load" : "אין אירועים נוספים לטעינה",
     "Files" : "קבצים"
 },
-"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;");
+"nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");
