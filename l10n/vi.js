@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Thông báo về hoạt động của bạn qua email",
     "You need to set up your email address before you can receive notification emails." : "bạn cần cài đặt địa chỉ email trước khi nhận email thông báo.",
     "Send emails:" : "Gửi email:",
+    "As soon as possible" : "Sớm nhất có thể",
     "Hourly" : "Hàng giờ",
     "Daily" : "Hàng ngày",
     "Weekly" : "Hàng tuần",
