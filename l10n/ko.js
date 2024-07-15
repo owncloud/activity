@@ -28,7 +28,7 @@ OC.L10N.register(
     "You are receiving this email because the following things happened at %s" : "%s에서 다음 활동이 있었기 때문에 이 이메일을 보냈습니다",
     "* %1$s - %2$s" : "* %1$s - %2$s",
     "_* and %n more _::_* and %n more _" : ["* 그 외 %n개 더 있음"],
-    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "이 메일은 <a href=\"%s\">%s</a>의 발생 원인에 의해 수신되었습니다.",
+    "You are receiving this email because the following things happened at <a href=\"%s\">%s</a>" : "이 이메일이 발송된 이유는 다음과 같은 일들이 <a href=\"%s\">%s</a>에서 일어났기 때문입니다.",
     "%1$s - %2$s" : "%1$s-%2$s",
     "_and %n more _::_and %n more _" : ["그 외 %n개 더 있음"],
     "Activity" : "활동",
