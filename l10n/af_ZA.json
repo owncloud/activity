@@ -1,6 +1,6 @@
 { "translations": {
     "Activities" : "Aktiwiteite",
-    "Error loading activities" : "Aktiwiteitlaaifout",
+    "Error loading activities" : "Aktiwiteit laaifout",
     "No activities" : "Geen aktiwiteite",
     "Load more activities" : "Laai nog aktiwiteite",
     ", " : ", ",
@@ -31,6 +31,7 @@
     "Notify about your own actions via email" : "Stel in kennis oor u eie aksies d.m.v. e-pos",
     "You need to set up your email address before you can receive notification emails." : "U moet u e-posadres opstel alvorens u kennisgewings per e-pos kan ontvang.",
     "Send emails:" : "Stuur e-pos:",
+    "As soon as possible" : "So gou as moontlik",
     "Hourly" : "Uurliks",
     "Daily" : "Daagliks",
     "Weekly" : "Weekliks",
