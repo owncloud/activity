@@ -61,10 +61,10 @@ class EmailNotification extends TimedJob {
 	 * @param bool|null $isCLI
 	 */
 	public function __construct(
-		MailQueueHandler $mailQueueHandler = null,
+		?MailQueueHandler $mailQueueHandler = null,
 		IUserManager $userManager,
-		IConfig $config = null,
-		ILogger $logger = null,
+		?IConfig $config = null,
+		?ILogger $logger = null,
 		$isCLI = null
 	) {
 		// Run all 15 Minutes
