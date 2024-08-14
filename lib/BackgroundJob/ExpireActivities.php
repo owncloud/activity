@@ -41,7 +41,7 @@ class ExpireActivities extends TimedJob {
 	 * @param Data|null $data
 	 * @param IConfig|null $config
 	 */
-	public function __construct(Data $data = null, IConfig $config = null) {
+	public function __construct(?Data $data = null, ?IConfig $config = null) {
 		// Run once per day
 		$this->setInterval(60 * 60 * 24);
 
