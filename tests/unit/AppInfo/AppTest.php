@@ -43,20 +43,20 @@ class AppTest extends TestCase {
 	}
 
 	// FIXME: Uncomment once the OC_App stuff is not static anymore
-//	public function testPersonalPanel() {
-//		require '../appinfo/app.php';
-//
-//		// Test whether the personal panel got registered
-//		$forms = \OC_App::getForms('personal');
-//		$this->assertGreaterThanOrEqual(1, sizeof($forms), 'Expected to find the activity personal panel');
-//
-//		$foundActivityPanel = false;
-//		foreach ($forms as $form) {
-//			if (strpos($form, 'id="activity_notifications"') !== false) {
-//				$foundActivityPanel = true;
-//				break;
-//			}
-//		}
-//		$this->assertTrue($foundActivityPanel, 'Expected to find the activity personal panel');
-//	}
+	//	public function testPersonalPanel() {
+	//		require '../appinfo/app.php';
+	//
+	//		// Test whether the personal panel got registered
+	//		$forms = \OC_App::getForms('personal');
+	//		$this->assertGreaterThanOrEqual(1, sizeof($forms), 'Expected to find the activity personal panel');
+	//
+	//		$foundActivityPanel = false;
+	//		foreach ($forms as $form) {
+	//			if (strpos($form, 'id="activity_notifications"') !== false) {
+	//				$foundActivityPanel = true;
+	//				break;
+	//			}
+	//		}
+	//		$this->assertTrue($foundActivityPanel, 'Expected to find the activity personal panel');
+	//	}
 }
