@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Paziņot par savām darbībām, izmantojot e-pastu",
     "You need to set up your email address before you can receive notification emails." : "Vispirms profilam ir nepieciešams uzstādīt e-pasta adresi, lai pa to saņemtu paziņojumus.",
     "Send emails:" : "E-pastus sūtīt:",
+    "As soon as possible" : "Pēc iespējas ātrāk",
     "Hourly" : "Ik stundu",
     "Daily" : "Katru dienu",
     "Weekly" : "Katru nedēļu",
