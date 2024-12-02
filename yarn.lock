@@ -491,10 +491,15 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
 
-jasmine-core@^3.10.1, jasmine-core@^3.6.0:
+jasmine-core@^3.6.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.10.1.tgz#7aa6fa2b834a522315c651a128d940eca553989a"
   integrity sha512-ooZWSDVAdh79Rrj4/nnfklL3NQVra0BcuhcuWoAwwi+znLDoUeH87AFfeX8s+YeYi6xlv5nveRyaA1v7CintfA==
+
+jasmine-core@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-5.5.0.tgz#43564e4b41f73a37cff3aeb262e23bbd073576d8"
+  integrity sha512-NHOvoPO6o9gVR6pwqEACTEpbgcH+JJ6QDypyymGbSUIFIFsMMbBJ/xsFNud8MSClfnWclXd7RQlAZBz7yVo5TQ==
 
 jasmine-sinon@^0.4.0:
   version "0.4.0"
