@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Activities" : "Дзеянні",
     "Error loading activities" : "Памылка загрузкі дзеянняў",
-    "No activities" : "Няма дзейнасці",
+    "No activities" : "Няма дзеянняў",
     "Load more activities" : "Загрузіць больш дзеянняў",
     ", " : ",",
     "{parameterList} and {lastParameter}" : "{parameterList} і {lastParameter}",
