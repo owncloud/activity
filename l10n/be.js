@@ -17,7 +17,7 @@ OC.L10N.register(
     "Your feed URL is invalid" : "URL вашай стужкі несапраўдны",
     "Your settings have been updated." : "Вашы налады былі абноўлены.",
     "Mail" : "Пошта",
-    "Stream" : "Вуліца",
+    "Stream" : "Трансляцыя",
     "\"remote user\"" : "\"аддалены карыстальнік\"",
     "Activity notification" : "Апавяшчэнне аб актыўнасці",
     "All Activities" : "Усе актыўнасці",
