@@ -206,6 +206,17 @@ class FilesHooks {
 			return;
 		}
 
+		// skip notifications for rejected shares
+		$this->view->chroot('/' . $this->currentUser . '/files');
+		$mount = $this->view->getMount($filePath);
+		$storage = $mount->getStorage();
+		if ($storage->instanceOfStorage('OC\Files\Storage\Shared')) {
+			$rejectedShare = $storage->getShare();
+			if ($rejectedShare->getState() === Share::STATE_REJECTED) {
+				return;
+			}
+		}
+
 		list($filePath, $uidOwner, $fileId) = $this->getSourcePathAndOwner($filePath);
 		if (!$fileId) {
 			// no owner, possibly deleted or unknown
