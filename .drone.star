@@ -212,7 +212,7 @@ def main(ctx):
     return before + coverageTests + afterCoverageTests + nonCoverageTests + stages
 
 def beforePipelines(ctx):
-    return validateDailyTarballBuild() + codestyle(ctx) + jscodestyle(ctx) + phpstan(ctx) + phan(ctx) + phplint(ctx) + checkStarlark()
+    return validateDailyTarballBuild() + codestyle(ctx) + jscodestyle(ctx) + phpstan(ctx) + phan(ctx) + phplint(ctx) + checkStarlark() + checkGitCommit()
 
 def coveragePipelines(ctx):
     # All unit test pipelines that have coverage or other test analysis reported
@@ -2046,6 +2046,25 @@ def checkStarlark():
                         "failure",
                     ],
                 },
+            },
+        ],
+        "depends_on": [],
+        "trigger": {
+            "ref": [
+                "refs/pull/**",
+            ],
+        },
+    }]
+
+def checkGitCommit():
+    return [{
+        "kind": "pipeline",
+        "type": "docker",
+        "name": "check-git-commit-messages",
+        "steps": [
+            {
+                "name": "format-check-git-commit",
+                "image": "aevea/commitsar:latest",
             },
         ],
         "depends_on": [],
