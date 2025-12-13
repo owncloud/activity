@@ -36,6 +36,7 @@ OC.L10N.register(
     "Notify about your own actions via email" : "Pochta orqali o'z amallaringiz haqida bildigi oling",
     "You need to set up your email address before you can receive notification emails." : "Bildirgilar pochtasini olish uchun siz dastlab pochta manzilini kiritishingiz lozim",
     "Send emails:" : "Pochtalarni jo'natish:",
+    "As soon as possible" : "Iloji boricha tezroq",
     "Hourly" : "Har soat",
     "Daily" : "Har kuni",
     "Weekly" : "Har hafta",
