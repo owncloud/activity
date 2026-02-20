@@ -70,10 +70,10 @@ class EndPoint extends Controller {
 	}
 
 	/**
-	 * @param \OC_OCS_Result $ocsResult
+	 * @param \OC\OCS\Result $ocsResult
 	 * @return JSONResponse
 	 */
-	protected function ocsToJsonResponse(\OC_OCS_Result $ocsResult) {
+	protected function ocsToJsonResponse(\OC\OCS\Result $ocsResult) {
 		$response = new JSONResponse(
 			[
 				'ocs' => [
