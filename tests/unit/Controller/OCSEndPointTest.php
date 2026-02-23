@@ -418,10 +418,10 @@ class OCSEndPointTest extends TestCase {
 				->method('generateHeaders');
 		}
 
-		/** @var \OC_OCS_Result $result */
+		/** @var \OC\OCS\Result $result */
 		$result = $this->invokePrivate($controller, 'get', [[]]);
 
-		$this->assertInstanceOf('\OC_OCS_Result', $result);
+		$this->assertInstanceOf('\OC\OCS\Result', $result);
 		$this->assertSame($expected, $result->getStatusCode());
 	}
 
@@ -477,10 +477,10 @@ class OCSEndPointTest extends TestCase {
 				'has_more' => false,
 			]);
 
-		/** @var \OC_OCS_Result $result */
+		/** @var \OC\OCS\Result $result */
 		$result = $this->invokePrivate($controller, 'get', [[]]);
 
-		$this->assertInstanceOf('\OC_OCS_Result', $result);
+		$this->assertInstanceOf('\OC\OCS\Result', $result);
 		$this->assertSame(100, $result->getStatusCode());
 		$this->assertSame([
 			$expected,

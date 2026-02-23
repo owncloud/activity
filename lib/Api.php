@@ -66,7 +66,7 @@ class Api {
 		}
 
 		/* @phan-suppress-next-line PhanDeprecatedClass */
-		return new \OC_OCS_Result($entries);
+		return new \OC\OCS\Result($entries);
 	}
 
 	/**
