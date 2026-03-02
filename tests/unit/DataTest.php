@@ -157,8 +157,9 @@ class DataTest extends TestCase {
 
 		$connection = \OC::$server->getDatabaseConnection();
 		$query = $connection->prepare('SELECT `user`, `affecteduser` FROM `*PREFIX*activity` WHERE `app` = ? ORDER BY `activity_id` DESC');
-		$query->execute(['test']);
-		$row = $query->fetch();
+		$result = $query->executeQuery(['test']);
+		$row = $result->fetchAssociative();
+		$result->free();
 
 		if ($expectedActivity) {
 			$this->assertEquals(['user' => $expectedAuthor, 'affecteduser' => $expectedAffected], $row);
@@ -200,8 +201,9 @@ class DataTest extends TestCase {
 
 		$connection = \OC::$server->getDatabaseConnection();
 		$query = $connection->prepare('SELECT `amq_latest_send`, `amq_affecteduser` FROM `*PREFIX*activity_mq` WHERE `amq_appid` = ? ORDER BY `mail_id` DESC');
-		$query->execute(['test']);
-		$row = $query->fetch();
+		$result = $query->executeQuery(['test']);
+		$row = $result->fetchAssociative();
+		$result->free();
 
 		if ($expectedActivity) {
 			$this->assertEquals(['amq_latest_send' => $time + 10, 'amq_affecteduser' => $expectedAffected], $row);

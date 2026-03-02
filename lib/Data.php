@@ -23,7 +23,8 @@
 
 namespace OCA\Activity;
 
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use OCP\Activity\IEvent;
 use OCP\Activity\IExtension;
 use OCP\Activity\IManager;
@@ -207,7 +208,7 @@ class Data {
 			->from('activity');
 
 		$query->where($query->expr()->eq('affecteduser', $query->createNamedParameter($user)))
-			->andWhere($query->expr()->in('type', $query->createNamedParameter($enabledNotifications, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)));
+			->andWhere($query->expr()->in('type', $query->createNamedParameter($enabledNotifications, ArrayParameterType::STRING)));
 		if ($filter === 'self') {
 			$query->andWhere($query->expr()->eq('user', $query->createNamedParameter($user)));
 		} elseif ($filter === 'by') {
@@ -273,7 +274,7 @@ class Data {
 		$result = $query->execute();
 		$hasMore = false;
 		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		while ($row = $result->fetch()) {
+		while ($row = $result->fetchAssociative()) {
 			if ($limit === 0) {
 				$hasMore = true;
 				break;
@@ -282,8 +283,7 @@ class Data {
 			$groupHelper->addActivity($row);
 			$limit--;
 		}
-		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		$result->closeCursor();
+		$result->free();
 
 		return ['data' => $groupHelper->getActivities(), 'has_more' => $hasMore, 'headers' => $headers];
 	}
@@ -305,10 +305,8 @@ class Data {
 				->from('activity')
 				->where($queryBuilder->expr()->eq('activity_id', $queryBuilder->createNamedParameter((int) $since)));
 			$result = $queryBuilder->execute();
-			/* @phan-suppress-next-line PhanDeprecatedFunction */
-			$activity = $result->fetch();
-			/* @phan-suppress-next-line PhanDeprecatedFunction */
-			$result->closeCursor();
+			$activity = $result->fetchAssociative();
+			$result->free();
 
 			if ($activity) {
 				if ($activity['affecteduser'] !== $user) {
@@ -337,10 +335,8 @@ class Data {
 			->orderBy('timestamp', $sort)
 			->setMaxResults(1);
 		$result = $fetchQuery->execute();
-		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		$activity = $result->fetch();
-		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		$result->closeCursor();
+		$activity = $result->fetchAssociative();
+		$result->free();
 
 		if ($activity !== false) {
 			return [
@@ -414,22 +410,21 @@ class Data {
 
 		// Add galera safe delete chunking if using mysql
 		// Stops us hitting wsrep_max_ws_rows when large row counts are deleted
-		if ($this->connection->getDatabasePlatform() instanceof MySqlPlatform) {
+		if ($this->connection->getDatabasePlatform() instanceof MySQLPlatform) {
 			// Then use chunked delete
 			$max = 100000;
 			$query = $this->connection->prepare(
 				'DELETE FROM `*PREFIX*activity`' . $sqlWhere . " LIMIT " . $max
 			);
 			do {
-				$query->execute($sqlParameters);
-				$deleted = $query->rowCount();
+				$deleted = $query->executeStatement($sqlParameters);
 			} while ($deleted === $max);
 		} else {
-			// Dont use chunked delete - let the DB handle the large row count natively
+			// Don't use chunked delete - let the DB handle the large row count natively
 			$query = $this->connection->prepare(
 				'DELETE FROM `*PREFIX*activity`' . $sqlWhere
 			);
-			$query->execute($sqlParameters);
+			$query->executeStatement($sqlParameters);
 		}
 		return null;
 	}

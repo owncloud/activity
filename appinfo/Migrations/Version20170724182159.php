@@ -4,6 +4,7 @@ namespace OCA\activity\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use OCP\Migration\ISchemaMigration;
 
 /**
@@ -20,27 +21,26 @@ class Version20170724182159 implements ISchemaMigration {
 		
 		$activityTable = $schema->getTable("{$prefix}activity");
 		$activityIdColumn = $activityTable->getColumn('activity_id');
-		/* @phan-suppress-next-line PhanDeprecatedClassConstant */
-		if ($activityIdColumn->getType()->getName() !== Type::BIGINT) {
-			/* @phan-suppress-next-line PhanDeprecatedClassConstant */
-			$activityIdColumn->setType(Type::getType(Type::BIGINT));
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
+		if ($activityIdColumn->getType()->getName() !== Types::BIGINT) {
+			$activityIdColumn->setType(Type::getType(Types::BIGINT));
 			$activityIdColumn->setOptions(['length' => 20]);
 		}
 		
 		$objectIdColumn = $activityTable->getColumn('object_id');
-		/* @phan-suppress-next-line PhanDeprecatedClassConstant */
-		if ($objectIdColumn->getType()->getName() !== Type::BIGINT) {
-			/* @phan-suppress-next-line PhanDeprecatedClassConstant */
-			$objectIdColumn->setType(Type::getType(Type::BIGINT));
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
+		if ($objectIdColumn->getType()->getName() !== Types::BIGINT) {
+			/* @phan-suppress-next-line PhanDeprecatedFunction */
+			$objectIdColumn->setType(Type::getType(Types::BIGINT));
 			$objectIdColumn->setOptions(['length' => 20]);
 		}
 		
 		$activityMqTable = $schema->getTable("{$prefix}activity_mq");
 		$mailIdColumn = $activityMqTable->getColumn('mail_id');
-		/* @phan-suppress-next-line PhanDeprecatedClassConstant */
-		if ($mailIdColumn->getType()->getName() !== Type::BIGINT) {
-			/* @phan-suppress-next-line PhanDeprecatedClassConstant */
-			$mailIdColumn->setType(Type::getType(Type::BIGINT));
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
+		if ($mailIdColumn->getType()->getName() !== Types::BIGINT) {
+			/* @phan-suppress-next-line PhanDeprecatedFunction */
+			$mailIdColumn->setType(Type::getType(Types::BIGINT));
 			$mailIdColumn->setOptions(['length' => 20]);
 		}
 	}

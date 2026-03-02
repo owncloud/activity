@@ -122,16 +122,16 @@ class MailQueueHandler {
 			. ' ORDER BY `amq_trigger_time` ASC',
 			$limit
 		);
-		$query->execute([$latestSend]);
+		$result = $query->executeQuery([$latestSend]);
 
 		$affectedUsers = [];
-		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		while ($row = $query->fetch()) {
+		while ($row = $result->fetchAssociative()) {
 			$affectedUsers[] = [
 				'uid' => $row['amq_affecteduser'],
 				'email' => $row['email']
 			];
 		}
+		$result->free();
 
 		return $affectedUsers;
 	}
@@ -153,13 +153,13 @@ class MailQueueHandler {
 			. ' ORDER BY `amq_timestamp` ASC',
 			$maxNumItems
 		);
-		$query->execute([(int) $maxTime, $affectedUser]);
+		$result = $query->executeQuery([(int) $maxTime, $affectedUser]);
 
 		$activities = [];
-		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		while ($row = $query->fetch()) {
+		while ($row = $result->fetchAssociative()) {
 			$activities[] = $row;
 		}
+		$result->free();
 
 		if (isset($activities[$maxNumItems - 1])) {
 			// Reached the limit, run a query to get the actual count.
@@ -169,14 +169,14 @@ class MailQueueHandler {
 				. ' WHERE `amq_timestamp` <= ? '
 				. ' AND `amq_affecteduser` = ?'
 			);
-			$query->execute([(int) $maxTime, $affectedUser]);
+			$result = $query->executeQuery([(int) $maxTime, $affectedUser]);
 
-			/* @phan-suppress-next-line PhanDeprecatedFunction */
-			$row = $query->fetch();
+			$row = $result->fetchAssociative();
+			$result->free();
 			return [$activities, $row['actual_count'] - $maxNumItems];
-		} else {
-			return [$activities, 0];
 		}
+
+		return [$activities, 0];
 	}
 
 	/**
@@ -327,7 +327,7 @@ class MailQueueHandler {
 			. ' WHERE `amq_timestamp` <= ? '
 			. ' AND `amq_affecteduser` IN (' . $placeholders . ')'
 		);
-		$query->execute($queryParams);
+		$query->executeStatement($queryParams);
 	}
 
 	/**
@@ -348,17 +348,18 @@ class MailQueueHandler {
 			. ' ORDER BY `amq_trigger_time` ASC',
 			$limit
 		);
-		$query->execute();
+		$result = $query->executeQuery();
 
 		$allUsers = [];
 		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		while ($row = $query->fetch()) {
+		while ($row = $result->fetchAssociative()) {
 			$allUsers[] = [
 				'uid' => $row['amq_affecteduser'],
 				'email' => $row['email'],
 				'max_mail_id' => $row['max_mail_id'],
 			];
 		}
+		$result->free();
 
 		return $allUsers;
 	}
@@ -417,6 +418,6 @@ class MailQueueHandler {
 		$query = $this->connection->prepare(
 			'DELETE FROM `*PREFIX*activity_mq` WHERE ' . $queryParts
 		);
-		$query->execute($queryParams);
+		$query->executeStatement($queryParams);
 	}
 }
