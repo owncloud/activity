@@ -22,7 +22,7 @@
 namespace OCA\activity\Migrations;
 
 use OCP\Migration\ISqlMigration;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use OCP\IDBConnection;
 
 /**
@@ -41,7 +41,7 @@ class Version20181022150134 implements ISqlMigration {
 		$tableName = "*PREFIX*activity";
 		$tableName = $connection->getDatabasePlatform()->quoteIdentifier($tableName);
 		
-		if ($platform instanceof MySqlPlatform) {
+		if ($platform instanceof MySQLPlatform) {
 			$sqls = [
 				"ALTER TABLE $tableName MODIFY COLUMN `subjectparams` LONGTEXT NOT NULL",
 				"ALTER TABLE $tableName MODIFY COLUMN `messageparams` LONGTEXT NULL",

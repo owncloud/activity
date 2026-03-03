@@ -84,10 +84,8 @@ class Api {
 			->setMaxResults(1);
 
 		$result = $query->execute();
-		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		$row = $result->fetch();
-		/* @phan-suppress-next-line PhanDeprecatedFunction */
-		$result->closeCursor();
+		$row = $result->fetchAssociative();
+		$result->free();
 
 		if ($row) {
 			return (int) $row['activity_id'];

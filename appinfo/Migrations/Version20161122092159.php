@@ -5,6 +5,7 @@ namespace OCA\activity\Migrations;
 use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use OCP\Migration\ISchemaMigration;
 
 class Version20161122092159 implements ISchemaMigration {
@@ -18,7 +19,7 @@ class Version20161122092159 implements ISchemaMigration {
 		$table = $schema->getTable($tableName);
 		// we only apply this step if the columns is not yet a CLOB
 		/* @phan-suppress-next-line PhanDeprecatedClassConstant */
-		if ($table->getColumn('subjectparams')->getType() === Type::getType(Type::TEXT)) {
+		if ($table->getColumn('subjectparams')->getType() === Type::getType(Types::TEXT)) {
 			return;
 		}
 
@@ -26,7 +27,9 @@ class Version20161122092159 implements ISchemaMigration {
 			return;
 		}
 		$table = $schema->getTable($tableName);
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$table->changeColumn('subjectparams', ['type' => Type::getType('text')]);
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$table->changeColumn('messageparams', ['type' => Type::getType('text')]);
 	}
 }

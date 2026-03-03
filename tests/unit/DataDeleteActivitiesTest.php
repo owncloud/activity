@@ -21,8 +21,8 @@
 
 namespace OCA\Activity\Tests\Unit;
 
-use Doctrine\DBAL\Driver\Statement;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use OCA\Activity\Data;
 use OCP\Activity\IExtension;
@@ -110,14 +110,14 @@ class DataDeleteActivitiesTest extends TestCase {
 		$this->assertTableKeys($expected, $query, 'affecteduser');
 	}
 
-	protected function assertTableKeys($expected, Statement $query, $keyName) {
-		$query->execute();
+	protected function assertTableKeys($expected, \Doctrine\DBAL\Statement $query, $keyName) {
+		$result = $query->executeQuery();
 
 		$users = [];
-		while ($row = $query->fetch()) {
+		while ($row = $result->fetchAssociative()) {
 			$users[] = $row[$keyName];
 		}
-		$query->closeCursor();
+		$result->free();
 		$users = \array_unique($users);
 		\sort($users);
 		\sort($expected);
@@ -135,7 +135,7 @@ class DataDeleteActivitiesTest extends TestCase {
 
 		$statement = $this->createMock(Statement::class);
 		// Wont chunk
-		$statement->expects($this->exactly(0))->method('rowCount')->willReturnOnConsecutiveCalls(100000, 50);
+		$statement->expects($this->once())->method('executeStatement')->willReturnOnConsecutiveCalls(100050);
 		$connection->expects($this->once())->method('prepare')->willReturn($statement);
 
 		$userSession = $this->createMock(\OCP\IUserSession::class);
@@ -150,12 +150,12 @@ class DataDeleteActivitiesTest extends TestCase {
 		$timelimit = \time() - $ttl;
 		$activityManager = $this->createMock(\OCP\Activity\IManager::class);
 		$connection = $this->createMock(\OCP\IDBConnection::class);
-		$platform = $this->createMock(MySqlPlatform::class);
+		$platform = $this->createMock(MySQLPlatform::class);
 		$connection->expects($this->once())->method('getDatabasePlatform')->willReturn($platform);
 
 		$statement = $this->createMock(Statement::class);
 		// Will chunk
-		$statement->expects($this->exactly(2))->method('rowCount')->willReturnOnConsecutiveCalls(100000, 50);
+		$statement->expects($this->exactly(2))->method('executeStatement')->willReturnOnConsecutiveCalls(100000, 50);
 		$connection->expects($this->once())->method('prepare')->willReturn($statement);
 
 		$userSession = $this->createMock(\OCP\IUserSession::class);

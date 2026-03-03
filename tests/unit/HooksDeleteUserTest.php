@@ -21,7 +21,7 @@
 
 namespace OCA\Activity\Tests\Unit;
 
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Statement;
 use OCA\Activity\Data;
 use OCA\Activity\Hooks;
 use OCP\Activity\IExtension;
@@ -106,13 +106,13 @@ class HooksDeleteUserTest extends TestCase {
 	}
 
 	protected function assertTableKeys($expected, Statement $query, $keyName) {
-		$query->execute();
+		$result = $query->executeQuery();
 
 		$users = [];
-		while ($row = $query->fetch()) {
+		while ($row = $result->fetchAssociative()) {
 			$users[] = $row[$keyName];
 		}
-		$query->closeCursor();
+		$result->free();
 		$users = \array_unique($users);
 		\sort($users);
 		\sort($expected);
