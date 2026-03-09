@@ -61,7 +61,7 @@ class EmailNotification extends TimedJob {
 	 * @param bool|null $isCLI
 	 */
 	public function __construct(
-		?MailQueueHandler $mailQueueHandler = null,
+		?MailQueueHandler $mailQueueHandler,
 		IUserManager $userManager,
 		?IConfig $config = null,
 		?ILogger $logger = null,
