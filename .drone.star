@@ -80,7 +80,7 @@ config = {
                 "firefox",
             ],
             "servers": [
-                "daily-master-qa",
+                "latest",
             ],
         },
         "federatedSuites": {
@@ -92,7 +92,7 @@ config = {
                 "firefox",
             ],
             "servers": [
-                "daily-master-qa",
+                "latest",
             ],
             "federatedServerNeeded": True,
         },
@@ -101,7 +101,7 @@ config = {
                 "apiActivity",
             ],
             "servers": [
-                "daily-master-qa",
+                "latest",
             ],
         },
         "core-api-acceptance": {
