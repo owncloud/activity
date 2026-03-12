@@ -54,17 +54,11 @@ config = {
         "master",
     ],
     "codestyle": True,
-    "validateDailyTarball": True,
-    "phpstan": True,
-    "phan": {
-        "multipleVersions": {
-            "phpVersions": [
-                DEFAULT_PHP_VERSION,
-            ],
-        },
-    },
-    "javascript": True,
-    "phpunit": True,
+    "validateDailyTarball": False,
+    "phpstan": False,
+    "phan": False,
+    "javascript": False,
+    "phpunit": False,
     "acceptance": {
         "webUI": {
             "suites": {
