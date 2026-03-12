@@ -80,7 +80,7 @@ config = {
                 "firefox",
             ],
             "servers": [
-                "10.16.1",
+                "10.9.1",
             ],
         },
         "federatedSuites": {
@@ -92,7 +92,7 @@ config = {
                 "firefox",
             ],
             "servers": [
-                "10.16.1",
+                "10.9.1",
             ],
             "federatedServerNeeded": True,
         },
@@ -101,7 +101,7 @@ config = {
                 "apiActivity",
             ],
             "servers": [
-                "10.16.1",
+                "10.9.1",
             ],
         },
         "core-api-acceptance": {
