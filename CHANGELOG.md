@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## [2.8.0] - 2026-03-23
+
+### Changed
+
+- Ready for ownCloud 11
+
+
 ## [2.7.3] - 2025-09-22
 
 ### Changed
