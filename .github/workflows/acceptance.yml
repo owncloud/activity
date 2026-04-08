@@ -30,6 +30,11 @@ on:
         required: false
         type: string
         default: ''
+      federated-root:
+        description: 'The folder under the Apache root in which to install a federated server'
+        required: false
+        type: string
+        default: ''
       do-api-tests:
         description: 'Whether to run API acceptance tests'
         required: false
@@ -167,10 +172,44 @@ jobs:
           DB_USERNAME: 'owncloud'
           DB_PASSWORD: 'owncloud'
 
+      - name: Create database for federated server
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          mysql --host 127.0.0.1 --port 3306 -uroot -ppassword -e "CREATE DATABASE federated;"
+          mysql --host 127.0.0.1 --port 3306 -uroot -ppassword -e "GRANT ALL PRIVILEGES ON federated.* TO 'owncloud'@'%';"
+
+      - name: Install federated owncloud/core
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          docker run -v /var/www/html${{ inputs.federated-root }}:/var/www/html${{ inputs.federated-root }} \
+            --network=host \
+            -e PLUGIN_VERSION=${VERSION} \
+            -e PLUGIN_CORE_PATH=${CORE_PATH} \
+            -e PLUGIN_DB_TYPE=${DB_TYPE} \
+            -e PLUGIN_DB_NAME=${DB_NAME} \
+            -e PLUGIN_DB_HOST=${DB_HOST} \
+            -e PLUGIN_DB_USERNAME=${DB_USERNAME} \
+            -e PLUGIN_DB_PASSWORD=${DB_PASSWORD} \
+            owncloudci/core:php83
+        env:
+          VERSION: 'daily-master-qa'
+          CORE_PATH: /var/www/html${{ inputs.federated-root }}
+          DB_TYPE: 'mysql'
+          DB_NAME: federated
+          DB_HOST: '127.0.0.1'
+          DB_USERNAME: 'owncloud'
+          DB_PASSWORD: 'owncloud'
+
       - name: Setup permissions for the backend of the Apache server
         run: |
           sudo chown -R www-data:www-data /var/www/html${{ inputs.server-root }}
           sudo chmod -R 777 /var/www/html${{ inputs.server-root }}
+
+      - name: Setup permissions for the backend of the federated Apache server
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          sudo chown -R www-data:www-data /var/www/html${{ inputs.federated-root }}
+          sudo chmod -R 777 /var/www/html${{ inputs.federated-root }}
 
       - name: Selenium
         if: ${{ inputs.do-webui-tests }}
@@ -210,9 +249,29 @@ jobs:
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
           sudo -u www-data php occ a:e testing
           sudo -u www-data php occ a:l -e
+          sudo -u www-data php occ config:list
+
+      - name: Setup owncloud federated server settings
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          cd /var/www/html${{ inputs.federated-root }}
+          sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
+          sudo -u www-data php occ log:manage --level 2
+          sudo -u www-data php occ config:system:set csrf.disabled --value=true
+          sudo -u www-data php occ a:e testing
+          sudo -u www-data php occ a:l -e
+          sudo -u www-data php occ config:list
 
       - name: Check access to status
         run: curl http://localhost:80${{ inputs.server-root }}/status.php
+
+      - name: Check access to federated status
+        if: ${{ inputs.federated-root != '' }}
+        run: curl http://localhost:80${{ inputs.federated-root }}/status.php
+
+      - name: Define environment variable pointing to the federated server
+        if: ${{ inputs.federated-root != '' }}
+        run: echo "TEST_SERVER_FED_URL=http://localhost${{ inputs.federated-root }}" >> $GITHUB_ENV
 
       - name: Install libxml2-utils to get xmllint used by acceptance test script
         run: sudo apt install -y libxml2-utils
