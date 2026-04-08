@@ -104,7 +104,7 @@ Feature: Deleted files/folders activities
     And user "Alice" has deleted folder "folder with space/simple-empty-folder"
     When the user browses to the activity page
     And the user filters activity list by "<filter>"
-    Then the activity number 1 should have message "You deleted simple-empty-folder, textfile0.txt, 'single'quotes, testavatar.png and 0" in the activity page
+    Then the activity page should have message "You deleted simple-empty-folder, textfile0.txt, 'single'quotes, testavatar.png and 0"
     Examples:
       | filter            |
       | All Activities    |

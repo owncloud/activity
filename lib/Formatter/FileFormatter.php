@@ -52,10 +52,10 @@ class FileFormatter implements IFormatter {
 
 	/**
 	 * @param IEvent $event
-	 * @param string $parameter The parameter to be formatted
+	 * @param string|array $parameter The parameter to be formatted
 	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, $parameter) {
+	public function format(IEvent $event, string|array $parameter): string {
 		$param = $this->fixLegacyFilename($parameter);
 
 		// If the activity is about the very same file, we use the current path
