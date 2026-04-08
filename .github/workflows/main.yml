@@ -64,3 +64,23 @@ jobs:
     with:
       app-name: ${{ needs.get-vars.outputs.app-name }}
       php-version: '8.3'
+
+  acceptance-api:
+    name: API acceptance tests
+    needs:
+      - get-vars
+    uses: ./.github/workflows/acceptance.yml
+    with:
+      app-name: ${{ needs.get-vars.outputs.app-name }}
+      do-api-tests: true
+
+  acceptance-webui:
+    name: WebUI acceptance tests
+    needs:
+      - get-vars
+    uses: ./.github/workflows/acceptance.yml
+    with:
+      app-name: ${{ needs.get-vars.outputs.app-name }}
+      do-webui-tests: true
+      test-suites: "['webUIActivityComments', 'webUIActivityCreateUpdate', 'webUIActivityDeleteRestore', 'webUIActivityFileMoveAndRename', 'webUIActivitySharingInternal', 'webUIActivityTags']"
+
