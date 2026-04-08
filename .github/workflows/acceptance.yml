@@ -25,6 +25,11 @@ on:
         required: false
         type: string
         default: ''
+      server-root:
+        description: 'The folder under the Apache root in which to install owncloud core'
+        required: false
+        type: string
+        default: ''
       do-api-tests:
         description: 'Whether to run API acceptance tests'
         required: false
@@ -143,7 +148,7 @@ jobs:
 
       - name: Install owncloud/core
         run: |
-          docker run -v /var/www/html:/var/www/html \
+          docker run -v /var/www/html${{ inputs.server-root }}:/var/www/html${{ inputs.server-root }} \
             --network=host \
             -e PLUGIN_VERSION=${VERSION} \
             -e PLUGIN_CORE_PATH=${CORE_PATH} \
@@ -155,7 +160,7 @@ jobs:
             owncloudci/core:php83
         env:
           VERSION: 'daily-master-qa'
-          CORE_PATH: '/var/www/html'
+          CORE_PATH: /var/www/html${{ inputs.server-root }}
           DB_TYPE: 'mysql'
           DB_NAME: 'owncloud'
           DB_HOST: '127.0.0.1'
@@ -164,8 +169,8 @@ jobs:
 
       - name: Setup permissions for the backend of the Apache server
         run: |
-          sudo chown -R www-data:www-data /var/www/html
-          sudo chmod -R 777 /var/www/html
+          sudo chown -R www-data:www-data /var/www/html${{ inputs.server-root }}
+          sudo chmod -R 777 /var/www/html${{ inputs.server-root }}
 
       - name: Selenium
         if: ${{ inputs.do-webui-tests }}
@@ -182,9 +187,9 @@ jobs:
         run: |
           cd apps/${{ inputs.app-name }}
           make ci
-          sudo -u www-data mkdir /var/www/html/apps/${{ inputs.app-name }}
-          sudo -u www-data cp -r * /var/www/html/apps/${{ inputs.app-name }}
-          cd /var/www/html
+          sudo -u www-data mkdir /var/www/html${{ inputs.server-root }}/apps/${{ inputs.app-name }}
+          sudo -u www-data cp -r * /var/www/html${{ inputs.server-root }}/apps/${{ inputs.app-name }}
+          cd /var/www/html${{ inputs.server-root }}
           sudo -u www-data php occ a:e ${{ inputs.app-name }}
 
       - name: Setup additional app ${{ inputs.additional-app }}
@@ -192,14 +197,14 @@ jobs:
         run: |
           cd apps/${{ inputs.additional-app }}
           make ci
-          sudo -u www-data mkdir /var/www/html/apps/${{ inputs.additional-app }}
-          sudo -u www-data cp -r * /var/www/html/apps/${{ inputs.additional-app }}
-          cd /var/www/html
+          sudo -u www-data mkdir /var/www/html${{ inputs.server-root }}/apps/${{ inputs.additional-app }}
+          sudo -u www-data cp -r * /var/www/html${{ inputs.server-root }}/apps/${{ inputs.additional-app }}
+          cd /var/www/html${{ inputs.server-root }}
           sudo -u www-data php occ a:e ${{ inputs.additional-app }}
 
       - name: Setup owncloud server settings
         run: |
-          cd /var/www/html
+          cd /var/www/html${{ inputs.server-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
@@ -207,7 +212,7 @@ jobs:
           sudo -u www-data php occ a:l -e
 
       - name: Check access to status
-        run: curl http://localhost:80/status.php
+        run: curl http://localhost:80${{ inputs.server-root }}/status.php
 
       - name: Install libxml2-utils to get xmllint used by acceptance test script
         run: sudo apt install -y libxml2-utils
@@ -215,7 +220,7 @@ jobs:
       - name: Run API acceptance tests
         if: ${{ inputs.do-api-tests }}
         env:
-          TEST_SERVER_URL: "http://localhost"
+          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
           BEHAT_FILTER_TAGS: ""
         run: |
@@ -225,7 +230,7 @@ jobs:
       - name: Run CLI acceptance tests
         if: ${{ inputs.do-cli-tests }}
         env:
-          TEST_SERVER_URL: "http://localhost"
+          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
           BEHAT_FILTER_TAGS: ""
         run: |
@@ -235,7 +240,7 @@ jobs:
       - name: Run WebUI acceptance tests
         if: ${{ inputs.do-webui-tests }}
         env:
-          TEST_SERVER_URL: "http://localhost"
+          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
           BROWSER: "chrome"
           SELENIUM_HOST: "localhost"
           SELENIUM_PORT: "4444"
@@ -248,6 +253,6 @@ jobs:
       - name: Display log file
         if: failure()
         run: |
-          sudo -u www-data ls -l /var/www/html
-          sudo -u www-data ls -l /var/www/html/data
-          sudo -u www-data cat /var/www/html/data/owncloud.log
+          sudo -u www-data ls -l /var/www/html${{ inputs.server-root }}
+          sudo -u www-data ls -l /var/www/html${{ inputs.server-root }}/data
+          sudo -u www-data cat /var/www/html${{ inputs.server-root }}/data/owncloud.log
