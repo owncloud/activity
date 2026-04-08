@@ -70,6 +70,11 @@ ifneq (,$(wildcard $(CURDIR)/js/package.json))
 	make npm
 endif
 
+# Installs dependencies and does any build actions needed for the app to run in CI
+.PHONY: ci
+ci: vendor
+	@echo dependencies and build actions for CI are completed
+
 # Installs and updates the composer dependencies.
 .PHONY: composer
 composer:
