@@ -283,6 +283,9 @@ jobs:
       - name: Check access to status
         run: curl http://localhost:80${{ inputs.server-root }}/status.php
 
+      - name: Check access to login endpoint
+        run: curl http://localhost:80${{ inputs.server-root }}/login
+
       - name: Check access to federated status
         if: ${{ inputs.federated-root != '' }}
         run: curl http://localhost:80${{ inputs.federated-root }}/status.php
