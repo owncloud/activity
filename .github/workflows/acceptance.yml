@@ -231,6 +231,15 @@ jobs:
           cd /var/www/html${{ inputs.server-root }}
           sudo -u www-data php occ a:e ${{ inputs.app-name }}
 
+      - name: Setup app ${{ inputs.app-name }} on federated server
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          cd apps/${{ inputs.app-name }}
+          sudo -u www-data mkdir /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.app-name }}
+          sudo -u www-data cp -r * /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.app-name }}
+          cd /var/www/html${{ inputs.federated-root }}
+          sudo -u www-data php occ a:e ${{ inputs.app-name }}
+
       - name: Setup additional app ${{ inputs.additional-app }}
         if: ${{ inputs.additional-app != '' }}
         run: |
@@ -239,6 +248,15 @@ jobs:
           sudo -u www-data mkdir /var/www/html${{ inputs.server-root }}/apps/${{ inputs.additional-app }}
           sudo -u www-data cp -r * /var/www/html${{ inputs.server-root }}/apps/${{ inputs.additional-app }}
           cd /var/www/html${{ inputs.server-root }}
+          sudo -u www-data php occ a:e ${{ inputs.additional-app }}
+
+      - name: Setup additional app ${{ inputs.additional-app }} on federated server
+        if: ${{ inputs.additional-app != '' && inputs.federated-root != '' }}
+        run: |
+          cd apps/${{ inputs.additional-app }}
+          sudo -u www-data mkdir /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.additional-app }}
+          sudo -u www-data cp -r * /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.additional-app }}
+          cd /var/www/html${{ inputs.federated-root }}
           sudo -u www-data php occ a:e ${{ inputs.additional-app }}
 
       - name: Setup owncloud server settings
