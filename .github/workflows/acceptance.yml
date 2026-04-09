@@ -290,6 +290,10 @@ jobs:
         run: |
           sudo -u www-data cat /var/www/html${{ inputs.server-root }}/.htaccess
           sudo -u www-data cat /var/www/html${{ inputs.server-root }}/config/config.php
+          sudo cat /etc/apache2/apache2.conf
+          sudo cat /etc/apache2/ports.conf
+          sudo ls -l /etc/apache2/sites-available
+          sudo ls -l /etc/apache2/sites-enabled
 
       - name: Check access to federated status
         if: ${{ inputs.federated-root != '' }}
