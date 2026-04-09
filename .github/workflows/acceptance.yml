@@ -286,6 +286,11 @@ jobs:
       - name: Check access to login endpoint
         run: curl http://localhost:80${{ inputs.server-root }}/login
 
+      - name: Check content of server files
+        run: |
+          sudo -u www-data cat /var/www/html${{ inputs.server-root }}/.htaccess
+          sudo -u www-data cat /var/www/html${{ inputs.server-root }}/config/config.php
+
       - name: Check access to federated status
         if: ${{ inputs.federated-root != '' }}
         run: curl http://localhost:80${{ inputs.federated-root }}/status.php
