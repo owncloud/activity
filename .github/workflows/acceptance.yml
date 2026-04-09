@@ -294,6 +294,7 @@ jobs:
           sudo cat /etc/apache2/ports.conf
           sudo ls -l /etc/apache2/sites-available
           sudo ls -l /etc/apache2/sites-enabled
+          sudo cat /etc/apache2/sites-enabled/000-default.conf
 
       - name: Check access to federated status
         if: ${{ inputs.federated-root != '' }}
