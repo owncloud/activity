@@ -143,7 +143,22 @@ jobs:
           sudo apt-get install -y libapache2-mod-php${{ matrix.php }}
           sudo apt-get install -y apache2
           sudo a2enmod rewrite
+          sudo a2enmod ssl
           sudo service apache2 restart
+
+      - name: Create certificate for server
+        run: |
+          echo "Generating certificates for server"
+          sudo mkdir -p /etc/apache2/ssl
+          SSL_SUBJ="/C=DE/ST=Bavaria/L=Nuremberg/O=ownCloud GmbH/CN=server"
+          sudo openssl req -x509 -subj "${SSL_SUBJ}" -sha256 -nodes -days 1825 -newkey rsa:4096 -keyout "/etc/apache2/ssl/server.key" -out "/etc/apache2/ssl/server.crt"
+
+      - name: Create certificate for federated
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          echo "Generating certificates for federated"
+          SSL_SUBJ="/C=DE/ST=Bavaria/L=Nuremberg/O=ownCloud GmbH/CN=federated"
+          sudo openssl req -x509 -subj "${SSL_SUBJ}" -sha256 -nodes -days 1825 -newkey rsa:4096 -keyout "/etc/apache2/ssl/federated.key" -out "/etc/apache2/ssl/federated.crt"
 
       - name: Configure Apache for server
         run: |
@@ -296,10 +311,10 @@ jobs:
           sudo -u www-data php occ config:list
 
       - name: Check access to status
-        run: curl http://localhost:80${{ inputs.server-root }}/status.php
+        run: curl --insecure https://localhost${{ inputs.server-root }}/status.php
 
       - name: Check access to login endpoint
-        run: curl http://localhost:80${{ inputs.server-root }}/login
+        run: curl --insecure https://localhost${{ inputs.server-root }}/login
 
       - name: Check content of server files
         run: |
@@ -311,10 +326,11 @@ jobs:
           sudo ls -l /etc/apache2/sites-enabled
           sudo cat /etc/apache2/sites-enabled/000-default.conf
           sudo cat /etc/apache2/sites-enabled/server.conf
+          sudo ls -l /etc/apache2/ssl
 
       - name: Check access to federated status
         if: ${{ inputs.federated-root != '' }}
-        run: curl http://localhost:80${{ inputs.federated-root }}/status.php
+        run: curl --insecure https://localhost${{ inputs.federated-root }}/status.php
 
       - name: Define environment variable pointing to the federated server
         if: ${{ inputs.federated-root != '' }}
@@ -326,7 +342,7 @@ jobs:
       - name: Run API acceptance tests
         if: ${{ inputs.do-api-tests }}
         env:
-          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
+          TEST_SERVER_URL: https://localhost${{ inputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
           BEHAT_FILTER_TAGS: ""
         run: |
@@ -336,7 +352,7 @@ jobs:
       - name: Run CLI acceptance tests
         if: ${{ inputs.do-cli-tests }}
         env:
-          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
+          TEST_SERVER_URL: https://localhost${{ inputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
           BEHAT_FILTER_TAGS: ""
         run: |
@@ -346,7 +362,7 @@ jobs:
       - name: Run WebUI acceptance tests
         if: ${{ inputs.do-webui-tests }}
         env:
-          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
+          TEST_SERVER_URL: https://localhost${{ inputs.server-root }}
           BROWSER: "chrome"
           SELENIUM_HOST: "localhost"
           SELENIUM_PORT: "4444"
@@ -362,3 +378,6 @@ jobs:
           sudo -u www-data ls -l /var/www/html${{ inputs.server-root }}
           sudo -u www-data ls -l /var/www/html${{ inputs.server-root }}/data
           sudo -u www-data cat /var/www/html${{ inputs.server-root }}/data/owncloud.log
+          sudo -u www-data ls -l /var/www/html${{ inputs.federated-root }}
+          sudo -u www-data ls -l /var/www/html${{ inputs.federated-root }}/data
+          sudo -u www-data cat /var/www/html${{ inputs.federated-root }}/data/owncloud.log
