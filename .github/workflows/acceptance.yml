@@ -153,21 +153,6 @@ jobs:
           SSL_SUBJ="/C=DE/ST=Bavaria/L=Nuremberg/O=ownCloud GmbH/CN=localhost"
           sudo openssl req -x509 -subj "${SSL_SUBJ}" -sha256 -nodes -days 1825 -newkey rsa:4096 -keyout "/etc/apache2/ssl/localhost.key" -out "/etc/apache2/ssl/localhost.crt"
 
-      - name: Configure Apache for server
-        run: |
-          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/server.conf /etc/apache2/sites-available
-          sudo a2ensite server
-
-      - name: Configure Apache for federated
-        if: ${{ inputs.federated-root != '' }}
-        run: |
-          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/federated.conf /etc/apache2/sites-available
-          sudo a2ensite federated
-
-      - name: Reload Apache to get new settings
-        run: |
-          sudo systemctl reload apache2
-
       - name: Check Apache server status
         run: curl http://localhost:80
 
@@ -233,6 +218,21 @@ jobs:
         run: |
           sudo chown -R www-data:www-data /var/www/html${{ inputs.federated-root }}
           sudo chmod -R 777 /var/www/html${{ inputs.federated-root }}
+
+      - name: Configure Apache for server
+        run: |
+          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/server.conf /etc/apache2/sites-available
+          sudo a2ensite server
+
+      - name: Configure Apache for federated
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/federated.conf /etc/apache2/sites-available
+          sudo a2ensite federated
+
+      - name: Reload Apache to get new settings
+        run: |
+          sudo systemctl reload apache2
 
       - name: Selenium
         if: ${{ inputs.do-webui-tests }}
