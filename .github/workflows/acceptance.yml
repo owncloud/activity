@@ -374,3 +374,5 @@ jobs:
           sudo -u www-data ls -l /var/www/html${{ inputs.federated-root }}
           sudo -u www-data ls -l /var/www/html${{ inputs.federated-root }}/data
           sudo -u www-data cat /var/www/html${{ inputs.federated-root }}/data/owncloud.log
+          sudo cat /var/log/apache2/access.log
+          sudo cat /var/log/apache2/error.log
