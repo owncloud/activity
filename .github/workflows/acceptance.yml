@@ -149,14 +149,16 @@ jobs:
         run: |
           sudo cp apps/${{ inputs.app-name }}/tests/acceptance/server.conf /etc/apache2/sites-available
           sudo a2ensite server
-          sudo service apache2 restart
 
       - name: Configure Apache for federated
         if: ${{ inputs.federated-root != '' }}
         run: |
           sudo cp apps/${{ inputs.app-name }}/tests/acceptance/federated.conf /etc/apache2/sites-available
           sudo a2ensite federated
-          sudo service apache2 restart
+
+      - name: Reload Apache to get new settings
+        run: |
+          sudo systemctl reload apache2
 
       - name: Check Apache server status
         run: curl http://localhost:80
