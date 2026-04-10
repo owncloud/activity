@@ -310,6 +310,7 @@ jobs:
           sudo ls -l /etc/apache2/sites-available
           sudo ls -l /etc/apache2/sites-enabled
           sudo cat /etc/apache2/sites-enabled/000-default.conf
+          sudo cat /etc/apache2/sites-enabled/server.conf
 
       - name: Check access to federated status
         if: ${{ inputs.federated-root != '' }}
