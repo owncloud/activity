@@ -247,6 +247,29 @@ class WebUIActivityContext extends RawMinkContext implements Context {
 	}
 
 	/**
+	 * @Then the activity page/tab should have message :message
+	 *
+	 * @param string $message
+	 *
+	 * @return void
+	 */
+	public function theActivityPageShouldHaveMessage(
+		string $message
+	): void {
+		$message = $this->featureContext->substituteInLineCodes($message);
+		$activityMessages = $this->activityPage->getAllActivityMessageLists();
+		$found = false;
+		$messagesLine = '';
+		foreach ($activityMessages as $activityMessage) {
+			$messagesLine .= $activityMessage . "\n";
+			if ($message === $activityMessage) {
+				$found = true;
+			}
+		}
+		PHPUnit\Framework\Assert::assertTrue($found, "Message $message not found in\n $messagesLine activity messages");
+	}
+
+	/**
 	 * @Then the activity number :index should have a message saying that you have shared file/folder :entry with user :user
 	 *
 	 * @param string $index (starting from 1, newest to the oldest)
