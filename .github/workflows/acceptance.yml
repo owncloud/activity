@@ -150,15 +150,8 @@ jobs:
         run: |
           echo "Generating certificates for server"
           sudo mkdir -p /etc/apache2/ssl
-          SSL_SUBJ="/C=DE/ST=Bavaria/L=Nuremberg/O=ownCloud GmbH/CN=server"
-          sudo openssl req -x509 -subj "${SSL_SUBJ}" -sha256 -nodes -days 1825 -newkey rsa:4096 -keyout "/etc/apache2/ssl/server.key" -out "/etc/apache2/ssl/server.crt"
-
-      - name: Create certificate for federated
-        if: ${{ inputs.federated-root != '' }}
-        run: |
-          echo "Generating certificates for federated"
-          SSL_SUBJ="/C=DE/ST=Bavaria/L=Nuremberg/O=ownCloud GmbH/CN=federated"
-          sudo openssl req -x509 -subj "${SSL_SUBJ}" -sha256 -nodes -days 1825 -newkey rsa:4096 -keyout "/etc/apache2/ssl/federated.key" -out "/etc/apache2/ssl/federated.crt"
+          SSL_SUBJ="/C=DE/ST=Bavaria/L=Nuremberg/O=ownCloud GmbH/CN=localhost"
+          sudo openssl req -x509 -subj "${SSL_SUBJ}" -sha256 -nodes -days 1825 -newkey rsa:4096 -keyout "/etc/apache2/ssl/localhost.key" -out "/etc/apache2/ssl/localhost.crt"
 
       - name: Configure Apache for server
         run: |
