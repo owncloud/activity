@@ -25,12 +25,12 @@ on:
         required: false
         type: string
         default: ''
-      server-root:
+      server-folder:
         description: 'The folder under the Apache root in which to install owncloud core'
         required: false
         type: string
         default: ''
-      federated-root:
+      federated-folder:
         description: 'The folder under the Apache root in which to install a federated server'
         required: false
         type: string
@@ -103,6 +103,23 @@ jobs:
           - 5432:5432
 
     steps:
+      - name: Prepend folder names with slash
+        id: prepend
+        env:
+          SERVER_FOLDER: ${{ inputs.server-folder }}
+          FEDERATED_FOLDER: ${{ inputs.federated-folder }}
+        run: |
+          if [ -n "$SERVER_FOLDER" ]; then
+            echo "server-root=/$SERVER_FOLDER" >> $GITHUB_OUTPUT
+          else
+            echo "server-root=" >> $GITHUB_OUTPUT
+          fi
+          if [ -n "$FEDERATED_FOLDER" ]; then
+            echo "federated-root=/$FEDERATED_FOLDER" >> $GITHUB_OUTPUT
+          else
+            echo "federated-root=" >> $GITHUB_OUTPUT
+          fi
+
       - name: Clone owncloud/core
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -151,7 +168,7 @@ jobs:
           sudo a2ensite server
 
       - name: Configure Apache for federated
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: |
           sudo cp apps/${{ inputs.app-name }}/tests/acceptance/federated.conf /etc/apache2/sites-available
           sudo a2ensite federated
@@ -168,7 +185,7 @@ jobs:
 
       - name: Install owncloud/core
         run: |
-          docker run -v /var/www/html${{ inputs.server-root }}:/var/www/html${{ inputs.server-root }} \
+          docker run -v /var/www/html${{ steps.prepend.outputs.server-root }}:/var/www/html${{ steps.prepend.outputs.server-root }} \
             --network=host \
             -e PLUGIN_VERSION=${VERSION} \
             -e PLUGIN_CORE_PATH=${CORE_PATH} \
@@ -180,7 +197,7 @@ jobs:
             owncloudci/core:php83
         env:
           VERSION: 'daily-master-qa'
-          CORE_PATH: /var/www/html${{ inputs.server-root }}
+          CORE_PATH: /var/www/html${{ steps.prepend.outputs.server-root }}
           DB_TYPE: 'mysql'
           DB_NAME: 'owncloud'
           DB_HOST: '127.0.0.1'
@@ -188,15 +205,15 @@ jobs:
           DB_PASSWORD: 'owncloud'
 
       - name: Create database for federated server
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: |
           mysql --host 127.0.0.1 --port 3306 -uroot -ppassword -e "CREATE DATABASE federated;"
           mysql --host 127.0.0.1 --port 3306 -uroot -ppassword -e "GRANT ALL PRIVILEGES ON federated.* TO 'owncloud'@'%';"
 
       - name: Install federated owncloud/core
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: |
-          docker run -v /var/www/html${{ inputs.federated-root }}:/var/www/html${{ inputs.federated-root }} \
+          docker run -v /var/www/html${{ steps.prepend.outputs.federated-root }}:/var/www/html${{ steps.prepend.outputs.federated-root }} \
             --network=host \
             -e PLUGIN_VERSION=${VERSION} \
             -e PLUGIN_CORE_PATH=${CORE_PATH} \
@@ -208,7 +225,7 @@ jobs:
             owncloudci/core:php83
         env:
           VERSION: 'daily-master-qa'
-          CORE_PATH: /var/www/html${{ inputs.federated-root }}
+          CORE_PATH: /var/www/html${{ steps.prepend.outputs.federated-root }}
           DB_TYPE: 'mysql'
           DB_NAME: federated
           DB_HOST: '127.0.0.1'
@@ -217,14 +234,14 @@ jobs:
 
       - name: Setup permissions for the backend of the Apache server
         run: |
-          sudo chown -R www-data:www-data /var/www/html${{ inputs.server-root }}
-          sudo chmod -R 777 /var/www/html${{ inputs.server-root }}
+          sudo chown -R www-data:www-data /var/www/html${{ steps.prepend.outputs.server-root }}
+          sudo chmod -R 777 /var/www/html${{ steps.prepend.outputs.server-root }}
 
       - name: Setup permissions for the backend of the federated Apache server
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: |
-          sudo chown -R www-data:www-data /var/www/html${{ inputs.federated-root }}
-          sudo chmod -R 777 /var/www/html${{ inputs.federated-root }}
+          sudo chown -R www-data:www-data /var/www/html${{ steps.prepend.outputs.federated-root }}
+          sudo chmod -R 777 /var/www/html${{ steps.prepend.outputs.federated-root }}
 
       - name: Selenium
         if: ${{ inputs.do-webui-tests }}
@@ -241,18 +258,18 @@ jobs:
         run: |
           cd apps/${{ inputs.app-name }}
           make ci
-          sudo -u www-data mkdir /var/www/html${{ inputs.server-root }}/apps/${{ inputs.app-name }}
-          sudo -u www-data cp -r * /var/www/html${{ inputs.server-root }}/apps/${{ inputs.app-name }}
-          cd /var/www/html${{ inputs.server-root }}
+          sudo -u www-data mkdir /var/www/html${{ steps.prepend.outputs.server-root }}/apps/${{ inputs.app-name }}
+          sudo -u www-data cp -r * /var/www/html${{ steps.prepend.outputs.server-root }}/apps/${{ inputs.app-name }}
+          cd /var/www/html${{ steps.prepend.outputs.server-root }}
           sudo -u www-data php occ a:e ${{ inputs.app-name }}
 
       - name: Setup app ${{ inputs.app-name }} on federated server
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: |
           cd apps/${{ inputs.app-name }}
-          sudo -u www-data mkdir /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.app-name }}
-          sudo -u www-data cp -r * /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.app-name }}
-          cd /var/www/html${{ inputs.federated-root }}
+          sudo -u www-data mkdir /var/www/html${{ steps.prepend.outputs.federated-root }}/apps/${{ inputs.app-name }}
+          sudo -u www-data cp -r * /var/www/html${{ steps.prepend.outputs.federated-root }}/apps/${{ inputs.app-name }}
+          cd /var/www/html${{ steps.prepend.outputs.federated-root }}
           sudo -u www-data php occ a:e ${{ inputs.app-name }}
 
       - name: Setup additional app ${{ inputs.additional-app }}
@@ -260,25 +277,25 @@ jobs:
         run: |
           cd apps/${{ inputs.additional-app }}
           make ci
-          sudo -u www-data mkdir /var/www/html${{ inputs.server-root }}/apps/${{ inputs.additional-app }}
-          sudo -u www-data cp -r * /var/www/html${{ inputs.server-root }}/apps/${{ inputs.additional-app }}
-          cd /var/www/html${{ inputs.server-root }}
+          sudo -u www-data mkdir /var/www/html${{ steps.prepend.outputs.server-root }}/apps/${{ inputs.additional-app }}
+          sudo -u www-data cp -r * /var/www/html${{ steps.prepend.outputs.server-root }}/apps/${{ inputs.additional-app }}
+          cd /var/www/html${{ steps.prepend.outputs.server-root }}
           sudo -u www-data php occ a:e ${{ inputs.additional-app }}
 
       - name: Setup additional app ${{ inputs.additional-app }} on federated server
-        if: ${{ inputs.additional-app != '' && inputs.federated-root != '' }}
+        if: ${{ inputs.additional-app != '' && inputs.federated-folder != '' }}
         run: |
           cd apps/${{ inputs.additional-app }}
-          sudo -u www-data mkdir /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.additional-app }}
-          sudo -u www-data cp -r * /var/www/html${{ inputs.federated-root }}/apps/${{ inputs.additional-app }}
-          cd /var/www/html${{ inputs.federated-root }}
+          sudo -u www-data mkdir /var/www/html${{ steps.prepend.outputs.federated-root }}/apps/${{ inputs.additional-app }}
+          sudo -u www-data cp -r * /var/www/html${{ steps.prepend.outputs.federated-root }}/apps/${{ inputs.additional-app }}
+          cd /var/www/html${{ steps.prepend.outputs.federated-root }}
           sudo -u www-data php occ a:e ${{ inputs.additional-app }}
 
       - name: Setup owncloud server settings
         run: |
-          cd /var/www/html${{ inputs.server-root }}
+          cd /var/www/html${{ steps.prepend.outputs.server-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
-          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=server
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=${{ steps.prepend.outputs.server-root }}/
           sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
@@ -287,18 +304,18 @@ jobs:
           sudo -u www-data php occ config:list
 
       - name: Allow Http fallback for federation to local server
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: |
-          cd /var/www/html${{ inputs.server-root }}
+          cd /var/www/html${{ steps.prepend.outputs.server-root }}
           sudo -u www-data php occ config:system:set sharing.federation.allowHttpFallback --value="true" --type=boolean
 
       - name: Setup owncloud federated server settings
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: |
-          cd /var/www/html${{ inputs.federated-root }}
+          cd /var/www/html${{ steps.prepend.outputs.federated-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
           sudo -u www-data php occ config:system:set sharing.federation.allowHttpFallback --value="true" --type=boolean
-          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=federated
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=${{ steps.prepend.outputs.federated-root }}/
           sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
@@ -307,15 +324,15 @@ jobs:
           sudo -u www-data php occ config:list
 
       - name: Check access to status
-        run: curl http://localhost:80${{ inputs.server-root }}/status.php
+        run: curl http://localhost:80${{ steps.prepend.outputs.server-root }}/status.php
 
       - name: Check access to login endpoint
-        run: curl http://localhost:80${{ inputs.server-root }}/login
+        run: curl http://localhost:80${{ steps.prepend.outputs.server-root }}/login
 
       - name: Check content of server files
         run: |
-          sudo -u www-data cat /var/www/html${{ inputs.server-root }}/.htaccess
-          sudo -u www-data cat /var/www/html${{ inputs.server-root }}/config/config.php
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/.htaccess
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/config/config.php
           sudo cat /etc/apache2/apache2.conf
           sudo cat /etc/apache2/ports.conf
           sudo ls -l /etc/apache2/sites-available
@@ -324,12 +341,12 @@ jobs:
           sudo cat /etc/apache2/sites-enabled/server.conf
 
       - name: Check access to federated status
-        if: ${{ inputs.federated-root != '' }}
-        run: curl http://localhost:80${{ inputs.federated-root }}/status.php
+        if: ${{ inputs.federated-folder != '' }}
+        run: curl http://localhost:80${{ steps.prepend.outputs.federated-root }}/status.php
 
       - name: Define environment variable pointing to the federated server
         if: ${{ inputs.federated-root != '' }}
-        run: echo "TEST_SERVER_FED_URL=http://localhost${{ inputs.federated-root }}" >> $GITHUB_ENV
+        run: echo "TEST_SERVER_FED_URL=http://localhost${{ steps.prepend.outputs.federated-root }}" >> $GITHUB_ENV
 
       - name: Install libxml2-utils to get xmllint used by acceptance test script
         run: sudo apt install -y libxml2-utils
@@ -337,7 +354,7 @@ jobs:
       - name: Run API acceptance tests
         if: ${{ inputs.do-api-tests }}
         env:
-          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
+          TEST_SERVER_URL: http://localhost${{ steps.prepend.outputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
           BEHAT_FILTER_TAGS: ""
         run: |
@@ -347,7 +364,7 @@ jobs:
       - name: Run CLI acceptance tests
         if: ${{ inputs.do-cli-tests }}
         env:
-          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
+          TEST_SERVER_URL: http://localhost${{ steps.prepend.outputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
           BEHAT_FILTER_TAGS: ""
         run: |
@@ -357,7 +374,7 @@ jobs:
       - name: Run WebUI acceptance tests
         if: ${{ inputs.do-webui-tests }}
         env:
-          TEST_SERVER_URL: http://localhost${{ inputs.server-root }}
+          TEST_SERVER_URL: http://localhost${{ steps.prepend.outputs.server-root }}
           BROWSER: "chrome"
           SELENIUM_HOST: "localhost"
           SELENIUM_PORT: "4444"
@@ -370,6 +387,6 @@ jobs:
       - name: Display log file
         if: failure()
         run: |
-          sudo -u www-data ls -l /var/www/html${{ inputs.server-root }}
-          sudo -u www-data ls -l /var/www/html${{ inputs.server-root }}/data
-          sudo -u www-data cat /var/www/html${{ inputs.server-root }}/data/owncloud.log
+          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.server-root }}
+          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.server-root }}/data
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/data/owncloud.log

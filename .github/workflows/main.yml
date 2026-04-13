@@ -73,8 +73,8 @@ jobs:
     with:
       app-name: ${{ needs.get-vars.outputs.app-name }}
       do-api-tests: true
-      server-root: '/server'
-      federated-root: '/federated'
+      server-folder: 'server'
+      federated-folder: 'federated'
 
   acceptance-webui:
     name: WebUI acceptance tests
