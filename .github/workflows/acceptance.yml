@@ -125,7 +125,7 @@ jobs:
             echo "federated-root=" >> $GITHUB_OUTPUT
           fi
 
-      - name: Clone owncloud/core
+      - name: Clone owncloud/core ${{ inputs.core-branch-for-test-code }} branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: owncloud/core
