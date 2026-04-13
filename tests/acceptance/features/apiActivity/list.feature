@@ -641,7 +641,7 @@ Feature: List activity
     And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/lorem.txt"
     And user "Alice" has shared file "/lorem.txt" with user "Brian"
     When user "Alice" deletes file "/lorem.txt" using the WebDAV API
-    And user "Alice" restores the file with original path "lorem.txt" using the activity test code
+    And user "Alice" restores the file with original path "lorem.txt" using the trashbin API
     Then the activity number 1 of user "Alice" should match these properties:
       | type             | /^file_restored$/                                                                                                                  |
       | user             | /^Alice$/                                                                                                                          |

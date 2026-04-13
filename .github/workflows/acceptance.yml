@@ -65,6 +65,11 @@ on:
         required: false
         type: string
         default: ''
+      core-branch-for-test-code:
+        description: the branch of core to be used for the common acceptance test code
+        required: false
+        type: string
+        default: 'master'
 
 jobs:
   acceptance:
@@ -124,6 +129,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: owncloud/core
+          ref: ${{ inputs.core-branch-for-test-code }}
 
       - name: Checkout apps/${{ inputs.app-name }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

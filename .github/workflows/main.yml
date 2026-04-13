@@ -75,6 +75,7 @@ jobs:
       do-api-tests: true
       server-folder: 'server'
       federated-folder: 'federated'
+      core-branch-for-test-code: fix-trashbin-ref
 
   acceptance-webui:
     name: WebUI acceptance tests
