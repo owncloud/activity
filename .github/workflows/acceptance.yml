@@ -295,7 +295,7 @@ jobs:
         run: |
           cd /var/www/html${{ steps.prepend.outputs.server-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
-          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=${{ steps.prepend.outputs.server-root }}/
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=/
           sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
@@ -315,7 +315,7 @@ jobs:
           cd /var/www/html${{ steps.prepend.outputs.federated-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
           sudo -u www-data php occ config:system:set sharing.federation.allowHttpFallback --value="true" --type=boolean
-          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=${{ steps.prepend.outputs.federated-root }}/
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=/
           sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
