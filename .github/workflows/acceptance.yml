@@ -278,17 +278,28 @@ jobs:
         run: |
           cd /var/www/html${{ inputs.server-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=server
+          sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
           sudo -u www-data php occ a:e testing
           sudo -u www-data php occ a:l -e
           sudo -u www-data php occ config:list
 
+      - name: Allow Http fallback for federation to local server
+        if: ${{ inputs.federated-root != '' }}
+        run: |
+          cd /var/www/html${{ inputs.server-root }}
+          sudo -u www-data php occ config:system:set sharing.federation.allowHttpFallback --value="true" --type=boolean
+
       - name: Setup owncloud federated server settings
         if: ${{ inputs.federated-root != '' }}
         run: |
           cd /var/www/html${{ inputs.federated-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
+          sudo -u www-data php occ config:system:set sharing.federation.allowHttpFallback --value="true" --type=boolean
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=federated
+          sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
           sudo -u www-data php occ a:e testing
