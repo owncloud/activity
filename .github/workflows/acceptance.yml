@@ -390,6 +390,30 @@ jobs:
           cd apps/${{ inputs.app-name }}
           make test-acceptance-webui
 
+      - name: Display content of server files after tests are finished
+        if: failure()
+        run: |
+          echo "server .htaccess and config.php"
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/.htaccess
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/config/config.php
+          echo "federated .htaccess and config.php"
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.federated-root }}/.htaccess
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.federated-root }}/config/config.php
+          echo "apache2.conf"
+          sudo cat /etc/apache2/apache2.conf
+          echo "ports.conf"
+          sudo cat /etc/apache2/ports.conf
+          echo "ls sites-available"
+          sudo ls -l /etc/apache2/sites-available
+          echo "ls sites-enabled"
+          sudo ls -l /etc/apache2/sites-enabled
+          echo "Cat 000-default.conf"
+          sudo cat /etc/apache2/sites-enabled/000-default.conf
+          echo "Cat server.conf"
+          sudo cat /etc/apache2/sites-enabled/server.conf
+          echo "Cat federated.conf"
+          sudo cat /etc/apache2/sites-enabled/federated.conf
+
       - name: Display log file
         if: failure()
         run: |
