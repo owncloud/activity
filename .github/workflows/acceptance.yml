@@ -351,7 +351,7 @@ jobs:
         run: curl http://localhost:80${{ steps.prepend.outputs.federated-root }}/status.php
 
       - name: Define environment variable pointing to the federated server
-        if: ${{ inputs.federated-root != '' }}
+        if: ${{ inputs.federated-folder != '' }}
         run: echo "TEST_SERVER_FED_URL=http://localhost${{ steps.prepend.outputs.federated-root }}" >> $GITHUB_ENV
 
       - name: Install libxml2-utils to get xmllint used by acceptance test script
