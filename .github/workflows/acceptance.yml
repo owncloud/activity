@@ -36,22 +36,22 @@ on:
         type: string
         default: ''
       do-api-tests:
-        description: 'Whether to run API acceptance tests'
+        description: 'Run API acceptance tests'
         required: false
         type: boolean
         default: false
       do-cli-tests:
-        description: 'Whether to run CLI acceptance tests'
+        description: 'Run CLI acceptance tests'
         required: false
         type: boolean
         default: false
       do-webui-tests:
-        description: 'Whether to run WebUI acceptance tests'
+        description: 'Run WebUI acceptance tests'
         required: false
         type: boolean
         default: false
       additional-app:
-        description: 'Additional app to enable for testing'
+        description: 'Additional app to install and enable (if needed for testing)'
         required: false
         type: string
         default: ''
@@ -332,7 +332,7 @@ jobs:
           sudo -u www-data php occ a:l -e
           sudo -u www-data php occ config:list
 
-      - name: Check access to status
+      - name: Check access to status endpoint
         run: curl http://localhost:80${{ steps.prepend.outputs.server-root }}/status.php
 
       - name: Check access to login endpoint
@@ -357,9 +357,12 @@ jobs:
         run: |
           sudo cat /etc/apache2/sites-enabled/server-federated.conf
 
-      - name: Check access to federated status
+      - name: Check access to federated status endpoint
         if: ${{ inputs.federated-folder != '' }}
         run: curl http://localhost:80${{ steps.prepend.outputs.federated-root }}/status.php
+
+      - name: Check access to federated login endpoint
+        run: curl http://localhost:80${{ steps.prepend.outputs.federated-root }}/login
 
       - name: Define environment variable pointing to the federated server
         if: ${{ inputs.federated-folder != '' }}
@@ -414,9 +417,9 @@ jobs:
           sudo cat /etc/apache2/apache2.conf
           echo "ports.conf"
           sudo cat /etc/apache2/ports.conf
-          echo "ls sites-available"
+          echo "sites-available"
           sudo ls -l /etc/apache2/sites-available
-          echo "ls sites-enabled"
+          echo "sites-enabled"
           sudo ls -l /etc/apache2/sites-enabled
 
       - name: Display log file
