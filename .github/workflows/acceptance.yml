@@ -168,16 +168,19 @@ jobs:
           sudo a2enmod rewrite headers env dir mime ssl expires dav dav_fs
           sudo service apache2 restart
 
-      - name: Configure Apache for server
+      - name: Configure Apache for server only (no federated)
+        if: ${{ inputs.federated-folder == '' }}
         run: |
           sudo cp apps/${{ inputs.app-name }}/tests/acceptance/server.conf /etc/apache2/sites-available
+          sudo a2dissite 000-default
           sudo a2ensite server
 
-      - name: Configure Apache for federated
+      - name: Configure Apache for server and federated
         if: ${{ inputs.federated-folder != '' }}
         run: |
-          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/federated.conf /etc/apache2/sites-available
-          sudo a2ensite federated
+          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/server-federated.conf /etc/apache2/sites-available
+          sudo a2dissite 000-default
+          sudo a2ensite server-federated
 
       - name: Reload Apache to get new settings
         run: |
@@ -301,7 +304,7 @@ jobs:
         run: |
           cd /var/www/html${{ steps.prepend.outputs.server-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
-          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=/
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=/server
           sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
@@ -321,7 +324,7 @@ jobs:
           cd /var/www/html${{ steps.prepend.outputs.federated-root }}
           sudo -u www-data php occ config:system:set trusted_domains 1 --value=localhost
           sudo -u www-data php occ config:system:set sharing.federation.allowHttpFallback --value="true" --type=boolean
-          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=/
+          sudo -u www-data php occ config:system:set htaccess.RewriteBase --value=/federated
           sudo -u www-data php occ maintenance:update:htaccess
           sudo -u www-data php occ log:manage --level 2
           sudo -u www-data php occ config:system:set csrf.disabled --value=true
@@ -343,8 +346,16 @@ jobs:
           sudo cat /etc/apache2/ports.conf
           sudo ls -l /etc/apache2/sites-available
           sudo ls -l /etc/apache2/sites-enabled
-          sudo cat /etc/apache2/sites-enabled/000-default.conf
+
+      - name: Display server.conf
+        if: ${{ inputs.federated-folder == '' }}
+        run: |
           sudo cat /etc/apache2/sites-enabled/server.conf
+
+      - name: Display server-federated.conf
+        if: ${{ inputs.federated-folder != '' }}
+        run: |
+          sudo cat /etc/apache2/sites-enabled/server-federated.conf
 
       - name: Check access to federated status
         if: ${{ inputs.federated-folder != '' }}
@@ -407,12 +418,6 @@ jobs:
           sudo ls -l /etc/apache2/sites-available
           echo "ls sites-enabled"
           sudo ls -l /etc/apache2/sites-enabled
-          echo "Cat 000-default.conf"
-          sudo cat /etc/apache2/sites-enabled/000-default.conf
-          echo "Cat server.conf"
-          sudo cat /etc/apache2/sites-enabled/server.conf
-          echo "Cat federated.conf"
-          sudo cat /etc/apache2/sites-enabled/federated.conf
 
       - name: Display log file
         if: failure()
