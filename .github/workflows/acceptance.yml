@@ -169,9 +169,9 @@ jobs:
           sudo service apache2 restart
 
       - name: Configure Apache for single server only (no federated)
-        if: ${{ inputs.server-folder != '' && inputs.federated-folder == '' }}
+        if: ${{ inputs.federated-folder == '' }}
         run: |
-          echo "export SERVER_SUBDIR=${{ inputs.server-folder }}" | sudo tee -a /etc/apache2/envvars
+          echo "export SERVER_SUBDIR=${{ steps.prepend.outputs.server-root }}" | sudo tee -a /etc/apache2/envvars
           sudo cp apps/${{ inputs.app-name }}/tests/acceptance/single-server.conf /etc/apache2/sites-available
           sudo a2dissite 000-default
           sudo a2ensite single-server
@@ -179,8 +179,8 @@ jobs:
       - name: Configure Apache for dual server (federated)
         if: ${{ inputs.federated-folder != '' }}
         run: |
-          echo "export SERVER_SUBDIR=${{ inputs.server-folder }}" | sudo tee -a /etc/apache2/envvars
-          echo "export FEDERATED_SUBDIR=${{ inputs.federated-folder }}" | sudo tee -a /etc/apache2/envvars
+          echo "export SERVER_SUBDIR=${{ steps.prepend.outputs.server-root }}" | sudo tee -a /etc/apache2/envvars
+          echo "export FEDERATED_SUBDIR=${{ steps.prepend.outputs.server-root }}" | sudo tee -a /etc/apache2/envvars
           sudo cp apps/${{ inputs.app-name }}/tests/acceptance/dual-server.conf /etc/apache2/sites-available
           sudo a2dissite 000-default
           sudo a2ensite dual-server
@@ -427,6 +427,14 @@ jobs:
           sudo ls -l /etc/apache2/sites-available
           echo "sites-enabled"
           sudo ls -l /etc/apache2/sites-enabled
+
+      - name: Display Apache logs
+        if: failure()
+        run: |
+          echo "access log"
+          sudo cat /var/log/apache2/access.log
+          echo "error log"
+          sudo cat /var/log/apache2/error.log
 
       - name: Display log file
         if: failure()
