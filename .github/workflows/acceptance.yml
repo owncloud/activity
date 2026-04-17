@@ -172,7 +172,7 @@ jobs:
         if: ${{ inputs.federated-folder == '' }}
         run: |
           echo "export SERVER_SUBDIR=${{ steps.prepend.outputs.server-root }}" | sudo tee -a /etc/apache2/envvars
-          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/single-server.conf /etc/apache2/sites-available
+          sudo cp tests/acceptance/setupApache/single-server.conf /etc/apache2/sites-available
           sudo a2dissite 000-default
           sudo a2ensite single-server
 
@@ -181,7 +181,7 @@ jobs:
         run: |
           echo "export SERVER_SUBDIR=${{ steps.prepend.outputs.server-root }}" | sudo tee -a /etc/apache2/envvars
           echo "export FEDERATED_SUBDIR=${{ steps.prepend.outputs.server-root }}" | sudo tee -a /etc/apache2/envvars
-          sudo cp apps/${{ inputs.app-name }}/tests/acceptance/dual-server.conf /etc/apache2/sites-available
+          sudo cp tests/acceptance/setupApache/dual-server.conf /etc/apache2/sites-available
           sudo a2dissite 000-default
           sudo a2ensite dual-server
 
@@ -352,7 +352,7 @@ jobs:
           sudo ls -l /etc/apache2/sites-enabled
 
       - name: Display single server site config
-        if: ${{ inputs.server-folder != '' && inputs.federated-folder == '' }}
+        if: ${{ inputs.federated-folder == '' }}
         run: |
           sudo cat /etc/apache2/sites-enabled/single-server.conf
 
@@ -408,15 +408,35 @@ jobs:
           cd apps/${{ inputs.app-name }}
           make test-acceptance-webui
 
-      - name: Display content of server files after tests are finished
+      - name: Display content of server settings and logs if tests failed
         if: failure()
         run: |
-          echo "server .htaccess and config.php"
+          echo "server .htaccess"
           sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/.htaccess
+          echo "server config.php"
           sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/config/config.php
-          echo "federated .htaccess and config.php"
+          echo "server directory contents"
+          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.server-root }}
+          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.server-root }}/data
+          echo "server owncloud.log"
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/data/owncloud.log
+
+      - name: Display content of federated settings and logs if tests failed
+        if: failure() && inputs.federated-folder != ''
+        run: |
+          echo "federated .htaccess"
           sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.federated-root }}/.htaccess
+          echo "federated config.php"
           sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.federated-root }}/config/config.php
+          echo "federated directory contents"
+          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.federated-root }}
+          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.federated-root }}/data
+          echo "federated owncloud.log"
+          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.federated-root }}/data/owncloud.log
+
+      - name: Display Apache config and logs if tests failed
+        if: failure()
+        run: |
           echo "apache2.conf"
           sudo cat /etc/apache2/apache2.conf
           echo "ports.conf"
@@ -427,21 +447,7 @@ jobs:
           sudo ls -l /etc/apache2/sites-available
           echo "sites-enabled"
           sudo ls -l /etc/apache2/sites-enabled
-
-      - name: Display Apache logs
-        if: failure()
-        run: |
           echo "access log"
           sudo cat /var/log/apache2/access.log
           echo "error log"
           sudo cat /var/log/apache2/error.log
-
-      - name: Display log file
-        if: failure()
-        run: |
-          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.server-root }}
-          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.server-root }}/data
-          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.server-root }}/data/owncloud.log
-          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.federated-root }}
-          sudo -u www-data ls -l /var/www/html${{ steps.prepend.outputs.federated-root }}/data
-          sudo -u www-data cat /var/www/html${{ steps.prepend.outputs.federated-root }}/data/owncloud.log
