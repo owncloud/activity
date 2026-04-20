@@ -70,6 +70,11 @@ on:
         required: false
         type: string
         default: 'master'
+      filter-tags:
+        description: test tags to run (or not run)
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -440,7 +445,7 @@ jobs:
           APP_NAME: ${{ inputs.app-name }}
           TEST_SERVER_URL: http://localhost${{ steps.prepend.outputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
-          BEHAT_FILTER_TAGS: ""
+          BEHAT_FILTER_TAGS: "${{ inputs.filter-tags }}"
         run: |
           cd "apps/${APP_NAME}"
           make test-acceptance-api
@@ -451,7 +456,7 @@ jobs:
           APP_NAME: ${{ inputs.app-name }}
           TEST_SERVER_URL: http://localhost${{ steps.prepend.outputs.server-root }}
           BEHAT_SUITE: ${{ matrix.suite }}
-          BEHAT_FILTER_TAGS: ""
+          BEHAT_FILTER_TAGS: "${{ inputs.filter-tags }}"
         run: |
           cd "apps/${APP_NAME}"
           make test-acceptance-cli
@@ -465,7 +470,7 @@ jobs:
           SELENIUM_HOST: "localhost"
           SELENIUM_PORT: "4444"
           BEHAT_SUITE: ${{ matrix.suite }}
-          BEHAT_FILTER_TAGS: ""
+          BEHAT_FILTER_TAGS: "${{ inputs.filter-tags }}"
         run: |
           cd "apps/${APP_NAME}"
           make test-acceptance-webui
