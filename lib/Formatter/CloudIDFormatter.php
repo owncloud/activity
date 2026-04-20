@@ -46,7 +46,7 @@ class CloudIDFormatter implements IFormatter {
 	 * @param string $parameter The parameter to be formatted
 	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, $parameter) {
+	public function format(IEvent $event, string $parameter) {
 		$displayName = $parameter;
 		try {
 			list($user, $server) = Helper::splitUserRemote($parameter);

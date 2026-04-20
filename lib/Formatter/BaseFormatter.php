@@ -30,7 +30,7 @@ class BaseFormatter implements IFormatter {
 	 * @param string $parameter The parameter to be formatted
 	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, $parameter) {
+	public function format(IEvent $event, string $parameter) {
 		return '<parameter>' . Util::sanitizeHTML($parameter) . '</parameter>';
 	}
 }

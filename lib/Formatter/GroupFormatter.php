@@ -38,7 +38,7 @@ class GroupFormatter implements IFormatter {
 	 * @param string $parameter The parameter to be formatted
 	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, $parameter) {
+	public function format(IEvent $event, string $parameter) {
 		$group = $this->groupManager->get($parameter);
 		$displayName = $parameter;
 		if ($group !== null) {
