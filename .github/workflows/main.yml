@@ -69,7 +69,7 @@ jobs:
     name: API acceptance tests
     needs:
       - get-vars
-    uses: ./.github/workflows/acceptance.yml
+    uses: owncloud/reusable-workflows/.github/workflows/acceptance.yml@main
     with:
       app-name: ${{ needs.get-vars.outputs.app-name }}
       do-api-tests: true
@@ -80,7 +80,7 @@ jobs:
     name: WebUI acceptance tests
     needs:
       - get-vars
-    uses: ./.github/workflows/acceptance.yml
+    uses: owncloud/reusable-workflows/.github/workflows/acceptance.yml@main
     with:
       app-name: ${{ needs.get-vars.outputs.app-name }}
       do-webui-tests: true
@@ -90,7 +90,7 @@ jobs:
     name: WebUI acceptance tests that need a federated server
     needs:
       - get-vars
-    uses: ./.github/workflows/acceptance.yml
+    uses: owncloud/reusable-workflows/.github/workflows/acceptance.yml@main
     with:
       app-name: ${{ needs.get-vars.outputs.app-name }}
       do-webui-tests: true
