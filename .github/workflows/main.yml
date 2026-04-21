@@ -97,3 +97,4 @@ jobs:
       server-folder: 'server'
       federated-folder: 'federated'
       test-suites: "['webUIActivitySharingExternal']"
+      core-branch-for-test-code: "debug-login-as"
