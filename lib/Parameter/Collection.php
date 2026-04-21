@@ -27,7 +27,7 @@ class Collection implements IParameter {
 	/** @var IL10N */
 	protected $l;
 
-	/** @var IParameter[]|IParameter[][] */
+	/** @var IParameter[] */
 	protected $parameters;
 
 	/** @var string */
@@ -84,13 +84,7 @@ class Collection implements IParameter {
 		$parameterList = $plainParameterList = [];
 
 		foreach ($this->parameters as $parameter) {
-			if (\is_array($parameter)) {
-				foreach ($parameter as $parameterValue) {
-					$parameterList[] = $parameterValue->format();
-				}
-			} else {
-				$parameterList[] = $parameter->format();
-			}
+			$parameterList[] = $parameter->format();
 		}
 
 		return '<collection>' . \implode('', $parameterList) . '</collection>';
