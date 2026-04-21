@@ -28,9 +28,13 @@ class BaseFormatter implements IFormatter {
 	/**
 	 * @param IEvent $event
 	 * @param string $parameter The parameter to be formatted
-	 * @return string The formatted parameter
+	 * @return string|array The formatted parameter
 	 */
-	public function format(IEvent $event, string $parameter) {
-		return '<parameter>' . Util::sanitizeHTML($parameter) . '</parameter>';
+	public function format(IEvent $event, string|array $parameter) {
+		$sanitizedParameter = Util::sanitizeHTML($parameter);
+		if (\is_array($sanitizedParameter)) {
+			$sanitizedParameter = \implode("", $sanitizedParameter);
+		}
+		return '<parameter>' . $sanitizedParameter . '</parameter>';
 	}
 }
