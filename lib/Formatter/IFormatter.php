@@ -29,5 +29,5 @@ interface IFormatter {
 	 * @param string $parameter The parameter to be formatted
 	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, string $parameter);
+	public function format(IEvent $event, string $parameter): string;
 }

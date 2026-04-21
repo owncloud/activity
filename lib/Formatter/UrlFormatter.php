@@ -39,7 +39,7 @@ class UrlFormatter implements IFormatter {
 	 *
 	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, string $parameter) {
+	public function format(IEvent $event, string $parameter): string {
 		$params = \json_decode($parameter, true);
 		if (!isset($params['url'])) {
 			// we can't work without a url

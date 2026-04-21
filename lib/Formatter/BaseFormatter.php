@@ -27,10 +27,10 @@ use OCP\Util;
 class BaseFormatter implements IFormatter {
 	/**
 	 * @param IEvent $event
-	 * @param string $parameter The parameter to be formatted
-	 * @return string|array The formatted parameter
+	 * @param string|array $parameter The parameter to be formatted
+	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, string|array $parameter) {
+	public function format(IEvent $event, string|array $parameter): string {
 		$sanitizedParameter = Util::sanitizeHTML($parameter);
 		if (\is_array($sanitizedParameter)) {
 			$sanitizedParameter = \implode("", $sanitizedParameter);

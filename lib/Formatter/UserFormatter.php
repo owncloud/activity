@@ -46,7 +46,7 @@ class UserFormatter implements IFormatter {
 	 * @param string $parameter The parameter to be formatted
 	 * @return string The formatted parameter
 	 */
-	public function format(IEvent $event, string $parameter) {
+	public function format(IEvent $event, string $parameter): string {
 		// If the username is empty, the action has been performed by a remote
 		// user, or via a public share. We don't know the username in that case
 		if ($parameter === '') {
