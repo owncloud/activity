@@ -207,6 +207,7 @@ class ActivityContext implements Context {
 	 *
 	 * @return array
 	 * @throws GuzzleException
+	 * @throws Exception
 	 */
 	private function sendActivityGetRequest(string $url, string $user):array {
 		$fullUrl = $this->featureContext->getBaseUrl() . $url;
@@ -220,10 +221,23 @@ class ActivityContext implements Context {
 			200,
 			$response->getStatusCode()
 		);
-		return \json_decode(
-			$response->getBody()->getContents(),
+		$contents = $response->getBody()->getContents();
+		if ($contents === "") {
+			// If the empty string is returned then there are no activity entries.
+			// Return an empty array because this function should always return an array.
+			return [];
+		}
+
+		$decoded_json = \json_decode(
+			$contents,
 			true
 		);
+		if ($decoded_json === null) {
+			throw new Exception(
+				"JSON returned by sendActivityGetRequest to $fullUrl is not valid: '$contents'"
+			);
+		}
+		return $decoded_json;
 	}
 
 	/**

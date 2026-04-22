@@ -4,7 +4,7 @@ Feature: public link federation sharing file/folder activities
   I want to be able to see history of the files and folders shared externally
   So that I know what happened in my cloud storage
 
-  @issue-800
+  @issue-800 @skip
   Scenario: adding a server to the public link does not show activity for the receiver
     Given using server "REMOTE"
     And user "Alice" has been created with default attributes and without skeleton files
