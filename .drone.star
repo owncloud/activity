@@ -60,44 +60,6 @@ config = {
     "javascript": False,
     "phpunit": False,
     "acceptance": {
-        "webUI": {
-            "suites": {
-                "webUIActivityComments": "webUIComments",
-                "webUIActivityCreateUpdate": "webUICreateUpdat",
-                "webUIActivityDeleteRestore": "webUIDelRestore",
-                "webUIActivitySharingInternal": "webUISharingInt",
-                "webUIActivityTags": "webUITags",
-                "webUIActivityFileMoveAndRename": "webUIMoveRename",
-            },
-            "browsers": [
-                "chrome",
-                "firefox",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-        },
-        "federatedSuites": {
-            "suites": {
-                "webUIActivitySharingExternal": "webUISharingExt",
-            },
-            "browsers": [
-                "chrome",
-                "firefox",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-            "federatedServerNeeded": True,
-        },
-        "api": {
-            "suites": [
-                "apiActivity",
-            ],
-            "servers": [
-                "daily-master-qa",
-            ],
-        },
         "core-api-acceptance": {
             "suites": {
                 "apiAll": "core-apiAll",
