@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   sync:
-    uses: owncloud/reusable-workflows/.github/workflows/translation-sync.yml@main
+    uses: owncloud/reusable-workflows/.github/workflows/translation-sync.yml@fix/translation-cleanup-git-rm
     with:
       mode: old
       sub_path: l10n
