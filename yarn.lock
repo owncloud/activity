@@ -491,10 +491,10 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
 
-jasmine-core@^3.6.0:
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.10.1.tgz#7aa6fa2b834a522315c651a128d940eca553989a"
-  integrity sha512-ooZWSDVAdh79Rrj4/nnfklL3NQVra0BcuhcuWoAwwi+znLDoUeH87AFfeX8s+YeYi6xlv5nveRyaA1v7CintfA==
+jasmine-core@^4.1.0:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-4.6.1.tgz#5ebb8afa07282078f8d7b15871737a83b74e58f2"
+  integrity sha512-VYz/BjjmC3klLJlLwA4Kw8ytk0zDSmbbDLNs794VnWmkcCB7I9aAL/D48VNQtmITyPvea2C3jdUMfc3kAoy0PQ==
 
 jasmine-core@^6.3.0:
   version "6.3.0"
@@ -537,12 +537,12 @@ karma-jasmine-sinon@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/karma-jasmine-sinon/-/karma-jasmine-sinon-1.0.4.tgz#fe8996604137946900a706c06229679500734c40"
 
-karma-jasmine@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-4.0.2.tgz#386db2a3e1acc0af5265c711f673f78f1e4938de"
-  integrity sha512-ggi84RMNQffSDmWSyyt4zxzh2CQGwsxvYYsprgyR1j8ikzIduEdOlcLvXjZGwXG/0j41KUXOWsUCBfbEHPWP9g==
+karma-jasmine@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-5.1.0.tgz#3af4558a6502fa16856a0f346ec2193d4b884b2f"
+  integrity sha512-i/zQLFrfEpRyQoJF9fsCdTMOF5c2dK7C7OmsuKg2D0YSsuZSfQDiLuaiktbuio6F2wiCsZSnSnieIQ0ant/uzQ==
   dependencies:
-    jasmine-core "^3.6.0"
+    jasmine-core "^4.1.0"
 
 karma@^6.4.4:
   version "6.4.4"
