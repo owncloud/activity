@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## [2.8.1] - 2026-07-22
+
+### Changed
+- Maintenance release re-signed with the ownCloud G2 code-signing certificate for the ownCloud 11.0.0 release.
+
+
 ## [2.8.0] - 2026-03-23
 
 ### Changed
@@ -166,8 +172,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Show displayName instead of group id - [#582](https://github.com/owncloud/activity/issues/582)
 - Catch mail exceptions and still remove sent emails from queue - [#574](https://github.com/owncloud/activity/issues/574)
 
-
-[Unreleased]: https://github.com/owncloud/activity/compare/v2.7.2...master
+[Unreleased]: https://github.com/owncloud/activity/compare/v2.8.1..master
+[2.8.1]: https://github.com/owncloud/activity/compare/v2.8.0..v2.8.1
+[2.8.0]: https://github.com/owncloud/activity/compare/v2.7.3..v2.8.0
+[2.7.3]: https://github.com/owncloud/activity/compare/v2.7.2..v2.7.3
 [2.7.2]: https://github.com/owncloud/activity/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/owncloud/activity/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/owncloud/activity/compare/v2.6.1...v2.7.0
