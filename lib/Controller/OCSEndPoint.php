@@ -56,7 +56,7 @@ class OCSEndPoint {
 	protected $objectId;
 
 	/** @var string */
-	protected $user;
+	protected $user = '';
 
 	/** @var bool */
 	protected $loadPreviews;
