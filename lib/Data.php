@@ -85,6 +85,7 @@ class Data {
 	 * @return bool
 	 */
 	public function send(IEvent $event) {
+		// @phpstan-ignore identical.alwaysFalse
 		if ($event->getAffectedUser() === '' || $event->getAffectedUser() === null) {
 			return false;
 		}
@@ -137,6 +138,7 @@ class Data {
 	 * @return bool
 	 */
 	public function storeMail(IEvent $event, $latestSendTime) {
+		// @phpstan-ignore identical.alwaysFalse
 		if ($event->getAffectedUser() === '' || $event->getAffectedUser() === null) {
 			return false;
 		}

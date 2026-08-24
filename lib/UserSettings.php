@@ -138,6 +138,7 @@ class UserSettings {
 	 *               Returns a "username => i:batchtime" Map for method = email
 	 */
 	public function filterUsersBySetting($users, $method, $type) {
+		// @phpstan-ignore function.alreadyNarrowedType
 		if (empty($users) || !\is_array($users)) {
 			return [];
 		}

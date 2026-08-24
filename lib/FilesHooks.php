@@ -681,6 +681,7 @@ class FilesHooks {
 		 */
 		$this->view->chroot('/' . $currentOwner . '/files');
 		$mount = $this->view->getMount($path);
+		// @phpstan-ignore instanceof.alwaysTrue
 		if (!($mount instanceof IMountPoint)) {
 			return;
 		}
@@ -742,6 +743,7 @@ class FilesHooks {
 			$event->setAuthor($agentAuthor);
 		}
 
+		// @phpstan-ignore identical.alwaysFalse
 		if ($event->getAuthor() === null) {
 			$event->setAuthor($this->currentUser);
 		}

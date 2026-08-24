@@ -177,6 +177,7 @@ class DataHelper {
 	 * @return array List of Parameters
 	 */
 	public function parseParameters($parameterString) {
+		// @phpstan-ignore function.alreadyNarrowedType
 		if (!\is_string($parameterString)) {
 			return [];
 		}
