@@ -53,6 +53,8 @@ class PlainTextParser {
 	 * @return string
 	 */
 	protected function parseCollections($message) {
+		// @phpstan-ignore nullCoalesce.variable
+		$message = $message ?? '';
 		return \preg_replace_callback('/<collection>(.*?)<\/collection>/', function ($match) {
 			$parameterList = \explode('><', $match[1]);
 			$parameterListLength = \sizeof($parameterList);
