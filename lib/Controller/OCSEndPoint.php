@@ -322,7 +322,7 @@ class OCSEndPoint {
 					], '', '&');
 
 					$preview['source'] = $this->urlGenerator->linkTo('', 'remote.php')
-						. '/dav/files/' . \rawurlencode($this->user) . \OCP\Util::encodePath($info['path'])
+						. '/dav/files/' . \rawurlencode($this->user ?? '') . \OCP\Util::encodePath($info['path'])
 						. "?$query";
 				} else {
 					$preview['source'] = $this->urlGenerator->linkToRoute('core_ajax_preview', [
