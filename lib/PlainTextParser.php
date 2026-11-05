@@ -41,6 +41,7 @@ class PlainTextParser {
 	 * @return string
 	 */
 	public function parseMessage($message) {
+		$message ??= '';
 		$message = $this->parseCollections($message);
 		$message = $this->parseParameters($message);
 		return $message;
