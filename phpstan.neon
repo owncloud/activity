@@ -18,7 +18,3 @@ parameters:
       rawMessage: 'PHPDoc tag @var for variable $storage contains unknown class OC\Files\Storage\Shared.'
       path: lib/FilesHooks.php
       count: 1
-    -
-      message: '#^Variable \$message on left side of \?\?= always exists and is not nullable\.$#'
-      path: lib/PlainTextParser.php
-      count: 1
