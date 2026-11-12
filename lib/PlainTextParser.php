@@ -41,6 +41,7 @@ class PlainTextParser {
 	 * @return string
 	 */
 	public function parseMessage($message) {
+		// @phpstan-ignore nullCoalesce.variable
 		$message ??= '';
 		$message = $this->parseCollections($message);
 		$message = $this->parseParameters($message);

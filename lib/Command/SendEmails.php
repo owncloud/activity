@@ -81,14 +81,11 @@ class SendEmails extends Command {
 		do {
 			$users = $this->mqHandler->getAllUsers(self::BATCH_SIZE);
 			$batchCount = \count($users);
-			if ($batchCount === 0) {
-				// queue is empty
-				break;
-			}
-
-			$this->sendBatch($users, $output);
-			if ($progress !== null) {
-				$progress->advance($batchCount);
+			if ($batchCount > 0) {
+				$this->sendBatch($users, $output);
+				if ($progress !== null) {
+					$progress->advance($batchCount);
+				}
 			}
 		} while ($batchCount > 0);
 
