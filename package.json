@@ -15,7 +15,7 @@
 		"jasmine-core": "^6.3.0",
 		"jasmine-sinon": "^0.4.0",
 		"karma": "^6.4.4",
-		"karma-jasmine": "^4.0.2",
+		"karma-jasmine": "^5.1.0",
 		"karma-jasmine-sinon": "^1.0.4",
 		"karma-firefox-launcher": "^2.1.3"
 	},
